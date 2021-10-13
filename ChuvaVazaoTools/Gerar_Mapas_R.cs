@@ -22,17 +22,17 @@ namespace ChuvaVazaoTools
 
             var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
             //C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-            var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
-            if (!Directory.Exists(oneDrive))
-            {
-                oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA\"));
-            }
+            //var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
+            //if (!Directory.Exists(oneDrive))
+            //{
+            //    oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA\"));
+            //}
 
-            var oneDrive_preco = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Previsao\"));
-
+            var oneDrive_preco = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
+            //B:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao
             if (!Directory.Exists(oneDrive_preco))
             {
-                oneDrive_preco = oneDrive_preco.Replace("Preço - Documentos", "Preço - Documents");
+                oneDrive_preco = oneDrive_preco.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
             }
             // Date of VE
             int dias_ve = -1;
@@ -229,16 +229,32 @@ namespace ChuvaVazaoTools
                     var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
                     //gfs
                     logF.WriteLine("Tranferindo arquivos GFS para Entrada");
-
-                    //Descompactar o Zip Com dat
-                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "GFS"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "GFS"));
-
                     if (!Directory.Exists(Path.Combine(path_ArqPrev, "GFS"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "GFS"));
                     var GFS_NOAA = Directory.GetFiles(Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "GFS00", "txt")).Where(x => x.EndsWith(".dat"));
 
                     foreach (var arq in GFS_NOAA)
                     {
                         File.Copy(arq, Path.Combine(path_ArqPrev, "GFS", arq.Split('\\').Last()), true);
+                    }
+                    //Descompactar o Zip Com dat
+
+
+                    // System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(oneDrive, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "GFS00", "txt.zip"), Path.Combine(path_ArqPrev, "GFS"));
+
+                    //System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(path_Previsao, data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"), "GFSNOAA00", "txt.zip"), Path.Combine(path_ArqPrev, "GFS"));
+
+                    var GFSs = Directory.GetFiles(Path.Combine(path_ArqPrev, "GFS"), "gfs_mp*");
+
+                    foreach (var GFS in GFSs)
+                    {
+                        try
+                        {
+                            File.Delete(GFS);
+                        }
+                        catch
+                        {
+
+                        }
                     }
 
                     // Verifica Merge, caso não tenha usa o funceme
@@ -311,15 +327,8 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "formato_novo.r");
                     executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
                     // executar_R(path_Conj, "vies_ve_woutGEFS.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy"));
-
-                    //    if (cv5.AddDays(14) >= data_ecmwf_ext)
-                    //    {
-                    //      executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy") + " " + cv5.ToString("dd/MM/yy"));
-                    //    }
-                    //    else
-                    //    {
+                    logF.WriteLine("Vies VE" + cv1.ToString("dd/MM/yy") + "   " + cv2.ToString("dd/MM/yy"));
                     executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
-                    //   }
                     executar_R(path_Conj, "madeira.r");
 
 
@@ -340,6 +349,8 @@ namespace ChuvaVazaoTools
                     var vies_cv3 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv3.ToString("dd-MM")));
                     var vies_cv4 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv4.ToString("dd-MM")));
 
+
+
                     rvx1(path_Conj, "GEFS", "CV_VIES_VE", vies_cv1, vies_cv2);
 
                     logF.WriteLine("CV_VIES_VE Criada!");
@@ -355,6 +366,13 @@ namespace ChuvaVazaoTools
                     rvx1(path_Conj, "ECMWFop", "CV_EUROop", vies_cv1, vies_cv2);
 
                     logF.WriteLine("CV_EURO_op Criada!");
+
+
+
+
+
+
+
 
                     //Organização das Rodada para rvx+2
 
@@ -377,6 +395,7 @@ namespace ChuvaVazaoTools
                     //   MCP(cv2, Path.Combine(path_Conj, "CV2_GFS"), path_ModeloR);
                     logF.WriteLine("CV2_GFS Criada!");
 
+
                     rvxX(path_Conj, "GEFS", "CV3_GEFS", vies_cv3);
                     logF.WriteLine("CV3_GEFS Criada!");
 
@@ -388,16 +407,6 @@ namespace ChuvaVazaoTools
 
                     rvxX(path_Conj, "ECMWF", "CV4_EURO", vies_cv4);
                     logF.WriteLine("CV4_ECMWF Criada!");
-
-                    //       if (cv5.AddDays(14) >= data_ecmwf_ext)
-                    //       {
-                    //           var vies_cv5 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv5.ToString("dd-MM")));
-                    //           rvxX(path_Conj, "GEFS", "CV5_GEFS", vies_cv5);
-                    //           logF.WriteLine("CV5_GEFS Criada!");
-
-                    //           rvxX(path_Conj, "ECMWF", "CV5_ECMWF", vies_cv5);
-                    //           logF.WriteLine("CV5_ECMWF Criada!");
-                    //       }
 
                     //CV_FUNC 
                     //Remoção de vies a partir do dia atual, completando com MCP se necessário
@@ -419,7 +428,7 @@ namespace ChuvaVazaoTools
 
                         File.Copy(arq, Path.Combine(cv_func, mapa), true);
                     }
-                    MCP_FUNC(cv1, Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
+                    MCP_FUNC(cv1.AddDays(-(dias_ve + 1)), Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
                     logF.WriteLine("CV_FUNC Criada!");
 
 
@@ -438,6 +447,7 @@ namespace ChuvaVazaoTools
                         {
                             foreach (var dir in dirs)
                             {
+
                                 File.Copy(arq, Path.Combine(dir, arq.Split('\\').Last()), true);
                                 Atualiza_DT(dir, dt_acomph);
                             }
@@ -665,6 +675,52 @@ namespace ChuvaVazaoTools
 
         }
 
+        internal static void GEFS_Ext(DateTime cv, string path)
+        {
+            var dt = DateTime.Today.AddDays(-1);
+            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
+            var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
+            if (!Directory.Exists(oneDrive))
+            {
+                oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
+            }
+
+            var oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+            while (!Directory.Exists(oneDrive_gefs))
+            {
+                dt = dt.AddDays(-1);
+                oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+            }
+            if (Directory.Exists(oneDrive_gefs))
+            {
+                var files_gefs = Directory.GetFiles(oneDrive_gefs);
+                while (files_gefs.Count() < 30)
+                {
+                    dt = dt.AddDays(-1);
+                    oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+                    files_gefs = Directory.GetFiles(oneDrive_gefs);
+                }
+
+                var arqs = Directory.GetFiles(path);
+                //for (int i = 0; i <= dias; i++)
+                for (int i = 0; i <= files_gefs.Count(); i++)
+                {
+                    var data = DateTime.Today.AddDays(i + 1);
+                    if (!File.Exists(Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
+                    {
+                        var file_gefs = files_gefs.Where(x => x.Contains(data.ToString("ddMMyy") + ".dat")).FirstOrDefault();
+                        try
+                        {
+                            File.Copy(file_gefs, Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"));
+                        }
+                        catch { }
+                        //File.Copy(Path.Combine(Modelo_R, "MCP", "prec_mct1318_" + data.Month.ToString().PadLeft(2, '0') + ".dat"), Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"), true);
+
+                    }
+                }
+            }
+        }
         internal static void MCP(DateTime cv, string path, string Modelo_R)
         {
             var arqs = Directory.GetFiles(path);
@@ -710,11 +766,10 @@ namespace ChuvaVazaoTools
             }
         }
 
-
         internal static void MCP_FUNC(DateTime cv, string path, string Modelo_R)
         {
             var arqs = Directory.GetFiles(path);
-            for (int i = 1; i <= 9; i++)
+            for (int i = 1; i <= 18; i++)
             {
                 var data = cv.AddDays(i);
                 if (!File.Exists(Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")) && !File.Exists(Path.Combine(path, "PMEDIA_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
@@ -725,19 +780,17 @@ namespace ChuvaVazaoTools
             }
         }
 
-
         internal static DateTime ECMWF_Ext(DateTime cv, string path, int dias = 14)
         {
             var dt = DateTime.Today;
             var data_final = DateTime.Today;
             var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-            //C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-            var oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Previsao\"));
+            //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
+            var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
             if (!Directory.Exists(oneDrive))
             {
-                oneDrive = oneDrive.Replace("Preço - Documentos", "Preço - Documents");
+                oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
             }
-
             var oneDrive_ecmwf = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ECMWF45");
             while (!Directory.Exists(oneDrive_ecmwf))
             {
@@ -782,52 +835,7 @@ namespace ChuvaVazaoTools
             return data_final;
         }
 
-        internal static void GEFS_Ext(DateTime cv, string path)
-        {
-            var dt = DateTime.Today.AddDays(-1);
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-            //C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-            var oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Previsao\"));
-            if (!Directory.Exists(oneDrive))
-            {
-                oneDrive = oneDrive.Replace("Preço - Documentos", "Preço - Documents");
-            }
 
-            var oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-            while (!Directory.Exists(oneDrive_gefs))
-            {
-                dt = dt.AddDays(-1);
-                oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-            }
-            if (Directory.Exists(oneDrive_gefs))
-            {
-                var files_gefs = Directory.GetFiles(oneDrive_gefs);
-                while (files_gefs.Count() < 30)
-                {
-                    dt = dt.AddDays(-1);
-                    oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-                    files_gefs = Directory.GetFiles(oneDrive_gefs);
-                }
-
-                var arqs = Directory.GetFiles(path);
-                //for (int i = 0; i <= dias; i++)
-                for (int i = 0; i <= files_gefs.Count(); i++)
-                {
-                    var data = DateTime.Today.AddDays(i + 1);
-                    if (!File.Exists(Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
-                    {
-                        var file_gefs = files_gefs.Where(x => x.Contains(data.ToString("ddMMyy") + ".dat")).FirstOrDefault();
-                        try
-                        {
-                            File.Copy(file_gefs, Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"));
-                        }
-                        catch { }
-                        //File.Copy(Path.Combine(Modelo_R, "MCP", "prec_mct1318_" + data.Month.ToString().PadLeft(2, '0') + ".dat"), Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"), true);
-
-                    }
-                }
-            }
-        }
 
         static void executar_R(string path, string Comando)
         {
@@ -839,11 +847,11 @@ namespace ChuvaVazaoTools
 
 
             var letra_Dir = path.Split('\\').First();
-            var path_Scripts = @"P:\Pedro\remoção_R\scripts\";
+            var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\";
             string executar = @"/C " + letra_Dir + " & cd " + path + @" & Rscript.exe " + path_Scripts + Comando;
 
 
-            System.Diagnostics.Process.Start("cmd.exe", executar).WaitForExit(600000);
+            System.Diagnostics.Process.Start("cmd.exe", executar).WaitForExit(1200000);
 
 
 

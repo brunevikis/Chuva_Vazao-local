@@ -14,7 +14,7 @@ namespace ChuvaVazaoTools
     {
         public static async Task<string> DownloadETA40Async(DateTime dt, System.IO.TextWriter log = null)
         {
-            return await Task.Factory.StartNew(() => DownloadETA40Gambiarra(dt, log));
+            return await Task.Factory.StartNew(() => DownloadETA40_Atual(dt, log));
         }
 
         public static void GetApiTempoTESTE(DateTime data)
@@ -205,20 +205,13 @@ namespace ChuvaVazaoTools
                 var datafunceme = (Newtonsoft.Json.JsonConvert.DeserializeObject(dataStr) as Newtonsoft.Json.Linq.JObject)["meta"]["cache"]["cached_at"] as Newtonsoft.Json.Linq.JObject;
 
                 var horafunceme = Convert.ToDateTime(datafunceme["date"]);
-                //http://apil5.funceme.br/rpc/v2/dado-sensor?instituicao=41&sensor=22&periodo=24h
-                //http://mobile.funceme.br/tempo/inmet.php?acao=4&sensor=22&intervalo=24
 
-                //var dataStr = c.DownloadData("http://funceme.br/app-pcd-inmet/?sensor=22&periodo=24h");
-                //                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject(dataStr) as Newtonsoft.Json.Linq.JArray;
                 var obj = ((Newtonsoft.Json.JsonConvert.DeserializeObject(dataStr) as Newtonsoft.Json.Linq.JObject)["data"]["list"] as Newtonsoft.Json.Linq.JArray);
 
                 var funcHist = Path.Combine("P:\\Trading\\Acompanhamento Metereologico Semanal\\spiderman", DateTime.Today.ToString("yyyy_MM_dd"), "OBSERVADO");
                 var functxt = "Funceme_Json" + DateTime.Now.ToString("HH_mm_ss") + ".txt";
 
-                //foreach (Newtonsoft.Json.Linq.JToken item in obj)
-                //{
-                //    Tools.Tools.addHistory(Path.Combine(funcHist, functxt), item.ToString());
-                //}
+
 
                 Dictionary<Tuple<decimal, decimal>, float> data = new Dictionary<Tuple<decimal, decimal>, float>();
 
@@ -236,24 +229,12 @@ namespace ChuvaVazaoTools
                     catch (Exception e)
                     {
                         var retornoEmail = Tools.Tools.SendMail("", "Erro no download do funceme:" + e.ToString(), "Erro Download Chuva FUNCEME", "desenv");
-                        //retornoEmail.Wait();
+
                     }
 
                 }
 
                 dados = GetApiTempo(horafunceme, lateFunc);
-                //GetApiTempoTESTE(DateTime.Today);
-
-                //if (dados.Count() > 0)
-                //{
-                //    foreach (var chave in dados.Keys.ToList())
-                //    {
-                //        if (!data.ContainsKey(chave))
-                //        {
-                //            data.Add(chave, dados[chave]);
-                //        }
-                //    }
-                //}
 
 
                 return PrecipitacaoFactory.BuildFromJsonData(data, DateTime.Today);
@@ -623,7 +604,7 @@ namespace ChuvaVazaoTools
             var localPath = System.IO.Path.GetTempPath() + modelo + "\\";
 
             var local_scripts = @"C:\NOAA\scripts_NOAA";
-            var scripts_path = @"H:\TI - Sistemas\UAT\ChuvaVazao\scripts_NOAA";
+            var scripts_path = @"C:\Sistemas\ChuvaVazao\scripts_NOAA";
             //Copia o scripts para Execução para o disco local do usuario
             if (!Directory.Exists(local_scripts))
             {
@@ -715,7 +696,7 @@ namespace ChuvaVazaoTools
             var zipDat = Path.Combine(caminhoDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GFS00", "txt.zip");
             if (File.Exists(zipDat))
             {
-                var caminhoPrecip = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica", dt.ToString("yyyyMM"), dt.ToString("dd"), "GFSNOAA00");
+                var caminhoPrecip = Path.Combine(@"C:\Files\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica", dt.ToString("yyyyMM"), dt.ToString("dd"), "GFSNOAA00");
                 var dest = System.IO.Path.Combine(System.IO.Path.GetTempPath(), dt.ToString("yyyyMM"), dt.ToString("dd"), "GFSNOAA00");
                 try
                 {
@@ -1079,50 +1060,7 @@ namespace ChuvaVazaoTools
                     cptec.CopyGifs(dest, directoryToSaveGif);
                     cptec.CopyBin(dest, directoryToSaveBin);
 
-                    //
 
-                    var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
-                    var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), modelo + hora + "_Tropical");
-
-
-                    var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
-
-                    string direDrivePath = "C:\\Compass\\MinhaTI\\Alex Freires Marques - Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\" + modelo + hora;
-
-                    if (Directory.Exists(oneDrive))
-                    {
-                        direDrivePath = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\" + modelo + hora;
-                    }
-                    if (!Directory.Exists(direDrivePath))
-                    {
-                        Directory.CreateDirectory(direDrivePath);
-                    }
-                    if (!Directory.Exists(oneDrive_Gif))
-                    {
-                        Directory.CreateDirectory(oneDrive_Gif);
-                    }
-
-                    //Now Create all of the directories
-                    foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
-                        SearchOption.AllDirectories))
-                        Directory.CreateDirectory(dirPath.Replace(directoryToSaveGif, direDrivePath));
-
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
-                        SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
-                    //
-
-                    //Now Create all of the directories
-                    foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
-                        SearchOption.AllDirectories))
-                        Directory.CreateDirectory(dirPath.Replace(directoryToSaveGif, oneDrive_Gif));
-
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
-                        SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
-                    //
                     foreach (var f in filesToDownload)
                     {
                         var destFile = System.IO.Path.Combine(dest, f.Value);
@@ -1167,19 +1105,29 @@ namespace ChuvaVazaoTools
             var directoryToSaveBin = System.IO.Path.Combine(Config.CaminhoPrevisao, dt.ToString("yyyyMM"), dt.ToString("dd"), modelo + hora);
             var url = @"https://img4.meteologix.com/images/data/cache/model";
             int horaI = int.Parse(hora);
-            //System.Net.WebClient c = new System.Net.WebClient();
-            //c.Headers.Add(System.Net.HttpRequestHeader.Host, "meteologix.com");
-            //c.Headers.Add(System.Net.HttpRequestHeader.UserAgent, "AutoTool");
+
 
             var filesToDownload = new Dictionary<int, string>();
             try
             {
-                if (log != null) log.WriteLine(url);
-                for (int i = 0; i < 9; i++)
+                if (horaI == 12)
                 {
-                    filesToDownload.Add(i, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (i * 24 + 36 - horaI).ToString() + "_1444_63.png");
+                    if (log != null) log.WriteLine(url);
+                    for (int i = 0; i < 9; i++)
+                    {
+                        filesToDownload.Add(i, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (i * 24 + 36 - horaI).ToString() + "_1444_63.png");
+                    }
+                    filesToDownload.Add(9, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (240).ToString() + "_1444_63.png");
                 }
-                filesToDownload.Add(9, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (240).ToString() + "_1444_63.png");
+                else
+                {
+                    if (log != null) log.WriteLine(url);
+                    for (int i = 0; i < 9; i++)
+                    {
+                        filesToDownload.Add(i, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (i * 24 + 36 - horaI).ToString() + "_1444_63.png");
+                    }
+                    //filesToDownload.Add(9, "model_modez_" + dt.ToString("yyyyMMdd") + hora + "_" + (240).ToString() + "_1444_63.png");
+                }
 
             }
             catch
@@ -1240,37 +1188,22 @@ namespace ChuvaVazaoTools
             if (log != null) log.WriteLine("Copiando imagens e binários");
             cptec.CopyGifs(dest, directoryToSaveGif);
             cptec.CopyBin(dest, directoryToSaveBin);
-            //
-            var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+
+
+            var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
+
+            if (!Directory.Exists(oneDrive_equip))
+            {
+                oneDrive_equip = oneDrive_equip.Replace("Documents", "Documentos");
+            }
+
             var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), modelo + hora);
 
-            var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
-
-            string direDrivePath = "C:\\Compass\\MinhaTI\\Alex Freires Marques - Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\" + modelo + hora;
-
-            if (Directory.Exists(oneDrive))
-            {
-                direDrivePath = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\" + modelo + hora;
-            }
-            if (!Directory.Exists(direDrivePath))
-            {
-                Directory.CreateDirectory(direDrivePath);
-            }
             if (!Directory.Exists(oneDrive_Gif))
             {
                 Directory.CreateDirectory(oneDrive_Gif);
             }
 
-            //Now Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
-                SearchOption.AllDirectories))
-                Directory.CreateDirectory(dirPath.Replace(directoryToSaveGif, direDrivePath));
-
-            //Copy all the files & Replaces any files with the same name
-            foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
-                SearchOption.AllDirectories))
-                File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
-            //
             //Now Create all of the directories
             foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
                 SearchOption.AllDirectories))
@@ -1366,16 +1299,16 @@ namespace ChuvaVazaoTools
                         CopyGifs(dest, directoryToSaveGif);
                         CopyBin(dest, directoryToSaveBin);
                         //
-                        var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
+                        var oneDrive = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Trading";
 
-                        string direDrivePath = "C:\\Compass\\MinhaTI\\Alex Freires Marques - Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
+                        string direDrivePath = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Trading\Acompanhamento Metereologico Semanal\spiderman\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
 
-                        var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+                        var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
                         var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ETA" + s);
 
                         if (Directory.Exists(oneDrive))
                         {
-                            direDrivePath = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
+                            direDrivePath = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Trading\Acompanhamento Metereologico Semanal\spiderman\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
                         }
                         if (!Directory.Exists(direDrivePath))
                         {
@@ -1455,7 +1388,6 @@ namespace ChuvaVazaoTools
             if (File.Exists(System.IO.Path.Combine(searchPath, "ECMWF_p" + dt.ToString("ddMMyy") + "a" + dt.AddDays(1).ToString("ddMMyy") + ".dat")))
             {
 
-
                 try
                 {
 
@@ -1488,46 +1420,29 @@ namespace ChuvaVazaoTools
                     }
 
 
+
                     Grads.ConvertECMWFToImg(dt, "00", dest, System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"), contagem);
+
 
                     CopyGifs(dest, directoryToSaveGif);
 
-                    //Copia gifs para a pasta sincronizada no one drive ====
-                    var pastaSync = @"C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading\Acompanhamento Metereologico Semanal\spiderman\" + dt.ToString("yyyy_MM_dd");
-
-                    var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
-
-                    var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+                    var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
+                    if (!System.IO.Directory.Exists(oneDrive_equip))
+                    {
+                        oneDrive_equip = oneDrive_equip.Replace("Documents", "Documentos");
+                    }
                     var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ECMWF_ONS");
 
 
-
-
-
-
-                    if (Directory.Exists(oneDrive))
-                    {
-                        pastaSync = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd");
-                    }
-
-
-
-
-
-                    if (!System.IO.Directory.Exists(pastaSync)) System.IO.Directory.CreateDirectory(pastaSync);
-
-                    if (!System.IO.Directory.Exists(Path.Combine(pastaSync, "ECMWF_ONS"))) System.IO.Directory.CreateDirectory(Path.Combine(pastaSync, "ECMWF_ONS"));
                     if (!System.IO.Directory.Exists(oneDrive_Gif)) System.IO.Directory.CreateDirectory(oneDrive_Gif);
 
                     foreach (var gif in System.IO.Directory.GetFiles(directoryToSaveGif, "*.gif"))
                     {
-                        File.Copy(gif, Path.Combine(pastaSync, "ECMWF_ONS", gif.Split('\\').Last()), true);
-                    }
-                    foreach (var gif in System.IO.Directory.GetFiles(directoryToSaveGif, "*.gif"))
-                    {
                         File.Copy(gif, Path.Combine(oneDrive_Gif, gif.Split('\\').Last()), true);
                     }
-                    //=======                 
+
+
+
                     CopyBin(dest, directoryToSaveBin);
 
                     System.IO.Directory.Delete(dest, true);
@@ -1543,7 +1458,7 @@ namespace ChuvaVazaoTools
 
             return message.ToString();
         }
-        public static string DownloadETA40Gambiarra(DateTime dt, System.IO.TextWriter log = null, string horasToDownload = "00;12")
+        public static string DownloadETA40_Atual(DateTime dt, System.IO.TextWriter log = null, string horasToDownload = "00;12")
         {
 
             var message = new StringBuilder();
@@ -1613,40 +1528,21 @@ namespace ChuvaVazaoTools
                     Grads.ConvertEta12ToImg(dt, s, dest, System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
 
                     CopyGifs(dest, directoryToSaveGif);
-                    CopyBin(dest, directoryToSaveBin);
-                    //
-                    var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+
+                    var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
+
+                    if (!Directory.Exists(oneDrive_equip))
+                    {
+                        oneDrive_equip = oneDrive_equip.Replace("Documents", "Documentos");
+                    }
+
                     var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ETA" + s);
 
-
-
-
-                    var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
-
-                    string direDrivePath = "C:\\Compass\\MinhaTI\\Alex Freires Marques - Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
-
-                    if (Directory.Exists(oneDrive))
-                    {
-                        direDrivePath = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + dt.ToString("yyyy_MM_dd") + @"\ETA" + s;
-                    }
-                    if (!Directory.Exists(direDrivePath))
-                    {
-                        Directory.CreateDirectory(direDrivePath);
-                    }
                     if (!Directory.Exists(oneDrive_Gif))
                     {
                         Directory.CreateDirectory(oneDrive_Gif);
                     }
-                    //Now Create all of the directories
-                    foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
-                        SearchOption.AllDirectories))
-                        Directory.CreateDirectory(dirPath.Replace(directoryToSaveGif, direDrivePath));
 
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
-                        SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
-                    //
                     //Now Create all of the directories
                     foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
                         SearchOption.AllDirectories))
@@ -1656,6 +1552,9 @@ namespace ChuvaVazaoTools
                         SearchOption.AllDirectories))
                         File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
                     //
+
+                    CopyBin(dest, directoryToSaveBin);
+
 
                     System.IO.Directory.Delete(dest, true);
 
@@ -1886,8 +1785,6 @@ ENDVARS
             var message = new StringBuilder();
 
             var localPath = Config.CaminhoMerge;
-            var oneDrivePath = Environment.GetEnvironmentVariable("OneDriveCommercial");
-
 
             var dtB = DateTime.Today;
             var dtA = dtB.AddDays(-7);
@@ -1939,10 +1836,6 @@ ENDVARS
                     , System.Globalization.DateTimeStyles.AssumeLocal
                     , out fileDate))
                 {
-                    var oneDrivePath_File = Path.Combine(oneDrivePath.Replace(oneDrivePath.Split('\\').Last(), @"MinhaTI\Preço - Documentos\Mapas"), fileDate.ToString("yyyyMM"), fileDate.ToString("dd"), "MERGE", fileName);
-
-                    var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
-                    var oneDrive_Dados = Path.Combine(oneDrive_equip, "Observado", fileDate.ToString("yyyy"), fileDate.ToString("MM"), fileDate.ToString("dd"), "Merge");
 
                     var localfilePath = System.IO.Path.Combine(localPath
                     , fileDate.Year.ToString()
@@ -1952,8 +1845,8 @@ ENDVARS
                     if (System.IO.File.Exists(localfilePath))
                     {
 
-                        //var fileInfo = new System.IO.FileInfo(localfilePath);
-                        var fileInfo = new System.IO.FileInfo(oneDrivePath_File);
+                        var fileInfo = new System.IO.FileInfo(localfilePath);
+
 
                         if (fileInfo.LastWriteTime < file.Item2)
                         {
@@ -1969,8 +1862,7 @@ ENDVARS
                             }
 
                             download(baseUrl + file.Item1, localfilePath);
-                            download(baseUrl + file.Item1, oneDrive_Dados);
-                            download(baseUrl + file.Item1, oneDrivePath_File);
+
                         }
                     }
                     else
@@ -1978,9 +1870,7 @@ ENDVARS
                         if (log != null) log.WriteLine("baixando: " + fileName);
                         message.AppendLine("baixando: " + fileName);
                         download(baseUrl + file.Item1, localfilePath);
-                        download(baseUrl + file.Item1, oneDrive_Dados);
 
-                        download(baseUrl + file.Item1, oneDrivePath_File);
                     }
                 }
             }

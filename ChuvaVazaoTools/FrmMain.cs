@@ -587,8 +587,8 @@ namespace ChuvaVazaoTools
 
             //var pastaMapa = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
             // var pastaRaiz = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
-            var pastaMapa = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
-            var pastaRaiz = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
+            var pastaMapa = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
+            var pastaRaiz = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
 
             try
             {
@@ -668,8 +668,8 @@ namespace ChuvaVazaoTools
                 return;
             }
 
-            ArquivosDeSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
-            var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+            ArquivosDeSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
+            var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
             var statusF = new RunStatus(ArquivosDeSaida);
 
@@ -742,52 +742,7 @@ namespace ChuvaVazaoTools
 
                 //btnConsultarVazObserv_Click(sender, e);
                 PreencherVazObservada(out _, out _);
-                //{
-
-                //    if (offset == EnumRemo.RemocaoUmaSemanaEuro) EuroSem(frm);
-                //    else if (offset == EnumRemo.RemocaoDuasSemanasEuro) EuroSemGefsCom(frm);
-                //    else if (offset == EnumRemo.RemocaoDuasSemanasGFS2x) GfsComGfsCom(frm);
-                //    else if (offset == EnumRemo.RemocaoDuasSemanasGFS) GfsSemGefsCom(frm);
-                //    else if (offset == EnumRemo.RemocaoDuasSemanasGEFS) GefsSemGefsCom(frm);
-                //    else
-                //    {
-                //        var funcLogs = new Action<string>(hora =>
-                //        {
-                //            //var eta = hora.Contains("00") ? WaitForm2.TipoEta._00h : WaitForm2.TipoEta._12h;
-                //            //var gefs = hora.Contains("00") ? WaitForm2.TipoGefs._00h : WaitForm2.TipoGefs._12h;
-
-                //            frm.LimparCache();
-                //            frm.Eta = WaitForm2.TipoEta._00h;
-                //            frm.Gefs = WaitForm2.TipoGefs._00h;
-                //            frm.Tipo = hora.Contains("GEFS") ? WaitForm.TipoConjunto.Gefs : WaitForm.TipoConjunto.Conjunto;
-                //            frm.SalvarDados = false;
-
-                //            if (offset == EnumRemo.RemocaoUmaSemana)
-                //            {
-                //                var dtRemocao = dtAtual.Value;
-                //                while (dtRemocao.DayOfWeek != DayOfWeek.Thursday) dtRemocao = dtRemocao.AddDays(1);
-
-                //                frm.DateRemocao = dtRemocao;
-                //                frm.sobrescreverCB = true;
-                //            }
-                //            else if (dtAtual.Value.DayOfWeek == DayOfWeek.Friday ||
-                //            dtAtual.Value.DayOfWeek == DayOfWeek.Saturday ||
-                //            dtAtual.Value.DayOfWeek == DayOfWeek.Sunday)
-                //            {
-                //                frm.TodasAsPrevisoes = true;
-                //            }
-
-                //            var chuvasConjunto = frm.ProcessarConjunto();
-                //            foreach (var c in chuvasConjunto)
-                //            {
-                //                chuvas[c.Key] = c.Value;
-                //            }
-
-                //            RefreshPrecipList();
-                //        });
-                //        funcLogs("00");
-                //    }
-                //}
+           
 
                 dtAtual.Value = datModel.AddDays(1);
                 dtModelo.Value = dtAtual.Value.Date;
@@ -2325,7 +2280,7 @@ namespace ChuvaVazaoTools
                     else
                     {
                         enaSem.AppendFormat("{0,-20}",
-                               bac.Replace("XINGU", "AMOZONAS - BELO MONTE").ToString());
+                               bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString());
                         foreach (var item in dats.Keys.ToList())
                         {
                             double resultado = 0;
@@ -2334,7 +2289,7 @@ namespace ChuvaVazaoTools
                             {
                                 resultado += post.DadoEna[item];
                             }
-                            Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMOZONAS - BELO MONTE").ToString(), item, resultado);
+                            Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString(), item, resultado);
                             ReeDados.Add(rDado);
 
                             enaSem.AppendFormat("{0,15}",
@@ -2723,7 +2678,7 @@ namespace ChuvaVazaoTools
                     else
                     {
                         enaDia.AppendFormat("{0,-20}",
-                               bac.Replace("XINGU", "AMOZONAS - BELO MONTE").ToString());
+                               bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString());
                         foreach (var item in dias)
                         {
                             double resultado = 0;
@@ -2732,7 +2687,7 @@ namespace ChuvaVazaoTools
                             {
                                 resultado += post.DadoEna[item];
                             }
-                            Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMOZONAS - BELO MONTE").ToString(), item, resultado);
+                            Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString(), item, resultado);
                             ReeDadoDia.Add(rDado);
 
                             enaDia.AppendFormat("{0,15}",
@@ -3320,11 +3275,11 @@ namespace ChuvaVazaoTools
             }
 
             // var pastaSaida = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
-            var pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
+            var pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
             //var pastaSaida = @"C:\temp\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
             //  var pastaBase = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
-            var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+            var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
             var statusF = new RunStatus(pastaSaida);
             if (statusF.Creation == RunStatus.statuscode.initialialized
@@ -3502,7 +3457,7 @@ namespace ChuvaVazaoTools
             {
                 incremento = 2;
             }
-            else if ((offset == EnumRemo.RemocaoTresSemanasEuro || offset == EnumRemo.RemocaoTresSemanasGEFS ))
+            else if ((offset == EnumRemo.RemocaoTresSemanasEuro || offset == EnumRemo.RemocaoTresSemanasGEFS))
             {
                 incremento = 3;
             }
@@ -3511,9 +3466,6 @@ namespace ChuvaVazaoTools
                 incremento = 4;
             }
 
-            //  var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value,
-            //    (offset == EnumRemo.RemocaoDuasSemanasEuro || offset == EnumRemo.RemocaoDuasSemanasEuro_op || offset == EnumRemo.RemocaoDuasSemanasGEFS || offset == EnumRemo.RemocaoDuasSemanasGFS || offset == EnumRemo.RemocaoDuasSemanasGFS2x) ? 2 : 1
-            //  );
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value, incremento);
             var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(dtAtual.Value);
 
@@ -3546,7 +3498,7 @@ namespace ChuvaVazaoTools
 
             PreencherVazObservada(out DateTime dataModelo, out string fonteVaz);
 
-            name = name+ "_"+ fonteVaz.ToUpper();
+            name = name + "_" + fonteVaz.ToUpper();
 
             var runRevMapas = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
 
@@ -3556,8 +3508,8 @@ namespace ChuvaVazaoTools
             //Pasta Onde os mapas de saída do R estão
             //var pastaMapa = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
             //var pastaRaiz = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
-            var pastaMapa = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
-            var pastaRaiz = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
+            var pastaMapa = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
+            var pastaRaiz = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
 
             if (modeloPrecReal.EndsWith("-1"))
             {
@@ -3565,15 +3517,16 @@ namespace ChuvaVazaoTools
                 //return;
             }
 
+            name = name + "_" + modeloPrecReal;
+
             Boolean d1 = false;
             Boolean exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", dtAtual.Value.ToString("yyyy"), dtAtual.Value.ToString("MM"), "psat_" + dtAtual.Value.ToString("ddMMyyyy") + ".txt"));
-            name = name + "_" + modeloPrecReal;
             //Verifica Acomph
             if (dataModelo < dtAtual.Value.Date.AddDays(-1))
             {
                 name = name + "_d-1";
 
-                pastaRaiz = Path.Combine(pastaMapa + " d-1","CV", "CV_FUNC");
+                pastaRaiz = Path.Combine(pastaMapa + " d-1", "CV", "CV_FUNC");
                 pastaMapa = (pastaMapa + " d-1");
                 d1 = true;
             }
@@ -3683,18 +3636,25 @@ namespace ChuvaVazaoTools
                         cbx_Encadear_Previvaz.Checked = true;
                     }
                 }
-                
+                else if (offset != EnumRemo.RemocaoAtual)
+                {
+                    return;
+                }
+
             }
-            
-           
+            else if (offset != EnumRemo.RemocaoAtual)
+            {
+                return;
+            }
+
             //@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\
             //Diretorio de destino das Rodadas
             // var pastaSaida = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
-            var pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
+            var pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
             //var pastaBase = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
-            var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+            var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
 
             var statusF = new RunStatus(pastaSaida);
@@ -3726,7 +3686,7 @@ namespace ChuvaVazaoTools
 
             if (logF != null) logF.WriteLine("INICIANDO RODADA: " + name);
 
-            //var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\12_2018\Dados_de_Entrada_e_Saida_201812_RV0";
+            //var pastaBase = @"C:\Files\Middle - Preço\Acompanhamento de vazões\12_2018\Dados_de_Entrada_e_Saida_201812_RV0";
 
 
             if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao")) && Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada")) && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
@@ -3765,26 +3725,29 @@ namespace ChuvaVazaoTools
                 dtModelo.Value = dtAtual.Value.Date;
                 Reiniciar(dtModelo.Value);
 
+                if (!Directory.Exists(pastaRaiz))
+                    statusF.Preparation = RunStatus.statuscode.error;
+                else
+                {
+                    PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
 
-                PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+                    //Chamar Imagens Aqui ######################################
 
-                //Chamar Imagens Aqui ######################################
-
-                AddLog(" --- ");
-                AddLog(" --- Executar Parte B quando pronto --- ");
+                    AddLog(" --- ");
+                    AddLog(" --- Executar Parte B quando pronto --- ");
 
 
-                //Renomear_Eta40();
-                PreencherPrecObserv();
-                SalvarPrecObserv_R();
-                // btnSalvarPrecObserv_Click(null, null);
-                SalvarVazObserv();
-                SalvarPrecPrev_R();
+                    //Renomear_Eta40();
+                    PreencherPrecObserv();
+                    SalvarPrecObserv_R();
+                    // btnSalvarPrecObserv_Click(null, null);
+                    SalvarVazObserv();
+                    SalvarPrecPrev_R();
 
-                // if (!File.Exists(Path.Combine(pastaSaida, "chuvamedia.log")))
-                //   statusF.Preparation = RunStatus.statuscode.error;
-                //else
-                statusF.Preparation = RunStatus.statuscode.completed;
+
+
+                    statusF.Preparation = RunStatus.statuscode.completed;
+                }
             }
 
             if (statusF.Preparation != RunStatus.statuscode.completed) return;
@@ -3828,10 +3791,19 @@ namespace ChuvaVazaoTools
                 Salvar_Img(pastaSaida);
             }
             catch (Exception ex) { }
+
+            foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+            {
+                if (proc.MainWindowHandle == this.pointer)
+                {
+                    proc.Kill();
+                }
+            }
+
         }
 
 
-        public void Run_Manual()
+        public void Run_Manual(bool rodarPrevivaz = true)
         {
             var logF = textLogger;
             var searchPath = "";
@@ -3841,7 +3813,7 @@ namespace ChuvaVazaoTools
 
             //d.SelectedPath = System.IO.Path.Combine(Config.CaminhoPrevisao, data.ToString("yyyyMM"), data.ToString("dd"));
             //d.SelectedPath = System.IO.Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\");
-            d.SelectedPath = System.IO.Path.Combine(@"N:\Middle - Preço\16_Chuva_Vazao\");
+            d.SelectedPath = System.IO.Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\");
             if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 searchPath = d.SelectedPath;
@@ -3926,7 +3898,7 @@ namespace ChuvaVazaoTools
                         //var pastaSaida = @"C:\temp\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
                         //var pastaBase = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
-                        var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+                        var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
 
 
@@ -4042,7 +4014,7 @@ namespace ChuvaVazaoTools
                                     logF.WriteLine("PROCESSANDO RESULTADOS");
                                     try
                                     {
-                                        ProcessarResultadosManual(pastaSaida, logF, revnum, statusF);
+                                        ProcessarResultadosManual(pastaSaida, logF, revnum, statusF, rodarPrevivaz);
 
                                     }
                                     catch
@@ -4294,7 +4266,7 @@ namespace ChuvaVazaoTools
 
             //else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, "Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip")))//"Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip"
             // else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy")+"_PLANILHA_USB.txt")))
-            else if (File.Exists(Path.Combine(@"N:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy") + "_PLANILHA_USB.txt")))
+            else if (File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy") + "_PLANILHA_USB.txt")))
             {
 
                 if (merge != null)
@@ -4376,7 +4348,7 @@ namespace ChuvaVazaoTools
 
             var nextRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(currRevDate);
             // ofd.SelectedPath = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
-            ofd.SelectedPath = @"N:\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
+            ofd.SelectedPath = @"H:\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -4428,7 +4400,7 @@ namespace ChuvaVazaoTools
             {
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(prec.Key);
                 string precipDado = "0.00";
-                var pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + prec.Key.ToString("yy-MM-dd") + @"\Mapas Acomph\madeira\funceme";
+                var pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + prec.Key.ToString("yy-MM-dd") + @"\Mapas Acomph\madeira\funceme";
 
 
                 foreach (var postoPlu in modelosChVz.SelectMany(x => x.PostosPlu))
@@ -5106,7 +5078,7 @@ namespace ChuvaVazaoTools
             var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(DateTime.Today);
 
             //var pastaBase = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
-            var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+            var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
             if (Directory.Exists(pastaBase))
             {
@@ -5125,7 +5097,7 @@ namespace ChuvaVazaoTools
 
             var nextRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
             //this.ArquivosDeSaida = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
-            this.ArquivosDeSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
+            this.ArquivosDeSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
 
 
             #endregion
@@ -6189,6 +6161,14 @@ namespace ChuvaVazaoTools
                                        value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "78" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
                                        value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "77" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
                                    }
+                                   else if (cod_posto.Item2 == "230")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "229" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "228")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "227" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
                                    else if (cod_posto.Item2 == "52")
                                    {
 
@@ -6948,14 +6928,25 @@ namespace ChuvaVazaoTools
             }
             AddLog("FINALIZADO");
         }
-
+        IntPtr pointer;
         private void ProcessarResultados(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null)
         {
             var check = cbx_Encadear_Previvaz.Checked;
             Excel.Workbook wbCen = null;
             Excel.Workbook wb = null;
 
+            if (this.pointer != null)
+            {
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                {
+                    if (proc.MainWindowHandle == this.pointer)
+                    {
+                        proc.Kill();
+                    }
+                }
+            }
             var xlsApp = new Microsoft.Office.Interop.Excel.Application();
+            this.pointer = new IntPtr(xlsApp.Hwnd);
 
             try
             {
@@ -7095,7 +7086,7 @@ namespace ChuvaVazaoTools
                         wbCen = xlsApp.Workbooks.Open(pathCen, ReadOnly: true);
 
 
-                        if (nextRevNum == 0 || (nextRevNum == 1 && currRev.rev != 0))
+                        if (nextRevNum == 0 || (nextRevNum == 1 && currRev.rev != 0) || ((nextRevNum == 2 && currRev.rev != 0) && (nextRevNum == 2 && currRev.rev != 1)) || ((nextRevNum == 3 && currRev.rev != 0) && (nextRevNum == 3 && currRev.rev != 1) && (nextRevNum == 3 && currRev.rev != 2)))
                         {
                             xlsApp.Run($"'CHUVAVAZAO_CENARIO_{code}.xlsm'!ExportarPrevsM1", pastaSaida);
                         }
@@ -7298,7 +7289,7 @@ namespace ChuvaVazaoTools
 
             //d.SelectedPath = System.IO.Path.Combine(Config.CaminhoPrevisao, data.ToString("yyyyMM"), data.ToString("dd"));
             //d.SelectedPath = System.IO.Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\");
-            d.SelectedPath = System.IO.Path.Combine(@"N:\Middle - Preço\16_Chuva_Vazao\");
+            d.SelectedPath = System.IO.Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\");
             if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 searchPath = d.SelectedPath;
@@ -7359,7 +7350,7 @@ namespace ChuvaVazaoTools
                         var pastaRaiz = dir_mapa;
                         var pastaSaida = Path.Combine(dir_saida, name);
 
-                        var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+                        var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
                         this.ArquivosDeEntradaModelo = System.IO.Path.Combine(txtEntrada.Text);//Modelos_Chuva_Vazao
                         this.ArquivosDeEntradaPrevivaz = System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada");
@@ -7712,7 +7703,7 @@ namespace ChuvaVazaoTools
 
 
         }
-        private void ProcessarResultadosManual(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null)
+        private void ProcessarResultadosManual(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null, bool rodarPrevivaz = true)
         {
             Excel.Workbook wbCen = null;
             Excel.Workbook wb = null;
@@ -8107,8 +8098,8 @@ namespace ChuvaVazaoTools
             var camRelPrevCompleto = @"P:\Marcos.Albarracin\Relatorio Final\Relatorios\" + "Relatorio_de_Previsoes_" + DateTime.Today.ToString("dd_MM_yyyy") + "_Completo.pdf";
             // var verPastaPre = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
             //var verPastaDef = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
-            var verPastaPre = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
-            var verPastaDef = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+            var verPastaPre = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
+            var verPastaDef = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
 
             var horaRel = @"P:\Marcos.Albarracin\Relatorio Final\Relatorios";
             var relprevPre = "Relatorio_de_Previsoes_" + DateTime.Today.ToString("dd_MM_yyyy") + "_Preliminar.pdf";
@@ -8135,7 +8126,7 @@ namespace ChuvaVazaoTools
             }
             //-----
 
-            if (File.Exists(camRelPrev) && !File.Exists(camRelPrevDef))
+            /*if (File.Exists(camRelPrev) && !File.Exists(camRelPrevDef))
             {
                 var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
@@ -8206,7 +8197,7 @@ namespace ChuvaVazaoTools
                     }
                 }
                 
-            }
+            }*/
         }
 
         private void Button8_Click(object sender, EventArgs e)
@@ -8779,7 +8770,11 @@ namespace ChuvaVazaoTools
             if (Relatorio == true)
             {
                 var data = DateTime.Today;
-                var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+                var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
+                if (!Directory.Exists(oneDrive_equip))
+                {
+                    oneDrive_equip = oneDrive_equip.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
+                }
                 var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"), "CONJUNTO00PREV");
 
                 var path_relatorio = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman", data.ToString("yyyy_MM_dd"), @"CONJUNTO00PREV");
@@ -8930,7 +8925,7 @@ namespace ChuvaVazaoTools
 
             //d.SelectedPath = System.IO.Path.Combine(Config.CaminhoPrevisao, data.ToString("yyyyMM"), data.ToString("dd"));
             //d.SelectedPath = System.IO.Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\");
-            d.SelectedPath = System.IO.Path.Combine(@"N:\Middle - Preço\16_Chuva_Vazao\");
+            d.SelectedPath = System.IO.Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\");
             if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 searchPath = d.SelectedPath;
@@ -8959,6 +8954,12 @@ namespace ChuvaVazaoTools
         private void button14_Click(object sender, EventArgs e)
         {
             autoExecPorPasta();
+        }
+
+        private void btn_PorPastaSemPrevivaz_Click(object sender, EventArgs e)
+        {
+            bool rodarPrevivaz = false;
+            Run_Manual(rodarPrevivaz);
         }
     }
 

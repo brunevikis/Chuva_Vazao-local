@@ -109,7 +109,7 @@ namespace ChuvaVazaoTools
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing");
 
 
-                    if (p_count <= 10)
+                    if (p_count <= 2)
                     {
                         AutoRun_R(data, logF);
                         Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
@@ -159,8 +159,8 @@ namespace ChuvaVazaoTools
 
             if (!System.IO.Directory.Exists(searchPath)) System.IO.Directory.CreateDirectory(searchPath);
             string funEuro = string.Empty;
-            Copy_GIFS_NOAA();
-
+            //Copy_GIFS_NOAA();
+            #region Download Funceme 
             //FUNCEME
             try
             {
@@ -170,15 +170,11 @@ namespace ChuvaVazaoTools
                 List<string> h;
 
                 if (!File.Exists(Path.Combine(directoryToSaveGif, "statusFunceme.txt")))
-
-                    File.Create(Path.Combine(directoryToSaveGif, "statusFunceme.txt")).Close();
-                
+                    File.Create(Path.Combine(directoryToSaveGif, "statusFunceme.txt"));
 
                 h = Tools.Tools.readHistory(Path.Combine(directoryToSaveGif, "statusFunceme.txt")).ToList();
 
-                //if(!h.Any(x=>x.Contains("EURO"))
 
-                //if (((!System.IO.Directory.Exists(directoryToSaveGif) || !System.IO.File.Exists(System.IO.Path.Combine(directoryToSaveGif, "funceme.gif"))) 
                 if (DateTime.Now.Hour >= 7 && (h.Count() == 0) || h.Any(y => y.Contains("EURO")) || DateTime.Now.Hour >= 11)
                 {
                     string horaFunc = "";
@@ -281,48 +277,31 @@ namespace ChuvaVazaoTools
                         if (late == true && File.Exists(Path.Combine(directoryToSaveGif, horaFunc + "funceme.gif")))
                         {
                             File.WriteAllText(Path.Combine(directoryToSaveGif, "LateFunceme.txt"), "Funceme Late");
-                            
+
                         }
                     }
 
                     else
                         logF.WriteLine("FUNCEME OK");
-                    //
-                    var oneDrive = @"C:\Compass\OneDrive - MinhaTI\Compass\Trading";
 
-                    string direDrivePath = "C:\\Compass\\MinhaTI\\Alex Freires Marques - Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + date.ToString("yyyy_MM_dd") + @"\OBSERVADO";
+                    var oneDrive_equip = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao");
 
-                    var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
+                    if (!Directory.Exists(oneDrive_equip))
+                    {
+                        oneDrive_equip = oneDrive_equip.Replace("Documents", "Documentos");
+                    }
+
                     var oneDrive_Gif = Path.Combine(oneDrive_equip, "Mapas", date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"), "OBSERVADO");
-
-                    if (Directory.Exists(oneDrive))
-                    {
-                        direDrivePath = "C:\\Compass\\OneDrive - MinhaTI\\Compass\\Trading\\Acompanhamento Metereologico Semanal\\spiderman\\" + date.ToString("yyyy_MM_dd") + @"\OBSERVADO";
-                    }
-
-                    if (!Directory.Exists(direDrivePath))
-                    {
-                        Directory.CreateDirectory(direDrivePath);
-                    }
 
                     if (!Directory.Exists(oneDrive_Gif))
                     {
                         Directory.CreateDirectory(oneDrive_Gif);
                     }
 
-                    //Now Create all of the directories
-                    foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
-                        SearchOption.AllDirectories))
-                        Directory.CreateDirectory(dirPath.Replace(directoryToSaveGif, direDrivePath));
-
-                    //Copy all the files & Replaces any files with the same name
-                    foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
-                        SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
-
                     foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                         SearchOption.AllDirectories))
                         File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+
                 }
 
 
@@ -331,12 +310,13 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
+            #endregion
 
+            #region Download Merge
             //MERGE
             try
             {
-                //soluçao temporaria para executar as rodadas de manha enquanto a questao do merge não for resolvida
-                
+
 
                 var pastaMerge = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\", DateTime.Today.ToString("yyyyMM"), DateTime.Today.ToString("dd"));
                 if (!Directory.Exists(pastaMerge))
@@ -351,120 +331,54 @@ namespace ChuvaVazaoTools
                 if (resp.Contains("baixando Merge do dia"))
                 {
                     var retornoEmail = Tools.Tools.SendMail("", "Precipitação obvservada (MERGE) mais recente disponível", "Precipitação Obvservada [AUTO]", "preco");
-                    //sendNotification(, "bruno.araujo@cpas.com.br,natalia.biondo@cpas.com.br,diana.lima@cpas.com.br");
+
                 }
 
                 //create image
                 if (!resp.Equals("Nada novo", StringComparison.OrdinalIgnoreCase))
                 {
-                    
-                    //var data = dtAtual.Value.Date;
-                   var chuvasMerge = new Dictionary<DateTime, Precipitacao>();
 
-                    var localPath =Path.Combine(System.IO.Path.GetTempPath(), "MERGE"+DateTime.Now.ToString("HHmmss"));
+
+                    var chuvasMerge = new Dictionary<DateTime, Precipitacao>();
+
+                    var localPath = Path.Combine(System.IO.Path.GetTempPath(), "MERGE" + DateTime.Now.ToString("HHmmss"));
                     if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
-                    
+
                     for (DateTime dt = date.AddDays(-7); dt <= date.Date; dt = dt.AddDays(1))
                     {
                         try
                         {
-                            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-                            
-                            //C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-                            var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Trading\Acompanhamento Metereologico Semanal\spiderman\");
-                            var oneDrive_equip = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao");
-                            var oneDrive_Gif = Path.Combine(oneDrive_equip,"Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "Merge");
-                            var oneDrive_Gif_Obs = Path.Combine(oneDrive_equip, "Mapas", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "OBSERVADO");
-
-                            var oneDrive_Dados = Path.Combine(oneDrive_equip, "Observado", dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "Merge");
-                            if (!Directory.Exists(oneDrive))
-                            {
-                                oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Alex Freires Marques - Compass\Trading\Acompanhamento Metereologico Semanal\spiderman\"));
-                            }
-
-                            var oneDrivePath = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Preço - Documentos\Mapas"), dt.ToString("yyyyMM"), dt.ToString("dd"), "MERGE");
-                            var oneDrivePath_Atual = Path.Combine(oneDrive, dt.ToString("yyyy_MM_dd"), @"OBSERVADO");
-                            
-                            if (!Directory.Exists(oneDrivePath_Atual))
-                            {
-                                Directory.CreateDirectory(oneDrivePath_Atual);
-                            }
 
                             var mergeCtlFile = System.IO.Directory.GetFiles(Path.Combine(Config.CaminhoMerge, dt.ToString("yyyy")), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".ctl", System.IO.SearchOption.AllDirectories);
                             var mergeGrib2File = System.IO.Directory.GetFiles(Path.Combine(Config.CaminhoMerge, dt.ToString("yyyy")), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".grib2", System.IO.SearchOption.AllDirectories);
                             var mergeIdxFile = System.IO.Directory.GetFiles(Path.Combine(Config.CaminhoMerge, dt.ToString("yyyy")), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".idx", System.IO.SearchOption.AllDirectories);
 
-                            // var mergeCtlFile = System.IO.Directory.GetFiles(Path.Combine(oneDrivePath), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".ctl", System.IO.SearchOption.AllDirectories);
-                            //   var mergeGrib2File = System.IO.Directory.GetFiles(Path.Combine(oneDrivePath), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".grib2", System.IO.SearchOption.AllDirectories);
-                            //  var mergeIdxFile = System.IO.Directory.GetFiles(Path.Combine(oneDrivePath), "MERGE_CPTEC_" + dt.ToString("yyyyMMdd") + ".idx", System.IO.SearchOption.AllDirectories);
 
 
                             if (mergeCtlFile.Length == 1)
                             {
-                                //   var prec = PrecipitacaoFactory.BuildFromMergeFile(mergeCtlFile[0]);
-                                //   prec.Descricao = "MERGE - " + System.IO.Path.GetFileNameWithoutExtension(mergeCtlFile[0]);
-                                //   prec.Data = dt;
 
-                                //  chuvasMerge[dt] = prec;
                                 File.Copy(mergeCtlFile[0], Path.Combine(localPath, "merge_" + dt.ToString("yyyyMMdd") + ".ctl"), true);
                                 File.Copy(mergeGrib2File[0], Path.Combine(localPath, mergeGrib2File[0].Split('\\').Last()), true);
                                 File.Copy(mergeIdxFile[0], Path.Combine(localPath, mergeIdxFile[0].Split('\\').Last()), true);
                                 var fanem = System.IO.Path.Combine(localPath, "merge_" + dt.ToString("yyyyMMdd"));
 
-                                //prec.SalvarModeloBin(fanem);
                                 Grads.ConvertCtlToImg(fanem, "MERGE", "Precipacao observada entre " + dt.AddDays(-1).ToString("dd/MM") + " e " + dt.ToString("dd/MM"), "merge_" + dt.ToString("ddMMyy") + ".gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_DAT_Merge.gs"));
-                                // Grads.ConvertCtlToImg(fanem, "MERGE", "Precipacao observada entre " + dt.AddDays(-1).ToString("dd/MM") + " e " + dt.ToString("dd/MM"), "merge.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
+
                                 File.Copy(Path.Combine(localPath, "merge_" + dt.ToString("ddMMyy") + ".dat"), Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\", dt.ToString("yyyyMM"), dt.ToString("dd"), "merge_p" + dt.ToString("ddMMyy") + "a" + dt.ToString("ddMMyy") + ".dat"), true);
-                                File.Copy(Path.Combine(localPath, "merge_" + dt.ToString("ddMMyy") + ".gif"), Path.Combine(oneDrivePath_Atual, "merge.gif"), true);
 
-
-
-                                File.Copy(Path.Combine(localPath, "merge_" + dt.ToString("ddMMyy") + ".gif"), Path.Combine(oneDrive_Gif_Obs, "merge.gif"), true);
-                                
                                 cptec.CopyGifs(localPath, @"P:\Trading\Acompanhamento Metereologico Semanal\spiderman\" + dt.ToString("yyyy_MM_dd") + @"\OBSERVADO");
 
-                                File.Copy(Path.Combine(localPath, "merge_" + dt.ToString("ddMMyy") + ".dat"), Path.Combine(oneDrivePath, "merge_p" + dt.ToString("ddMMyy") + "a" + dt.ToString("ddMMyy") + ".dat"), true);
-                                File.Copy(Path.Combine(localPath, "merge_" + dt.ToString("ddMMyy") + ".dat"), Path.Combine(oneDrive_Dados, "merge_p" + dt.ToString("ddMMyy") + "a" + dt.ToString("ddMMyy") + ".dat"), true);
 
 
                             }
                         }
-                        catch(Exception erro)
+                        catch (Exception erro)
                         {
                             logF.WriteLine(erro.ToString());
                         }
                     }
-                    /*
-                    var remo = new PrecipitacaoConjunto(config);
-                    var chuvaMEDIA = remo.ConjuntoLivre(chuvasMerge, null);
 
-                    foreach (var c in chuvaMEDIA)
-                    {
-                        var fanem = System.IO.Path.Combine(localPath, "mergemed_" + c.Key.ToString("yyyyMMdd"));
-                        c.Value.SalvarModeloBin(fanem);
-                        Grads.ConvertCtlToImg(fanem, "MERGE Medio", "Precipacao observada entre " + c.Key.AddDays(-1).ToString("dd/MM") + " e " + c.Key.ToString("dd/MM"), "mergemed.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
-                        cptec.CopyGifs(localPath, @"P:\Trading\Acompanhamento Metereologico Semanal\spiderman\" + c.Key.ToString("yyyy_MM_dd") + @"\OBSERVADO");
-                    }
-
-                    foreach (var pCo in remo.RegioesConjunto.Where(x => x.Modelo == "CONJ"))
-                    {
-                        for (int i = 0; i < chuvaMEDIA.Keys.Count; i++)
-                        {
-                            PrecipitacaoRepository.SaveAverage(chuvaMEDIA.Keys.ToArray()[i], pCo.Agrupamento.Nome, pCo.Nome, pCo.precMedia[i], "MERGE");
-                        }
-
-                    }
-
-                    remo = new PrecipitacaoConjunto(config);
-                    var chuvaMediaBacia = remo.MediaBacias(chuvasMerge);
-                    foreach (var pCo in remo.RegioesConjunto.Where(x => x.Modelo == "CONJ").GroupBy(x => x.Agrupamento))
-                    {
-                        for (int i = 0; i < chuvaMediaBacia.Keys.Count; i++)
-                        {
-                            PrecipitacaoRepository.SaveAverage(chuvaMediaBacia.Keys.ToArray()[i], pCo.Key.Nome, "", pCo.First().precMedia[i], "MERGE");
-                        }
-                    }
-                    */
                     System.IO.Directory.Delete(localPath, true);
                 }
 
@@ -473,7 +387,9 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
+            #endregion
 
+            #region Download ETA CPTEC
             //ETA
             try
             {
@@ -510,7 +426,8 @@ namespace ChuvaVazaoTools
                 if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "eta00.log")) || !System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ETA00")))
                 {
                     logF.WriteLine("ETA 00");
-                    cptec.DownloadETA40Gambiarra(date, logF, "00");
+                    cptec.DownloadETA40_Atual(date, logF, "00");
+
 
                     frm = WaitForm2.CreateInstance(date);
 
@@ -526,24 +443,9 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
+            #endregion
 
-            //ECMWF_ONS
-            try
-            {
-                // if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF_ONS")))
-                //{
-                logF.WriteLine("ECMWF_ONS");
-
-                cptec.DownloadECMWF(date, logF, "00");
-                // }
-                //else
-                logF.WriteLine("ECMWF_ONS 00 OK");
-            }
-            catch (Exception ex)
-            {
-                logF.WriteLine(ex.ToString());
-            }
-
+            #region Download GEFS Tropical TidBits  
             //GEFS
             try
             {
@@ -587,15 +489,13 @@ namespace ChuvaVazaoTools
 
                     logF.WriteLine("GEFS 00");
                     cptec.DownloadNoaaImgs(date, logF, "GEFS", "00");
-                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GEFS", "00");
 
                     frm = WaitForm2.CreateInstance(date);
 
                     if (frm.TemGefs00)
                     {
                         funcLogs("00");
-                        //var retornoEmail = Tools.Tools.SendMail("", "GEFS 00h Disponivel", "GEFS 00h [AUTO]", "preco");
-                        //sendNotification("GEFS 00h Disponivel", "bruno.araujo@cpas.com.br,marcos.albarracin@cpas.com.br;diana.lima@cpas.com.br");
+
                     }
                 }
                 else logF.WriteLine("GEFS 00 OK");
@@ -618,15 +518,14 @@ namespace ChuvaVazaoTools
 
                     logF.WriteLine("GEFS 12");
                     cptec.DownloadNoaaImgs(date, logF, "GEFS", "12");
-                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GEFS", "12");
+
 
                     frm = WaitForm2.CreateInstance(date);
 
                     if (frm.TemGefs12)
                     {
                         funcLogs("12");
-                       // var retornoEmail = Tools.Tools.SendMail("", "GEFS 12h Disponivel", "GEFS 12h [AUTO]", "preco");
-                        //sendNotification("GEFS 12h Disponivel", "bruno.araujo@cpas.com.br;diana.lima@cpas.com.br");
+
                     }
                 }
                 else logF.WriteLine("GEFS 12 OK");
@@ -635,43 +534,132 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
+            #endregion
 
-            //CONJUNTO
+            #region Download GFS Tropical TidBits
+            ////GFS
             try
             {
                 IPrecipitacaoForm frm = null;
 
 
-                /* var funcLogs = new Action<string>(hora =>
-                 {
+                var funcLogs = new Action<string>(hora =>
+                {
 
-                     var eta = hora == "00" ? WaitForm2.TipoEta._00h : WaitForm2.TipoEta._12h;
-                     var gefs = hora == "00" ? WaitForm2.TipoGefs._00h : WaitForm2.TipoGefs._12h;
+                    var eta = hora == "00" ? WaitForm2.TipoEta._00h : WaitForm2.TipoEta._12h;
+                    WaitForm2.TipoGefs gefs;
 
-                     frm.LimparCache();
-                     frm.Eta = eta;
-                     frm.Gefs = gefs;
-                     frm.Tipo = WaitForm.TipoConjunto.Conjunto;
-                     frm.SalvarDados = true;
+                    switch (hora)
+                    {
+                        case "00":
+                            gefs = WaitForm2.TipoGefs._ctl_00h;
+                            break;
+                        case "06":
+                            gefs = WaitForm2.TipoGefs._ctl_06h;
+                            break;
+                        case "12":
+                            gefs = WaitForm2.TipoGefs._ctl_12h;
+                            break;
+                        default:
+                            return;
+                    }
+                    frm.Eta = eta;
+                    frm.Gefs = gefs;
+                    frm.Tipo = WaitForm.TipoConjunto.Gefs;
+                    frm.RemoveLimiteGEFS = false;
+                    frm.RemoveViesGEFS = false;
+                    frm.SalvarDados = true;
 
-                     var chuvasConjunto = frm.ProcessarConjunto(saveLogFile: System.IO.Path.Combine(searchPath, "conjunto" + hora + ".log"));
+                    frm.ProcessarConjunto(saveLogFile: System.IO.Path.Combine(searchPath, "gfs" + hora + ".log"));
+                });
 
-                     var conjPath = System.IO.Path.Combine(searchPath, "CONJUNTO" + hora);
 
-                     if (!System.IO.Directory.Exists(conjPath)) System.IO.Directory.CreateDirectory(conjPath);
+                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs00.log")))
+                {
+                    logF.WriteLine("GFS 00");
 
-                     foreach (var prec in chuvasConjunto)
-                     {
-                         PrecipitacaoFactory.SalvarModeloBin(prec.Value,
-                             System.IO.Path.Combine(conjPath,
-                             "pp" + date.ToString("yyyyMMdd") + "_" + ((prec.Key - date).TotalHours + (hora == "00" ? 12 : 0)).ToString("0000")
-                             )
-                         );
-                     }
-                     //criar imagens conjunto                        
-                     cptec.ProcessaConjunto(date, hora);
 
-                 });*/
+                    cptec.DownloadNoaaImgs(date, logF, "GFS", "00");
+
+                    frm = WaitForm2.CreateInstance(date);
+
+                    if (frm.TemGfs00)
+                    {
+                        funcLogs("00");
+                    }
+                }
+                else logF.WriteLine("GFS 00 OK");
+                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs06.log")))
+                {
+                    logF.WriteLine("GFS 06");
+
+                    cptec.DownloadNoaaImgs(date, logF, "GFS", "06");
+
+                    frm = WaitForm2.CreateInstance(date);
+
+                    if (frm.TemGfs06)
+                    {
+                        funcLogs("06");
+                    }
+                }
+                else logF.WriteLine("GFS 06 OK");
+                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs12.log")))
+                {
+
+                    logF.WriteLine("GFS 12");
+                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GFS", "12");
+                    //cptec.DownloadGFSNoaa(data, logF, "GFS", "12");
+                    cptec.DownloadNoaaImgs(date, logF, "GFS", "12");
+
+                    frm = WaitForm2.CreateInstance(date);
+
+                    if (frm.TemGfs12)
+                    {
+                        funcLogs("12");
+                    }
+                }
+                else logF.WriteLine("GFS 12 OK");
+
+            }
+            catch (Exception ex)
+            {
+                logF.WriteLine(ex.ToString());
+            }
+            #endregion
+
+            #region Download ECMWF Meteologix
+
+            //MODELO EURO
+            try
+            {
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF00")))
+                {
+                    logF.WriteLine("EURO 00");
+                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _));
+                }
+                else logF.WriteLine("EURO 00 OK");
+
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF12")))
+                {
+                    logF.WriteLine("EURO 12");
+                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
+
+                }
+                else logF.WriteLine("EURO 12 OK");
+
+            }
+            catch (Exception ex)
+            {
+                logF.WriteLine(ex.ToString());
+            }
+
+            #endregion
+
+            #region Conjunto ONS
+            //CONJUNTO
+            try
+            {
+                IPrecipitacaoForm frm = null;
 
                 var funcLogsExtended = new Action(() =>
                 {
@@ -778,125 +766,26 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.Message);
             }
+            #endregion
 
-            ////GFS
+            #region Conversão ECMWF_ONS em GIFS
+            //ECMWF_ONS
             try
             {
-                IPrecipitacaoForm frm = null;
+                // if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF_ONS")))
+                //{
+                logF.WriteLine("ECMWF_ONS");
 
-
-                var funcLogs = new Action<string>(hora =>
-                {
-
-                    var eta = hora == "00" ? WaitForm2.TipoEta._00h : WaitForm2.TipoEta._12h;
-                    WaitForm2.TipoGefs gefs;
-
-                    switch (hora)
-                    {
-                        case "00":
-                            gefs = WaitForm2.TipoGefs._ctl_00h;
-                            break;
-                        case "06":
-                            gefs = WaitForm2.TipoGefs._ctl_06h;
-                            break;
-                        case "12":
-                            gefs = WaitForm2.TipoGefs._ctl_12h;
-                            break;
-                        default:
-                            return;
-                    }
-                    frm.Eta = eta;
-                    frm.Gefs = gefs;
-                    frm.Tipo = WaitForm.TipoConjunto.Gefs;
-                    frm.RemoveLimiteGEFS = false;
-                    frm.RemoveViesGEFS = false;
-                    frm.SalvarDados = true;
-
-                    frm.ProcessarConjunto(saveLogFile: System.IO.Path.Combine(searchPath, "gfs" + hora + ".log"));
-                });
-
-
-                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs00.log")))
-                {
-                    logF.WriteLine("GFS 00");
-                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GFS", "00");
-                    //cptec.DownloadGFSNoaa(data, logF, "GFS", "00");
-
-                    cptec.DownloadNoaaImgs(date, logF, "GFS", "00");
-
-                    frm = WaitForm2.CreateInstance(date);
-
-                    if (frm.TemGfs00)
-                    {
-                        funcLogs("00");
-                    }
-                }
-                else logF.WriteLine("GFS 00 OK");
-                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs06.log")))
-                {
-                    logF.WriteLine("GFS 06");
-                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GFS", "06");
-                    //cptec.DownloadGFSNoaa(data, logF, "GFS", "06");
-
-                    cptec.DownloadNoaaImgs(date, logF, "GFS", "06");
-
-                    frm = WaitForm2.CreateInstance(date);
-
-                    if (frm.TemGfs06)
-                    {
-                        funcLogs("06");
-                    }
-                }
-                else logF.WriteLine("GFS 06 OK");
-                if (!System.IO.File.Exists(System.IO.Path.Combine(searchPath, "gfs12.log")))
-                {
-
-                    logF.WriteLine("GFS 12");
-                    //gefsOK = cptec.DownloadGEFSNoaa(data, logF, "GFS", "12");
-                    //cptec.DownloadGFSNoaa(data, logF, "GFS", "12");
-                    cptec.DownloadNoaaImgs(date, logF, "GFS", "12");
-
-                    frm = WaitForm2.CreateInstance(date);
-
-                    if (frm.TemGfs12)
-                    {
-                        funcLogs("12");
-                    }
-                }
-                else logF.WriteLine("GFS 12 OK");
-
+                cptec.DownloadECMWF(date, logF, "00");
+                // }
+                //else
+                logF.WriteLine("ECMWF_ONS 00 OK");
             }
             catch (Exception ex)
             {
                 logF.WriteLine(ex.ToString());
             }
-
-            //MODELO EURO
-            try
-            {
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF00")))
-                {
-                    logF.WriteLine("EURO 00");
-                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _));
-                }
-                else logF.WriteLine("EURO 00 OK");
-
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF12")))
-                {
-                    logF.WriteLine("EURO 12");
-                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
-                    //var retornoEmail = Tools.Tools.SendMail("", "Euro 12h Disponivel", "Euro 12h [AUTO]", "preco");
-                    //sendNotification("EURO 12h Disponivel", "bruno.araujo@cpas.com.br;diana.lima@cpas.com.br");
-                }
-                else logF.WriteLine("EURO 12 OK");
-
-            }
-            catch (Exception ex)
-            {
-                logF.WriteLine(ex.ToString());
-            }
-
-
+            #endregion
             // Converte Bin para Dat arquivos do GFS00 e do ECMWF00
             try
             {
@@ -906,123 +795,6 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
-
-            logF.WriteLine("Downloads NOAA");
-
-          //  Copy_GIFS_NOAA();
-
-            cptec.DownloadNoaa(date, "GEFS.ps1", "ftp://ftp.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.", "GEFS",logF);
-            cptec.DownloadNoaa(date, "GEFS_0.5.ps1", "ftp://ftp.ncep.noaa.gov/pub/data/nccf/com/gens/prod/gefs.", "GEFS_0.5_", logF);
-            cptec.DownloadNoaa(date, "GFS.ps1", "ftp://ftp.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.", "GFS", logF);
-            cptec.DownloadNoaa(date, "GEFSm_0.5.ps1", "ftp://ftp.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.", "GEFSm_0.5_",logF,"00");
-            
-           
-
-
-            //var pastaTrading = @"P:\Trading\Acompanhamento Metereologico Semanal\spiderman\" + date.ToString("yyyy_MM_dd");
-            //if (Directory.Exists(Path.Combine(pastaTrading, "ECMWF00")))
-            //{
-            //    var ECMWF00 = Path.Combine(pastaTrading, "ECMWF00.log");
-            //    if (!File.Exists(ECMWF00))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "EURO 00Z disponível para analise", "EURO 00Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(ECMWF00);
-
-            //    }
-            //}//
-
-            //if (Directory.Exists(Path.Combine(pastaTrading, "ECMWF12")))
-            //{
-            //    var ECMWF12 = Path.Combine(pastaTrading, "ECMWF12.log");
-            //    if (!File.Exists(ECMWF12))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "EURO 12Z disponível para analise", "EURO 12Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(ECMWF12);
-
-            //    }
-            //}//
-
-            //if (Directory.Exists(Path.Combine(pastaTrading, "ETA00")))
-            //{
-            //    var ETA00 = Path.Combine(pastaTrading, "ETA00.log");
-            //    if (!File.Exists(ETA00))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "ETA 00Z disponível para analise", "ETA 00Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(ETA00);
-
-            //    }
-            //}//
-
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GEFS00")))
-            //{
-            //    var GEFS00 = Path.Combine(pastaTrading, "GEFS00.log");
-            //    if (!File.Exists(GEFS00))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GEFS 00Z disponível para analise", "GEFS 00Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GEFS00);
-
-            //    }
-            //}//
-
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GEFS06")))
-            //{
-            //    var GEFS06 = Path.Combine(pastaTrading, "GEFS06.log");
-            //    if (!File.Exists(GEFS06))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GEFS 06Z disponível para analise", "GEFS 06Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GEFS06);
-
-            //    }
-            //}//
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GEFS12")))
-            //{
-            //    var GEFS12 = Path.Combine(pastaTrading, "GEFS12.log");
-            //    if (!File.Exists(GEFS12))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GEFS 12Z disponível para analise", "GEFS 12Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GEFS12);
-
-            //    }
-            //}//
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GFS00")))
-            //{
-            //    var GFS00 = Path.Combine(pastaTrading, "GFS00.log");
-            //    if (!File.Exists(GFS00))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GFS 00Z disponível para analise", "GFS 00Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GFS00);
-
-            //    }
-            //}//
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GFS06")))
-            //{
-            //    var GFS06 = Path.Combine(pastaTrading, "GFS06.log");
-            //    if (!File.Exists(GFS06))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GFS 06Z disponível para analise", "GFS 06Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GFS06);
-
-            //    }
-            //}//
-            //if (Directory.Exists(Path.Combine(pastaTrading, "GFS12")))
-            //{
-            //    var GFS12 = Path.Combine(pastaTrading, "GFS12.log");
-            //    if (!File.Exists(GFS12))
-            //    {
-            //        var email = ChuvaVazaoTools.Tools.Tools.SendMail("", "GFS 12Z disponível para analise", "GFS 12Z disponível", "preco");
-            //        email.Wait();
-            //        File.Create(GFS12);
-
-            //    }
-            //}//
 
         }
 
@@ -1114,7 +886,7 @@ namespace ChuvaVazaoTools
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
                     if (funceme.Length != 0 && ETA40.Length > 1)
                     {
-                        pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                        pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
                         {
 
@@ -1165,7 +937,7 @@ namespace ChuvaVazaoTools
                 else
                 {
 
-                    pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                    pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     if (!Directory.Exists(pastaSaida))
                     {
                         logF.WriteLine("Executando Mapas R Acomph");
@@ -1381,10 +1153,10 @@ namespace ChuvaVazaoTools
 
             // var verPastaPre = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
             //var verPastaDef = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
-            var verPastaPre = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
-            var verPastaDef = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+            var verPastaPre = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1";
+            var verPastaDef = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
 
-            var previsoesPath0 = Path.Combine(@"N:\Middle - Preço\16_Chuva_Vazao", nextRev.revDate.ToString("yyyy_MM"), $"RV{nextRev.rev}", date.ToString("yy-MM-dd"));
+            var previsoesPath0 = Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao", nextRev.revDate.ToString("yyyy_MM"), $"RV{nextRev.rev}", date.ToString("yy-MM-dd"));
 
             var dirA = (Path.Combine(previsoesPath0, "CV_ACOMPH_FUNC"));
             var dirB = (Path.Combine(previsoesPath0, "CV_ACOMPH_FUNC_d-1"));//CV_SOMBRA_ACOMPH_FUNC
@@ -1407,8 +1179,9 @@ namespace ChuvaVazaoTools
             {
                 try
                 {
-                    if (!File.Exists(camRelPrev) && DateTime.Now >= DateTime.Today.AddMinutes(495) && Directory.Exists(pastPrev00) || !File.Exists(camRelPrev) && DateTime.Now >= DateTime.Today.AddHours(9))// File.Exists(Path.Combine(verPastaPre, "logC.txt")))
+                    if (!File.Exists(camRelPrev) && DateTime.Now >= DateTime.Today.AddSeconds(27000) && Directory.Exists(pastPrev00) || !File.Exists(camRelPrev) && DateTime.Now >= DateTime.Today.AddHours(9))// File.Exists(Path.Combine(verPastaPre, "logC.txt")))
                     {
+                        logF.WriteLine("Relatorio Preliminar");
                         Tools.Tools.addHistory("H:\\TI - Sistemas\\UAT\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório de previsoes via auto report");
 
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
@@ -1435,6 +1208,7 @@ namespace ChuvaVazaoTools
 
                     if (File.Exists(camRelPrev) && !File.Exists(camRelPrevDef))
                     {
+                        logF.WriteLine("Relatorio Definitivo");
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
                         var d = Convert.ToDateTime(h);
@@ -1444,7 +1218,7 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs(date, camRelPrevDef);
                             if (File.Exists(camRelPrevDef))
                             {
-                                var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergio");
+                                var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
                                 retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
@@ -1456,6 +1230,8 @@ namespace ChuvaVazaoTools
 
                     if (File.Exists(camRelPrev) && File.Exists(camRelPrevDef) && !File.Exists(camRelPrevCompleto))
                     {
+                        logF.WriteLine("Relatorio Definitivo 2");
+
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
                         var d = Convert.ToDateTime(h);
@@ -1465,7 +1241,7 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs2(date, camRelPrevCompleto);
                             if (File.Exists(camRelPrevCompleto))
                             {
-                                var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergio");
+                                var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
                                 retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
@@ -1477,116 +1253,117 @@ namespace ChuvaVazaoTools
                 }
                 catch (Exception ex)
                 {
+                    logF.WriteLine("Erro ao Gerar Relatorio: " + ex.Message);
                     Tools.Tools.addHistory("H:\\TI - Sistemas\\UAT\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- catch acionado na tentativa de gerar relatório de previsoes " + ex.Message);
 
                 }
-                //caminho = @"P:\Marcos.Albarracin\Relatorio Final\" + "Relatorio_Compass_" + data.ToString("dd_MM_yyyy") + "_(" + hora.ToString() + " hrs).pdf";
-                if ((Directory.Exists(dirB) && File.Exists(Path.Combine(dirB, "enadiaria.log"))) || DateTime.Now >= DateTime.Today.AddHours(8))
-                {
-                    var caminhoRel = @"P:\Marcos.Albarracin\Relatorio Final\Relatorios\" + "Relatorio_Compass_" + date.ToString("dd_MM_yyyy") + "_(" + 0.ToString() + " hrs)_Preliminar.pdf";
+                //caminho = @"C:\Files\Relatorios\Relatorio Final\" + "Relatorio_Compass_" + data.ToString("dd_MM_yyyy") + "_(" + hora.ToString() + " hrs).pdf";
+                /*   if ((Directory.Exists(dirB) && File.Exists(Path.Combine(dirB, "enadiaria.log"))) || DateTime.Now >= DateTime.Today.AddHours(8))
+                   {
+                       var caminhoRel = @"C:\Files\Relatorios\Relatorio Final\Relatorios\" + "Relatorio_Compass_" + date.ToString("dd_MM_yyyy") + "_(" + 0.ToString() + " hrs)_Preliminar.pdf";
 
-                    if (!File.Exists(caminhoRel))
-                    {
-                        Tools.Tools.addHistory("H:\\TI - Sistemas\\UAT\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório via pârametro [preliminar == true]");
-                        if (!File.Exists(Path.Combine(horaRel, "RelatoriosCompass_log.txt")))
-                        {
-                            Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.AddMinutes(-20).ToString("dd-MM-yyyy HH:mm:ss"));
+                       if (!File.Exists(caminhoRel))
+                       {
+                           Tools.Tools.addHistory("C:\\Sistemas\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório via pârametro [preliminar == true]");
+                           if (!File.Exists(Path.Combine(horaRel, "RelatoriosCompass_log.txt")))
+                           {
+                               Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.AddMinutes(-20).ToString("dd-MM-yyyy HH:mm:ss"));
 
-                        }
+                           }
 
-                        var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt")).Last();
+                           var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h);
+                           var d = Convert.ToDateTime(h);
 
-                        if (d <= DateTime.Now.AddMinutes(-10))
-                        {
-                            Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
-                            try
-                            {
-                                logF.WriteLine("Gerando relatorio:");
-                                logF.WriteLine(caminhoRel);
-                                Report.Program.CriarRelatorio2(date, caminhoRel, true);
+                           if (d <= DateTime.Now.AddMinutes(-10))
+                           {
+                               Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
+                               try
+                               {
+                                   logF.WriteLine("Gerando relatorio:");
+                                   logF.WriteLine(caminhoRel);
+                                   Report.Program.CriarRelatorio2(date, caminhoRel, true);
 
-                                if (File.Exists(caminhoRel))
-                                {
-                                    var retornoEmail = Tools.Tools.SendMail(caminhoRel, "Relatório de acompanhamento disponível", "Relatório de acompanhamento [AUTO]", "preco");
-                                    //sendNotification("Relatório de acompanhamento disponível", "bruno.araujo@cpas.com.br,natalia.biondo@cpas.com.br,diana.lima@cpas.com.br,pedro.modesto@cpas.com.br", caminhoRel);
-                                    retornoEmail.Wait(300000);
-                                    Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
+                                   if (File.Exists(caminhoRel))
+                                   {
+                                       var retornoEmail = Tools.Tools.SendMail(caminhoRel, "Relatório de acompanhamento disponível", "Relatório de acompanhamento [AUTO]", "precoSergio");
+                                       //sendNotification("Relatório de acompanhamento disponível", "bruno.araujo@cpas.com.br,natalia.biondo@cpas.com.br,diana.lima@cpas.com.br,pedro.modesto@cpas.com.br", caminhoRel);
+                                       retornoEmail.Wait(300000);
+                                       Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
 
-                                }
+                                   }
 
-                            }
-                            catch
-                            {
-                                if (File.Exists(caminhoRel))
-                                {
-                                    File.Delete(caminhoRel);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        logF.WriteLine("Relatório já existente:");
-                        logF.WriteLine(caminhoRel);
-                    }
-                    // relatorio 00 h preliminar
-                }
+                               }
+                               catch
+                               {
+                                   if (File.Exists(caminhoRel))
+                                   {
+                                       File.Delete(caminhoRel);
+                                   }
+                               }
+                           }
+                       }
+                       else
+                       {
+                           logF.WriteLine("Relatório já existente:");
+                           logF.WriteLine(caminhoRel);
+                       }
+                       // relatorio 00 h preliminar
+                   }
 
-                if ((Directory.Exists(dirA) && File.Exists(Path.Combine(dirA, "enadiaria.log")))|| (Directory.Exists(dirS) && File.Exists(Path.Combine(dirS, "enadiaria.log"))))
-                {
-                    var caminhoRel = @"P:\Marcos.Albarracin\Relatorio Final\Relatorios\" + "Relatorio_Compass_" + date.ToString("dd_MM_yyyy") + "_(" + 0.ToString() + " hrs).pdf";
+                   if ((Directory.Exists(dirA) && File.Exists(Path.Combine(dirA, "enadiaria.log")))|| (Directory.Exists(dirS) && File.Exists(Path.Combine(dirS, "enadiaria.log"))))
+                   {
+                       var caminhoRel = @"C:\Files\Relatorios\Relatorio Final\Relatorios\" + "Relatorio_Compass_" + date.ToString("dd_MM_yyyy") + "_(" + 0.ToString() + " hrs).pdf";
 
-                    if (!File.Exists(caminhoRel))
-                    {
-                        Tools.Tools.addHistory("H:\\TI - Sistemas\\UAT\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório via pârametro [preliminar == false]");
+                       if (!File.Exists(caminhoRel))
+                       {
+                           Tools.Tools.addHistory("C:\\Sistemas\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório via pârametro [preliminar == false]");
 
-                        if (!File.Exists(Path.Combine(horaRel, "RelatoriosCompass_log.txt")))
-                        {
-                            Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.AddMinutes(-20).ToString("dd-MM-yyyy HH:mm:ss"));
+                           if (!File.Exists(Path.Combine(horaRel, "RelatoriosCompass_log.txt")))
+                           {
+                               Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.AddMinutes(-20).ToString("dd-MM-yyyy HH:mm:ss"));
 
-                        }
-                        var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt")).Last();
+                           }
+                           var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h);
+                           var d = Convert.ToDateTime(h);
 
-                        if (d <= DateTime.Now.AddMinutes(-10))
-                        {
-                            Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
-                            try
-                            {
-                                logF.WriteLine("Gerando relatorio:");
-                                logF.WriteLine(caminhoRel);
-                                Report.Program.CriarRelatorio2(date, caminhoRel, false);
+                           if (d <= DateTime.Now.AddMinutes(-10))
+                           {
+                               Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
+                               try
+                               {
+                                   logF.WriteLine("Gerando relatorio:");
+                                   logF.WriteLine(caminhoRel);
+                                   Report.Program.CriarRelatorio2(date, caminhoRel, false);
 
-                                if (File.Exists(caminhoRel))
-                                {
-                                    var retornoEmail = Tools.Tools.SendMail(caminhoRel, "Relatório de acompanhamento disponível", "Relatório de acompanhamento [AUTO]", "preco");
+                                   if (File.Exists(caminhoRel))
+                                   {
+                                       var retornoEmail = Tools.Tools.SendMail(caminhoRel, "Relatório de acompanhamento disponível", "Relatório de acompanhamento [AUTO]", "precoSergio");
 
-                                    retornoEmail.Wait(300000);
-                                    //sendNotification("Relatório de acompanhamento disponível", "bruno.araujo@cpas.com.br,natalia.biondo@cpas.com.br,diana.lima@cpas.com.br,pedro.modesto@cpas.com.br", caminhoRel);
-                                    Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
+                                       retornoEmail.Wait(300000);
+                                       //sendNotification("Relatório de acompanhamento disponível", "bruno.araujo@cpas.com.br,natalia.biondo@cpas.com.br,diana.lima@cpas.com.br,pedro.modesto@cpas.com.br", caminhoRel);
+                                       Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosCompass_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
 
-                                }
+                                   }
 
-                            }
-                            catch
-                            {
-                                if (File.Exists(caminhoRel))
-                                {
-                                    File.Delete(caminhoRel);
-                                }
-                            }
+                               }
+                               catch
+                               {
+                                   if (File.Exists(caminhoRel))
+                                   {
+                                       File.Delete(caminhoRel);
+                                   }
+                               }
 
-                        }
-                    }
-                    else
-                    {
-                        logF.WriteLine("Relatório já existente:");
-                        logF.WriteLine(caminhoRel);
-                    }
-                }
+                           }
+                       }
+                       else
+                       {
+                           logF.WriteLine("Relatório já existente:");
+                           logF.WriteLine(caminhoRel);
+                       }
+                   }*/
             }
             catch (Exception ex)
             {
@@ -1621,7 +1398,7 @@ namespace ChuvaVazaoTools
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
                     if (funceme.Length != 0 && ETA40.Length > 1)
                     {
-                        pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                        pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
                         {
 
@@ -1671,7 +1448,7 @@ namespace ChuvaVazaoTools
                 else
                 {
 
-                    pastaSaida = @"N:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                    pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     if (!Directory.Exists(pastaSaida))
                     {
                         logF.WriteLine("Executando Mapas R Acomph");
@@ -1690,16 +1467,6 @@ namespace ChuvaVazaoTools
 
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
-                    try
-                    {
-                        frmMain.modelosChVz.Clear();
-                        frmMain.Run_R(logF, out var runIdT);
-                    }
-                    catch (Exception ex)
-                    {
-                        logF.WriteLine(ex.ToString());
-                    }
-                    
                     try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
@@ -1728,8 +1495,15 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
-                    
-                    
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.Run_R(logF, out var runIdT);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
@@ -1837,14 +1611,6 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
-                                      
-                    
-                   
-                    
-                   
-
-                    
-
                 }
                 else if(File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
@@ -1876,7 +1642,7 @@ namespace ChuvaVazaoTools
         {
             var data = date;
             var localPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Conjunto_R_" + DateTime.Now.ToString("HHmmss"));
-            var Conj_Zip = Path.Combine(@"N:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos.zip");
+            var Conj_Zip = Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos.zip");
 
             var path_final = Path.Combine(path);
 

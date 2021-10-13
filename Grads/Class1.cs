@@ -139,7 +139,7 @@ namespace GradsHelper
             }
         }
 
-        public static void ConvertECMWFToImg(DateTime dt, string hora, string tempPath, string gradsScript,int contagem)
+        public static void ConvertECMWFToImg(DateTime dt, string hora, string tempPath, string gradsScript, int contagem)
         {
             //if (!System.IO.Directory.Exists(tempPath)) System.IO.Directory.CreateDirectory(tempPath);
             //var gradsScript = System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs");
@@ -229,7 +229,7 @@ namespace GradsHelper
             {
                 int a = 0;
                 int b = contagem;
-                if (hora == "00") b = contagem -1;
+                if (hora == "00") b = contagem - 1;
                 else if (hora == "12") a = 1;
                 else return;
 
@@ -404,7 +404,7 @@ namespace GradsHelper
 
             var fname = System.IO.Path.GetFileNameWithoutExtension(ctlFilePath);
             var tempPath = System.IO.Path.GetDirectoryName(ctlFilePath);
-            string outDatName = outImgName.Split('.').First()+".dat";
+            string outDatName = outImgName.Split('.').First() + ".dat";
             var openfile = "'open " + ctlFilePath + ".ctl'";
 
 
@@ -442,14 +442,14 @@ namespace GradsHelper
             }
         }
 
-        public static void ConvertCtlToImgGEFS(string ctlFilePath, string header, string subheader, string outImgName, string gradsScript, string complemento ="")
+        public static void ConvertCtlToImgGEFS(string ctlFilePath, string header, string subheader, string outImgName, string gradsScript, string complemento = "")
         {
             //var gradsScript = System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs");
 
             var fname = System.IO.Path.GetFileNameWithoutExtension(ctlFilePath);
             var tempPath = System.IO.Path.GetDirectoryName(ctlFilePath);
 
-            var openfile = "'open " + ctlFilePath+"'";
+            var openfile = "'open " + ctlFilePath + "'";
 
 
 
@@ -986,9 +986,9 @@ ENDVARS
             {
 
                 File.Copy(Path.Combine(localPath, Path.GetFileName(outImgFile)), outImgFile, true);
-            
 
-            System.IO.Directory.Delete(localPath, true);
+
+                System.IO.Directory.Delete(localPath, true);
             }
             catch { }
         }

@@ -160,7 +160,7 @@ namespace ChuvaVazaoTools
         }
 
         //BuildFromGFSNOAA
-        
+
         public static Precipitacao BuildFromGFSNOAA(string GFSFile)
         {
 
@@ -503,7 +503,7 @@ namespace ChuvaVazaoTools
                 SalvarModeloDAT(precipitacao, p, metodo, Precipitacao.latminGEFS, Precipitacao.latmaxGEFS, Precipitacao.lonminGEFS, Precipitacao.lonmaxGEFS);
             }
 
-            else if (metodo =="ECMWF")
+            else if (metodo == "ECMWF")
             {
                 SalvarModeloDAT(precipitacao, p, metodo, Precipitacao.latminECMWF, Precipitacao.latmaxECMWF, Precipitacao.lonminECMWF, Precipitacao.lonmaxECMWF);
             }

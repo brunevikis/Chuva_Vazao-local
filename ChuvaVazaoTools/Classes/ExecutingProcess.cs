@@ -2940,7 +2940,7 @@ namespace ChuvaVazaoTools.Classes
             {
                 var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data);
 
-                var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+                var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
                 var prevs = System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories)[0];
                 //var vazPrev = new StreamReader(prevs);
                 List<double[]> vazPrevs = new List<double[]>();
@@ -3041,7 +3041,7 @@ namespace ChuvaVazaoTools.Classes
 
                 var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(DateTime.Today);
 
-                var pastaBase = @"N:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+                var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
 
                 var PathModelo = Path.Combine(pastaBase, "Modelos_Chuva_Vazao", "CPINS", "Arq_Saida");
                 DateTime dt_CPINS = DateTime.Today;
