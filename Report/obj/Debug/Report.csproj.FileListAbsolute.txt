@@ -21,7 +21,6 @@ C:\Development\chuva_vazao\Report\bin\Debug\Tools.dll
 C:\Development\chuva_vazao\Report\bin\Debug\Grads.pdb
 C:\Development\chuva_vazao\Report\bin\Debug\Tools.pdb
 C:\Development\chuva_vazao\Report\bin\Debug\itextsharp.xml
-C:\Development\chuva_vazao\Report\obj\Debug\Report.csprojAssemblyReference.cache
 C:\Development\chuva_vazao\Report\obj\Debug\Report.csproj.CoreCompileInputs.cache
 C:\Development\chuva_vazao\Report\obj\Debug\Report.csproj.CopyComplete
 C:\Development\chuva_vazao\Report\obj\Debug\Report.dll
@@ -68,3 +67,4 @@ C:\Development\Chuva_vazao\trunk\Report\obj\Debug\Report.csproj.CoreCompileInput
 C:\Development\Chuva_vazao\trunk\Report\obj\Debug\Report.csproj.CopyComplete
 C:\Development\Chuva_vazao\trunk\Report\obj\Debug\Report.dll
 C:\Development\Chuva_vazao\trunk\Report\obj\Debug\Report.pdb
+C:\Development\chuva_vazao\Report\obj\Debug\Report.csproj.AssemblyReference.cache

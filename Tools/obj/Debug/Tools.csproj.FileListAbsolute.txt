@@ -21,10 +21,10 @@ D:\Compass\Development\chuva_vazao\Tools\obj\Debug\Tools.csprojAssemblyReference
 D:\Compass\Development\chuva_vazao\Tools\obj\Debug\Tools.csproj.CoreCompileInputs.cache
 D:\Compass\Development\chuva_vazao\Tools\obj\Debug\Tools.dll
 D:\Compass\Development\chuva_vazao\Tools\obj\Debug\Tools.pdb
-C:\Development\chuva_vazao\Tools\obj\Debug\Tools.csprojAssemblyReference.cache
 C:\Development\Chuva_vazao\trunk\Tools\bin\Debug\Tools.dll
 C:\Development\Chuva_vazao\trunk\Tools\bin\Debug\Tools.pdb
 C:\Development\Chuva_vazao\trunk\Tools\obj\Debug\Tools.csproj.CoreCompileInputs.cache
 C:\Development\Chuva_vazao\trunk\Tools\obj\Debug\Tools.dll
 C:\Development\Chuva_vazao\trunk\Tools\obj\Debug\Tools.pdb
 C:\Development\Chuva_vazao\trunk\Tools\obj\Debug\Tools.csprojAssemblyReference.cache
+C:\Development\chuva_vazao\Tools\obj\Debug\Tools.csproj.AssemblyReference.cache

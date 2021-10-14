@@ -29,7 +29,6 @@ C:\Development\chuva_vazao\ChuvaVazaoTools\bin\Debug\EntityFramework.xml
 C:\Development\chuva_vazao\ChuvaVazaoTools\bin\Debug\EntityFramework.SqlServer.xml
 C:\Development\chuva_vazao\ChuvaVazaoTools\bin\Debug\Ookii.Dialogs.xml
 C:\Development\chuva_vazao\ChuvaVazaoTools\bin\Debug\itextsharp.xml
-C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csprojAssemblyReference.cache
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.ChuvaViewer.resources
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.DownloadForm.resources
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.FrmMain.resources
@@ -174,3 +173,4 @@ C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\ChuvaVazaoTools.exe.c
 C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\ChuvaVazaoTools.exe.manifest
 C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\ChuvaVazaoTools.application
 C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.CopyComplete
+C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.AssemblyReference.cache

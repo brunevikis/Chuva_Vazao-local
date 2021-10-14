@@ -608,20 +608,16 @@ namespace Report
 
         public static string CriarRelatorioPrevs(DateTime data, string caminho = null, bool preliminar = false)
         {
-            // camPrev = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman" , DateTime.Now.ToString("yyyy_MM_dd") , "CONJUNTO00PREV");
+            // camPrev = Path.Combine(@"C:\Files\Trading\Acompanhamento Metereologico Semanal\spiderman" , DateTime.Now.ToString("yyyy_MM_dd") , "CONJUNTO00PREV");
 
 
 
             DateTime data1 = data.AddDays(-1);
-            //var camNOAA = Path.Combine(@"C:\Compass\MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            // var camNOAAOntem = Path.Combine(@"C:\Compass\MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
-            //C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Mapas\2021\03\24\GFS00
+            var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
-            var camNOAA = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camNOAAOntem = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
-
-            var camAlterNOAA = Path.Combine(@"C:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camAlterNOAAOntem = Path.Combine(@"C:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            //var camAlterNOAA = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            // var camAlterNOAAOntem = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
             string GefsNOAA00 = "GEFS_0.5_00";
             string GfsNOAA00 = "GFS00";
@@ -678,7 +674,7 @@ namespace Report
 
                     }
 
-
+                    #region mapa nao utilizado
                     //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS)");
 
                     //try
@@ -704,6 +700,7 @@ namespace Report
                     //catch { }
 
                     //doc.NovaPagina2();
+                    #endregion
 
                     doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF Operativo) dos dias " + data1.ToString("dd/MM/yyyy") + " e " + data.ToString("dd/MM/yyyy"));
 
@@ -787,9 +784,10 @@ namespace Report
                     return caminho;
 
                 }
-                else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA00)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA00)))
+                #region caminho nao utilizado
+                /*else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA00)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA00)))
                 {
-                    var pastPrev00 = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman", DateTime.Now.ToString("yyyy_MM_dd"), "CONJUNTO00PREV");
+                    var pastPrev00 = Path.Combine(@"C:\Files\Trading\Acompanhamento Metereologico Semanal\spiderman", DateTime.Now.ToString("yyyy_MM_dd"), "CONJUNTO00PREV");
 
                     int hora = 0;
                     var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
@@ -924,124 +922,131 @@ namespace Report
                     doc.Close();
 
                     return caminho;
-                }
+                }*/
+                #endregion
             }
-            else
+            else//ja tem o relotorio de manha
             {
-                if (Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) &&
-                    Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
+                if (Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)))//Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && 
                 {
-
-
-
-                    int hora = 12;
-                    var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
-
-
-
-                    var imgsConj = buscaPrev(caminhoSpider, data, camGefs12, 3);
-                    var imgsConj1 = buscaPrev(caminhoSpider, data, camGefs, 3);
-
-
-                    //doc.InserirParte2("Previsão de precipitação pelos modelos Conjunto (ETA 40+GEFS)");
-
-                    //try
-                    //{
-                    //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data1.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj1);
-                    //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj);
-                    //}
-                    //catch { }
-
-                    //doc.InserirEspaco();
-
-                    //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS)");
-
-                    //try
-                    //{
-
-
-                    //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj1);
-                    //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj);
-                    //}
-                    //catch { }
-
-                    //doc.InserirEspaco();
-
-                    //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL OPERATIVO (GFS)");
-
-                    //try
-                    //{
-                    //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camGfs, 3));
-                    //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camGfs12, 3));
-                    //}
-                    //catch { }
-
-                    //doc.NovaPagina2();
-
-                    //doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF)");
-
-                    //try
-                    //{
-                    //    doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
-                    //    doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
-                    //}
-                    //catch { }
-
-                    //doc.InserirEspaco();
-
-                    //doc.InserirParte2("Previsão de precipitação pelo modelo REGIONAL (ETA40)");
-                    //try
-                    //{
-                    //    doc.InserirSubtitulo2("Previsão por  modelo (ETA40) do dia " + data1.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEta40, 3));
-                    //    doc.InserirSubtitulo2("Previsão por modelo (ETA40) do dia " + data.ToString("dd/MM/yyyy"));
-                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEta40, 3));
-                    //}
-                    //catch { }
-
-                    //doc.NovaPagina2();
-                    doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
-
-                    try
+                    //var qtdGefsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GefsNOAA12), "*.gif").ToList();
+                    var qtdGfsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GfsNOAA12), "*.gif").ToList();
+                    //qtdGefsNOAA12.Count() >= 15 && 
+                    if (qtdGfsNOAA12.Count >= 15)
                     {
-                        // doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GefsNOAA00, 0, camNOAA, preliminar));
-                        doc.InserirMeioEspaco();
+                        int hora = 12;
+                        var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
 
-                        //doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GefsNOAA12, 0, camNOAA, preliminar));
+
+
+                        var imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camNOAA, preliminar);
+                        var imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camNOAA, preliminar);
+
+                        #region mapa nao utlizado
+                        //doc.InserirParte2("Previsão de precipitação pelos modelos Conjunto (ETA 40+GEFS)");
+
+                        //try
+                        //{
+                        //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data1.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1);
+                        //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj);
+                        //}
+                        //catch { }
+
+                        //doc.InserirEspaco();
+
+                        //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS)");
+
+                        //try
+                        //{
+
+
+                        //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1);
+                        //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj);
+                        //}
+                        //catch { }
+
+                        //doc.InserirEspaco();
+
+                        //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL OPERATIVO (GFS)");
+
+                        //try
+                        //{
+                        //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camGfs, 3));
+                        //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camGfs12, 3));
+                        //}
+                        //catch { }
+
+                        //doc.NovaPagina2();
+
+                        //doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF)");
+
+                        //try
+                        //{
+                        //    doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                        //    doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
+                        //}
+                        //catch { }
+
+                        //doc.InserirEspaco();
+
+                        //doc.InserirParte2("Previsão de precipitação pelo modelo REGIONAL (ETA40)");
+                        //try
+                        //{
+                        //    doc.InserirSubtitulo2("Previsão por  modelo (ETA40) do dia " + data1.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEta40, 3));
+                        //    doc.InserirSubtitulo2("Previsão por modelo (ETA40) do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEta40, 3));
+                        //}
+                        //catch { }
+
+                        //doc.NovaPagina2();
+                        #endregion
+
+                        //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
+
+                        //try
+                        //{
+                        //    // doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GefsNOAA00, 0, camNOAA, preliminar));
+                        //    doc.InserirMeioEspaco();
+
+                        //    //doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        //    doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GefsNOAA12, 0, camNOAA, preliminar));
+                        //}
+                        //catch { }
+
+                        //doc.InserirMeioEspaco();
+                        //doc.InserirEspaco();
+
+                        doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
+
+                        try
+                        {
+                            //doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                            doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camNOAA, preliminar));
+                            doc.InserirMeioEspaco();
+
+                            //doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                            doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camNOAA, preliminar));
+                        }
+                        catch { }
+                        doc.Close();
+
+                        return caminho;
                     }
-                    catch { }
 
-                    doc.InserirMeioEspaco();
-                    //doc.InserirEspaco();
-
-                    doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
-
-                    try
-                    {
-                        //doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camNOAA, preliminar));
-                        doc.InserirMeioEspaco();
-
-                        //doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camNOAA, preliminar));
-                    }
-                    catch { }
-                    doc.Close();
-
-                    //return caminho;
 
                 }
-                else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
+                #region caminho nao utilizado
+                /*else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
                 {
                     int hora = 12;
                     var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
@@ -1140,14 +1145,15 @@ namespace Report
                         doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camAlterNOAA, preliminar));
                         doc.InserirMeioEspaco();
 
-                       // doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        // doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
                         doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camAlterNOAA, preliminar));
                     }
                     catch { }
                     doc.Close();
 
                     return caminho;
-                }
+                }*/
+                #endregion
             }
 
             return "";
@@ -1155,20 +1161,16 @@ namespace Report
 
         public static string CriarRelatorioPrevs2(DateTime data, string caminho = null, bool preliminar = false)
         {
-            // camPrev = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman" , DateTime.Now.ToString("yyyy_MM_dd") , "CONJUNTO00PREV");
+            // camPrev = Path.Combine(@"C:\Files\Trading\Acompanhamento Metereologico Semanal\spiderman" , DateTime.Now.ToString("yyyy_MM_dd") , "CONJUNTO00PREV");
 
 
 
             DateTime data1 = data.AddDays(-1);
-            //var camNOAA = Path.Combine(@"C:\Compass\MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            //var camNOAAOntem = Path.Combine(@"C:\Compass\MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
-            var camNOAA = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camNOAAOntem = Path.Combine(@"C:\Compass\MinhaTI\Preço - Documentos\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
-
-
-            var camAlterNOAA = Path.Combine(@"C:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camAlterNOAAOntem = Path.Combine(@"C:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            // var camAlterNOAA = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            //var camAlterNOAAOntem = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
             string GefsNOAA00 = "GEFS_0.5_00";
             string GfsNOAA00 = "GFS00";
@@ -1195,124 +1197,136 @@ namespace Report
 
 
 
-            if (Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) &&
-                Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
+            if (Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12)))
             {
-
-
-
-                int hora = 12;
-                var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
-
-
-
-                var imgsConj = buscaPrev(caminhoSpider, data, camGefs12, 3);
-                var imgsConj1 = buscaPrev(caminhoSpider, data, camGefs, 3);
-
-
-                //doc.InserirParte2("Previsão de precipitação pelos modelos Conjunto (ETA 40+GEFS)");
-
-                //try
-                //{
-                //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data1.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj1);
-                //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj);
-                //}
-                //catch { }
-
-                //doc.InserirEspaco();
-
-                //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS)");
-
-                //try
-                //{
-
-
-                //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj1);
-                //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj);
-                //}
-                //catch { }
-
-                //doc.InserirEspaco();
-
-                //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL OPERATIVO (GFS)");
-
-                //try
-                //{
-                //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camGfs, 3));
-                //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camGfs12, 3));
-                //}
-                //catch { }
-
-                //doc.NovaPagina2();
-
-                doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF) 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
-
-                try
+                var qtdGefsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GefsNOAA12), "*.gif").ToList();
+                var qtdGfsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GfsNOAA12), "*.gif").ToList();
+                //qtdGefsNOAA12.Count() >= 15 && 
+                if (qtdGefsNOAA12.Count() >= 15 && qtdGfsNOAA12.Count() >= 15)
                 {
-                    //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                    int hora = 12;
+                    var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
+
+
+
+                    var imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3);
+                    var imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3);
+
+                    #region mapas nao utilizados
+                    /*&& Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12))*/
+                    /* && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12))*/
+                    //doc.InserirParte2("Previsão de precipitação pelos modelos Conjunto (ETA 40+GEFS)");
+
+                    //try
+                    //{
+                    //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data1.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj1);
+                    //    doc.InserirSubtitulo2("Previsão por Conjunto (ETA40+GEFS) do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj);
+                    //}
+                    //catch { }
+
+                    //doc.InserirEspaco();
+
+                    //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS)");
+
+                    //try
+                    //{
+
+
+                    //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj1);
+                    //    doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj);
+                    //}
+                    //catch { }
+
+                    //doc.InserirEspaco();
+
+                    //doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL OPERATIVO (GFS)");
+
+                    //try
+                    //{
+                    //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camGfs, 3));
+                    //    doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camGfs12, 3));
+                    //}
+                    //catch { }
+
+                    //doc.NovaPagina2();
+                    #endregion
+
+                    doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF) 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
+
+                    try
+                    {
+                        //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                        doc.InserirMeioEspaco();
+
+                        //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
+                    }
+                    catch { }
+
+                    //doc.InserirEspaco();
+                    doc.InserirMeioEspaco();
+                    #region mapas nao utilizados
+                    //doc.InserirParte2("Previsão de precipitação pelo modelo REGIONAL (ETA40)");
+                    //try
+                    //{
+                    //    doc.InserirSubtitulo2("Previsão por  modelo (ETA40) do dia " + data1.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEta40, 3));
+                    //    doc.InserirSubtitulo2("Previsão por modelo (ETA40) do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEta40, 3));
+                    //}
+                    //catch { }
+
+                    //doc.NovaPagina2();
+                    #endregion
+
+                    doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
+
+                    try
+                    {
+                        // doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GefsNOAA00, 0, camNOAA, preliminar));
+                        doc.InserirMeioEspaco();
+
+                        //doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GefsNOAA12, 0, camNOAA, preliminar));
+                    }
+                    catch { }
                     doc.InserirMeioEspaco();
 
-                    //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
+                    //doc.InserirEspaco();
+                    //doc.NovaPagina2();
+
+
+                    doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
+
+                    try
+                    {
+                        //doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camNOAA, preliminar));
+                        doc.InserirMeioEspaco();
+
+                        // doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                        doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camNOAA, preliminar));
+                    }
+                    catch (Exception e) { }
+                    doc.Close();
+
+                    return caminho;
                 }
-                catch { }
-
-                //doc.InserirEspaco();
-                doc.InserirMeioEspaco();
-                //doc.InserirParte2("Previsão de precipitação pelo modelo REGIONAL (ETA40)");
-                //try
-                //{
-                //    doc.InserirSubtitulo2("Previsão por  modelo (ETA40) do dia " + data1.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEta40, 3));
-                //    doc.InserirSubtitulo2("Previsão por modelo (ETA40) do dia " + data.ToString("dd/MM/yyyy"));
-                //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEta40, 3));
-                //}
-                //catch { }
-
-                //doc.NovaPagina2();
-                doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GEFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
-
-                try
-                {
-                    // doc.InserirSubtitulo2("Previsão por modelo (GEFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GefsNOAA00, 0, camNOAA, preliminar));
-                    doc.InserirMeioEspaco();
-
-                    //doc.InserirSubtitulo2("Previsão por modelo (GEFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GefsNOAA12, 0, camNOAA, preliminar));
-                }
-                catch { }
-                doc.InserirMeioEspaco();
-
-                //doc.InserirEspaco();
-                //doc.NovaPagina2();
 
 
-                doc.InserirParte2("Previsão de precipitação pelo modelo GLOBAL ENSEMBLE (GFS) NOAA 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
-
-                try
-                {
-                    //doc.InserirSubtitulo2("Previsão por modelo (GFS) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj1 = buscaPrevNOAA(caminhoSpider, data, GfsNOAA00, 0, camNOAA, preliminar));
-                    doc.InserirMeioEspaco();
-
-                    // doc.InserirSubtitulo2("Previsão por modelo (GFS) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                    doc.InserirImagens(1, imgsConj = buscaPrevNOAA(caminhoSpider, data, GfsNOAA12, 0, camNOAA, preliminar));
-                }
-                catch(Exception e) { }
-                doc.Close();
-
-                return caminho;
 
             }
-            else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
+
+            #region caminho nao utilizado
+            /*else if (Directory.Exists(Path.Combine(camAlterNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camAlterNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGfs12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camGefs12)))
             {
                 int hora = 12;
                 var doc = PdfExtensions.NovoPdfPrevs(caminho, data, hora);
@@ -1419,7 +1433,8 @@ namespace Report
                 doc.Close();
 
                 return caminho;
-            }
+            }*/
+            #endregion
 
 
             return "";

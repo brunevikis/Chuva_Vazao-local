@@ -205,7 +205,7 @@ namespace ChuvaVazaoTools
                 //else if (modelo == "GFS") log.WriteLine(cptec.DownloadGFSNoaa(data, log, modelo, hora));
                 //else if (modelo == "ETA") log.WriteLine(cptec.DownloadETA40(data, log, hora));
                 //else return;
-                log.WriteLine(cptec.DownloadETA40Gambiarra(data, log, hora));
+                log.WriteLine(cptec.DownloadETA40_Atual(data, log, hora));
 
 
                 if ("00;12".Contains(hora))
@@ -287,7 +287,7 @@ namespace ChuvaVazaoTools
                             var fanem = System.IO.Path.Combine(localPath, "merge_" + dt.ToString("yyyyMMdd"));
                             prec.SalvarModeloBin(fanem);
                             Grads.ConvertCtlToImg(fanem, "MERGE", "Precipacao observada entre " + dt.AddDays(-1).ToString("dd/MM") + " e " + dt.ToString("dd/MM"), "merge.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
-                            
+
                             var directoryToSaveGif = @"P:\Trading\Acompanhamento Metereologico Semanal\spiderman\" + dt.ToString("yyyy_MM_dd") + @"\OBSERVADO";
                             cptec.CopyGifs(localPath, directoryToSaveGif);
                         }
@@ -321,7 +321,7 @@ namespace ChuvaVazaoTools
                         {
                             PrecipitacaoRepository.SaveAverage(chuvaMediaBacia.Keys.ToArray()[i], pCo.Key.Nome, "", pCo.First().precMedia[i], "MERGE");
                         }
-                    }                 
+                    }
 
                     System.IO.Directory.Delete(localPath, true);
                 }
@@ -334,63 +334,63 @@ namespace ChuvaVazaoTools
                     break;
                 case "CONJUNTO 00":
                 case "CONJUNTO 12":
-                {
-                    var h = btn.Text.Split(' ')[1];
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcConjunto(h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                    {
+                        var h = btn.Text.Split(' ')[1];
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcConjunto(h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 case "GEFS 00":
                 case "GEFS 06":
                 case "GEFS 12":
                 case "GFS 00":
                 case "GFS 06":
                 case "GFS 12":
-                {
-                    var m = btn.Text.Split(' ')[0];
-                    var h = btn.Text.Split(' ')[1];
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcGEFS(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                    {
+                        var m = btn.Text.Split(' ')[0];
+                        var h = btn.Text.Split(' ')[1];
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcGEFS(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 case "ETA 00":
                 case "ETA 12":
-                {
-                    var m = btn.Text.Split(' ')[0];
-                    var h = btn.Text.Split(' ')[1];
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcETA(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                    {
+                        var m = btn.Text.Split(' ')[0];
+                        var h = btn.Text.Split(' ')[1];
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcETA(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 case "ECMWF 00":
-                {
-                    var m = btn.Text.Split(' ')[0];
-                    var h = btn.Text.Split(' ')[1];
+                    {
+                        var m = btn.Text.Split(' ')[0];
+                        var h = btn.Text.Split(' ')[1];
 
-                    //funcECMWF(m, h, null);
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                        //funcECMWF(m, h, null);
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 case "ECMWF 06":
-                {
-                    var m = btn.Text.Split(' ')[0];
-                    var h = btn.Text.Split(' ')[1];
+                    {
+                        var m = btn.Text.Split(' ')[0];
+                        var h = btn.Text.Split(' ')[1];
 
-                    //funcECMWF(m, h, null);
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                        //funcECMWF(m, h, null);
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 case "ECMWF 12":
-                {
-                    var m = btn.Text.Split(' ')[0];
-                    var h = btn.Text.Split(' ')[1];
+                    {
+                        var m = btn.Text.Split(' ')[0];
+                        var h = btn.Text.Split(' ')[1];
 
-                    //funcECMWF(m, h, null);
-                    this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
-                    break;
-                }
+                        //funcECMWF(m, h, null);
+                        this.Acao = (TextWriter log) => { return Task.Factory.StartNew(() => { funcECMWF(m, h, log); /*Logs( cptec.ProcessaConjunto(dateTimePicker1.Value, "00");*/ }); };
+                        break;
+                    }
                 default:
-                {
-                    MessageBox.Show("Não configurado");
-                    return;
-                }
+                    {
+                        MessageBox.Show("Não configurado");
+                        return;
+                    }
             }
             this.Close();
         }
