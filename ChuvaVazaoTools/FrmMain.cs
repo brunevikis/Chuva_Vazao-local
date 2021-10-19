@@ -8090,6 +8090,7 @@ namespace ChuvaVazaoTools
 
         private void button6_Click(object sender, EventArgs e)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
             var preliminar = false;
             //Tools.Tools.addHistory("H:\\TI - Sistemas\\UAT\\ChuvaVazao\\Log\\report.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de gerar relatório via botão(button6)");
@@ -8109,7 +8110,7 @@ namespace ChuvaVazaoTools
             {
                 var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
-                var d = Convert.ToDateTime(h);
+                var d = Convert.ToDateTime(h, Culture.DateTimeFormat);
 
                 if (d <= DateTime.Now.AddMinutes(-10))
                 {
@@ -8675,6 +8676,7 @@ namespace ChuvaVazaoTools
         private void datTOctl(string Caminho, string path_saida, Boolean Relatorio = false)//, string nome
         {// chamar do download
             //Cria Pasta temporaria para os CTLs
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var localPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "GIFSCTLS", DateTime.Now.ToString("HHmmss"));
             if (Directory.Exists(localPath))
             {
@@ -8723,7 +8725,7 @@ namespace ChuvaVazaoTools
             {
                 PrecipitacaoFactory.SalvarModeloBin(prec.Value,
                     System.IO.Path.Combine(localPath,
-                    "pp" + Convert.ToDateTime(prec.Key).ToString("yyyyMMdd")
+                    "pp" + Convert.ToDateTime(prec.Key, Culture.DateTimeFormat).ToString("yyyyMMdd")
                     )
                 );
 

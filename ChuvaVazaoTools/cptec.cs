@@ -193,6 +193,7 @@ namespace ChuvaVazaoTools
 
         public static Precipitacao DownloadFunceme(string lateFunc = "")
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 Dictionary<Tuple<decimal, decimal>, float> dados = new Dictionary<Tuple<decimal, decimal>, float>();
@@ -204,7 +205,7 @@ namespace ChuvaVazaoTools
                 var dataStr = c.DownloadString("http://apil5.funceme.br/rpc/v2/dado-sensor?instituicao=41&sensor=22&periodo=24h");
                 var datafunceme = (Newtonsoft.Json.JsonConvert.DeserializeObject(dataStr) as Newtonsoft.Json.Linq.JObject)["meta"]["cache"]["cached_at"] as Newtonsoft.Json.Linq.JObject;
 
-                var horafunceme = Convert.ToDateTime(datafunceme["date"]);
+                var horafunceme = Convert.ToDateTime(datafunceme["date"], Culture.DateTimeFormat);
 
                 var obj = ((Newtonsoft.Json.JsonConvert.DeserializeObject(dataStr) as Newtonsoft.Json.Linq.JObject)["data"]["list"] as Newtonsoft.Json.Linq.JArray);
 

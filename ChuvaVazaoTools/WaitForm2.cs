@@ -122,7 +122,7 @@ namespace ChuvaVazaoTools
 
         public void LoadData()
         {
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             EtaDate = Date;
             searchPath = System.IO.Path.Combine(Config.CaminhoPrevisao, Date.ToString("yyyyMM"), Date.ToString("dd"));
             searchPathETA = searchPath;
@@ -199,7 +199,7 @@ namespace ChuvaVazaoTools
             //   EtaDate = EtaDate.AddDays(-10);
 
 
-            if (EtaDate != Date && EtaDate != Convert.ToDateTime("01 / 01 / 0001 00:00:00"))
+            if (EtaDate != Date && EtaDate != Convert.ToDateTime("01 / 01 / 0001 00:00:00",Culture.DateTimeFormat))
             {
                 alertaETA.Text = "ETA do dia:" + EtaDate;
             }

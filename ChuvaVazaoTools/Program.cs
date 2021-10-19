@@ -1147,6 +1147,7 @@ namespace ChuvaVazaoTools
 
         internal static void AutoReport(DateTime date, System.IO.TextWriter logF)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             //condicões para relatorios: Downloads OK / (Rodadas CV do dia ok || 8:40 da manhã)
             var nextRev = Tools.Tools.GetNextRev(date);
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(date);
@@ -1186,7 +1187,7 @@ namespace ChuvaVazaoTools
 
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h);
+                        var d = Convert.ToDateTime(h,Culture.DateTimeFormat);
 
                         if (d <= DateTime.Now.AddMinutes(-10))
                         {
@@ -1211,7 +1212,7 @@ namespace ChuvaVazaoTools
                         logF.WriteLine("Relatorio Definitivo");
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h);
+                        var d = Convert.ToDateTime(h, Culture.DateTimeFormat);
 
                         if (d <= DateTime.Now.AddMinutes(-10))
                         {
@@ -1234,7 +1235,7 @@ namespace ChuvaVazaoTools
 
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h);
+                        var d = Convert.ToDateTime(h, Culture.DateTimeFormat);
 
                         if (d <= DateTime.Now.AddMinutes(-10))
                         {
