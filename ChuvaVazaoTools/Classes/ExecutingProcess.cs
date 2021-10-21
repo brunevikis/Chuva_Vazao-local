@@ -14,6 +14,7 @@ namespace ChuvaVazaoTools.Classes
     {
         public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
             // = modelos;
             if (modelos == null)
@@ -858,6 +859,7 @@ namespace ChuvaVazaoTools.Classes
             //dados do Smap para calcular a propagação. OBS: As operações matemáticas que montam a variável propagacoes variam de usina para usina
             CalculaVazaoPosto = new Action<Propagacao>(propaga =>
             {
+
                 try
                 {
                     var vaz = dadosAcompH.Where(v => v.posto == propaga.IdPosto);
@@ -872,7 +874,7 @@ namespace ChuvaVazaoTools.Classes
                         if (vazdiariaSmapDia <= vaz.Select(x => x.data).Last())// verifica se as datas de vazões do acomph e smap batem
                         {
                             if (vaz.Select(k => k.data).Contains(vazdiariaSmapDia)) // verifica se o posto possui montantes(se nao possuir a VNI será igual à VNA)
-                                propaga.VazaoIncremental[vazdiariaSmapDia] = (Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc)) > 0 ? Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc) : Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qnat);
+                                propaga.VazaoIncremental[vazdiariaSmapDia] = (Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qnat, Culture.NumberFormat);
 
                         }
                         if (vazdiariaSmapDia > vaz.Select(x => x.data).Last() || (propaga.VazaoIncremental[vazdiariaSmapDia] <= 1))//(propaga.VazaoIncremental[vazdiariaSmapDia] == 0 && vazdiariaSmapDia > DateTime.Today.AddDays(-6)))
@@ -909,7 +911,7 @@ namespace ChuvaVazaoTools.Classes
 
                             if (vaz.Select(k => k.data).Contains(vazdiariaDia))
                             {
-                                propaga.VazaoNatural[vazdiariaDia] = Convert.ToDouble(vaz.Where(a => a.data == vazdiariaDia).First().qnat);
+                                propaga.VazaoNatural[vazdiariaDia] = Convert.ToDouble(vaz.Where(a => a.data == vazdiariaDia).First().qnat, Culture.NumberFormat);
                             }
                         }
                         else //if (vazdiariaDia >= DateTime.Today)
@@ -956,10 +958,10 @@ namespace ChuvaVazaoTools.Classes
 
                         if (data <= vaz.Select(x => x.data).Last())
                         {
-                            if (vaz.Select(k => k.data).Contains(data) && Convert.ToDouble(vaz.Where(x => x.data == data).First().qnat) != propaga.VazaoNatural[data])
+                            if (vaz.Select(k => k.data).Contains(data) && Convert.ToDouble(vaz.Where(x => x.data == data).First().qnat, Culture.NumberFormat) != propaga.VazaoNatural[data])
                             {
                                 //var teste = Convert.ToDouble(vaz.Where(x => x.data == data).First().qnat);
-                                propaga.VazaoNatural[data] = Convert.ToDouble(vaz.Where(x => x.data == data).First().qnat);
+                                propaga.VazaoNatural[data] = Convert.ToDouble(vaz.Where(x => x.data == data).First().qnat, Culture.NumberFormat);
                             }
                             /*else
                                 propaga.VazaoNatural[data] += 0;*/
@@ -2267,6 +2269,7 @@ namespace ChuvaVazaoTools.Classes
 
         public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var ultimoAcomph = dadosAcompH.Select(x => x.data).Last();
 
             var dataInicio = data.AddDays(-94);
@@ -2289,8 +2292,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        SerraMesa.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qnat);
-                        SerraMesa.VazaoNatural[dia] = Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qnat);
+                        SerraMesa.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        SerraMesa.VazaoNatural[dia] = Convert.ToDouble(vazAcomphSerra.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2319,8 +2322,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        canaBrava.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qnat);
-                        canaBrava.VazaoNatural[dia] = Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qnat);
+                        canaBrava.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        canaBrava.VazaoNatural[dia] = Convert.ToDouble(vazAcomphCana.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
 
                     }
                     else
@@ -2355,8 +2358,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        sSalvador.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qnat);
-                        sSalvador.VazaoNatural[dia] = Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qnat);
+                        sSalvador.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        sSalvador.VazaoNatural[dia] = Convert.ToDouble(vazAcomphSalvador.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2389,8 +2392,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        pAngi.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qnat);
-                        pAngi.VazaoNatural[dia] = Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qnat);
+                        pAngi.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        pAngi.VazaoNatural[dia] = Convert.ToDouble(vazAcomphPangi.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2423,8 +2426,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        laj.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qnat);
-                        laj.VazaoNatural[dia] = Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qnat);
+                        laj.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        laj.VazaoNatural[dia] = Convert.ToDouble(vazAcomphLaj.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2563,8 +2566,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dat <= ultimoAcomph)
                     {
-                        estreito.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qinc) : Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qnat); //estreitoSmap[dat];
-                        estreito.VazaoNatural[dat] = Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qnat);
+                        estreito.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qnat, Culture.NumberFormat); //estreitoSmap[dat];
+                        estreito.VazaoNatural[dat] = Convert.ToDouble(vazAcomphEST.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2620,8 +2623,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dat <= ultimoAcomph)
                     {
-                        tucurui.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qinc) : Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qnat);
-                        tucurui.VazaoNatural[dat] = Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qnat);
+                        tucurui.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
+                        tucurui.VazaoNatural[dat] = Convert.ToDouble(vazAcomphTuc.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2770,8 +2773,8 @@ namespace ChuvaVazaoTools.Classes
                 {
                     if (dia <= ultimoAcomph)
                     {
-                        jirau.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qinc)) > 0 ? Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qinc) : Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qnat);
-                        jirau.VazaoNatural[dia] = Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qnat);
+                        jirau.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        jirau.VazaoNatural[dia] = Convert.ToDouble(vazAcomphJirau.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
                     }
                     else
                     {
@@ -2801,7 +2804,7 @@ namespace ChuvaVazaoTools.Classes
                     if (dia <= ultimoAcomph)
                     {
                         stoAnt.VazaoIncremental[dia] = vazStoAnt[dia];
-                        stoAnt.VazaoNatural[dia] = Convert.ToDouble(vazAcomphStoAnt.Where(a => a.data == dia).First().qnat);
+                        stoAnt.VazaoNatural[dia] = Convert.ToDouble(vazAcomphStoAnt.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
 
                     }
                     else
@@ -2933,6 +2936,7 @@ namespace ChuvaVazaoTools.Classes
         }
         public void GetPrevs(List<Propagacao> propagacoes, DateTime data)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             //esse metodo captura as vazões do arquivo prevsRVX oficial mais recente dos arquivos do GEVAZP para 
             //preencher os dados ds vazoes da RV0 do mês até a semana atual e tambem inclui os postos que ainda
             //não foram inclusos na lista de propagações
@@ -2954,7 +2958,7 @@ namespace ChuvaVazaoTools.Classes
                         var dados = f.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
                         for (int i = 0; i < vaz.Length; i++)
                         {
-                            vaz[i] = Convert.ToDouble(dados[i]);
+                            vaz[i] = Convert.ToDouble(dados[i], Culture.NumberFormat);
                         }
                         vazPrevs.Add(vaz);// adiciona as vazoes do prevs na lista vazPrevs
                     }
@@ -2974,7 +2978,7 @@ namespace ChuvaVazaoTools.Classes
                     var postoAlvo = propagacoes.Where(x => x.IdPosto == item[0]).FirstOrDefault();
                     if (postoAlvo == null)//o posto ainda não esta na lista de propagações 
                     {
-                        var prop = new Propagacao() { IdPosto = Convert.ToInt32(item[0]), NomePostoFluv = "PostoPrevs" };
+                        var prop = new Propagacao() { IdPosto = Convert.ToInt32(item[0], Culture.NumberFormat), NomePostoFluv = "PostoPrevs" };
                         for (int i = 1; i < item.Count(); i++)
                         {
                             var vazoes = new Tuple<DateTime, double>(dat, item[i]);
@@ -3036,6 +3040,7 @@ namespace ChuvaVazaoTools.Classes
 
         public void AdicionaCPINS(List<Propagacao> propagacoes, List<CONSULTA_VAZAO> dadosAcomph)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
             {
 
@@ -3062,9 +3067,9 @@ namespace ChuvaVazaoTools.Classes
                 for (int i = 0; i <= Num_linhas - 1; i++)
                 {
                     var Separa = TxtCpins[i].Split(';');
-                    var d = double.Parse(Separa[0]);            //no txt a data esta codificada pelo excel 
+                    var d = double.Parse(Separa[0], Culture.NumberFormat);            //no txt a data esta codificada pelo excel 
                     var data = DateTime.FromOADate(d);         // esse passo converte para datetime  
-                    var dado = new Tuple<DateTime, double, double>(data, Convert.ToDouble(Separa[1]), Convert.ToDouble(Separa[2]));
+                    var dado = new Tuple<DateTime, double, double>(data, Convert.ToDouble(Separa[1], Culture.NumberFormat), Convert.ToDouble(Separa[2], Culture.NumberFormat));
                     dados.Add(dado);
 
                 }

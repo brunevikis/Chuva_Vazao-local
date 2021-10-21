@@ -19,6 +19,7 @@ namespace ChuvaVazaoTools
 
         public static void GetApiTempoTESTE(DateTime data)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             for (DateTime dia = data.AddDays(-7); dia <= data; dia = dia.AddDays(1))
             {
                 dia = dia.AddHours(9);
@@ -57,15 +58,15 @@ namespace ChuvaVazaoTools
                                 {
                                     if (item.Value<float?>("CHUVA").HasValue)
                                     {
-                                        if (dados.ContainsKey(new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"]))))
+                                        if (dados.ContainsKey(new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat))))
                                         {
-                                            dados[new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"]))] += Convert.ToSingle(item["CHUVA"]);
+                                            dados[new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat))] += Convert.ToSingle(item["CHUVA"], Culture.NumberFormat);
                                         }
                                         else
                                         {
                                             dados.Add(
-                                        new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"])),
-                                        Convert.ToSingle(item["CHUVA"]));
+                                        new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat)),
+                                        Convert.ToSingle(item["CHUVA"], Culture.NumberFormat));
                                         }
 
                                     }
@@ -107,6 +108,7 @@ namespace ChuvaVazaoTools
         //-------------
         public static Dictionary<Tuple<decimal, decimal>, float> GetApiTempo(DateTime data, string lateFunc)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             Dictionary<Tuple<decimal, decimal>, float> dados = new Dictionary<Tuple<decimal, decimal>, float>();
             var dataHora = data.AddDays(-1);
             string json = "";
@@ -142,15 +144,15 @@ namespace ChuvaVazaoTools
                             {
                                 if (item.Value<float?>("CHUVA").HasValue)
                                 {
-                                    if (dados.ContainsKey(new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"]))))
+                                    if (dados.ContainsKey(new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat))))
                                     {
-                                        dados[new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"]))] += Convert.ToSingle(item["CHUVA"]);
+                                        dados[new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat))] += Convert.ToSingle(item["CHUVA"], Culture.NumberFormat);
                                     }
                                     else
                                     {
                                         dados.Add(
-                                    new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"]), Convert.ToDecimal(item["VL_LONGITUDE"])),
-                                    Convert.ToSingle(item["CHUVA"]));
+                                    new Tuple<decimal, decimal>(Convert.ToDecimal(item["VL_LATITUDE"], Culture.NumberFormat), Convert.ToDecimal(item["VL_LONGITUDE"], Culture.NumberFormat)),
+                                    Convert.ToSingle(item["CHUVA"], Culture.NumberFormat));
                                     }
 
                                 }
@@ -223,8 +225,8 @@ namespace ChuvaVazaoTools
                         if (item.Value<float?>("valor").HasValue)
                         {
                             data.Add(
-                            new Tuple<decimal, decimal>(Convert.ToDecimal(item["geom"]["lat"]), Convert.ToDecimal(item["geom"]["lon"])),
-                            Convert.ToSingle(item["valor"]));
+                            new Tuple<decimal, decimal>(Convert.ToDecimal(item["geom"]["lat"], Culture.NumberFormat), Convert.ToDecimal(item["geom"]["lon"], Culture.NumberFormat)),
+                            Convert.ToSingle(item["valor"], Culture.NumberFormat));
                         }
                     }
                     catch (Exception e)
@@ -961,6 +963,7 @@ namespace ChuvaVazaoTools
 
         public static string DownloadNoaaImgs(DateTime dt, System.IO.TextWriter log = null, string modelo = "GEFS", string horasToDownload = "12")
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             //https://www.tropicaltidbits.com/analysis/models/gfs-ens/2018110500/ //gfs-ens_apcpn24_samer_3.png
             //https://www.tropicaltidbits.com/analysis/models/gfs/2018110500/ //gfs_apcpn24_samer_19.png
 
@@ -974,7 +977,7 @@ namespace ChuvaVazaoTools
                 var directoryToSaveBin = System.IO.Path.Combine(Config.CaminhoPrevisao, dt.ToString("yyyyMM"), dt.ToString("dd"), modelo + hora);
                 var directoryToSaveBin40 = System.IO.Path.Combine(Config.CaminhoPrevisao, dt.ToString("yyyyMM"), dt.ToString("dd"), modelo + "40_" + hora);
                 var url = @"https://www.tropicaltidbits.com/analysis/models/" + fileRadical + "/" + dt.ToString("yyyyMMdd") + hora;
-                int horaI = int.Parse(hora);
+                int horaI = int.Parse(hora, Culture.NumberFormat);
                 System.Net.WebClient c = new System.Net.WebClient();
                 var filesToDownload = new Dictionary<int, string>();
                 try

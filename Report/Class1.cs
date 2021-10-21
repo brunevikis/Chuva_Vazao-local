@@ -2320,7 +2320,8 @@ namespace Report
 
         private static List<string> CriarImagensEnas(DateTime data, bool preliminar)
         {
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
             var re = new List<string>();
 
             var app = new Microsoft.Office.Interop.Excel.Application();
@@ -2404,9 +2405,9 @@ namespace Report
                         for (int r = 0; r < valsText.Length; r++)
                             for (int c = 0; c < valsText[r].Length; c++)
                             {
-                                if (double.TryParse(valsText[r][c], out double dbl))
+                                if (double.TryParse(valsText[r][c], style, Culture.NumberFormat, out double dbl))
                                     vals[r, c] = dbl;
-                                else if (DateTime.TryParse(valsText[r][c], out DateTime dt))
+                                else if (DateTime.TryParse(valsText[r][c], Culture.DateTimeFormat, System.Globalization.DateTimeStyles.None, out DateTime dt))
                                     vals[r, c] = dt;
                                 else
                                     vals[r, c] = valsText[r][c];
@@ -2423,9 +2424,9 @@ namespace Report
                         for (int r = 0; r < valsText.Length; r++)
                             for (int c = 0; c < valsText[r].Length; c++)
                             {
-                                if (double.TryParse(valsText[r][c], out double dbl))
+                                if (double.TryParse(valsText[r][c], style, Culture.NumberFormat, out double dbl))
                                     vals[r, c] = dbl;
-                                else if (DateTime.TryParse(valsText[r][c], out DateTime dt))
+                                else if (DateTime.TryParse(valsText[r][c], Culture.DateTimeFormat, System.Globalization.DateTimeStyles.None, out DateTime dt))
                                     vals[r, c] = dt;
                                 else
                                     vals[r, c] = valsText[r][c];

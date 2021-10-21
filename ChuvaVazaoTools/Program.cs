@@ -1753,6 +1753,7 @@ namespace ChuvaVazaoTools
         internal static void Convert_BinDat
             (string metodo)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             DateTime data_inicial = DateTime.Today.AddDays(-5);
 
             if (metodo == "funceme")
@@ -1840,14 +1841,14 @@ namespace ChuvaVazaoTools
                                     if (fMatch.Success)
                                     {
                                         var data = new DateTime(
-                                            int.Parse(fMatch.Groups[1].Value),
-                                            int.Parse(fMatch.Groups[2].Value),
-                                            int.Parse(fMatch.Groups[3].Value))
+                                            int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat),
+                                            int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
+                                            int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat))
                                             ;
                                         var dataPrev = data;
                                         if (metodo != "funceme" && metodo != "merge")
                                         {
-                                            var horas = int.Parse(fMatch.Groups[4].Value);
+                                            var horas = int.Parse(fMatch.Groups[4].Value, Culture.NumberFormat);
 
                                             dataPrev = data.AddHours(horas).Date;
                                         }
@@ -1899,14 +1900,14 @@ namespace ChuvaVazaoTools
                                         if (fMatch.Success)
                                         {
                                             var data = new DateTime(
-                                                int.Parse(fMatch.Groups[1].Value),
-                                                int.Parse(fMatch.Groups[2].Value),
-                                                int.Parse(fMatch.Groups[3].Value))
+                                                int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat),
+                                                int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
+                                                int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat))
                                                 ;
                                             var dataPrev = data;
                                             if (metodo != "funceme" && metodo != "merge")
                                             {
-                                                var horas = int.Parse(fMatch.Groups[4].Value);
+                                                var horas = int.Parse(fMatch.Groups[4].Value, Culture.NumberFormat);
 
                                                 dataPrev = data.AddHours(horas).Date;
                                             }
@@ -1982,9 +1983,9 @@ namespace ChuvaVazaoTools
                                         if (fMatch.Success)
                                         {
                                             var data = new DateTime(
-                                                int.Parse(fMatch.Groups[1].Value),
-                                                int.Parse(fMatch.Groups[2].Value),
-                                                int.Parse(fMatch.Groups[3].Value))
+                                                int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat),
+                                                int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
+                                                int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat))
                                                 ;
 
                                             var raiznome = metodo + "_p" + data.ToString("ddMMyy") + "a" + prec.Value.Data.ToString("ddMMyy") + ".dat";

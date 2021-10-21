@@ -609,7 +609,7 @@ namespace ChuvaVazaoTools
                 if (dataModelo < dtAtual.Value.Date.AddDays(-1))
                 {
                     name = name + "_d-1";
-                    pastaRaiz = Path.Combine(pastaMapa + " d-1","CV", "CV_FUNC");
+                    pastaRaiz = Path.Combine(pastaMapa + " d-1", "CV", "CV_FUNC");
                     pastaMapa = (pastaMapa + " d-1");
                 }
                 else
@@ -742,7 +742,7 @@ namespace ChuvaVazaoTools
 
                 //btnConsultarVazObserv_Click(sender, e);
                 PreencherVazObservada(out _, out _);
-           
+
 
                 dtAtual.Value = datModel.AddDays(1);
                 dtModelo.Value = dtAtual.Value.Date;
@@ -985,7 +985,7 @@ namespace ChuvaVazaoTools
         public static void CalcularPostRegre(List<Propagacao> Propagacoes, List<DateTime> dias)
         {
 
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 List<int> idRegre = new List<int> {002, 007, 008, 009, 010, 011, 012, 015, 016, 022, 251, 206, 207, 028, 023, 032, 248, 261,
@@ -998,10 +998,10 @@ namespace ChuvaVazaoTools
                 foreach (string l in regresA1)
                 {
                     Regressao reg = new Regressao();
-                    reg.IdPosto = Convert.ToInt32(l.Split(' ').First());
+                    reg.IdPosto = Convert.ToInt32(l.Split(' ').First(), Culture.NumberFormat);
                     var list = l.Split(' ').ToList();
 
-                    reg.Valor_mensal = list.Select(x => double.Parse(x)).ToList();
+                    reg.Valor_mensal = list.Select(x => double.Parse(x, Culture.NumberFormat)).ToList();
 
                     RegressoesA1.Add(reg);
                 }
@@ -1010,10 +1010,10 @@ namespace ChuvaVazaoTools
                 foreach (string l in regresA0)
                 {
                     Regressao regB = new Regressao();
-                    regB.IdPosto = Convert.ToInt32(l.Split(' ').First());
+                    regB.IdPosto = Convert.ToInt32(l.Split(' ').First(), Culture.NumberFormat);
                     var list = l.Split(' ').ToList();
 
-                    regB.Valor_mensal = list.Select(x => double.Parse(x)).ToList();
+                    regB.Valor_mensal = list.Select(x => double.Parse(x, Culture.NumberFormat)).ToList();
 
                     RegressoesA0.Add(regB);
                 }
@@ -1021,8 +1021,8 @@ namespace ChuvaVazaoTools
                 foreach (var l in listRegre)
                 {
                     PostoRegre post = new PostoRegre();
-                    post.Idposto_Regredido = Convert.ToInt32(l.Split(' ').First());
-                    post.IdPosto_Base = Convert.ToInt32(l.Split(' ').Last());
+                    post.Idposto_Regredido = Convert.ToInt32(l.Split(' ').First(), Culture.NumberFormat);
+                    post.IdPosto_Base = Convert.ToInt32(l.Split(' ').Last(), Culture.NumberFormat);
                     PostoRegredidos.Add(post);
                 }
             }
@@ -1162,6 +1162,7 @@ namespace ChuvaVazaoTools
 
         public static void CalcularPostCalculados(List<Propagacao> Propagacoes, List<DateTime> dias)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var verifica = Propagacoes;
             List<DateTime> listSem = dias;
             /*foreach (var pn in postosIncrementais)//soma as vazões dos postos  montantes e incremnetais dos postos que possuem postos incrementais
@@ -1214,24 +1215,24 @@ namespace ChuvaVazaoTools
 
             foreach (var d in listSem)
             {
-                
+
                 foreach (var p in Propagacoes.Where(x => x.IdPosto == 240))
                 {
                     var p239 = GetMediaSemanal(Propagacoes, 239, d);
                     var p242 = GetMediaSemanal(Propagacoes, 242, d);
-                    
-                    
-                        p.VazaoNatural[d] = (p242 - p239) * 0.717 + p239;
 
-                        if (p.VazaoNatural[d] <= 0)
-                        {
-                            p.VazaoNatural[d] = 0;
-                        }
-                        else if (p.VazaoNatural[d] <= 1)
-                        {
-                            p.VazaoNatural[d] = 1;
-                        }
-                    
+
+                    p.VazaoNatural[d] = (p242 - p239) * 0.717 + p239;
+
+                    if (p.VazaoNatural[d] <= 0)
+                    {
+                        p.VazaoNatural[d] = 0;
+                    }
+                    else if (p.VazaoNatural[d] <= 1)
+                    {
+                        p.VazaoNatural[d] = 1;
+                    }
+
 
 
                 }
@@ -1261,18 +1262,18 @@ namespace ChuvaVazaoTools
                 {
                     var p239 = GetMediaSemanal(Propagacoes, 239, d);
                     var p237 = GetMediaSemanal(Propagacoes, 237, d);
-                    
-                    
-                        p.VazaoNatural[d] = (p239 - p237) * 0.342 + p237;
-                        if (p.VazaoNatural[d] <= 0)
-                        {
-                            p.VazaoNatural[d] = 0;
-                        }
-                        else if (p.VazaoNatural[d] <= 1)
-                        {
-                            p.VazaoNatural[d] = 1;
-                        }
-                    
+
+
+                    p.VazaoNatural[d] = (p239 - p237) * 0.342 + p237;
+                    if (p.VazaoNatural[d] <= 0)
+                    {
+                        p.VazaoNatural[d] = 0;
+                    }
+                    else if (p.VazaoNatural[d] <= 1)
+                    {
+                        p.VazaoNatural[d] = 1;
+                    }
+
 
                 }
 
@@ -1456,7 +1457,7 @@ namespace ChuvaVazaoTools
 
                         double mediaTVR = 0;
 
-                        mediaTVR = Convert.ToDouble(TVRmeses[d.Month - 1]);
+                        mediaTVR = Convert.ToDouble(TVRmeses[d.Month - 1], Culture.NumberFormat);
 
                         if (p288 <= mediaTVR)
                         {
@@ -2031,7 +2032,7 @@ namespace ChuvaVazaoTools
                     p21.VazaoNatural[dia] = p123.VazaoNatural[dia];
                 }
 
-                
+
 
                 foreach (var p in Propagacoes)
                 {
@@ -2092,7 +2093,7 @@ namespace ChuvaVazaoTools
                 }
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 e.ToString();
             }
@@ -2144,7 +2145,7 @@ namespace ChuvaVazaoTools
                         vazaoCalcinc += SomaIncDiaria(postoMontante, dia);
                     }
                 }
-                
+
                 if (propaga.IdPosto != 2)//o posto 2 (ITUTINGA) é uma copia  do posto 1(camargos), esse if previne o erro no calculo.
                 {
                     vazaoCalcinc += propaga.VazaoIncremental[dia];
@@ -2163,6 +2164,7 @@ namespace ChuvaVazaoTools
 
         public static void ExportaEnas(List<Propagacao> propagacoes, string pastaSaida)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
             {
                 List<string> subMercados = new List<string>() { "SE/CO", "S", "NE", "N" };
@@ -2225,11 +2227,11 @@ namespace ChuvaVazaoTools
                     if (Prods.Any(x => x.id == p.IdPosto))
                     {
                         var postoEna = new Enas() { IdPosto = p.IdPosto, bacia = Prods.Where(x => x.id == p.IdPosto).Select(x => x.bacia).First() };
-                        postoEna.subMercado = Convert.ToInt32(Prods.Where(x => x.id == p.IdPosto).Select(x => x.submercado).First());
+                        postoEna.subMercado = Convert.ToInt32(Prods.Where(x => x.id == p.IdPosto).Select(x => x.submercado).First(), Culture.NumberFormat);
                         var dataSenamal = p.calMedSemanal.OrderBy(x => x.Key).ToList();
                         foreach (var item in dataSenamal)
                         {
-                            postoEna.DadoEna[item.Key] = p.calMedSemanal[item.Key] * Convert.ToDouble(Prods.Where(x => x.id == p.IdPosto).Select(x => x.produtibilidade).First());
+                            postoEna.DadoEna[item.Key] = p.calMedSemanal[item.Key] * Convert.ToDouble(Prods.Where(x => x.id == p.IdPosto).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
                         }
                         enasemanal.Add(postoEna);
                     }
@@ -2365,7 +2367,7 @@ namespace ChuvaVazaoTools
                 foreach (var item in dats.Keys.ToList())
                 {
                     double valor = 0;
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     var dad66 = propagacoes.Where(x => x.IdPosto == 66).Select(x => x.calMedSemanal[item]).FirstOrDefault();
                     var dad44 = propagacoes.Where(x => x.IdPosto == 44).Select(x => x.calMedSemanal[item]).FirstOrDefault();
@@ -2390,7 +2392,7 @@ namespace ChuvaVazaoTools
                         valor += dados;
                     }
                     var dad44 = propagacoes.Where(x => x.IdPosto == 44).Select(x => x.calMedSemanal[item]).FirstOrDefault();
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     valor += (dad44 * produti);//ITAIPU Mont PARANA
                     valor += enasemanal.Where(x => x.IdPosto == 154).Select(x => x.DadoEna[item]).FirstOrDefault();//sao domingos
@@ -2413,7 +2415,7 @@ namespace ChuvaVazaoTools
                         valor += dados;
                     }
                     var dad61 = propagacoes.Where(x => x.IdPosto == 61).Select(x => x.calMedSemanal[item]).FirstOrDefault();
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     valor += (dad61 * produti);//ITAIPU Mont PARANAPANEMA
 
@@ -2614,7 +2616,7 @@ namespace ChuvaVazaoTools
                     if (Prods.Any(x => x.id == p.IdPosto))
                     {
                         var postoEna = new Enas() { IdPosto = p.IdPosto, bacia = Prods.Where(x => x.id == p.IdPosto).Select(x => x.bacia).First() };
-                        postoEna.subMercado = Convert.ToInt32(Prods.Where(x => x.id == p.IdPosto).Select(x => x.submercado).First());
+                        postoEna.subMercado = Convert.ToInt32(Prods.Where(x => x.id == p.IdPosto).Select(x => x.submercado).First(), Culture.NumberFormat);
                         //foreach (var dia in dias)
                         //{
                         //    if (!p.VazaoNatural.ContainsKey(dia)||p.VazaoNatural[dia] == 0)
@@ -2626,7 +2628,7 @@ namespace ChuvaVazaoTools
 
                         foreach (var item in dias)
                         {
-                            postoEna.DadoEna[item] = p.VazaoNatural[item] * Convert.ToDouble(Prods.Where(x => x.id == p.IdPosto).Select(x => x.produtibilidade).First());
+                            postoEna.DadoEna[item] = p.VazaoNatural[item] * Convert.ToDouble(Prods.Where(x => x.id == p.IdPosto).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
                         }
                         enasDiarias.Add(postoEna);
                     }
@@ -2763,7 +2765,7 @@ namespace ChuvaVazaoTools
                 foreach (var item in dias)
                 {
                     double valor = 0;
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     var dad66 = propagacoes.Where(x => x.IdPosto == 66).Select(x => x.VazaoNatural[item]).FirstOrDefault();
                     var dad44 = propagacoes.Where(x => x.IdPosto == 44).Select(x => x.VazaoNatural[item]).FirstOrDefault();
@@ -2788,7 +2790,7 @@ namespace ChuvaVazaoTools
                         valor += dados;
                     }
                     var dad44 = propagacoes.Where(x => x.IdPosto == 44).Select(x => x.VazaoNatural[item]).FirstOrDefault();
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     valor += (dad44 * produti);//ITAIPU Mont PARANA
                     valor += enasDiarias.Where(x => x.IdPosto == 154).Select(x => x.DadoEna[item]).FirstOrDefault();//sao domingos
@@ -2811,7 +2813,7 @@ namespace ChuvaVazaoTools
                         valor += dados;
                     }
                     var dad61 = propagacoes.Where(x => x.IdPosto == 61).Select(x => x.VazaoNatural[item]).FirstOrDefault();
-                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First());
+                    var produti = Convert.ToDouble(Prods.Where(x => x.id == 66).Select(x => x.produtibilidade).First(), Culture.NumberFormat);
 
                     valor += (dad61 * produti);//ITAIPU Mont PARANAPANEMA
 
@@ -4387,6 +4389,7 @@ namespace ChuvaVazaoTools
 
         public void PreencherPrecObserv()
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var dataAcomph = dtAtual.Value.Date;
             var pastAcomph = Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", dataAcomph.ToString("yyyy"), dataAcomph.ToString("MM_yyyy"));
             var nomeAcomph = "ACOMPH_" + dataAcomph.ToString("dd-MM-yyyy") + ".xls";
@@ -4426,7 +4429,7 @@ namespace ChuvaVazaoTools
                                 if (isWindowns)
                                 {
                                     //postoPlu.Preciptacao[prec.Key] = prec.Value[postoPlu.Codigo];
-                                    postoPlu.Preciptacao[prec.Key] = float.Parse(precipDado.Replace('.', ','));// o replace é para publicação em windowns 
+                                    postoPlu.Preciptacao[prec.Key] = float.Parse(precipDado.Replace('.', ','), Culture.NumberFormat);// o replace é para publicação em windowns 
                                 }
                                 else
                                 {
@@ -5574,6 +5577,7 @@ namespace ChuvaVazaoTools
 
         private void btnAtualizarAcomphTXT_Click(object sender, EventArgs e)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var vazInicialConfigs = System.IO.File.ReadLines(Config.IniVazao)
                 .Where(x => x.Length >= 115 && x[0] != '#')
                 .Select(x => new
@@ -5598,7 +5602,7 @@ namespace ChuvaVazaoTools
 
                     for (int i = 0; i < v.Length; i++)
                     {
-                        var vazArq = float.Parse(v[i]);
+                        var vazArq = float.Parse(v[i], Culture.NumberFormat);
 
                         if (vazArq > 0) arqEntrada.entrada.Vazoes[dataIni.AddDays(i)] = vazArq;
                     }
@@ -6033,7 +6037,7 @@ namespace ChuvaVazaoTools
 
         private void PreencherVazObservada(out DateTime ultimaDataDisponivel, out string fonte)
         {
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var iniVazao = Config.Postos_Vazaoes;
 
 
@@ -6054,7 +6058,7 @@ namespace ChuvaVazaoTools
                     {
                         configFlu.Origem.Add((
                             float.Parse(x[2 + i * 3], System.Globalization.NumberFormatInfo.InvariantInfo),
-                            int.Parse(x[3 + i * 3]),
+                            int.Parse(x[3 + i * 3], Culture.NumberFormat),
                             x[4 + i * 3].Trim()
                             ));
                     }
@@ -6149,7 +6153,7 @@ namespace ChuvaVazaoTools
                                    {
                                        var UV_Atual = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "65310001" && x.Tipo_Vazao == "VMD").Vazao;
                                        var UV_D1 = dados_observados.First(x => x.Data == dt.AddDays(-1) && x.Cod_Posto.ToString() == "65310001" && x.Tipo_Vazao == "VMD").Vazao;
-                                       value = Convert.ToDecimal(Convert.ToDouble(value) - (Convert.ToDouble(UV_Atual) * (24 - 17.4f) + Convert.ToDouble(UV_D1) * (17.4f)) / 24);
+                                       value = Convert.ToDecimal(Convert.ToDouble(value, Culture.NumberFormat) - (Convert.ToDouble(UV_Atual, Culture.NumberFormat) * (24 - 17.4f) + Convert.ToDouble(UV_D1, Culture.NumberFormat) * (17.4f)) / 24, Culture.NumberFormat);
                                    }
                                    else if (cod_posto.Item2 == "73")
                                    {
@@ -6191,13 +6195,13 @@ namespace ChuvaVazaoTools
                                        var valor1d1 = ((vnm3d1 * (24 - 3) + vnm3d2 * 3) / 24);
                                        var valor1d2 = ((vnm3d2 * (24 - 3) + vnm3d3 * 3) / 24);
 
-                                       var valor2 = ((Convert.ToDouble(vnm2 + valor1) * (24 - 2.8) + Convert.ToDouble(vnm2d1 + valor1d1) * 2.8) / 24);
-                                       var valor2d1 = ((Convert.ToDouble(vnm2d1 + valor1d1) * (24 - 2.8) + Convert.ToDouble(vnm2d2 + valor1d2) * 2.8) / 24);
+                                       var valor2 = ((Convert.ToDouble(vnm2 + valor1, Culture.NumberFormat) * (24 - 2.8) + Convert.ToDouble(vnm2d1 + valor1d1, Culture.NumberFormat) * 2.8) / 24);
+                                       var valor2d1 = ((Convert.ToDouble(vnm2d1 + valor1d1, Culture.NumberFormat) * (24 - 2.8) + Convert.ToDouble(vnm2d2 + valor1d2, Culture.NumberFormat) * 2.8) / 24);
 
-                                       var valor3 = (((Convert.ToDouble(vnm1) + valor2) * (24 - 2.8) + (Convert.ToDouble(vnm1d1) + valor2d1) * 2.8) / 24);
+                                       var valor3 = (((Convert.ToDouble(vnm1, Culture.NumberFormat) + valor2) * (24 - 2.8) + (Convert.ToDouble(vnm1d1, Culture.NumberFormat) + valor2d1) * 2.8) / 24);
 
 
-                                       value = Convert.ToDecimal(Convert.ToDouble(value) + valor3);
+                                       value = Convert.ToDecimal(Convert.ToDouble(value, Culture.NumberFormat) + valor3, Culture.NumberFormat);
 
                                    }
                                    else if (cod_posto.Item2 == "49")
@@ -6211,7 +6215,7 @@ namespace ChuvaVazaoTools
 
                                    return value;
                                }).Sum();
-                                arqEntrada.posto.Vazoes[dt] = float.Parse(vazHidr.ToString());
+                                arqEntrada.posto.Vazoes[dt] = float.Parse(vazHidr.ToString(), Culture.NumberFormat);
                             }
                             catch (Exception e)
                             {
@@ -6300,6 +6304,8 @@ namespace ChuvaVazaoTools
 
         private void btnAtualizarRDHBD_Click(object sender, EventArgs e)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+
             var iniVazao = Config.PostosFlu;
 
             var vazInicialConfigs = System.IO.File.ReadLines(iniVazao)
@@ -6309,7 +6315,7 @@ namespace ChuvaVazaoTools
                 {
                     Arquivo = x[0].Trim(),
                     Fator = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo),
-                    Posto = int.Parse(x[2]),
+                    Posto = int.Parse(x[2], Culture.NumberFormat),
                     PostoTipo = x[3].Trim(),
                     TipoAtualizacao = x[4].Trim()
                 }).ToList();
@@ -6368,7 +6374,7 @@ namespace ChuvaVazaoTools
                                     : dados.First(x => x.data == dt && x.posto == arqEntrada.config.Posto).qinc;
                             value = value < 0 ? 0 : value;
                             arqEntrada.posto.Vazoes[dt] =
-                                arqEntrada.config.Fator * float.Parse(value.ToString());
+                                arqEntrada.config.Fator * float.Parse(value.ToString(), Culture.NumberFormat);
                         }
                     }
                 }
@@ -6417,7 +6423,8 @@ namespace ChuvaVazaoTools
         }
         private List<CONSULTA_VAZAO> ReadVazoesPassadas(string historicoVazao)
         {
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
             List<CONSULTA_VAZAO> dados;
 
 
@@ -6436,14 +6443,14 @@ namespace ChuvaVazaoTools
                     int _q_inc;
 
 
-                    if (!int.TryParse(x[1], out _posto) || !DateTime.TryParse(x[0], out _data))
+                    if (!int.TryParse(x[1], style, Culture.NumberFormat, out _posto) || !DateTime.TryParse(x[0], Culture.DateTimeFormat, System.Globalization.DateTimeStyles.None, out _data))
                     {
                         return (CONSULTA_VAZAO)null;
                     }
 
 
-                    int.TryParse(x[2], out _q_nat);
-                    int.TryParse(x[3], out _q_inc);
+                    int.TryParse(x[2], style, Culture.NumberFormat, out _q_nat);
+                    int.TryParse(x[3], style, Culture.NumberFormat, out _q_inc);
 
                     return new CONSULTA_VAZAO() { data = _data, posto = _posto, qinc = _q_inc, qnat = _q_nat, fonte = "FILE" };
                 }
@@ -6455,6 +6462,8 @@ namespace ChuvaVazaoTools
 
         private void btnInserirPrecip_Click(object sender, EventArgs e)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+
             OpenFileDialog ofd = new OpenFileDialog();
 
             ofd.Multiselect = true;
@@ -6478,9 +6487,9 @@ namespace ChuvaVazaoTools
 
 
                             var data = new DateTime(
-                                int.Parse(fMatch.Groups[3].Value) + 2000,
-                                int.Parse(fMatch.Groups[2].Value),
-                                int.Parse(fMatch.Groups[1].Value))
+                                int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat) + 2000,
+                                int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
+                                int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat))
                                 ;
 
 
@@ -6514,12 +6523,12 @@ namespace ChuvaVazaoTools
                         if (fMatch.Success)
                         {
                             var data = new DateTime(
-                                int.Parse(fMatch.Groups[1].Value),
-                                int.Parse(fMatch.Groups[2].Value),
-                                int.Parse(fMatch.Groups[3].Value))
+                                int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat),
+                                int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
+                                int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat))
                                 ;
 
-                            var horas = int.Parse(fMatch.Groups[4].Value);
+                            var horas = int.Parse(fMatch.Groups[4].Value, Culture.NumberFormat);
 
                             var dataPrev = data.AddHours(horas).Date;
 
@@ -6539,15 +6548,15 @@ namespace ChuvaVazaoTools
                             fMatch = r.Match(file);
                             if (fMatch.Success)
                             {
-                                var ano = int.Parse(fMatch.Groups[2].Value);
+                                var ano = int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat);
 
 
 
 
                                 var data = new DateTime(
                                     ano < DateTime.Today.Year ? DateTime.Today.Year : ano,
-                                    int.Parse(fMatch.Groups[3].Value),
-                                    int.Parse(fMatch.Groups[4].Value))
+                                    int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat),
+                                    int.Parse(fMatch.Groups[4].Value, Culture.NumberFormat))
                                     ;
 
 
@@ -6912,6 +6921,8 @@ namespace ChuvaVazaoTools
 
         private void button2_Click(object sender, EventArgs e)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
             var pastaSaida = ArquivosDeSaida;
 
             var rev = new Ookii.Dialogs.InputDialog();
@@ -6920,7 +6931,7 @@ namespace ChuvaVazaoTools
             if (rev.ShowDialog() == DialogResult.OK)
             {
 
-                if (int.TryParse(rev.Input, out int revnum))
+                if (int.TryParse(rev.Input, style, Culture.NumberFormat, out int revnum))
                 {
                     ProcessarResultados(pastaSaida, revnum: revnum, statusF: new RunStatus(pastaSaida));
                 }
@@ -6931,6 +6942,8 @@ namespace ChuvaVazaoTools
         IntPtr pointer;
         private void ProcessarResultados(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
             var check = cbx_Encadear_Previvaz.Checked;
             Excel.Workbook wbCen = null;
             Excel.Workbook wb = null;
@@ -7219,7 +7232,7 @@ namespace ChuvaVazaoTools
                             {
                                 if (valDia != null)
                                 {
-                                    if (decimal.TryParse(valDia.ToString(), out valu))
+                                    if (decimal.TryParse(valDia.ToString(), style, Culture.NumberFormat, out valu))
                                         if (valu < 0)
                                             throw new Exception("Erro ao criando Ena diaria");
                                 }
@@ -7705,6 +7718,8 @@ namespace ChuvaVazaoTools
         }
         private void ProcessarResultadosManual(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null, bool rodarPrevivaz = true)
         {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
             Excel.Workbook wbCen = null;
             Excel.Workbook wb = null;
 
@@ -7991,7 +8006,7 @@ namespace ChuvaVazaoTools
                             {
                                 if (valDia != null)
                                 {
-                                    if (decimal.TryParse(valDia.ToString(), out valu))
+                                    if (decimal.TryParse(valDia.ToString(), style, Culture.NumberFormat, out valu))
                                         if (valu < 0)
                                             throw new Exception("Erro ao criando Ena diaria");
                                 }
@@ -8705,10 +8720,10 @@ namespace ChuvaVazaoTools
 
                     //var horas = int.Parse(fMatch.Groups[4].Value);
                     var data = new DateTime(
-                        int.Parse(fMatch.Groups[3].Value) + 2000,
-                        int.Parse(fMatch.Groups[2].Value),
+                        int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat) + 2000,
+                        int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
                         //int.Parse(fMatch.Groups[3].Value)).AddHours(horas).Date
-                        int.Parse(fMatch.Groups[1].Value))
+                        int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat))
                         ;
 
                     this.chuvas[data] = PrecipitacaoFactory.BuildFromEtaFile(file);
@@ -8747,10 +8762,10 @@ namespace ChuvaVazaoTools
 
                     //var horas = int.Parse(fMatch.Groups[4].Value);
                     var data = new DateTime(
-                        int.Parse(fMatch.Groups[1].Value),
-                        int.Parse(fMatch.Groups[2].Value),
+                        int.Parse(fMatch.Groups[1].Value, Culture.NumberFormat),
+                        int.Parse(fMatch.Groups[2].Value, Culture.NumberFormat),
                         //int.Parse(fMatch.Groups[3].Value.AddHours(horas).Date
-                        int.Parse(fMatch.Groups[3].Value))
+                        int.Parse(fMatch.Groups[3].Value, Culture.NumberFormat))
                         ;
                     var NomeArq = Path.Combine(localPath, "prev" + conta);
                     //File.Move(ctlfile, NomeArq+".ctl");

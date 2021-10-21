@@ -1470,7 +1470,8 @@ namespace ChuvaVazaoTools
 
         public PrecipitacaoConjunto(string arquivoParametros)
         {
-
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            //System.Globalization.CultureInfo("pt-BR");
             Agrupamentos = new List<Agrupamento>();
             Regioes = new List<RegiaoVies>();
             RegioesConjunto = new List<RegiaoConj>();
@@ -1486,118 +1487,126 @@ namespace ChuvaVazaoTools
             foreach (var line in fileLines)
             {
 
-
-                if (line.StartsWith("&") || string.IsNullOrWhiteSpace(line))
+                try
                 {
-                    continue;
-                }
-
-                if (line.StartsWith("#"))
-                {
-                    readGrades = readParame = readLimite = readCorrel = readConjun = false;
-                }
-
-                var lineArr = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (line.StartsWith("#GRADES"))
-                {
-                    readGrades = true;
-                }
-                else if (line.StartsWith("#PARAMETROS"))
-                {
-                    readParame = true;
-                }
-                else if (line.StartsWith("#LIMITES"))
-                {
-                    readLimite = true;
-                }
-                else if (line.StartsWith("#CONJUNTO"))
-                {
-                    readConjun = true;
-                }
-                else if (line.StartsWith("#CORRELACAO"))
-                {
-                    readCorrel = true;
-                }
-                else if (readGrades)
-                {
-                    var reg = new RegiaoVies();
-
-                    reg.Nome = lineArr[0];
-                    reg.Modelo = lineArr[1];
-
-                    reg.Coordenadas.AddRange(
-                    lineArr.Skip(2).ToList().Select(coord =>
+                    if (line.StartsWith("&") || string.IsNullOrWhiteSpace(line))
                     {
-                        var lat = decimal.Parse(coord.Split(';')[0]);
-                        var lon = decimal.Parse(coord.Split(';')[1]);
-                        return new Tuple<decimal, decimal>(lat, lon);
-                    }));
-                    Regioes.Add(reg);
-                }
-                else if (readParame)
-                {
-                    if (Regioes.Any(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]))
-                    {
-                        var reg = Regioes.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]);
+                        continue;
+                    }
 
-                        for (int i = 1; i <= 12; i++)
+                    if (line.StartsWith("#"))
+                    {
+                        readGrades = readParame = readLimite = readCorrel = readConjun = false;
+                    }
+
+                    var lineArr = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (line.StartsWith("#GRADES"))
+                    {
+                        readGrades = true;
+                    }
+                    else if (line.StartsWith("#PARAMETROS"))
+                    {
+                        readParame = true;
+                    }
+                    else if (line.StartsWith("#LIMITES"))
+                    {
+                        readLimite = true;
+                    }
+                    else if (line.StartsWith("#CONJUNTO"))
+                    {
+                        readConjun = true;
+                    }
+                    else if (line.StartsWith("#CORRELACAO"))
+                    {
+                        readCorrel = true;
+                    }
+                    else if (readGrades)
+                    {
+                        var reg = new RegiaoVies();
+
+                        reg.Nome = lineArr[0];
+                        reg.Modelo = lineArr[1];
+
+                        reg.Coordenadas.AddRange(
+                        lineArr.Skip(2).ToList().Select(coord =>
                         {
-                            reg.A[i] = float.Parse(lineArr.ToArray()[i + 1]);
-                            reg.B[i] = float.Parse(lineArr.ToArray()[i + 13]);
-                            reg.LimVies[i] = float.Parse(lineArr.ToArray()[i + 25]);
-                        }
+                            var lat = decimal.Parse(coord.Split(';')[0], Culture.NumberFormat);
+                            var lon = decimal.Parse(coord.Split(';')[1], Culture.NumberFormat);
+                            return new Tuple<decimal, decimal>(lat, lon);
+                        }));
+                        Regioes.Add(reg);
                     }
-                    else { }
-                }
-                else if (readLimite)
-                {
-
-                    if (Regioes.Any(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]))
+                    else if (readParame)
                     {
-                        var reg = Regioes.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]);
-                        reg.LimDiario = float.Parse(lineArr[2]);
-                        for (int i = 1; i <= 12; i++)
+                        if (Regioes.Any(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]))
                         {
-                            reg.Lim10Dias[i] = float.Parse(lineArr.ToArray()[i + 2]);
+                            var reg = Regioes.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]);
+
+                            for (int i = 1; i <= 12; i++)
+                            {
+                                reg.A[i] = float.Parse(lineArr.ToArray()[i + 1], Culture.NumberFormat);
+                                reg.B[i] = float.Parse(lineArr.ToArray()[i + 13], Culture.NumberFormat);
+                                //reg.LimVies[i] = float.Parse(lineArr.ToArray()[i + 25], System.Globalization.CultureInfo.InvariantCulture);
+                                reg.LimVies[i] = float.Parse(lineArr.ToArray()[i + 25], Culture.NumberFormat);
+                            }
                         }
+                        else { }
                     }
-                    else { }
-                }
-                else if (readCorrel)
-                {
-                    var agrup = new Agrupamento();
-                    agrup.Nome = lineArr[0];
-                    agrup.Modelo = lineArr[1];
-
-                    for (int i = 1; i <= 10; i++)
+                    else if (readLimite)
                     {
-                        agrup.Correlacao[i] = float.Parse(lineArr.ToArray()[i + 1]);
+
+                        if (Regioes.Any(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]))
+                        {
+                            var reg = Regioes.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[1]);
+                            reg.LimDiario = float.Parse(lineArr[2], Culture.NumberFormat);
+                            for (int i = 1; i <= 12; i++)
+                            {
+                                reg.Lim10Dias[i] = float.Parse(lineArr.ToArray()[i + 2], Culture.NumberFormat);
+                            }
+                        }
+                        else { }
                     }
-
-                    Agrupamentos.Add(agrup);
-                }
-                else if (readConjun)
-                {
-                    var reg = new RegiaoConj();
-
-                    var agrup = Agrupamentos.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[2]);
-
-                    reg.Agrupamento = agrup;
-                    reg.Nome = lineArr[1];
-                    reg.Modelo = lineArr[2];
-
-                    reg.Coordenadas.AddRange(
-                    lineArr.Skip(3).ToList().Select(coord =>
+                    else if (readCorrel)
                     {
-                        var lat = decimal.Parse(coord.Split(';')[0]);
-                        var lon = decimal.Parse(coord.Split(';')[1]);
-                        return new Tuple<decimal, decimal>(lat, lon);
-                    }));
+                        var agrup = new Agrupamento();
+                        agrup.Nome = lineArr[0];
+                        agrup.Modelo = lineArr[1];
+
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            agrup.Correlacao[i] = float.Parse(lineArr.ToArray()[i + 1], Culture.NumberFormat);
+                        }
+
+                        Agrupamentos.Add(agrup);
+                    }
+                    else if (readConjun)
+                    {
+                        var reg = new RegiaoConj();
+
+                        var agrup = Agrupamentos.First(x => x.Nome == lineArr[0] && x.Modelo == lineArr[2]);
+
+                        reg.Agrupamento = agrup;
+                        reg.Nome = lineArr[1];
+                        reg.Modelo = lineArr[2];
+
+                        reg.Coordenadas.AddRange(
+                        lineArr.Skip(3).ToList().Select(coord =>
+                        {
+                            var lat = decimal.Parse(coord.Split(';')[0], Culture.NumberFormat);
+                            var lon = decimal.Parse(coord.Split(';')[1], Culture.NumberFormat);
+                            return new Tuple<decimal, decimal>(lat, lon);
+                        }));
 
 
-                    RegioesConjunto.Add(reg);
+                        RegioesConjunto.Add(reg);
+                    }
                 }
+                catch (Exception e)
+                {
+                    e.ToString();
+                }
+
             }
         }
 
@@ -1923,6 +1932,7 @@ namespace ChuvaVazaoTools
 
             public void RemoverVies(Dictionary<DateTime, Precipitacao> previsoes, Dictionary<DateTime, Precipitacao> previsoesOUT, bool remVies, bool remLim)
             {
+                var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
 
                 Console.Write(Nome + "\t");
 
