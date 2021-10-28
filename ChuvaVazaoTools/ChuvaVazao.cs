@@ -111,7 +111,7 @@ namespace ChuvaVazaoTools
             Preciptacao
                 .OrderByDescending(x => x.Key).Take(120)
                 .OrderBy(x => x.Key).ToList().ForEach(x => cont.AppendLine(
-                               string.Join(" ", this.Codigo, x.Key.ToString("dd/MM/yyyy"), "1000", x.Value.HasValue ? x.Value.Value.ToString("0.0", System.Globalization.NumberFormatInfo.InvariantInfo) : "-")
+                               string.Join(" ", this.Codigo, x.Key.ToString("dd/MM/yyyy"), "1000", x.Value.HasValue ? x.Value.Value.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo) : "-")
                 ));
 
             System.IO.File.WriteAllText(c, cont.ToString());
@@ -162,7 +162,7 @@ namespace ChuvaVazaoTools
                 Vazoes
                 .OrderByDescending(x => x.Key).Take(120)
                 .OrderBy(x => x.Key).Select(x =>
-                  string.Join("|", key, x.Key.ToString("yyyy-MM-dd hh:mm:ss"), x.Value.ToString("0.0", System.Globalization.NumberFormatInfo.InvariantInfo))
+                  string.Join("|", key, x.Key.ToString("yyyy-MM-dd hh:mm:ss"), x.Value.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo))
                 ).ToArray()
             );
         }
