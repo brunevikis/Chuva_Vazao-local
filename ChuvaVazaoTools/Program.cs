@@ -1209,8 +1209,8 @@ namespace ChuvaVazaoTools
 
                             if (File.Exists(camRelPrev))
                             {
-                                //var retornoEmail = Tools.Tools.SendMail(camRelPrev, "Relatório preliminar de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                //retornoEmail.Wait(300000);
+                                var retornoEmail = Tools.Tools.SendMail(camRelPrev, "Relatório preliminar de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
@@ -1231,8 +1231,8 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs(date, camRelPrevDef);
                             if (File.Exists(camRelPrevDef))
                             {
-                                //var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                //retornoEmail.Wait(300000);
+                                var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
@@ -1254,8 +1254,8 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs2(date, camRelPrevCompleto);
                             if (File.Exists(camRelPrevCompleto))
                             {
-                                //var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                //retornoEmail.Wait(300000);
+                                var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
