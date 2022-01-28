@@ -79,6 +79,7 @@
             this.btnTempView = new System.Windows.Forms.Button();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.btn_PorPastaSemPrevivaz = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
@@ -118,7 +119,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.dtAtual = new System.Windows.Forms.DateTimePicker();
             this.cbx_Encadear_Previvaz = new System.Windows.Forms.CheckBox();
-            this.btn_PorPastaSemPrevivaz = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -203,6 +203,7 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(902, 62);
             this.panel6.TabIndex = 14;
+            this.panel6.Paint += new System.Windows.Forms.PaintEventHandler(this.panel6_Paint);
             // 
             // bt_execR
             // 
@@ -771,6 +772,16 @@
             this.panel3.Size = new System.Drawing.Size(932, 247);
             this.panel3.TabIndex = 10;
             // 
+            // btn_PorPastaSemPrevivaz
+            // 
+            this.btn_PorPastaSemPrevivaz.Location = new System.Drawing.Point(142, 125);
+            this.btn_PorPastaSemPrevivaz.Name = "btn_PorPastaSemPrevivaz";
+            this.btn_PorPastaSemPrevivaz.Size = new System.Drawing.Size(142, 55);
+            this.btn_PorPastaSemPrevivaz.TabIndex = 23;
+            this.btn_PorPastaSemPrevivaz.Text = "Executar Rodadas Por Pasta Sem Previvaz";
+            this.btn_PorPastaSemPrevivaz.UseVisualStyleBackColor = true;
+            this.btn_PorPastaSemPrevivaz.Click += new System.EventHandler(this.btn_PorPastaSemPrevivaz_Click);
+            // 
             // button14
             // 
             this.button14.Location = new System.Drawing.Point(290, 120);
@@ -1157,16 +1168,6 @@
             this.cbx_Encadear_Previvaz.Text = "Encadear Previvaz";
             this.cbx_Encadear_Previvaz.UseVisualStyleBackColor = true;
             this.cbx_Encadear_Previvaz.CheckedChanged += new System.EventHandler(this.Cbx_Encadear_Previvaz_CheckedChanged);
-            // 
-            // btn_PorPastaSemPrevivaz
-            // 
-            this.btn_PorPastaSemPrevivaz.Location = new System.Drawing.Point(142, 125);
-            this.btn_PorPastaSemPrevivaz.Name = "btn_PorPastaSemPrevivaz";
-            this.btn_PorPastaSemPrevivaz.Size = new System.Drawing.Size(142, 55);
-            this.btn_PorPastaSemPrevivaz.TabIndex = 23;
-            this.btn_PorPastaSemPrevivaz.Text = "Executar Rodadas Por Pasta Sem Previvaz";
-            this.btn_PorPastaSemPrevivaz.UseVisualStyleBackColor = true;
-            this.btn_PorPastaSemPrevivaz.Click += new System.EventHandler(this.btn_PorPastaSemPrevivaz_Click);
             // 
             // FrmMain
             // 

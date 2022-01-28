@@ -613,8 +613,16 @@ namespace Report
 
 
             DateTime data1 = data.AddDays(-1);
-            var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            var onedriveroot = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents";
+            if (!Directory.Exists(onedriveroot))
+            {
+                onedriveroot = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documentos";
+            }
+
+           // var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            var camNOAA = Path.Combine(onedriveroot, @"Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            //var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            var camNOAAOntem = Path.Combine(onedriveroot, @"Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
             //var camAlterNOAA = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
             // var camAlterNOAAOntem = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
@@ -1166,8 +1174,17 @@ namespace Report
 
 
             DateTime data1 = data.AddDays(-1);
-            var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
-            var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+
+            var onedriveroot = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents";
+            if (!Directory.Exists(onedriveroot))
+            {
+                onedriveroot = @"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documentos";
+            }
+
+            //var camNOAA = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            var camNOAA = Path.Combine(onedriveroot,@"Acompanhamento_de_Precipitacao\Mapas", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
+            //var camNOAAOntem = Path.Combine(@"C:\Enercore\Energy Core Trading\Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
+            var camNOAAOntem = Path.Combine(onedriveroot,@"Acompanhamento_de_Precipitacao\Mapas", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));
 
             // var camAlterNOAA = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"));
             //var camAlterNOAAOntem = Path.Combine(@"B:\Compass\OneDrive - MinhaTI\Compass\Pedro\NOAA", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"));

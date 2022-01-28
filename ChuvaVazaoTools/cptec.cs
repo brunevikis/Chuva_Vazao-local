@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GradsHelper;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace ChuvaVazaoTools
 {
     public class cptec
     {
+        
+
         public static async Task<string> DownloadETA40Async(DateTime dt, System.IO.TextWriter log = null)
         {
             return await Task.Factory.StartNew(() => DownloadETA40_Atual(dt, log));
@@ -178,7 +183,7 @@ namespace ChuvaVazaoTools
             if (!File.Exists(Path.Combine(directoryToSaveGif, "LATE_funceme_INMET.gif")))
             {
                 var pr = PrecipitacaoFactory.BuildFromJsonData(dados, DateTime.Today);
-                var localPath = System.IO.Path.GetTempPath() + "FUNCEME\\";
+                var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO\\";
                 if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
 
                 var fanem = System.IO.Path.Combine(localPath, lateFunc + "Inmet_funceme_" + data.ToString("yyyyMMdd"));
@@ -1083,9 +1088,75 @@ namespace ChuvaVazaoTools
             }
             return "OK";
         }
+        public static void testesdownload(string address, string destFile)
+        {
+            CookieContainer cct = new CookieContainer();
+
+            HttpClientHandler handler = new HttpClientHandler { CookieContainer = cct };
+            HttpClient cli = new HttpClient(handler);
+            try
+            {
+                var uri = new Uri(address);
+                byte[] content = null;
+
+                var cookie = GetUriCookieContainer(uri);
+                try
+                {
+                    handler.CookieContainer.Add(uri, cookie.GetCookies(uri));
+
+                    var r =  cli.GetAsync(uri);
+                    r.Wait();
+                    r.Result.EnsureSuccessStatusCode();
+
+                    var str = r.Result.Content.ReadAsStreamAsync();
+
+                    str.Wait();
+                    using (var fstr = System.IO.File.Create(destFile))
+                    {
+                        str.Result.CopyTo(fstr);
+                    }
+                }
+                catch { }
+                //return content;
+            }
+            catch (Exception er)
+            {
+                er.ToString();
+            }
+        }
+
+        public static System.Drawing.Image DownloadImageFromUrl(string imageUrl)
+        {
+            System.Drawing.Image image = null;
+
+            try
+            {
+                System.Net.HttpWebRequest webRequest = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(imageUrl);
+                webRequest.AllowWriteStreamBuffering = true;
+                webRequest.Timeout = 30000;
+
+                System.Net.WebResponse webResponse = webRequest.GetResponse();
+
+                System.IO.Stream stream = webResponse.GetResponseStream();
+
+                image = System.Drawing.Image.FromStream(stream);
+
+                webResponse.Close();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+            return image;
+        }
 
         public static string DownloadMeteologixImgs(DateTime dt, System.IO.TextWriter log, out List<Precipitacao> precs, string hora = "00")
         {
+            CookieContainer cct = new CookieContainer();
+
+            HttpClientHandler handler = new HttpClientHandler { CookieContainer = cct };
+            HttpClient cli = new HttpClient(handler);
 
             var cc = new System.Net.CookieContainer();
 
@@ -1151,17 +1222,72 @@ namespace ChuvaVazaoTools
 
                 if (!System.IO.File.Exists(destFile))
                 {
+                    var testes = $"https://meteologix.com/br/model-charts/euro/{dt.ToString("yyyyMMdd")}{hora}/brazil/precipitation-total/{dt.AddDays(f.Key + 2).ToString("yyyyMMdd")}-0000z.html";
+
                     var r = httpCli.GetAsync($"https://meteologix.com/br/model-charts/euro/{dt.ToString("yyyyMMdd")}{hora}/brazil/precipitation-total/{dt.AddDays(f.Key + 2).ToString("yyyyMMdd")}-0000z.html");
-                    r.Wait(6000);
+                    r.Wait(20000);
                     r.Result.EnsureSuccessStatusCode();
 
                     if (log != null)
                     {
                         log.WriteLine("download " + f.Value);
                     }
+                    //System.Net.WebClient c = new System.Net.WebClient();
 
+                    //var testes2 = url + "/" + f.Value;
+
+                    //byte[] cont = null;
+                    //testesdownload(testes2,destFile);
+                    //System.Drawing.Image image = DownloadImageFromUrl(testes2);
+
+
+                    // image.Save(destFile);
+                    //try
+                    //{
+                    //    var uri = new Uri(testes2);
+                    //    byte[] content = null;
+
+                    //    var cookie = GetUriCookieContainer(uri);
+                    //    try
+                    //    {
+                    //        handler.CookieContainer.Add(uri, cookie.GetCookies(uri));
+
+                    //        content =await cli.GetByteArrayAsync(url);
+                    //    }
+                    //    catch { }
+                    //}
+                    //catch(Exception er)
+                    //{
+                    //    er.ToString();
+                    //}
+                    // c.DownloadFile(url + "/" + f.Value, destFile);
+
+                    System.Diagnostics.Process pr = new System.Diagnostics.Process();
+                    System.Diagnostics.Process pr2 = new System.Diagnostics.Process();
+
+                    var prInfo = new System.Diagnostics.ProcessStartInfo();
+                    prInfo.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+                    prInfo.UseShellExecute = false;
+                    prInfo.Arguments = testes;
+                    pr.StartInfo = prInfo;
+                    pr.Start();
+                    Thread.Sleep(10000);
+                    pr.CloseMainWindow();
+                    Thread.Sleep(10000);
+
+                    var prInfo2 = new System.Diagnostics.ProcessStartInfo();
+                    prInfo2.FileName = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+                    prInfo2.UseShellExecute = false;
+                    prInfo2.Arguments = url + "/" + f.Value;
+                    pr2.StartInfo = prInfo2;
+                    pr2.Start();
+                    Thread.Sleep(10000);
+                    pr2.CloseMainWindow();
+                    //pr.WaitForExit();
 
                     r = httpCli.GetAsync(url + "/" + f.Value);
+                    //var t = httpCli.GetByteArrayAsync(url + "/" + f.Value);
+                    //t.Wait();
                     r.Wait();
                     r.Result.EnsureSuccessStatusCode();
 
@@ -1172,6 +1298,8 @@ namespace ChuvaVazaoTools
                     {
                         str.Result.CopyTo(fstr);
                     }
+                    //pr.Kill();
+                    //pr2.Kill();
                 }
                 else
                 {
@@ -1222,7 +1350,43 @@ namespace ChuvaVazaoTools
             if (log != null) log.WriteLine("OK");
             return "OK";
         }
+        [DllImport("wininet.dll", SetLastError = true)]
+        public static extern bool InternetGetCookieEx(
+            string url,
+            string cookieName,
+            StringBuilder cookieData,
+            ref int size,
+            Int32 dwFlags,
+            IntPtr lpReserved);
+        private const Int32 InternetCookieHttponly = 0x2000;
 
+        public static CookieContainer GetUriCookieContainer(Uri uri)
+        {
+            CookieContainer cookies = null;
+            // Determine the size of the cookie
+            int datasize = 8192 * 16;
+            StringBuilder cookieData = new StringBuilder(datasize);
+            if (!InternetGetCookieEx(uri.ToString(), null, cookieData, ref datasize, InternetCookieHttponly, IntPtr.Zero))
+            {
+                if (datasize < 0)
+                    return null;
+                // Allocate stringbuilder large enough to hold the cookie
+                cookieData = new StringBuilder(datasize);
+                if (!InternetGetCookieEx(
+                    uri.ToString(),
+                    null, cookieData,
+                    ref datasize,
+                    InternetCookieHttponly,
+                    IntPtr.Zero))
+                    return null;
+            }
+            if (cookieData.Length > 0)
+            {
+                cookies = new CookieContainer();
+                cookies.SetCookies(uri, cookieData.ToString().Replace(';', ','));
+            }
+            return cookies;
+        }
         public static string DownloadETA40CPTEC(DateTime dt, System.IO.TextWriter log = null, string horasToDownload = "00;12")
         {
 

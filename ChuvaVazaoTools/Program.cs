@@ -65,7 +65,7 @@ namespace ChuvaVazaoTools
                             RunAutoRoutines("all");
                             Thread.Sleep(600000);
                         }
-                       
+
                     }
                     else
                     {
@@ -104,7 +104,7 @@ namespace ChuvaVazaoTools
                     break;
                 case "run":
                     logF.WriteLine("Iniciando AutoRun");
-                   
+
                     var p_count = Process.GetProcesses().Where(p => p.ProcessName.Contains("ChuvaVazaoTools")).Count();
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing");
 
@@ -133,7 +133,7 @@ namespace ChuvaVazaoTools
                         AutoExec(data, logF);
                         Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
                     }
-                    
+
                     break;
                 case "all": //roda tudo
                     logF.WriteLine("Iniciando Tudo");
@@ -231,7 +231,7 @@ namespace ChuvaVazaoTools
 
                     if (pr != null && (h.Count() == 0 || h.Any(y => y.Contains("EURO")) || (late == true && !File.Exists(Path.Combine(directoryToSaveGif, "LateFunceme.txt")))))
                     {
-                        var localPath = System.IO.Path.GetTempPath() + "FUNCEME\\";
+                        var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO\\";
                         if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
 
                         var fanem = System.IO.Path.Combine(localPath, horaFunc + "funceme_" + date.ToString("yyyyMMdd"));
@@ -650,6 +650,17 @@ namespace ChuvaVazaoTools
             }
             catch (Exception ex)
             {
+                //var p_count = Process.GetProcesses().Where(p => p.ProcessName.Contains("chrome")).ToList();
+                //int contagem = p_count.Count();
+                //while (contagem > 0)
+                //{
+                //    p_count[0].Kill();
+                //    p_count = Process.GetProcesses().Where(p => p.ProcessName.Contains("chrome")).ToList();
+                //    contagem = p_count.Count();
+
+                //}
+
+
                 logF.WriteLine(ex.ToString());
             }
 
@@ -803,9 +814,9 @@ namespace ChuvaVazaoTools
             var dt = DateTime.Today;
             var caminho_p = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman", dt.ToString("yyyy_MM_dd"));
             var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-            
+
             var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
-            
+
             if (!Directory.Exists(oneDrive))
             {
                 oneDrive = Path.Combine(oneDrivePath_ori.Replace(oneDrivePath_ori.Split('\\').Last(), @"MinhaTI\Alex Freires Marques - Compass\Pedro\NOAA\"));
@@ -816,8 +827,8 @@ namespace ChuvaVazaoTools
             if (Directory.Exists(oneDrivePath_Atual))
             {
                 var dirs_noaa = Directory.GetDirectories(oneDrivePath_Atual);
-            
-                foreach(var dir in dirs_noaa)
+
+                foreach (var dir in dirs_noaa)
                 {
                     DirectoryInfo dir_info = new DirectoryInfo(dir);
                     var data_modif = dir_info.LastWriteTime;
@@ -825,39 +836,40 @@ namespace ChuvaVazaoTools
                     var arqs_noaa = Directory.GetFiles(dir, "*.gif");
                     string[] arqs_P = null;
                     var dir_files = Path.Combine(caminho_p, dir.Split('\\').Last() + "_NOAA");
-                    
-                        
-                    
-                    
-                        var name_path = dir.Split('\\').Last();
-                        
-                        if (name_path.Contains("GEFS") || name_path.Contains("GFS"))
-                        {
-                            if (!Directory.Exists(dir_files) && arqs_noaa.Count() > 0)
-                            {
-                                Directory.CreateDirectory(dir_files);
-                            }
-                            
 
-                            if (arqs_noaa.Count() > 0){
-                                arqs_P = Directory.GetFiles(dir_files, "*.gif");
-                                if (arqs_P.Count() != arqs_noaa.Count())
+
+
+
+                    var name_path = dir.Split('\\').Last();
+
+                    if (name_path.Contains("GEFS") || name_path.Contains("GFS"))
+                    {
+                        if (!Directory.Exists(dir_files) && arqs_noaa.Count() > 0)
+                        {
+                            Directory.CreateDirectory(dir_files);
+                        }
+
+
+                        if (arqs_noaa.Count() > 0)
+                        {
+                            arqs_P = Directory.GetFiles(dir_files, "*.gif");
+                            if (arqs_P.Count() != arqs_noaa.Count())
+                            {
+                                foreach (var arq_noaa in arqs_noaa)
                                 {
-                                    foreach (var arq_noaa in arqs_noaa)
-                                    {
-                                        var dir_file = Path.Combine(dir_files, arq_noaa.Split('\\').Last());
-                                        File.Copy(arq_noaa, dir_file, true);
-                                    }
+                                    var dir_file = Path.Combine(dir_files, arq_noaa.Split('\\').Last());
+                                    File.Copy(arq_noaa, dir_file, true);
                                 }
                             }
-
-                            
-
-                            
                         }
-                    
+
+
+
+
+                    }
+
                 }
-                
+
 
             }
         }
@@ -1187,7 +1199,7 @@ namespace ChuvaVazaoTools
 
                         var h = Tools.Tools.readHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt")).Last();
 
-                        var d = Convert.ToDateTime(h,Culture.DateTimeFormat);
+                        var d = Convert.ToDateTime(h, Culture.DateTimeFormat);
 
                         if (d <= DateTime.Now.AddMinutes(-10))
                         {
@@ -1197,8 +1209,8 @@ namespace ChuvaVazaoTools
 
                             if (File.Exists(camRelPrev))
                             {
-                                var retornoEmail = Tools.Tools.SendMail(camRelPrev, "Relatório preliminar de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                retornoEmail.Wait(300000);
+                                //var retornoEmail = Tools.Tools.SendMail(camRelPrev, "Relatório preliminar de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                //retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
@@ -1219,8 +1231,8 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs(date, camRelPrevDef);
                             if (File.Exists(camRelPrevDef))
                             {
-                                var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                retornoEmail.Wait(300000);
+                                //var retornoEmail = Tools.Tools.SendMail(camRelPrevDef, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                //retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
@@ -1242,8 +1254,8 @@ namespace ChuvaVazaoTools
                             Report.Program.CriarRelatorioPrevs2(date, camRelPrevCompleto);
                             if (File.Exists(camRelPrevCompleto))
                             {
-                                var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
-                                retornoEmail.Wait(300000);
+                                //var retornoEmail = Tools.Tools.SendMail(camRelPrevCompleto, "Relatório de previsões disponível", "Relatório de previsões [AUTO]", "precoSergioVini");
+                                //retornoEmail.Wait(300000);
                                 Tools.Tools.addHistory(Path.Combine(horaRel, "RelatoriosPrev_log.txt"), DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"));
                             }
 
@@ -1399,7 +1411,8 @@ namespace ChuvaVazaoTools
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
                     if (funceme.Length != 0 && ETA40.Length > 1)
                     {
-                        pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                       // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                        pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
                         {
 
@@ -1407,6 +1420,21 @@ namespace ChuvaVazaoTools
                             Directory.CreateDirectory(pastaSaida);
 
                             Conjunto_R(pastaSaida, date, logF);
+
+                            var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+                            var fonte = pastaSaida;
+                            foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                                SearchOption.AllDirectories))
+                                Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                            foreach (string newPath in Directory.GetFiles(fonte, ".",
+                               SearchOption.AllDirectories))
+                            {
+                                if (!File.Exists(newPath.Replace(fonte, dest)))
+                                {
+                                    File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                                }
+                            }
 
                             //Salvar mapas de saída do modelo R como Img
                             frmMain.Salvar_Img(Path.Combine(pastaSaida, "Arq_Saida"), true);
@@ -1440,7 +1468,7 @@ namespace ChuvaVazaoTools
                         else
                         {
                             logF.WriteLine("Arquivos não encontrados");
-                           // RunAutoRoutines("download");
+                            RunAutoRoutines("download");
                         }
 
                     }
@@ -1449,7 +1477,8 @@ namespace ChuvaVazaoTools
                 else
                 {
 
-                    pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                   // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                    pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     if (!Directory.Exists(pastaSaida))
                     {
                         logF.WriteLine("Executando Mapas R Acomph");
@@ -1457,13 +1486,29 @@ namespace ChuvaVazaoTools
 
                         Conjunto_R(pastaSaida, date, logF);
 
+                        var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+                        var fonte = pastaSaida;
+                        foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                            SearchOption.AllDirectories))
+                            Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                        foreach (string newPath in Directory.GetFiles(fonte, ".",
+                           SearchOption.AllDirectories))
+                        {
+                            if (!File.Exists(newPath.Replace(fonte, dest)))
+                            {
+                                File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                            }
+                        }
+
+
                         //Salvar mapas de saída do modelo R como Img
                         frmMain.Salvar_Img(Path.Combine(pastaSaida, "Arq_Saida"), true);
                     }
 
 
                 }
-
+                var mapasCount = Directory.GetFiles(pastaSaida,".",SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
 
 
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
@@ -1613,7 +1658,7 @@ namespace ChuvaVazaoTools
                         logF.WriteLine(ex.ToString());
                     }
                 }
-                else if(File.Exists(Path.Combine(pastaSaida, "error.log")))
+                else if (File.Exists(Path.Combine(pastaSaida, "error.log")) || mapasCount.Count() <= 0)
                 {
                     Directory.Delete(pastaSaida, true);
                 }
@@ -1669,6 +1714,8 @@ namespace ChuvaVazaoTools
 
             if (dirs_CV.Count() > 0)
             {
+                Directory.CreateDirectory(path_final);
+
                 foreach (var dir in dirs_CV)
                 {
                     DirectoryCopy(dir, Path.Combine(path_final, dir.Split('\\').Last()), true);
@@ -1676,7 +1723,8 @@ namespace ChuvaVazaoTools
 
                 var log_C = Path.Combine(path_final, "logC.txt");
 
-                File.Create(log_C);
+                //File.Create(log_C);
+                File.WriteAllText(log_C, "ok");
 
 
                 foreach (var dir in dirs_Resto)
@@ -1696,7 +1744,26 @@ namespace ChuvaVazaoTools
                     File.Copy(file, Path.Combine(path_final, file.Split('\\').Last()));
                 }
             }
+            //var path_X = path_final.Replace("H:\\Middle - Preço\\16_Chuva_Vazao", "X:\\AWS\\16_Chuva_Vazao");
 
+            //copia a pasta do C: para o H:
+            var dest = path_final.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+            var fonte = path_final;
+            foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+            foreach (string newPath in Directory.GetFiles(fonte, ".",
+               SearchOption.AllDirectories))
+            {
+                if (!File.Exists(newPath.Replace(fonte, dest)))
+                {
+                    File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                }
+            }
+
+            //var path_H = path_final.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+            //DirectoryCopy(path_final, path_H, true);
             Directory.Delete(Path.Combine(localPath), true);
         }
 

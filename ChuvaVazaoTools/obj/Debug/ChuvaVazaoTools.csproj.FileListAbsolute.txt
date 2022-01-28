@@ -41,7 +41,6 @@ C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.Gene
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.CoreCompileInputs.cache
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.exe.manifest
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.application
-C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.CopyComplete
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.exe
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.pdb
 C:\Development\FARIA\chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\PRECIPITACAO_VIES.txt
