@@ -87,7 +87,7 @@ namespace ChuvaVazaoTools
         {
 
             var logFile = Config.CaminhoLogAutoRun;
-
+            var excelcaminho = Config.XltmResultado;
             var logF = new LogFile(logFile);
             logF.WriteLine("Iniciando AutoRoutine");
 
@@ -111,7 +111,7 @@ namespace ChuvaVazaoTools
 
                     if (p_count <= 2)
                     {
-                        AutoRun_R(data, logF);
+                        AutoRun_R(data, logF, excelcaminho);
                         Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
                     }
                     break;
@@ -140,7 +140,7 @@ namespace ChuvaVazaoTools
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_All.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de execução total via Self Enforcing");
 
                     AutoDownload(data, logF);
-                    AutoRun_R(data, logF);
+                    AutoRun_R(data, logF, excelcaminho);
                     AutoReport(data, logF);
                     break;
                 default:
@@ -1386,7 +1386,7 @@ namespace ChuvaVazaoTools
         }
 
 
-        internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF, bool encad = false)
+        internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF,string excelFile, bool encad = false)
         {
 
             // Verifica se já existe mapas para rodada
@@ -1395,14 +1395,13 @@ namespace ChuvaVazaoTools
             var data_verifica = DateTime.Today;
 
 
-
             if (DateTime.Now > DateTime.Today.AddHours(7))
             {
                 var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")));
                 var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd"));
                 var ETA40 = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")), "ETA40_*");
 
-                var frmMain = new FrmMain(true, encad);
+                var frmMain = new FrmMain(true,excelFile, encad);
 
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(date);
 
@@ -1463,7 +1462,7 @@ namespace ChuvaVazaoTools
                             logF.WriteLine("Arquivos funceme não encontrados, subistituindo por euro");
                             var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
                             retornoEmail.Wait();
-                            AutoRun_R(date, logF, encad);
+                            AutoRun_R(date, logF, excelFile, encad);
                         }
                         else
                         {

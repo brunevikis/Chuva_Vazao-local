@@ -119,6 +119,10 @@
             this.label6 = new System.Windows.Forms.Label();
             this.dtAtual = new System.Windows.Forms.DateTimePicker();
             this.cbx_Encadear_Previvaz = new System.Windows.Forms.CheckBox();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
+            this.txtExcel = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -133,6 +137,7 @@
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLer
@@ -171,11 +176,11 @@
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(12, 233);
+            this.tabControl1.Location = new System.Drawing.Point(12, 318);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.Padding = new System.Drawing.Point(6, 2);
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(946, 283);
+            this.tabControl1.Size = new System.Drawing.Size(1093, 310);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 4;
             // 
@@ -741,7 +746,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 26);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(938, 253);
+            this.tabPage6.Size = new System.Drawing.Size(1085, 280);
             this.tabPage6.TabIndex = 6;
             this.tabPage6.Text = "Precip.";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -769,7 +774,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(932, 247);
+            this.panel3.Size = new System.Drawing.Size(1079, 274);
             this.panel3.TabIndex = 10;
             // 
             // btn_PorPastaSemPrevivaz
@@ -962,15 +967,15 @@
             // progressoParte
             // 
             this.progressoParte.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progressoParte.Location = new System.Drawing.Point(0, 522);
+            this.progressoParte.Location = new System.Drawing.Point(0, 634);
             this.progressoParte.Name = "progressoParte";
-            this.progressoParte.Size = new System.Drawing.Size(983, 23);
+            this.progressoParte.Size = new System.Drawing.Size(1130, 23);
             this.progressoParte.TabIndex = 15;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 207);
+            this.label3.Location = new System.Drawing.Point(18, 289);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(123, 13);
             this.label3.TabIndex = 8;
@@ -979,7 +984,7 @@
             // dtModelo
             // 
             this.dtModelo.Enabled = false;
-            this.dtModelo.Location = new System.Drawing.Point(145, 201);
+            this.dtModelo.Location = new System.Drawing.Point(147, 283);
             this.dtModelo.Name = "dtModelo";
             this.dtModelo.Size = new System.Drawing.Size(250, 20);
             this.dtModelo.TabIndex = 7;
@@ -1090,7 +1095,7 @@
             this.panel1.Controls.Add(this.txtEntrada);
             this.panel1.Location = new System.Drawing.Point(12, 1);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(959, 118);
+            this.panel1.Size = new System.Drawing.Size(1106, 118);
             this.panel1.TabIndex = 18;
             // 
             // panel2
@@ -1103,7 +1108,7 @@
             this.panel2.Controls.Add(this.txtCaminho);
             this.panel2.Location = new System.Drawing.Point(12, 125);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(959, 73);
+            this.panel2.Size = new System.Drawing.Size(1106, 73);
             this.panel2.TabIndex = 19;
             // 
             // label7
@@ -1144,7 +1149,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(655, 207);
+            this.label6.Location = new System.Drawing.Point(657, 289);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(60, 13);
             this.label6.TabIndex = 20;
@@ -1152,7 +1157,7 @@
             // 
             // dtAtual
             // 
-            this.dtAtual.Location = new System.Drawing.Point(721, 201);
+            this.dtAtual.Location = new System.Drawing.Point(723, 283);
             this.dtAtual.Name = "dtAtual";
             this.dtAtual.Size = new System.Drawing.Size(250, 20);
             this.dtAtual.TabIndex = 21;
@@ -1161,7 +1166,7 @@
             // cbx_Encadear_Previvaz
             // 
             this.cbx_Encadear_Previvaz.AutoSize = true;
-            this.cbx_Encadear_Previvaz.Location = new System.Drawing.Point(490, 204);
+            this.cbx_Encadear_Previvaz.Location = new System.Drawing.Point(492, 286);
             this.cbx_Encadear_Previvaz.Name = "cbx_Encadear_Previvaz";
             this.cbx_Encadear_Previvaz.Size = new System.Drawing.Size(116, 17);
             this.cbx_Encadear_Previvaz.TabIndex = 15;
@@ -1169,11 +1174,60 @@
             this.cbx_Encadear_Previvaz.UseVisualStyleBackColor = true;
             this.cbx_Encadear_Previvaz.CheckedChanged += new System.EventHandler(this.Cbx_Encadear_Previvaz_CheckedChanged);
             // 
+            // panel7
+            // 
+            this.panel7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel7.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.panel7.Controls.Add(this.label9);
+            this.panel7.Controls.Add(this.button15);
+            this.panel7.Controls.Add(this.txtExcel);
+            this.panel7.Location = new System.Drawing.Point(12, 204);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(1106, 73);
+            this.panel7.TabIndex = 22;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(114, 8);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(157, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Caminho da Planilha de Coleta";
+            // 
+            // button15
+            // 
+            this.button15.BackColor = System.Drawing.Color.RoyalBlue;
+            this.button15.FlatAppearance.BorderColor = System.Drawing.Color.RoyalBlue;
+            this.button15.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Lime;
+            this.button15.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightSteelBlue;
+            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button15.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button15.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.button15.Location = new System.Drawing.Point(6, 8);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(102, 56);
+            this.button15.TabIndex = 14;
+            this.button15.Text = "Selecionar Caminho da Planilha";
+            this.button15.UseVisualStyleBackColor = false;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // txtExcel
+            // 
+            this.txtExcel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtExcel.Location = new System.Drawing.Point(114, 24);
+            this.txtExcel.Name = "txtExcel";
+            this.txtExcel.Size = new System.Drawing.Size(832, 20);
+            this.txtExcel.TabIndex = 10;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(983, 545);
+            this.ClientSize = new System.Drawing.Size(1130, 657);
+            this.Controls.Add(this.panel7);
             this.Controls.Add(this.cbx_Encadear_Previvaz);
             this.Controls.Add(this.progressoParte);
             this.Controls.Add(this.dtAtual);
@@ -1206,6 +1260,8 @@
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1307,6 +1363,10 @@
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button btn_PorPastaSemPrevivaz;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.TextBox txtExcel;
     }
 }
 

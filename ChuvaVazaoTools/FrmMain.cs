@@ -38,6 +38,8 @@ namespace ChuvaVazaoTools
 
         public string ArquivosDeSaida { get { return this.txtCaminho.Text; } set { this.txtCaminho.Text = value; } }
 
+        public string ExcelModelo { get { return this.txtExcel.Text; } set { this.txtExcel.Text = value; } }
+
         public DateTime? DataSemanaPrevsBase { get; private set; }
 
         public List<ModeloChuvaVazao> modelosChVz = new List<ModeloChuvaVazao>();
@@ -49,6 +51,12 @@ namespace ChuvaVazaoTools
 
         #region Public Methods
 
+        public FrmMain(bool run,string excelFile, bool verifica = false) : this()
+        {
+            runAuto = run;
+            cbx_Encadear_Previvaz.Checked = verifica;
+            ExcelModelo = excelFile;
+        }
         public FrmMain(bool run, bool verifica = false) : this()
         {
             runAuto = run;
@@ -3914,7 +3922,7 @@ namespace ChuvaVazaoTools
                         this.ArquivosDeEntradaPrevivaz = System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada");
                         this.ArquivoPrevsBase = System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories)[0];
                         this.DataSemanaPrevsBase = currRev.revDate;
-
+                        this.ExcelModelo = System.IO.Path.Combine(txtExcel.Text);
                         ArquivosDeSaida = pastaSaida;
 
                         var statusF = new RunStatus(pastaSaida);
@@ -5095,7 +5103,7 @@ namespace ChuvaVazaoTools
                 this.ArquivoPrevsBase = System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories)[0];
             }
 
-
+            this.ExcelModelo = Config.XltmResultado;
             #endregion
 
             #region Caminho de saída
@@ -5876,8 +5884,9 @@ namespace ChuvaVazaoTools
             //return;
             //ExecutingProcess proc = new ExecutingProcess();
 
-
-            var excelFile = Config.XltmResultado;
+            //var teste = ExcelModelo;
+            //var excelFile = Config.XltmResultado;
+            var excelFile = ExcelModelo;
 
             wb = app.Workbooks.Add(excelFile);
             while (!app.Ready)
@@ -8631,12 +8640,13 @@ namespace ChuvaVazaoTools
 
         private void bt_RunR_Click(object sender, EventArgs e)
         {
+            var caminhoExcel = txtExcel.Text;
             var encad = cbx_Encadear_Previvaz.Checked;
             var logF = textLogger;
             logF.WriteLine("Iniciando AutoRoutine Modelo R");
             var data = dtAtual.Value.Date;
             logF.WriteLine("Iniciando AutoRun Modelo R");
-            Program.AutoRun_R(data, logF);
+            Program.AutoRun_R(data, logF,caminhoExcel);
 
 
             logF.WriteLine("Encerrando AutoRoutine Modelo R");
@@ -9020,6 +9030,22 @@ namespace ChuvaVazaoTools
         private void panel6_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            Ookii.Dialogs.VistaOpenFileDialog ofd = new Ookii.Dialogs.VistaOpenFileDialog();
+
+            var currRevDate = dtAtual.Value;
+
+            var nextRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(currRevDate);
+            // ofd.SelectedPath = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + nextRev.revDate.ToString("yyyy_MM") + @"\RV" + nextRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\"; ;
+            ofd.FileName = txtExcel.Text;
+
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtExcel.Text = ofd.FileName;
+            }
         }
     }
 
