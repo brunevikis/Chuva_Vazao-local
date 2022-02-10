@@ -107,13 +107,18 @@ namespace ChuvaVazaoTools
 
                     var p_count = Process.GetProcesses().Where(p => p.ProcessName.Contains("ChuvaVazaoTools")).Count();
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing");
+                    DateTime hoje = DateTime.Today.AddHours(22);
+                    DateTime agora = DateTime.Now;
 
-
-                    if (p_count <= 2)
+                    if (hoje.Day == agora.Day && agora.Hour < hoje.Hour)
                     {
-                        AutoRun_R(data, logF, excelcaminho);
-                        Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
+                        if (p_count <= 2)
+                        {
+                            AutoRun_R(data, logF, excelcaminho);
+                            Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
+                        }
                     }
+                    
                     break;
                 case "report":
                     logF.WriteLine("Iniciando AutoReport");

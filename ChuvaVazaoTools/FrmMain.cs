@@ -5918,11 +5918,19 @@ namespace ChuvaVazaoTools
 
             ws = wb.Worksheets["PREVS_SMAP"] as Microsoft.Office.Interop.Excel.Worksheet;
             (ws.Range[ws.Cells[1, 2], ws.Cells[1, 2]] as Excel.Range).Value2 = this.dtModelo.Value;
-
-            foreach (dynamic conn in wb.Connections)
+            try
             {
-                conn.Refresh();
+                foreach (dynamic conn in wb.Connections)
+                {
+                    conn.Refresh();
+                }
             }
+            catch (Exception e)
+            {
+
+                e.ToString();
+            }
+            
         }
 
         #region Precipitação
@@ -7803,13 +7811,15 @@ namespace ChuvaVazaoTools
                 var pathResult = Path.Combine(pastaSaida, $"CHUVAVAZAO_{code}.xlsm");
                 if (!File.Exists(pathResult) || statusF?.Collect != RunStatus.statuscode.completed)
                 {
-
-                    if (statusF != null) statusF.Collect = RunStatus.statuscode.initialialized;
-                    ColetaDeResultados(xlsApp, out wb);
-                    wb.SaveAs(
-                        pathResult, wb.FileFormat
-                        );
-
+                    
+                    
+                        if (statusF != null) statusF.Collect = RunStatus.statuscode.initialialized;
+                        ColetaDeResultados(xlsApp, out wb);
+                        wb.SaveAs(
+                            pathResult, wb.FileFormat
+                            );
+                    
+                  
 
                 }
                 else
@@ -7876,34 +7886,37 @@ namespace ChuvaVazaoTools
                         wb = null;
                     }
 
-
-
-                    var p = Program.GetPrevivazExPath(pathCen);
-
-
-                    if (p != null)
+                    if (rodarPrevivaz)
                     {
-                        if (logF != null) logF.WriteLine("EXECUCAO PREVIVAZ");
-                        if (encad)
-                        {
-                            var teste = p.Item2 + "|true";
-                            var pre = System.Diagnostics.Process.Start(p.Item1, p.Item2 + "|true");
+                        var p = Program.GetPrevivazExPath(pathCen);
 
-                            pre.WaitForExit();
+
+                        if (p != null)
+                        {
+                            if (logF != null) logF.WriteLine("EXECUCAO PREVIVAZ");
+                            if (encad)
+                            {
+                                var teste = p.Item2 + "|true";
+                                var pre = System.Diagnostics.Process.Start(p.Item1, p.Item2 + "|true");
+
+                                pre.WaitForExit();
+                            }
+                            else
+                            {
+
+                                var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
+
+                                pr.WaitForExit();
+                            }
                         }
                         else
                         {
-
-                            var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
-
-                            pr.WaitForExit();
+                            if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                            return;
                         }
                     }
-                    else
-                    {
-                        if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
-                        return;
-                    }
+
+                    
                     if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
                 }
 
