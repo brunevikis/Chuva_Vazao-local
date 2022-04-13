@@ -30,6 +30,7 @@ namespace ChuvaVazaoTools.Classes
 
 
                 #region GRANDE
+
                 #region Camargos
                 var camargos = new Propagacao() { IdPosto = 1, NomePostoFluv = "CAMARGOS" };
                 camargos.Modelo.Add(new ModeloSmap() { NomeVazao = "Camargos", TempoViagem = 0, FatorDistribuicao = 1 });
@@ -141,6 +142,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Tiête
+
                 #region Guarapiranga
                 var Guarapiranga = new Propagacao() { IdPosto = 117, NomePostoFluv = "Guarapiranga" };
                 Guarapiranga.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.120f });
@@ -198,20 +200,21 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Promissao
                 var Promissao = new Propagacao() { IdPosto = 240, NomePostoFluv = "Promissao" };
-                Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.719f });
+                Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.717f });
                 Promissao.PostoMontantes.Add(new PostoMontante { Propaga = Ibitinga, TempoViagem = 29 });
                 propagacoes.Add(Promissao);
                 #endregion
 
                 #region N. Avanhandava
                 var NAvanhandava = new Propagacao() { IdPosto = 242, NomePostoFluv = "NAvanhandava" };
-                NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.281f });
+                NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.283f });
                 NAvanhandava.PostoMontantes.Add(new PostoMontante { Propaga = Promissao, TempoViagem = 13 });
                 propagacoes.Add(NAvanhandava);
                 #endregion
                 #endregion
 
                 #region Paranaiba
+
                 #region CorumbaIV
                 var CorumbaIV = new Propagacao() { IdPosto = 205, NomePostoFluv = "Corumba IV" };
                 CorumbaIV.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBAIV", TempoViagem = 0, FatorDistribuicao = 1f });
@@ -613,6 +616,188 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
+                #region Xingu
+
+                #region Pimental
+                var Piment = new Propagacao() { IdPosto = 288, NomePostoFluv = "Pimental" };
+                Piment.Modelo.Add(new ModeloSmap() { NomeVazao = "PIMENTALT", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Piment);
+                #endregion
+
+                #region Sinop
+                var Sinop = new Propagacao() { IdPosto = 227, NomePostoFluv = "Sinop" };
+                Sinop.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.915f });
+                propagacoes.Add(Sinop);
+                #endregion
+
+                #region Colider
+                var coli = new Propagacao() { IdPosto = 228, NomePostoFluv = "Colider" };
+                coli.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.085f });
+                coli.PostoMontantes.Add(new PostoMontante { Propaga = Sinop, TempoViagem = 17 });
+                propagacoes.Add(coli);
+                #endregion
+
+                #region Teles Pires
+                var Telepi = new Propagacao() { IdPosto = 229, NomePostoFluv = "Teles Pires" };
+                Telepi.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.991f });
+                Telepi.PostoMontantes.Add(new PostoMontante { Propaga = coli, TempoViagem = 132 });
+                propagacoes.Add(Telepi);
+                #endregion
+
+                #region Sao Manoel
+                var Smano = new Propagacao() { IdPosto = 230, NomePostoFluv = "Sao Manoel" };
+                Smano.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.009f });
+                Smano.PostoMontantes.Add(new PostoMontante { Propaga = Telepi, TempoViagem = 7 });
+                propagacoes.Add(Smano);
+                #endregion
+
+                #endregion
+
+                #region Norte
+
+                #region Balbina
+                var Balb = new Propagacao() { IdPosto = 269, NomePostoFluv = "Balbina" };
+                Balb.Modelo.Add(new ModeloSmap() { NomeVazao = "BALBINA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Balb);
+                #endregion
+
+                #region Curua-una
+                var Curuauna = new Propagacao() { IdPosto = 277, NomePostoFluv = "Curuauna" };
+                Curuauna.Modelo.Add(new ModeloSmap() { NomeVazao = "CURUAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Curuauna);
+                #endregion
+
+                #region Santo Antonio do Jari
+                var StaJari = new Propagacao() { IdPosto = 290, NomePostoFluv = "Antonio do Jari" };
+                StaJari.Modelo.Add(new ModeloSmap() { NomeVazao = "STOANTJARI", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(StaJari);
+                #endregion
+
+                #region Cachoeira Caldeirao
+                var CachoCa = new Propagacao() { IdPosto = 204, NomePostoFluv = "Cachoeira Caldeirao" };
+                CachoCa.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.989f });
+                propagacoes.Add(CachoCa);
+                #endregion
+
+                #region Coaracy Nunes
+                var Coaracy = new Propagacao() { IdPosto = 280, NomePostoFluv = "Coaracy Nunes" };
+                Coaracy.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.003f });
+                Coaracy.PostoMontantes.Add(new PostoMontante { Propaga = CachoCa, TempoViagem = 2 });
+                propagacoes.Add(Coaracy);
+                #endregion
+
+                #region Ferreira Gomes
+                var Ferreira = new Propagacao() { IdPosto = 297, NomePostoFluv = "Ferreira Gomes" };
+                Ferreira.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.008f });
+                Ferreira.PostoMontantes.Add(new PostoMontante { Propaga = Coaracy, TempoViagem = 2 });
+                propagacoes.Add(Ferreira);
+                #endregion
+
+                #endregion
+
+                #region Paraguai
+
+                #region Itiquira
+                var Itiquira = new Propagacao() { IdPosto = 259, NomePostoFluv = "Itiquira" };
+                Itiquira.Modelo.Add(new ModeloSmap() { NomeVazao = "ITIQUIRAI", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Itiquira);
+                #endregion
+
+                #region Jauru
+                var Jauru = new Propagacao() { IdPosto = 295, NomePostoFluv = "Jauru" };
+                Jauru.Modelo.Add(new ModeloSmap() { NomeVazao = "JAURU", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Jauru);
+                #endregion
+
+                #region MANSO
+                var MANSO = new Propagacao() { IdPosto = 278, NomePostoFluv = "MANSO" };
+                MANSO.Modelo.Add(new ModeloSmap() { NomeVazao = "MANSO", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(MANSO);
+                #endregion
+
+                #region PDEPEDRA
+                var PDEPEDRA = new Propagacao() { IdPosto = 281, NomePostoFluv = "PDEPEDRA" };
+                PDEPEDRA.Modelo.Add(new ModeloSmap() { NomeVazao = "PDEPEDRA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(PDEPEDRA);
+                #endregion
+
+                #endregion
+
+                #region DOCE
+
+                #region CAndonga
+                var CAndonga = new Propagacao() { IdPosto = 149, NomePostoFluv = "CAndonga" };
+                CAndonga.Modelo.Add(new ModeloSmap() { NomeVazao = "CANDONGA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(CAndonga);
+                #endregion
+
+                #region Guiman amorim
+                var guimam = new Propagacao() { IdPosto = 262, NomePostoFluv = "Guiman amorim" };
+                guimam.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.978f });
+                propagacoes.Add(guimam);
+                #endregion
+
+                #region SA CARVALHO
+                var SACAR = new Propagacao() { IdPosto = 183, NomePostoFluv = "SA CARVALHO" };
+                SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.022f });
+                SACAR.PostoMontantes.Add(new PostoMontante { Propaga = guimam, TempoViagem = 4 });
+                propagacoes.Add(SACAR);
+                #endregion
+
+                #region SALTO GRANDE CM
+                var SALTOCM = new Propagacao() { IdPosto = 134, NomePostoFluv = "SALTO GRANDE CM" };
+                SALTOCM.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(SALTOCM);
+                #endregion
+
+                #region PTO ESTRELA
+                var PTOESTRE = new Propagacao() { IdPosto = 263, NomePostoFluv = "PTO ESTRELA" };
+                PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 0 });
+                PTOESTRE.PostoMontantes.Add(new PostoMontante { Propaga = SALTOCM, TempoViagem = 2 });
+                propagacoes.Add(PTOESTRE);
+                #endregion
+
+                #region BAGUARI
+                var BAGUARI = new Propagacao() { IdPosto = 141, NomePostoFluv = "BAGUARI" };
+                BAGUARI.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.456f });
+                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = PTOESTRE, TempoViagem = 16.3f });
+                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = SACAR, TempoViagem = 15.8f });
+                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = CAndonga, TempoViagem = 19.6f });
+                propagacoes.Add(BAGUARI);
+                #endregion
+
+                #region AIMORES
+                var AIMORES = new Propagacao() { IdPosto = 148, NomePostoFluv = "AIMORES" };
+                AIMORES.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.195f });
+                AIMORES.PostoMontantes.Add(new PostoMontante { Propaga = BAGUARI, TempoViagem = 12 });
+                propagacoes.Add(AIMORES);
+                #endregion
+
+                #region MASCARENHAS
+                var MASCARENHAS = new Propagacao() { IdPosto = 144, NomePostoFluv = "MASCARENHAS" };
+                MASCARENHAS.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.349f });
+                MASCARENHAS.PostoMontantes.Add(new PostoMontante { Propaga = AIMORES, TempoViagem = 1 });
+                propagacoes.Add(MASCARENHAS);
+                #endregion
+
+                #endregion
+
+                #region OUTRAS
+
+                #region ROSAL
+                var ROSAL = new Propagacao() { IdPosto = 196, NomePostoFluv = "ROSAL" };
+                ROSAL.Modelo.Add(new ModeloSmap() { NomeVazao = "ROSAL", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(ROSAL);
+                #endregion
+
+                #region STA CLAR-MG
+                var STACLAMG = new Propagacao() { IdPosto = 283, NomePostoFluv = "STA CLAR-MG" };
+                STACLAMG.Modelo.Add(new ModeloSmap() { NomeVazao = "SCLARA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(STACLAMG);
+                #endregion
+
+                #endregion
+
                 #region TOCANTINS
 
                 #region Serra da Mesa
@@ -629,8 +814,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Sao Salvador
-                var SaoSalvador = new Propagacao() { IdPosto = 253, NomePostoFluv = "São Salvador" };//confirmar fator de distribuição, trocar com lajeado?
-                SaoSalvador.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.055f });//planilha propagaçoes tocantins e config smap com valores trocados
+                var SaoSalvador = new Propagacao() { IdPosto = 253, NomePostoFluv = "São Salvador" };
+                SaoSalvador.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.055f });
                 SaoSalvador.PostoMontantes.Add(new PostoMontante { Propaga = CanaBrava, TempoViagem = 16 });
                 propagacoes.Add(SaoSalvador);
                 #endregion
@@ -643,8 +828,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Lajeado
-                var Lajeado = new Propagacao() { IdPosto = 273, NomePostoFluv = "Lajeado" };//confirmar fator de distribuição, trocar com  sao salvador?  
-                Lajeado.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.455640423031727f });//planilha propagaçoes tocantins e config smap com valores trocados
+                var Lajeado = new Propagacao() { IdPosto = 273, NomePostoFluv = "Lajeado" };
+                Lajeado.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.455640423031727f });
                 Lajeado.PostoMontantes.Add(new PostoMontante { Propaga = PeAngi, TempoViagem = 64 });
                 propagacoes.Add(Lajeado);
                 #endregion
@@ -666,6 +851,35 @@ namespace ChuvaVazaoTools.Classes
                 propagacoes.Add(Tucurui);
                 #endregion
 
+                #endregion
+
+                #region PARNAIBA
+
+                #region Irape
+                var Irape = new Propagacao() { IdPosto = 255, NomePostoFluv = "Irape" };
+                Irape.Modelo.Add(new ModeloSmap() { NomeVazao = "IRAPE", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Irape);
+                #endregion
+
+                #region Itapebi
+                var Itapebi = new Propagacao() { IdPosto = 188, NomePostoFluv = "Itapebi" };
+                Itapebi.Modelo.Add(new ModeloSmap() { NomeVazao = "ITAPEBI", TempoViagem = 0, FatorDistribuicao = 1 });
+                Itapebi.PostoMontantes.Add(new PostoMontante { Propaga = Irape, TempoViagem = 0 });
+                propagacoes.Add(Itapebi);
+                #endregion
+
+                #region boa  esperança
+                var Besp = new Propagacao() { IdPosto = 190, NomePostoFluv = "Boa Esperanca" };
+                Besp.Modelo.Add(new ModeloSmap() { NomeVazao = "UBESP", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Besp);
+                #endregion
+
+                #region Pedra do cavalo
+                var Pcav = new Propagacao() { IdPosto = 254, NomePostoFluv = "Pedra do cavalo" };
+                Pcav.Modelo.Add(new ModeloSmap() { NomeVazao = "PCAVALO", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Pcav);
+
+                #endregion
                 #endregion
 
                 #region SAO FRANCISCO
@@ -2210,7 +2424,7 @@ namespace ChuvaVazaoTools.Classes
                 AdicionaCPINS(propagacoes, dadosAcompH);
 
                 #endregion
-                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH);//propagação da bacia tocantins e madeira
+                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH);//propagação da bacia tocantins, madeira, jeq_Parnaiba
 
 
                 GetPrevs(propagacoes, dataForms);
@@ -2272,11 +2486,120 @@ namespace ChuvaVazaoTools.Classes
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var ultimoAcomph = dadosAcompH.Select(x => x.data).Last();
 
-            var dataInicio = data.AddDays(-94);
+            var dataInicio = data.AddDays(-95);//inicio da propagação Muskingun para tocantins e Madeira 
+            var dataInicioJeqParna = data.AddDays(-45); // inicio da propagação Muskingun Jeq_Parnaiba
+            //todo: confirmar a questão das data inicio das propagaçoes(confirmar se pega as datas certas de acordo com rodadas d-1 e depois do acomph)
             try
             {
 
+                #region Jeq_Paraniba
+                #region Irape
+                var sIrape = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+                var Irapepro = propagacoes.Where(x => x.IdPosto == 255).FirstOrDefault();
 
+                Irapepro.VazaoIncremental.Clear();
+                Irapepro.VazaoNatural.Clear();
+                Irapepro.calMedSemanal.Clear();
+                Irapepro.medSemanalIncremental.Clear();
+                Irapepro.medSemanalNatural.Clear();
+
+                foreach (var dia in sIrape.Keys.ToList())
+                {
+                    Irapepro.VazaoIncremental[dia] = sIrape[dia];
+                    Irapepro.VazaoNatural[dia] = sIrape[dia];
+
+                }
+                CalcMediaMuskingun(Irapepro);
+                #endregion
+
+                #region irape-itapebi
+
+                var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+                List<double> irItCoef = new List<double> { 0.166666666666667, 0.666666666666667, 0.166666666666667 };
+                double vazaoP = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    foreach (var dat in irItSmap.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
+                    {
+                        if (dat == dataInicioJeqParna)
+                        {
+                            vazaoP = irItSmap[dat];
+                            irItSmap[dat] = irItSmap[dat];
+                        }
+                        else
+                        {
+                            double vazao = 0;
+                            vazao = irItSmap[dat] * irItCoef[0] + vazaoP * irItCoef[1] + irItSmap[dat.AddDays(-1)] * irItCoef[2];
+                            vazaoP = irItSmap[dat];
+                            irItSmap[dat] = (float)vazao;
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region Itapebi
+
+                var sItapebi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ITAPEBI".ToUpper()).Select(x => x.Vazoes).First();
+                var Itapebipro = propagacoes.Where(x => x.IdPosto == 188).FirstOrDefault();
+
+                Itapebipro.VazaoIncremental.Clear();
+                Itapebipro.VazaoNatural.Clear();
+                Itapebipro.calMedSemanal.Clear();
+                Itapebipro.medSemanalIncremental.Clear();
+                Itapebipro.medSemanalNatural.Clear();
+
+                var vazAcomphItapebi = dadosAcompH.Where(x => x.posto == Itapebipro.IdPosto).ToList();
+
+                foreach (var dia in sItapebi.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        Itapebipro.VazaoIncremental[dia] = sItapebi[dia];
+                        Itapebipro.VazaoNatural[dia] = Convert.ToDouble(vazAcomphItapebi.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                    }
+                    else
+                    {
+                        Itapebipro.VazaoIncremental[dia] = sItapebi[dia];
+                        Itapebipro.VazaoNatural[dia] = irItSmap[dia] + Itapebipro.VazaoIncremental[dia];
+                    }
+
+                }
+                CalcMediaMuskingun(Itapebipro);
+
+                #endregion
+
+                #region BOA ESPERANÇA
+
+                var BOASMAP = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "UBESP".ToUpper()).Select(x => x.Vazoes).First();
+                var boapro = propagacoes.Where(x => x.IdPosto == 190).FirstOrDefault();
+
+                boapro.VazaoIncremental.Clear();
+                boapro.VazaoNatural.Clear();
+                boapro.calMedSemanal.Clear();
+                boapro.medSemanalIncremental.Clear();
+                boapro.medSemanalNatural.Clear();
+
+                var vazAcomphBOA = dadosAcompH.Where(x => x.posto == boapro.IdPosto).ToList();
+                foreach (var dia in BOASMAP.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        boapro.VazaoIncremental[dia] = BOASMAP[dia];
+                        boapro.VazaoNatural[dia] = Convert.ToDouble(vazAcomphBOA.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                    }
+                    else
+                    {
+                        boapro.VazaoIncremental[dia] = BOASMAP[dia];
+                        boapro.VazaoNatural[dia] = BOASMAP[dia];
+                    }
+
+                }
+                CalcMediaMuskingun(boapro);
+
+                #endregion
+
+                #endregion
                 #region serra da mesa
                 var sMesa = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "SMesa".ToUpper()).Select(x => x.Vazoes).First();
                 var SerraMesa = propagacoes.Where(x => x.IdPosto == 270).FirstOrDefault();
@@ -2708,7 +3031,7 @@ namespace ChuvaVazaoTools.Classes
                 #region  Guajará Mirim - Jirau
 
                 var GmJi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "GUAJ-MIRIM".ToUpper()).Select(x => x.Vazoes).First();
-                Dictionary<DateTime,float> auxiliar = new Dictionary<DateTime, float>();
+                Dictionary<DateTime, float> auxiliar = new Dictionary<DateTime, float>();
                 double tempVi = 14;
 
                 foreach (var item in GmJi.Keys.ToList())
@@ -2814,7 +3137,7 @@ namespace ChuvaVazaoTools.Classes
                 }
 
                 CalculaVazaoNat(stoAnt, dadosAcompH);
-             
+
                 CalcMediaMuskingun(stoAnt);
 
                 #endregion
@@ -2857,7 +3180,7 @@ namespace ChuvaVazaoTools.Classes
                                 }
                                 else
                                 {
-                                    if (prop.PostoMontantes.Count() > 0 && prop.IdPosto != 287)
+                                    if (prop.PostoMontantes.Count() > 0 && prop.IdPosto != 287 && prop.IdPosto != 188)
                                     {
                                         var vazao = SomaInc(prop, semanaNow);
                                         prop.calMedSemanal.Add(semanaNow, vazao);
@@ -3176,7 +3499,7 @@ namespace ChuvaVazaoTools.Classes
 
                         //semana atual 
 
-                        if (prop.IdPosto == 97 || prop.IdPosto == 98 || prop.IdPosto == 110 || prop.IdPosto == 111 || prop.IdPosto == 112 || prop.IdPosto == 113 || prop.IdPosto == 114 || prop.IdPosto == 222 || prop.IdPosto == 284)
+                        if (prop.IdPosto == 97 || prop.IdPosto == 98 || prop.IdPosto == 110 || prop.IdPosto == 111 || prop.IdPosto == 112 || prop.IdPosto == 113 || prop.IdPosto == 114 /*|| prop.IdPosto == 222 || prop.IdPosto == 284*/)
                         {
                             CorrecaoSul(prop, propagacoes, SOatualMaior);
                         }
@@ -3196,8 +3519,17 @@ namespace ChuvaVazaoTools.Classes
                             {
                                 if (!prop.VazaoNatural.ContainsKey(date))
                                 {
-                                    prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] + (mediaPon * (Math.Exp(fator)));
-                                    fator += -0.4f;
+                                    if ((prop.IdPosto == 222 || prop.IdPosto == 284) && (date.DayOfWeek == DayOfWeek.Thursday || date.DayOfWeek == DayOfWeek.Friday))
+                                    {
+                                        double newFactor = FatorCorrecaoSulDiario(propagacoes, date);
+                                        prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] * newFactor;
+                                    }
+                                    else
+                                    {
+                                        prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] + (mediaPon * (Math.Exp(fator)));
+                                        fator += -0.4f;
+                                    }
+                                    
                                 }
                             }
                             var vazNaturais = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);
@@ -3221,6 +3553,24 @@ namespace ChuvaVazaoTools.Classes
 
         }
 
+        public double FatorCorrecaoSulDiario(List<Propagacao> propagacoes, DateTime date)
+        {
+            var p74 = propagacoes.Where(x => x.IdPosto == 74).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p73 = propagacoes.Where(x => x.IdPosto == 73).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p78 = propagacoes.Where(x => x.IdPosto == 78).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p77 = propagacoes.Where(x => x.IdPosto == 77).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p76 = propagacoes.Where(x => x.IdPosto == 76).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p71 = propagacoes.Where(x => x.IdPosto == 71).Select(x => x.VazaoNatural).FirstOrDefault();
+            var p72 = propagacoes.Where(x => x.IdPosto == 72).Select(x => x.VazaoNatural).FirstOrDefault();
+
+            var diaAnt = date.AddDays(-1);
+            var mediaAtual = (p71[date] + p72[date] + p73[date] + p74[date] + p76[date] + p77[date] + p78[date]) / 7;
+            var mediaAnt = (p71[diaAnt] + p72[diaAnt] + p73[diaAnt] + p74[diaAnt] + p76[diaAnt] + p77[diaAnt] + p78[diaAnt]) / 7;
+            var fator = mediaAtual / mediaAnt;
+
+            return fator;
+        }
+
         public void CorrecaoSul(Propagacao prop, List<Propagacao> propagacoes, DateTime SOatualMaior)
         {
             //  o calculo da semana atual dos postos do sul é realizada de maneira diferente
@@ -3239,12 +3589,21 @@ namespace ChuvaVazaoTools.Classes
             {
                 // if (!prop.VazaoNatural.ContainsKey(date))//se der erro decomentar o if e tirar o adddays do ultimoacomph do for
                 // {
-                var diaAnt = date.AddDays(-1);
-                var mediaAtual = (p71[date] + p72[date] + p73[date] + p74[date] + p76[date] + p77[date] + p78[date]) / 7;
-                var mediaAnt = (p71[diaAnt] + p72[diaAnt] + p73[diaAnt] + p74[diaAnt] + p76[diaAnt] + p77[diaAnt] + p78[diaAnt]) / 7;
-                var fator = mediaAtual / mediaAnt;
 
-                prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] * fator;
+                if ((prop.IdPosto == 110 || prop.IdPosto == 111 || prop.IdPosto == 112 || prop.IdPosto == 113 || prop.IdPosto == 114) && (date.DayOfWeek != DayOfWeek.Thursday && date.DayOfWeek != DayOfWeek.Friday))
+                {
+                    prop.VazaoNatural[date] = prop.VazaoNatural[ultimoAcomph];
+                }
+                else
+                {
+                    var diaAnt = date.AddDays(-1);
+                    var mediaAtual = (p71[date] + p72[date] + p73[date] + p74[date] + p76[date] + p77[date] + p78[date]) / 7;
+                    var mediaAnt = (p71[diaAnt] + p72[diaAnt] + p73[diaAnt] + p74[diaAnt] + p76[diaAnt] + p77[diaAnt] + p78[diaAnt]) / 7;
+                    var fator = mediaAtual / mediaAnt;
+
+                    prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] * fator;
+                }
+               
                 //}
             }
             var vazNaturais = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);
@@ -3253,6 +3612,7 @@ namespace ChuvaVazaoTools.Classes
 
         }
         public void CalculaMediaFaltante(List<Propagacao> propagacoes, DateTime ultimoAcomph)//calcula as medias semanais dos postos que foram incluidos antes da chamada desta função
+
         {
             try
             {

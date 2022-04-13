@@ -131,12 +131,16 @@ namespace ChuvaVazaoTools
 
                     var prCount = Process.GetProcesses().Where(p => p.ProcessName.Contains("ChuvaVazaoTools")).Count();
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing");
+                    DateTime hoje22 = DateTime.Today.AddHours(22);
+                    DateTime agoraNow = DateTime.Now;
 
-
-                    if (prCount <= 10)
+                    if (hoje22.Day == agoraNow.Day && agoraNow.Hour < hoje22.Hour)
                     {
-                        AutoExec(data, logF);
-                        Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
+                        if (prCount <= 10)
+                        {
+                            AutoExec(data, logF);
+                            Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
+                        }
                     }
 
                     break;
@@ -903,7 +907,7 @@ namespace ChuvaVazaoTools
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
                     if (funceme.Length != 0 && ETA40.Length > 1)
                     {
-                        pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                        pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
                         {
 
@@ -912,6 +916,20 @@ namespace ChuvaVazaoTools
 
                             Conjunto_R(pastaSaida, date, logF);
 
+                            var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+                            var fonte = pastaSaida;
+                            foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                                SearchOption.AllDirectories))
+                                Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                            foreach (string newPath in Directory.GetFiles(fonte, ".",
+                               SearchOption.AllDirectories))
+                            {
+                                if (!File.Exists(newPath.Replace(fonte, dest)))
+                                {
+                                    File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                                }
+                            }
 
                             //Salvar mapas de saída do modelo R como Img
                             frmMain.Salvar_Img(Path.Combine(pastaSaida, "Arq_Saida"), true);
@@ -954,7 +972,7 @@ namespace ChuvaVazaoTools
                 else
                 {
 
-                    pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                    pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     if (!Directory.Exists(pastaSaida))
                     {
                         logF.WriteLine("Executando Mapas R Acomph");
@@ -962,12 +980,28 @@ namespace ChuvaVazaoTools
 
                         Conjunto_R(pastaSaida, date, logF);
 
+                        var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+                        var fonte = pastaSaida;
+                        foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                            SearchOption.AllDirectories))
+                            Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                        foreach (string newPath in Directory.GetFiles(fonte, ".",
+                           SearchOption.AllDirectories))
+                        {
+                            if (!File.Exists(newPath.Replace(fonte, dest)))
+                            {
+                                File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                            }
+                        }
+
                         //Salvar mapas de saída do modelo R como Img
                         frmMain.Salvar_Img(Path.Combine(pastaSaida, "Arq_Saida"), true);
                     }
 
 
                 }
+                var mapasCount = Directory.GetFiles(pastaSaida, ".", SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
 
 
                 //frmMain.Run(logF, out _);
@@ -1039,15 +1073,6 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGEFS);
-                    }
-                    catch (Exception ex)
-                    {
-                        logF.WriteLine(ex.ToString());
-                    }
-                    try
-                    {
-                        frmMain.modelosChVz.Clear();
                         frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasEuro);
                     }
                     catch (Exception ex)
@@ -1066,14 +1091,73 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                   
+                    
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
                         frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGFS);
                     }
                     catch (Exception ex)
                     {
                         logF.WriteLine(ex.ToString());
                     }
+
+                    //
+                    try
+                    {
+
+                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasEuro);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+
+                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasEuro);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    //
                 }
-                else
+                else if (File.Exists(Path.Combine(pastaSaida, "error.log")) || mapasCount.Count() <= 0)
                 {
                     Directory.Delete(pastaSaida, true);
                 }
