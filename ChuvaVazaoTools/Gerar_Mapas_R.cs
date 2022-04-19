@@ -35,14 +35,14 @@ namespace ChuvaVazaoTools
                 oneDrive_preco = oneDrive_preco.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
             }
             // Date of VE
-            int dias_ve = -2;
-            
+            int dias_ve = -3;
+
             var runRev_Curr = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data_Atual);
 
             var cv1 = runRev_Curr.revDate.AddDays(dias_ve);
 
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual);
-            var cv2 = runRev.revDate.AddDays(-3);
+            var cv2 = runRev.revDate.AddDays(-1);
 
             var runRev3 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 2);
             var cv3 = runRev3.revDate.AddDays(-1);
@@ -199,34 +199,56 @@ namespace ChuvaVazaoTools
                     // ECWMF OP
                     logF.WriteLine("Tranferindo arquivos ECWMF OP para Entrada");
 
+                    var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
+                    var ecmwfTempArqs = Directory.GetFiles(EcmwfTempoOK, "ECMWFop_*").Where(x => x.EndsWith(".dat"));
+
                     var ECMWFs = Directory.GetFiles(Path.Combine(path_ModeloR, "ECMWF00", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"))).Where(x => x.EndsWith(".dat"));
 
-                    if (ECMWFs != null)
+                    if (ecmwfTempArqs != null && ecmwfTempArqs.Count() >= 9)
                     {
                         if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
-                        foreach (var ECMWF in ECMWFs)
+                        logF.WriteLine("Utilizando arquivos Tempo OK");
+
+                        foreach (var arqs in ecmwfTempArqs)
                         {
+                            string nameFile = Path.GetFileName(arqs);
 
-                            System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"pp(\d{4})(\d{2})(\d{2})_(\d+)");
+                            File.Copy(arqs, Path.Combine(path_ArqPrev, "ECMWFop", nameFile), true);
+                        }
+                    }
+                    else
+                    {
+                        if (ECMWFs != null)
+                        {
+                            if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
+                            logF.WriteLine("Utilizando arquivos meteologix");
 
-                            var fMatch = r.Match(ECMWF);
-                            if (fMatch.Success)
+                            foreach (var ECMWF in ECMWFs)
                             {
-                                var data = new DateTime(
-                                    int.Parse(fMatch.Groups[1].Value),
-                                    int.Parse(fMatch.Groups[2].Value),
-                                    int.Parse(fMatch.Groups[3].Value))
-                                    ;
 
-                                var horas = int.Parse(fMatch.Groups[4].Value);
+                                System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"pp(\d{4})(\d{2})(\d{2})_(\d+)");
 
-                                var dataPrev = data.AddHours(horas).Date;
+                                var fMatch = r.Match(ECMWF);
+                                if (fMatch.Success)
+                                {
+                                    var data = new DateTime(
+                                        int.Parse(fMatch.Groups[1].Value),
+                                        int.Parse(fMatch.Groups[2].Value),
+                                        int.Parse(fMatch.Groups[3].Value))
+                                        ;
 
-                                File.Copy(ECMWF, Path.Combine(path_ArqPrev, "ECMWFop", "ECMWFop_p" + data.ToString("ddMMyy") + "a" + dataPrev.ToString("ddMMyy") + ".dat"), true);
+                                    var horas = int.Parse(fMatch.Groups[4].Value);
 
+                                    var dataPrev = data.AddHours(horas).Date;
+
+                                    File.Copy(ECMWF, Path.Combine(path_ArqPrev, "ECMWFop", "ECMWFop_p" + data.ToString("ddMMyy") + "a" + dataPrev.ToString("ddMMyy") + ".dat"), true);
+
+                                }
                             }
                         }
                     }
+
+
                     var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
                     //gfs
                     logF.WriteLine("Tranferindo arquivos GFS para Entrada");
@@ -875,7 +897,7 @@ namespace ChuvaVazaoTools
             pr.Start();
             pr.WaitForExit();
 
-           // System.Diagnostics.Process.Start("cmd.exe", executar).WaitForExit(1200000);
+            // System.Diagnostics.Process.Start("cmd.exe", executar).WaitForExit(1200000);
 
 
 
