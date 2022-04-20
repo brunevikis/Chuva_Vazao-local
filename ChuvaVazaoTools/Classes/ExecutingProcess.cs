@@ -1089,9 +1089,13 @@ namespace ChuvaVazaoTools.Classes
                         {
                             if (vaz.Select(k => k.data).Contains(vazdiariaSmapDia)) // verifica se o posto possui montantes(se nao possuir a VNI será igual à VNA)
                                 propaga.VazaoIncremental[vazdiariaSmapDia] = (Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vaz.Where(a => a.data == vazdiariaSmapDia).First().qnat, Culture.NumberFormat);
-
+                            if (propaga.IdPosto == 263)
+                            {
+                                //vazoes incrementais desse posto são sempre zeradas devido ao seu fator de distribuição ser zero
+                                propaga.VazaoIncremental[vazdiariaSmapDia] = 0;
+                            }
                         }
-                        if (vazdiariaSmapDia > vaz.Select(x => x.data).Last() || (propaga.VazaoIncremental[vazdiariaSmapDia] <= 1))//(propaga.VazaoIncremental[vazdiariaSmapDia] == 0 && vazdiariaSmapDia > DateTime.Today.AddDays(-6)))
+                        if (vazdiariaSmapDia > vaz.Select(x => x.data).Last() || (propaga.VazaoIncremental[vazdiariaSmapDia] <= 1 && propaga.IdPosto != 183))//(propaga.VazaoIncremental[vazdiariaSmapDia] == 0 && vazdiariaSmapDia > DateTime.Today.AddDays(-6)))
                         {
                             foreach (var ms in propaga.Modelo)
                             {
@@ -1113,6 +1117,13 @@ namespace ChuvaVazaoTools.Classes
                                         propaga.VazaoIncremental[vazdiariaSmapDia] += modeloSmap.Vazoes[dmaior] * (24f - horaatraso) / 24f;
                                     }
                                 }
+
+                            }
+
+                            if (propaga.IdPosto == 263)
+                            {
+                                //vazoes incrementais desse posto são sempre zeradas devido ao seu fator de distribuição ser zero
+                                propaga.VazaoIncremental[vazdiariaSmapDia] = 0;
                             }
                         }
                     }
@@ -1367,7 +1378,11 @@ namespace ChuvaVazaoTools.Classes
                                 propaga.VazaoIncremental[dat] += modeloSmap.Vazoes[dat] * ms.FatorDistribuicao;
 
                             }
-
+                            if (propaga.IdPosto == 263)
+                            {
+                                //vazoes incrementais desse posto são sempre zeradas devido ao seu fator de distribuição ser zero
+                                propaga.VazaoIncremental[dat] = 0;
+                            }
                         }
                     }
                 }
@@ -1432,8 +1447,8 @@ namespace ChuvaVazaoTools.Classes
             {
                 foreach (var propaga in propagacoes)
                 {
-                    /*if(propaga.IdPosto == 18)
-                    { }*/
+                    if (propaga.IdPosto == 183)
+                    { }
                     CalculaVazaoPosto(propaga);
                     //CalculaMedSemanal(propaga);
                 }

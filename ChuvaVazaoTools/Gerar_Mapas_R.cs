@@ -35,7 +35,7 @@ namespace ChuvaVazaoTools
                 oneDrive_preco = oneDrive_preco.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
             }
             // Date of VE
-            int dias_ve = -3;
+            int dias_ve = -1;
 
             var runRev_Curr = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data_Atual);
 

@@ -112,7 +112,7 @@ namespace ChuvaVazaoTools
 
                     if (hoje.Day == agora.Day && agora.Hour < hoje.Hour)
                     {
-                        if (p_count <= 2)
+                        if (p_count <= 4)
                         {
                             AutoRun_R(data, logF, excelcaminho);
                             Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
@@ -138,7 +138,11 @@ namespace ChuvaVazaoTools
                     {
                         if (prCount <= 10)
                         {
-                            AutoExec(data, logF);
+                            var newlogFile = @"H:\TI - Sistemas\UAT\ChuvaVazao\AutoExecRun.log";
+                            var newlogF = new LogFile(newlogFile);
+                            newlogF.WriteLine("Iniciando AutoRoutine");
+
+                            AutoExec(data, newlogF);
                             Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
                         }
                     }
@@ -956,8 +960,8 @@ namespace ChuvaVazaoTools
                             File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".ctl"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".ctl"));
 
                             logF.WriteLine("Arquivos funceme não encontrados, subistituindo por euro");
-                            var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
-                            retornoEmail.Wait();
+                            //var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
+                            //retornoEmail.Wait();
                             AutoExec(date, logF, encad);
                         }
                         else
@@ -1008,7 +1012,7 @@ namespace ChuvaVazaoTools
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
-                    try
+                   /* try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
                         {
@@ -1069,7 +1073,7 @@ namespace ChuvaVazaoTools
                     catch (Exception ex)
                     {
                         logF.WriteLine(ex.ToString());
-                    }
+                    }*/
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1549,8 +1553,8 @@ namespace ChuvaVazaoTools
                             File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".ctl"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".ctl"));
 
                             logF.WriteLine("Arquivos funceme não encontrados, subistituindo por euro");
-                            var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
-                            retornoEmail.Wait();
+                            //var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
+                            //retornoEmail.Wait();
                             AutoRun_R(date, logF, excelFile, encad);
                         }
                         else

@@ -816,6 +816,7 @@ namespace ChuvaVazaoTools
             {
                 try
                 {
+                    if (logF != null) logF.WriteLine( name + ": Copiando arquivos SMAP!!!");
                     CriarCaso(statusF);
                     string user = System.Environment.UserName.ToString();
                     Tools.Tools.addHistory(Path.Combine(pastaSaida, user + ".txt"), System.Environment.UserName.ToString());
@@ -851,12 +852,19 @@ namespace ChuvaVazaoTools
                     PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
                     AddLog(" --- ");
                     AddLog(" --- Executar Parte B quando pronto --- ");
+
+                    if (logF != null) logF.WriteLine(name + ": Salvando dados de precipitação e vazão!!!");
+
                     PreencherPrecObserv();
                     SalvarPrecObserv_R();
                     SalvarVazObserv();
+
+
                     SalvarPrecPrev_R();
 
                     statusF.Preparation = RunStatus.statuscode.completed;
+                    if (logF != null) logF.WriteLine(name + ": Preparação completa!!!");
+
                 }
 
                 //btnSalvarPrecObserv_Click(null, null);
@@ -868,6 +876,9 @@ namespace ChuvaVazaoTools
             if (statusF.Preparation == RunStatus.statuscode.completed && statusF.Creation == RunStatus.statuscode.completed && statusF.Execution != RunStatus.statuscode.completed)
             {
                 statusF.Execution = RunStatus.statuscode.initialialized; //TODO: criar um status para o metodo automatico do executingProcess
+
+                if (logF != null) logF.WriteLine(name + ": Iniciando execução SMAP!!!");
+
 
                 if (modelosChVz.Count == 0)
                     Ler();
@@ -896,14 +907,27 @@ namespace ChuvaVazaoTools
                 List<Propagacao> propagacoes = null;
                 if (statusF.Preparation == RunStatus.statuscode.completed && statusF.Creation == RunStatus.statuscode.completed && statusF.Previvaz != RunStatus.statuscode.completed)
                 {
+                    if (logF != null) logF.WriteLine(name + ": SMAP concluido, iniciando coleta dos resultados!!!");
+                    statusF.Execution = RunStatus.statuscode.completed;
+
                     statusF.Collect = RunStatus.statuscode.initialialized;
                     if (modelosChVz.Count == 0)
                         Ler();
+
+                    if (logF != null) logF.WriteLine(name + ": Iniciando cálculo de propagações!!!");
+
                     propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value);
                     if (propagacoes.Count != 0 || propagacoes != null)
                     {
                         statusF.Execution = RunStatus.statuscode.completed;
                         statusF.Collect = RunStatus.statuscode.completed;
+                    }
+                    else
+                    {
+                        if (logF != null) logF.WriteLine(name + ": Erro nos cálculos de propagações!!!");
+
+                        statusF.Collect = RunStatus.statuscode.error;
+                        return;
                     }
 
 
@@ -922,6 +946,7 @@ namespace ChuvaVazaoTools
                         if (statusF.Execution == RunStatus.statuscode.completed && statusF.Collect == RunStatus.statuscode.completed)
                         {
                             File.WriteAllText(Path.Combine(pastaSaida, "Propagacoes_Automaticas.txt"), new StreamReader(stream1).ReadToEnd());
+                            if (logF != null) logF.WriteLine(name + ": Propagações concluídas, iniciando processo PREVIVAZ!!!");
 
                             statusF.Previvaz = RunStatus.statuscode.initialialized;
 
@@ -931,7 +956,7 @@ namespace ChuvaVazaoTools
                             {
                                 var encad = cbx_Encadear_Previvaz.Checked;
                                 AddLog("EXECUCAO PREVIVAZ");
-                                if (logF != null) logF.WriteLine("EXECUCAO PREVIVAZ");
+                                if (logF != null) logF.WriteLine(name + ": EXECUCAO PREVIVAZ !!!");
                                 if (encad)
                                 {
                                     var parametro = p.Item2 + "|true";
@@ -951,11 +976,14 @@ namespace ChuvaVazaoTools
                                     if (System.IO.File.Exists(Path.Combine(pastaSaida, "Previvaz2.txt")))
                                     {
                                         // var procId = pr.BasePriority;
+                                        if (logF != null) logF.WriteLine(name + ": PREVIVAZ concluído!!!");
 
                                         if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
                                     }
                                     else
                                     {
+                                        if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+
                                         statusF.Previvaz = RunStatus.statuscode.error;
                                         return;
                                     }
@@ -964,11 +992,15 @@ namespace ChuvaVazaoTools
                                 catch (Exception e)
                                 {
                                     e.ToString();
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;
                                 }
                                 if (statusF?.Previvaz != RunStatus.statuscode.completed)
                                 {
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;
                                 }
@@ -977,12 +1009,16 @@ namespace ChuvaVazaoTools
                             else
                             {
                                 if (statusF != null && System.IO.Directory.Exists(Path.Combine(pastaSaida, "Propagacoes_Automaticas.txt"))) statusF.Previvaz = RunStatus.statuscode.error;
+                                if (logF != null) logF.WriteLine(name + ": Falha ao iniciar instância de execução PREVIVAZ!!!");
+
                                 return;
                             }
                         }
                     }
                     else
                     {
+                        if (logF != null) logF.WriteLine(name + ": Erro nos cálculos de propagações!!!");
+
                         statusF.Execution = RunStatus.statuscode.error;
                         statusF.Collect = RunStatus.statuscode.error;
                         //throw new Exception("As propagações foram enviadas ao método e retornaram vazias ou com erro");
@@ -1004,6 +1040,8 @@ namespace ChuvaVazaoTools
 
                     if (System.IO.File.Exists(Path.Combine(pastaSaida, "Previvaz2.txt")))
                     {
+                        if (logF != null) logF.WriteLine(name + ": Exportando arquivos Prevs e Enas!!!");
+
                         var Read = System.IO.File.ReadAllText(Path.Combine(pastaSaida, "Previvaz2.txt"));
                         //testeRead.ReadToEnd();
 
@@ -1017,6 +1055,8 @@ namespace ChuvaVazaoTools
                         {
                             try
                             {
+                                if (logF != null) logF.WriteLine(name + ": Prevs exportado!!!");
+
                                 var nomeDoCaso = pastaSaida.Split('\\').Last();
 
                                 if (nomeDoCaso.StartsWith("SCP_CV_") || nomeDoCaso.StartsWith("SCP_CV2_") || nomeDoCaso.StartsWith("SCP_CV3_") || nomeDoCaso.StartsWith("SCP_CV4_") || nomeDoCaso.StartsWith("SCP_CV5_"))
@@ -1025,8 +1065,9 @@ namespace ChuvaVazaoTools
                                     //if (!System.IO.Directory.Exists(pathDestino))
                                     //{
                                     //    Directory.CreateDirectory(pathDestino);
-                                     // File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
+                                    // File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
                                     //}
+                                    if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
 
                                 }
                                 else
@@ -1039,6 +1080,8 @@ namespace ChuvaVazaoTools
                             catch
                             {
                                 if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                                if (logF != null) logF.WriteLine(name + ": Erro ao copiar prevs para diretório de execução automática!!!");
+
                                 return;
                             }
 
@@ -1046,11 +1089,15 @@ namespace ChuvaVazaoTools
                         else
                         {
                             if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                            if (logF != null) logF.WriteLine(name + ": Erro ao exportar Prevs!!!");
+
                             return;
                         }
 
                         if (!File.Exists(Path.Combine(pastaSaida, "enasemanal.log")) || !File.Exists(Path.Combine(pastaSaida, "enadiaria.log")))
                         {
+                            if (logF != null) logF.WriteLine(name + ": Erro ao exportar Enas!!!");
+
                             if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
                             return;
                         }
@@ -1059,11 +1106,15 @@ namespace ChuvaVazaoTools
                     {
                         if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
                         if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                        if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ (Post Processing)!!!");
+
                         return;
                     }
 
                     try
                     {
+                        if (logF != null) logF.WriteLine(name + ": Copiando rodada para diretório compartilhado!!!");
+
                         var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
                         var fonte = pastaSaida;
                         foreach (string dirPath in Directory.GetDirectories(fonte, "*",
@@ -1083,6 +1134,8 @@ namespace ChuvaVazaoTools
 
                     try
                     {
+                        if (logF != null) logF.WriteLine(name + ": FINALIZADO!!!");
+
                         Salvar_Img(pastaSaida);
                         if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.completed;
 
