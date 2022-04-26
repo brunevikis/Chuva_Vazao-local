@@ -118,7 +118,7 @@ namespace ChuvaVazaoTools
                             Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas via Self Enforcing - Dentro dos Processos");
                         }
                     }
-                    
+
                     break;
                 case "report":
                     logF.WriteLine("Iniciando AutoReport");
@@ -1012,7 +1012,7 @@ namespace ChuvaVazaoTools
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
-                   /* try
+                    try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
                         {
@@ -1073,7 +1073,7 @@ namespace ChuvaVazaoTools
                     catch (Exception ex)
                     {
                         logF.WriteLine(ex.ToString());
-                    }*/
+                    }
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1101,8 +1101,8 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
-                   
-                    
+
+
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1479,7 +1479,7 @@ namespace ChuvaVazaoTools
         }
 
 
-        internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF,string excelFile, bool encad = false)
+        internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF, string excelFile, bool encad = false)
         {
 
             // Verifica se já existe mapas para rodada
@@ -1494,7 +1494,7 @@ namespace ChuvaVazaoTools
                 var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd"));
                 var ETA40 = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")), "ETA40_*");
 
-                var frmMain = new FrmMain(true,excelFile, encad);
+                var frmMain = new FrmMain(true, excelFile, encad);
 
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(date);
 
@@ -1503,7 +1503,7 @@ namespace ChuvaVazaoTools
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
                     if (funceme.Length != 0 && ETA40.Length > 1)
                     {
-                       // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
+                        // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
                         {
@@ -1569,7 +1569,7 @@ namespace ChuvaVazaoTools
                 else
                 {
 
-                   // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
+                    // pastaSaida = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph";
                     if (!Directory.Exists(pastaSaida))
                     {
@@ -1600,7 +1600,7 @@ namespace ChuvaVazaoTools
 
 
                 }
-                var mapasCount = Directory.GetFiles(pastaSaida,".",SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
+                var mapasCount = Directory.GetFiles(pastaSaida, ".", SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
 
 
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))

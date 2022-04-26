@@ -8490,12 +8490,18 @@ namespace ChuvaVazaoTools
 
         private void AutoDev_Click(object sender, EventArgs e)
         {
+            var newlogFile = @"H:\TI - Sistemas\UAT\ChuvaVazao\AutoExecRun.log";
+            var newlogF = new LogFile(newlogFile);
+            newlogF.WriteLine("Iniciando AutoRoutine");
+            newlogF.WriteLine("Iniciando rodada Self Process");
+
             var logF = textLogger;
             logF.WriteLine("Iniciando rodada Self Process");
             var data = dtAtual.Value.Date;
             logF.WriteLine("Iniciando...");
             var encad = cbx_Encadear_Previvaz.Checked;
-            Program.AutoExec(data, logF, encad);
+            //Program.AutoExec(data, logF, encad);
+            Program.AutoExec(data, newlogF, encad);
 
 
             logF.WriteLine("Encerrando rodada digital");
