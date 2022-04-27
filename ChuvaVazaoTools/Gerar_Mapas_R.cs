@@ -202,7 +202,6 @@ namespace ChuvaVazaoTools
                     var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
                     var ecmwfTempArqs = Directory.GetFiles(EcmwfTempoOK, "ECMWFop_*").Where(x => x.EndsWith(".dat"));
 
-                    var ECMWFs = Directory.GetFiles(Path.Combine(path_ModeloR, "ECMWF00", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"))).Where(x => x.EndsWith(".dat"));
 
                     if (ecmwfTempArqs != null && ecmwfTempArqs.Count() >= 9)
                     {
@@ -218,6 +217,8 @@ namespace ChuvaVazaoTools
                     }
                     else
                     {
+                        var ECMWFs = Directory.GetFiles(Path.Combine(path_ModeloR, "ECMWF00", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"))).Where(x => x.EndsWith(".dat"));
+
                         if (ECMWFs != null)
                         {
                             if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
