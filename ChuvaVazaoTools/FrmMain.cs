@@ -1483,6 +1483,20 @@ namespace ChuvaVazaoTools
                     }
                 }
 
+                foreach (var p in Propagacoes.Where(x => x.IdPosto == 307))
+                {
+                    var p201 = GetMediaSemanal(Propagacoes, 201, d);
+                    var p201b = p201 - 25;
+                    if (p201b > 0)
+                    {
+                        p.VazaoNatural[d] = p201b;
+                    }
+                    else
+                    {
+                        p.VazaoNatural[d] = 0;
+                    }
+                }
+
                 foreach (var p in Propagacoes.Where(x => x.IdPosto == 298))
                 {
                     var p125 = GetMediaSemanal(Propagacoes, 125, d);
