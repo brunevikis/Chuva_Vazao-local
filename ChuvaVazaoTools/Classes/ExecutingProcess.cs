@@ -986,21 +986,21 @@ namespace ChuvaVazaoTools.Classes
                 #region Passo Real
                 var passoReal = new Propagacao() { IdPosto = 111, NomePostoFluv = "Passo Real" };
                 passoReal.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSOREAL", TempoViagem = 0, FatorDistribuicao = 1 });
-                passoReal.PostoMontantes.Add(new PostoMontante { Propaga = enerstina, TempoViagem = 1 });
+                passoReal.PostoMontantes.Add(new PostoMontante { Propaga = enerstina, TempoViagem = 19.8f });//1
                 propagacoes.Add(passoReal);
                 #endregion
 
                 #region Jacui
                 var jacui = new Propagacao() { IdPosto = 112, NomePostoFluv = "Jacui" };
                 jacui.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.020f });
-                jacui.PostoMontantes.Add(new PostoMontante { Propaga = passoReal, TempoViagem = 1 });
+                jacui.PostoMontantes.Add(new PostoMontante { Propaga = passoReal, TempoViagem = 1.3f });//1
                 propagacoes.Add(jacui);
                 #endregion
 
                 #region Itauba
                 var itauba = new Propagacao() { IdPosto = 113, NomePostoFluv = "Itauba" };
                 itauba.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.464f });
-                itauba.PostoMontantes.Add(new PostoMontante { Propaga = jacui, TempoViagem = 1 });
+                itauba.PostoMontantes.Add(new PostoMontante { Propaga = jacui, TempoViagem = 6.2f });//1
                 propagacoes.Add(itauba);
                 #endregion
 
@@ -1020,14 +1020,14 @@ namespace ChuvaVazaoTools.Classes
                 #region Monte Claro
                 var Montecl = new Propagacao() { IdPosto = 97, NomePostoFluv = "Monte Claro" };
                 Montecl.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.887f });
-                Montecl.PostoMontantes.Add(new PostoMontante { Propaga = CastroAl, TempoViagem = 1 });
+                Montecl.PostoMontantes.Add(new PostoMontante { Propaga = CastroAl, TempoViagem = 6 });
                 propagacoes.Add(Montecl);
                 #endregion
 
                 #region 14 de Julho
                 var XIVjulho = new Propagacao() { IdPosto = 284, NomePostoFluv = "14 de julho" };
                 XIVjulho.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.113f });
-                XIVjulho.PostoMontantes.Add(new PostoMontante { Propaga = Montecl, TempoViagem = 1 });
+                XIVjulho.PostoMontantes.Add(new PostoMontante { Propaga = Montecl, TempoViagem = 4.5f });
                 propagacoes.Add(XIVjulho);
                 #endregion
 

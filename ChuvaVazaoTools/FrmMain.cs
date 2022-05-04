@@ -1557,7 +1557,7 @@ namespace ChuvaVazaoTools
                     var p203 = GetMediaSemanal(Propagacoes, 203, d);
                     var p304 = GetMediaSemanal(Propagacoes, 304, d);
 
-                    p.VazaoNatural[d] = p129 - p298 - p203 - p304;
+                    p.VazaoNatural[d] = p129 - p298 - p203 + p304;
                     if (p.VazaoNatural[d] <= 0)
                     {
                         p.VazaoNatural[d] = 0;
