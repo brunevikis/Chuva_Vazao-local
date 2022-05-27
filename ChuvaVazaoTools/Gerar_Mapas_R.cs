@@ -45,7 +45,7 @@ namespace ChuvaVazaoTools
             var cv2 = runRev.revDate.AddDays(-1);
 
             var runRev3 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 2);
-            var cv3 = runRev3.revDate.AddDays(-1);
+            var cv3 = runRev3.revDate.AddDays(-3);
 
             var runRev4 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 3);
             var cv4 = runRev4.revDate.AddDays(-1);

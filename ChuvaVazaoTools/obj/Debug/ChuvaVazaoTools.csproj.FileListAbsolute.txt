@@ -173,4 +173,3 @@ C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\ChuvaVazaoTools.exe.m
 C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\bin\Debug\ChuvaVazaoTools.application
 C:\Development\Chuva_vazao\trunk\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.CopyComplete
 C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.AssemblyReference.cache
-C:\Development\chuva_vazao\ChuvaVazaoTools\obj\Debug\ChuvaVazaoTools.csproj.CopyComplete

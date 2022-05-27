@@ -2436,7 +2436,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region adiciona cpins
-                AdicionaCPINS(propagacoes, dadosAcompH);
+                AdicionaMPV(propagacoes, dadosAcompH);
+                //AdicionaCPINS(propagacoes, dadosAcompH);
 
                 #endregion
                 PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH);//propagação da bacia tocantins, madeira, jeq_Parnaiba
@@ -3472,6 +3473,104 @@ namespace ChuvaVazaoTools.Classes
                 e.ToString();
             }
         }
+
+        public void AdicionaMPV(List<Propagacao> propagacoes, List<CONSULTA_VAZAO> dadosAcomph)
+        {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            try
+            {
+
+                var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(DateTime.Today);
+
+                var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+
+                var PathModelo = Path.Combine(pastaBase, "Modelos_Chuva_Vazao", "MPV", "Arq_Saida");
+                DateTime dt_CPINS = DateTime.Today;
+                var Arquivo = Path.Combine(PathModelo, dt_CPINS.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+
+                while (!File.Exists(Arquivo)) // busca o txt com dados do cpins mais recente
+                {
+                    dt_CPINS = dt_CPINS.AddDays(-1);
+                    Arquivo = Path.Combine(PathModelo, dt_CPINS.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+                }
+
+                var TxtCpins = File.ReadAllLines(Arquivo);
+
+                var Num_linhas = TxtCpins.Length;
+                List<Tuple<DateTime, double, double>> dados = new List<Tuple<DateTime, double, double>>();
+
+
+                for (int i = 0; i <= Num_linhas - 1; i++)
+                {
+                    var Separa = TxtCpins[i].Split(';');
+                    var d = double.Parse(Separa[0], Culture.NumberFormat);            //no txt a data esta codificada pelo excel 
+                    var data = DateTime.FromOADate(d);         // esse passo converte para datetime  
+                    var dado = new Tuple<DateTime, double, double>(data, Convert.ToDouble(Separa[1], Culture.NumberFormat), Convert.ToDouble(Separa[2], Culture.NumberFormat));
+                    dados.Add(dado);
+
+                }
+                foreach (var prop in propagacoes)
+                {
+                    if (prop.IdPosto == 168 || prop.IdPosto == 169 || prop.IdPosto == 172 || prop.IdPosto == 173 || prop.IdPosto == 178)
+                    {
+                        var ultimoAcomph = dadosAcomph.Select(x => x.data).Last();
+                        var dataFim = dados.Select(x => x.Item1).Last();
+
+                        for (DateTime dat = ultimoAcomph.AddDays(1); dat <= dataFim; dat = dat.AddDays(1))
+                        {
+                            if (prop.IdPosto == 168)
+                            {
+                                prop.VazaoNatural[dat] = dados.Where(x => x.Item1 == dat).Select(x => x.Item2).FirstOrDefault();
+                                prop.VazaoIncremental[dat] = prop.VazaoNatural[dat];
+                            }
+                            if (prop.IdPosto == 169 || prop.IdPosto == 172 || prop.IdPosto == 173 || prop.IdPosto == 178)
+                            {
+                                prop.VazaoNatural[dat] = dados.Where(x => x.Item1 == dat).Select(x => x.Item3).FirstOrDefault();
+                            }
+
+                        }
+                        DateTime dataNow = DateTime.Today.AddDays(-1);
+
+                        var SOatualMaior = dataNow;
+
+                        while (SOatualMaior.DayOfWeek != DayOfWeek.Friday)
+                            SOatualMaior = SOatualMaior.AddDays(+1);//até sexta(fim da semana)atual
+                        DateTime semanaNow = SOatualMaior.AddDays(1);
+                        for (DateTime date = SOatualMaior.AddDays(1); date <= SOatualMaior.AddDays(14); date = date.AddDays(1))
+                        {
+                            if (date.DayOfWeek == DayOfWeek.Friday)
+                            {
+
+                                if (date <= SOatualMaior.AddDays(14))
+                                {
+                                    var vaz = prop.VazaoNatural.Where(x => x.Key >= date.AddDays(-6) && x.Key <= date);
+
+                                    if (vaz.Count() == 7)
+                                    {
+                                        prop.calMedSemanal[date] = vaz.Average(x => x.Value);//media das  semanas seguintes à atual
+                                    }
+                                }
+                            }
+                        }
+                        if (prop.IdPosto == 168 || prop.IdPosto == 169)
+                        {
+                            var vaz = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);
+                            if (vaz.Count() == 7)
+                            {
+                                prop.calMedSemanal[SOatualMaior] = vaz.Average(x => x.Value);//media da semana atual(para esses postos a media é calculada usando os dias de acomph e os dias de cpins para fechar a semana)
+                            }                                                                //os dias de acomph ja haviam sido inseridos no metodo CalcSemanaPrevivaz
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                e.ToString();
+            }
+        }
+
         public void CalcSemanaPrevivaz(List<Propagacao> propagacoesAux, List<Propagacao> propagacoes)
         {
             //realiza a projeção para a semana atual dos postos previvaz utilizando dados do acomph,media ponderada com as variaçoes dos dados 

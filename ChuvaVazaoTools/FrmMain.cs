@@ -5703,6 +5703,42 @@ namespace ChuvaVazaoTools
             MessageBox.Show("OK");
         }
 
+        public object[,] ColetaMVP()
+        {
+            try
+            {
+                var PathModelo = Path.Combine(txtEntrada.Text, "MPV", "Arq_Saida");
+                DateTime dt_MVP = DateTime.Today;
+                var Arquivo = Path.Combine(PathModelo, dt_MVP.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+
+                while (!File.Exists(Arquivo))
+                {
+                    dt_MVP = dt_MVP.AddDays(-1);
+                    Arquivo = Path.Combine(PathModelo, dt_MVP.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+                }
+
+                var TxtMVP = File.ReadAllLines(Arquivo);
+
+                var Num_linhas = TxtMVP.Length;
+
+                object[,] results = new object[Num_linhas, 3];
+
+                for (int i = 0; i <= Num_linhas - 1; i++)
+                {
+                    var Separa = TxtMVP[i].Split(';');
+                    results[i, 0] = Convert.ToDouble(Separa[0]);
+                    results[i, 1] = Convert.ToDouble(Separa[1]);
+                    results[i, 2] = Convert.ToDouble(Separa[2]);
+                }
+
+                return results;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
 
         public object[,] ColetaCPINS()
         {
@@ -6108,7 +6144,8 @@ namespace ChuvaVazaoTools
             ws.UsedRange.ClearContents();
 
             var res = ColetarResultado();
-            var resCPINS = ColetaCPINS();
+            var resCPINS = ColetaMVP();
+            //var resCPINS2 = ColetaCPINS();
             //modelosChVz
 
             ws.Range[ws.Cells[2, "A"], ws.Cells[61, "C"]].value = resCPINS;
