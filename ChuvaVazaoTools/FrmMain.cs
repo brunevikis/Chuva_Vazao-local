@@ -4487,7 +4487,7 @@ namespace ChuvaVazaoTools
 
             //else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, "Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip")))//"Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip"
             // else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy")+"_PLANILHA_USB.txt")))
-            else if (File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy") + "_PLANILHA_USB.txt")))
+            else if (File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\MPV\Arq_Saida", data_Atual.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt")))
             {
 
                 if (merge != null)
