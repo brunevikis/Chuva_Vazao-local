@@ -181,7 +181,7 @@ namespace ChuvaVazaoTools
 
                     var Euro_ONS = Directory.GetFiles(path_Dia, "ECMWF_*").Where(x => x.EndsWith(".dat"));
 
-                    if (Euro_ONS != null)
+                    if (Euro_ONS != null && Euro_ONS.Count() >= 14)
                     {
                         if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
                         foreach (var Euro in Euro_ONS)
@@ -194,6 +194,27 @@ namespace ChuvaVazaoTools
                             }
 
                         }
+                    }
+                    else
+                    {
+                        var ECMWFensemTempo = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF");
+                        var ecmwfEnsemTempArqs = Directory.GetFiles(ECMWFensemTempo, "ECMWF_*").Where(x => x.EndsWith(".dat"));
+
+                        if (ecmwfEnsemTempArqs != null && ecmwfEnsemTempArqs.Count() >= 14)
+                        {
+                            if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
+                            foreach (var EcmwfTempo in ecmwfEnsemTempArqs)
+                            {
+                                System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+                                var data_mapa = r.Match(EcmwfTempo);
+                                if (data_mapa.Success)
+                                {
+                                    File.Copy(EcmwfTempo, Path.Combine(path_ArqPrev, "ECMWF", EcmwfTempo.Split('\\').Last()), true);
+                                }
+
+                            }
+                        }
+
                     }
 
                     // ECWMF OP

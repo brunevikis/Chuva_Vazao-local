@@ -503,9 +503,15 @@ namespace ChuvaVazaoTools.Classes
                 propagacoes.Add(BGrande);
                 #endregion
 
+                #region Sao Roque
+                var sRoque = new Propagacao() { IdPosto = 88, NomePostoFluv = "Sao Roque" };
+                sRoque.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.745f });
+                propagacoes.Add(sRoque);
+                #endregion
+
                 #region Garibaldi
                 var Garibaldi = new Propagacao() { IdPosto = 89, NomePostoFluv = "Garibaldi" };
-                Garibaldi.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.910f });
+                Garibaldi.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.165f });//0.910f
                 propagacoes.Add(Garibaldi);
                 #endregion
 
@@ -2508,6 +2514,210 @@ namespace ChuvaVazaoTools.Classes
             try
             {
 
+                #region correcao postos uruguai
+
+                #region sao roque
+
+                var cnSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "CN".ToUpper()).Select(x => x.Vazoes).First();
+                var vazAcomphGarib = dadosAcompH.Where(x => x.posto == 89).ToList();
+                var sroque = propagacoes.Where(x => x.IdPosto == 88).FirstOrDefault();
+
+
+                sroque.VazaoIncremental.Clear();
+                sroque.VazaoNatural.Clear();
+                sroque.calMedSemanal.Clear();
+                sroque.medSemanalIncremental.Clear();
+                sroque.medSemanalNatural.Clear();
+
+                foreach (var dia in cnSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        var valor = Convert.ToDouble(vazAcomphGarib.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        sroque.VazaoNatural[dia] = valor * 0.82f;
+                        sroque.VazaoIncremental[dia] = sroque.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        sroque.VazaoNatural[dia] = cnSmap[dia] * 0.745f;
+                        sroque.VazaoIncremental[dia] = sroque.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(sroque);
+                #endregion
+
+                #region garibaldi
+
+                var gari = propagacoes.Where(x => x.IdPosto == 89).FirstOrDefault();
+
+
+                gari.VazaoIncremental.Clear();
+                gari.VazaoNatural.Clear();
+                gari.calMedSemanal.Clear();
+                gari.medSemanalIncremental.Clear();
+                gari.medSemanalNatural.Clear();
+
+                foreach (var dia in cnSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        gari.VazaoNatural[dia] = Convert.ToDouble(vazAcomphGarib.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        gari.VazaoIncremental[dia] = gari.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        gari.VazaoNatural[dia] = cnSmap[dia] * 0.165f + sroque.VazaoNatural[dia];
+                        gari.VazaoIncremental[dia] = gari.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(gari);
+
+                #endregion
+
+                #region camposnovos
+
+                var campos = propagacoes.Where(x => x.IdPosto == 216).FirstOrDefault();
+                var vazAcomphCampos = dadosAcompH.Where(x => x.posto == 216).ToList();
+
+
+                campos.VazaoIncremental.Clear();
+                campos.VazaoNatural.Clear();
+                campos.calMedSemanal.Clear();
+                campos.medSemanalIncremental.Clear();
+                campos.medSemanalNatural.Clear();
+
+                foreach (var dia in cnSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        campos.VazaoNatural[dia] = Convert.ToDouble(vazAcomphCampos.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        campos.VazaoIncremental[dia] = campos.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        campos.VazaoNatural[dia] = cnSmap[dia] * 0.09f + gari.VazaoNatural[dia];
+                        campos.VazaoIncremental[dia] = campos.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(campos);
+
+                #endregion
+
+                #region machadinho
+
+                var macha = propagacoes.Where(x => x.IdPosto == 217).FirstOrDefault();
+                var vazAcomphMacha = dadosAcompH.Where(x => x.posto == 217).ToList();
+                var machaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Machadinho".ToUpper()).Select(x => x.Vazoes).First();
+                var bgSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BG".ToUpper()).Select(x => x.Vazoes).First();
+
+
+                macha.VazaoIncremental.Clear();
+                macha.VazaoNatural.Clear();
+                macha.calMedSemanal.Clear();
+                macha.medSemanalIncremental.Clear();
+                macha.medSemanalNatural.Clear();
+
+                foreach (var dia in machaSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        macha.VazaoNatural[dia] = Convert.ToDouble(vazAcomphMacha.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        macha.VazaoIncremental[dia] = macha.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        macha.VazaoNatural[dia] = machaSmap[dia] + campos.VazaoNatural[dia] + bgSmap[dia];
+                        macha.VazaoIncremental[dia] = macha.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(macha);
+
+                #endregion
+
+                #region ITA
+
+                var ita = propagacoes.Where(x => x.IdPosto == 92).FirstOrDefault();
+                var vazAcomphIta = dadosAcompH.Where(x => x.posto == 92).ToList();
+                var itaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Ita".ToUpper()).Select(x => x.Vazoes).First();
+
+
+                ita.VazaoIncremental.Clear();
+                ita.VazaoNatural.Clear();
+                ita.calMedSemanal.Clear();
+                ita.medSemanalIncremental.Clear();
+                ita.medSemanalNatural.Clear();
+
+                foreach (var dia in itaSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        ita.VazaoNatural[dia] = Convert.ToDouble(vazAcomphIta.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        ita.VazaoIncremental[dia] = ita.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        ita.VazaoNatural[dia] = macha.VazaoNatural[dia] + itaSmap[dia];
+                        ita.VazaoIncremental[dia] = ita.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(ita);
+
+                #endregion
+
+                #region Foz chapeco
+
+                var chap = propagacoes.Where(x => x.IdPosto == 94).FirstOrDefault();
+                var monjolinho = propagacoes.Where(x => x.IdPosto == 220).FirstOrDefault();
+                var vazAcomphChap = dadosAcompH.Where(x => x.posto == 94).ToList();
+                var chapSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "FozChapeco".ToUpper()).Select(x => x.Vazoes).First();
+
+
+                chap.VazaoIncremental.Clear();
+                chap.VazaoNatural.Clear();
+                chap.calMedSemanal.Clear();
+                chap.medSemanalIncremental.Clear();
+                chap.medSemanalNatural.Clear();
+
+                foreach (var dia in chapSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        chap.VazaoNatural[dia] = Convert.ToDouble(vazAcomphChap.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        chap.VazaoIncremental[dia] = chap.VazaoNatural[dia];
+
+                    }
+                    else
+                    {
+                        chap.VazaoNatural[dia] = ita.VazaoNatural[dia] + monjolinho.VazaoNatural[dia] + chapSmap[dia];
+                        chap.VazaoIncremental[dia] = chap.VazaoNatural[dia];
+
+                    }
+
+                }
+                CalcMediaMuskingun(chap);
+
+                #endregion
+
+
+                #endregion
+
+
+
                 #region Jeq_Paraniba
                 #region Irape
                 var sIrape = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
@@ -3196,7 +3406,7 @@ namespace ChuvaVazaoTools.Classes
                                 }
                                 else
                                 {
-                                    if (prop.PostoMontantes.Count() > 0 && prop.IdPosto != 287 && prop.IdPosto != 188)
+                                    if (prop.PostoMontantes.Count() > 0 && prop.IdPosto != 287 && prop.IdPosto != 188 && prop.IdPosto != 216 && prop.IdPosto != 217 && prop.IdPosto != 92 && prop.IdPosto != 94)
                                     {
                                         var vazao = SomaInc(prop, semanaNow);
                                         prop.calMedSemanal.Add(semanaNow, vazao);
