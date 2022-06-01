@@ -2166,33 +2166,33 @@ namespace ChuvaVazaoTools.Classes
                             e.ToString();
                         }
                     }
-                    if (propaga.IdPosto == 222)
-                    {
-                        try
-                        {
-                            foreach (var dat in propaga.VazaoNatural.Keys.ToList())
-                            {
+                    //if (propaga.IdPosto == 222)
+                    //{
+                    //    try
+                    //    {
+                    //        foreach (var dat in propaga.VazaoNatural.Keys.ToList())
+                    //        {
 
-                                if (dat > ultimaDiaAcomph)
-                                {
-                                    if (propaga.VazaoNatural.ContainsKey(dat)) propaga.VazaoNatural[dat] = 0;
-                                    if (!propaga.VazaoNatural.ContainsKey(dat)) propaga.VazaoNatural[dat] = 0;
-                                    foreach (var ms in propaga.Modelo)//var ms in propaga.Modelo
-                                    {
-                                        var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == ms.NomeVazao.ToUpper()).First();
+                    //            if (dat > ultimaDiaAcomph)
+                    //            {
+                    //                if (propaga.VazaoNatural.ContainsKey(dat)) propaga.VazaoNatural[dat] = 0;
+                    //                if (!propaga.VazaoNatural.ContainsKey(dat)) propaga.VazaoNatural[dat] = 0;
+                    //                foreach (var ms in propaga.Modelo)//var ms in propaga.Modelo
+                    //                {
+                    //                    var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == ms.NomeVazao.ToUpper()).First();
 
 
-                                        propaga.VazaoNatural[dat] += modeloSmap.Vazoes[dat];
-                                    }
+                    //                    propaga.VazaoNatural[dat] += modeloSmap.Vazoes[dat];
+                    //                }
 
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            e.ToString();
-                        }
-                    }
+                    //            }
+                    //        }
+                    //    }
+                    //    catch (Exception e)
+                    //    {
+                    //        e.ToString();
+                    //    }
+                    //}
 
                     if (propaga.IdPosto == 216)
                     {
@@ -2407,7 +2407,7 @@ namespace ChuvaVazaoTools.Classes
                 todoPosto = todoPosto.Union(dadosAcompH.Select(x => x.posto));
                 foreach (var item in todoPosto)
                 {
-                    if (propagacoes.All(x => !x.IdPosto.Equals(item)) || item == 22 || item == 222 || item == 248)//estes postos são Smap mas sao tratados como previvaz
+                    if (propagacoes.All(x => !x.IdPosto.Equals(item)) || item == 22 /*|| item == 222 */|| item == 248)//estes postos são Smap mas sao tratados como previvaz
                     {
                         if (item != 81 && item != 227 && item != 228)//estes postos nao possuem serão incluidos no método GetPrevs, pois seus dados serão obtidos atraves do prevs oficial
                         {
@@ -2427,7 +2427,7 @@ namespace ChuvaVazaoTools.Classes
 
                 foreach (var prop in propagacoesAux)
                 {
-                    if (prop.IdPosto == 22 || prop.IdPosto == 222 || prop.IdPosto == 248)
+                    if (prop.IdPosto == 22 /*|| prop.IdPosto == 222*/ || prop.IdPosto == 248)
                     {
                         var remove = propagacoes.Where(x => x.IdPosto == prop.IdPosto).FirstOrDefault();
                         propagacoes.Remove(remove);// substitui os dados desses postos pelos novos dados com a semana calculada como previvaz
@@ -2513,6 +2513,43 @@ namespace ChuvaVazaoTools.Classes
             //todo: confirmar a questão das data inicio das propagaçoes(confirmar se pega as datas certas de acordo com rodadas d-1 e depois do acomph)
             try
             {
+                #region iguacu
+
+                #region saltacaxias
+
+                var SaltocaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "SCaxias".ToUpper()).Select(x => x.Vazoes).First();
+                var vazAcomphCaxias = dadosAcompH.Where(x => x.posto == 222).ToList();
+                var sCaxias = propagacoes.Where(x => x.IdPosto == 222).FirstOrDefault();
+                sCaxias.VazaoIncremental.Clear();
+                sCaxias.VazaoNatural.Clear();
+                sCaxias.calMedSemanal.Clear();
+                sCaxias.medSemanalIncremental.Clear();
+                sCaxias.medSemanalNatural.Clear();
+
+                foreach (var dia in SaltocaSmap.Keys.ToList())
+                {
+                    if (dia <= ultimoAcomph)
+                    {
+                        var valor = Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        sCaxias.VazaoNatural[dia] = valor;
+                        sCaxias.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+
+
+                    }
+                    else
+                    {
+                        sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
+                        sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
+
+                    }
+
+                }
+                CalcMediaMuskingun(sCaxias);
+
+                #endregion
+
+                #endregion
+
 
                 #region correcao postos uruguai
 
@@ -3843,7 +3880,7 @@ namespace ChuvaVazaoTools.Classes
                             {
                                 if (!prop.VazaoNatural.ContainsKey(date))
                                 {
-                                    if ((prop.IdPosto == 222 || prop.IdPosto == 284) && (date.DayOfWeek == DayOfWeek.Thursday || date.DayOfWeek == DayOfWeek.Friday))
+                                    if ((/*prop.IdPosto == 222 ||*/ prop.IdPosto == 284) && (date.DayOfWeek == DayOfWeek.Thursday || date.DayOfWeek == DayOfWeek.Friday))
                                     {
                                         double newFactor = FatorCorrecaoSulDiario(propagacoes, date);
                                         prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] * newFactor;
