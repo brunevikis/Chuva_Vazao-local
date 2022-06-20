@@ -18,7 +18,7 @@ namespace ChuvaVazaoTools.Tools
             cli.Port = 587;
             cli.EnableSsl = true;
             cli.UseDefaultCredentials = false;
-            //cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
+           // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
             cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
 
             

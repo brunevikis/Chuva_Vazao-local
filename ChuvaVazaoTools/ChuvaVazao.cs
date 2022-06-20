@@ -33,6 +33,7 @@ namespace ChuvaVazaoTools
         }
 
         public abstract void ColetarSaida();
+        public abstract void ColetarSaidaTotal(string mod);
 
         public abstract void SalvarVazaoObservada();
     }

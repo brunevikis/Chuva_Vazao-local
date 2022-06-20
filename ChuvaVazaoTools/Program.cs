@@ -1668,6 +1668,7 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
+                    /////////////////
                     try
                     {
                         frmMain.modelosChVz.Clear();

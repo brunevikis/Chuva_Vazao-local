@@ -61,7 +61,7 @@ namespace ChuvaVazaoTools.SMAP
             var modelos = System.IO.Directory.GetFiles(ArquivosDeEntrada, "MODELOS_PRECIPITACAO.TXT")[0];
 
             ModelosPrecipitacao = System.IO.File.ReadLines(modelos)
-                  .Skip(1).Take(1)
+                  .Skip(1)/*.Take(1)*/
                   .Select(x => x.Split(' ')[0])
                   .Where(x => !string.IsNullOrWhiteSpace(x))
                     .Select(x => x).ToList();
@@ -160,6 +160,14 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public override void ColetarSaidaTotal(string mod)
+        {
+            foreach (var sb in SubBacias)
+            {
+                
+                sb.CarregaSaida(ModelosPrecipitacao.Where(x => x == mod).First());
+            }
+        }
         public override void ColetarSaida()
         {
             foreach (var sb in SubBacias)

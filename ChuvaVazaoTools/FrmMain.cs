@@ -125,6 +125,112 @@ namespace ChuvaVazaoTools
             }
         }
 
+        public void LerTotal(string raiz, Boolean manual = false)
+        {
+            try
+            {
+                var path = txtCaminho.Text;
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+                if (!System.IO.Directory.Exists(path))
+                {
+                    MessageBox.Show("Caminho não existente");
+                    return;
+                }
+
+                modelosChVz.Clear();
+
+                var modelos = System.IO.Directory.GetDirectories(path);
+
+                foreach (var modelo in modelos)
+                {
+
+                    var nomeModelo = modelo.Replace(System.IO.Path.GetDirectoryName(modelo), "").Remove(0, 1);
+
+                    if (nomeModelo.StartsWith("SMAP", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var bacias = System.IO.Directory.GetDirectories(modelo);
+                        foreach (var bacia in bacias)
+                        {
+
+                            modelosChVz.Add(new ChuvaVazaoTools.SMAP.ModeloSmap(bacia, manual));
+
+                        }
+                    }
+
+                    AddLog("\t" + modelo);
+                }
+
+
+                // modelosChVz.ForEach(x => x.ColetarSaida());
+                modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
+
+                listView1.Items.Clear();
+
+                listView1.Items.AddRange(modelosChVz.Select(x => new ModeloItemView(x)).ToArray());
+
+                dtModelo.Value = modelosChVz.Min(x => x.DataPrevisao);
+
+                AddLog("- Modelos Carregados");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                AddLog("\t" + "Erro no método FrmMain/Ler: " + e.Message);
+            }
+        }
+        public void LerSmap(string raiz, Boolean manual = false)
+        {
+            try
+            {
+                var path = txtCaminho.Text;
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV3_", "");
+                if (!System.IO.Directory.Exists(path))
+                {
+                    MessageBox.Show("Caminho não existente");
+                    return;
+                }
+
+                modelosChVz.Clear();
+
+                var modelos = System.IO.Directory.GetDirectories(path);
+
+                foreach (var modelo in modelos)
+                {
+
+                    var nomeModelo = modelo.Replace(System.IO.Path.GetDirectoryName(modelo), "").Remove(0, 1);
+
+                    if (nomeModelo.StartsWith("SMAP", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var bacias = System.IO.Directory.GetDirectories(modelo);
+                        foreach (var bacia in bacias)
+                        {
+
+                            modelosChVz.Add(new ChuvaVazaoTools.SMAP.ModeloSmap(bacia, manual));
+
+                        }
+                    }
+
+                    AddLog("\t" + modelo);
+                }
+
+
+                // modelosChVz.ForEach(x => x.ColetarSaida());
+                modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
+
+                listView1.Items.Clear();
+
+                listView1.Items.AddRange(modelosChVz.Select(x => new ModeloItemView(x)).ToArray());
+
+                dtModelo.Value = modelosChVz.Min(x => x.DataPrevisao);
+
+                AddLog("- Modelos Carregados");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                AddLog("\t" + "Erro no método FrmMain/Ler: " + e.Message);
+            }
+        }
         private void btnLer_Click(object sender, EventArgs e)
         {
             Ler();
@@ -817,7 +923,9 @@ namespace ChuvaVazaoTools
                 try
                 {
                     if (logF != null) logF.WriteLine(name + ": Copiando arquivos SMAP!!!");
-                    CriarCaso(statusF);
+                    CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF);
+                    //
+                    //CriarCaso(statusF);
                     string user = System.Environment.UserName.ToString();
                     Tools.Tools.addHistory(Path.Combine(pastaSaida, user + ".txt"), System.Environment.UserName.ToString());
                 }
@@ -832,8 +940,8 @@ namespace ChuvaVazaoTools
             {
                 statusF.Preparation = RunStatus.statuscode.initialialized;
 
-                Ler();
-
+                //Ler();
+                LerTotal(pastaRaiz);
                 CarregarPrecObserv();
                 PreencherPrecObserv();
 
@@ -849,7 +957,11 @@ namespace ChuvaVazaoTools
                     statusF.Preparation = RunStatus.statuscode.error;
                 else
                 {
-                    PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+                    //
+                    //PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+
+                    PrecipitacaoPrevista_RTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), pastaSaida);
+
                     AddLog(" --- ");
                     AddLog(" --- Executar Parte B quando pronto --- ");
 
@@ -875,14 +987,46 @@ namespace ChuvaVazaoTools
 
             if (statusF.Preparation == RunStatus.statuscode.completed && statusF.Creation == RunStatus.statuscode.completed && statusF.Execution != RunStatus.statuscode.completed)
             {
-                statusF.Execution = RunStatus.statuscode.initialialized; //TODO: criar um status para o metodo automatico do executingProcess
-
+                //statusF.Execution = RunStatus.statuscode.initialialized; //TODO: criar um status para o metodo automatico do executingProcess
                 if (logF != null) logF.WriteLine(name + ": Iniciando execução SMAP!!!");
+
+                var pastaSmapTotal = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\SmapTotal";
+                if (name.Contains("d-1"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_d-1";
+                }
+                else if (name.Contains("PSAT"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_PSAT";
+                }
+                else if (name.Contains("Atualizado"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_Atualizado";
+                }
+
+                var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
+                var execOk = Path.Combine(pastaSmapTotal, "EXEC_OK.txt");
+
 
 
                 if (modelosChVz.Count == 0)
-                    Ler();
-                ExecutarTudo(statusF);
+                LerTotal(pastaRaiz);
+
+                if (!Directory.Exists(pastaSmapTotal) || statusF.Execution == RunStatus.statuscode.error)
+                {
+                    //ExecutarTudo(statusF);
+                    ExecutarTudoTotal(pastaRaiz, statusF);
+                    if (statusF.Execution == RunStatus.statuscode.completed)
+                    {
+                        CopiarDiretorio(pastaSmap, pastaSmapTotal);
+                    }
+                }
+                else if (File.Exists(execOk) && statusF.Execution != RunStatus.statuscode.completed)
+                {
+                    CopiarDiretorio(pastaSmapTotal, pastaSmap);
+                    statusF.Execution = RunStatus.statuscode.completed;
+                }
+
                 if (File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
                     logF.WriteLine("Erro no SMAP");
@@ -911,8 +1055,11 @@ namespace ChuvaVazaoTools
                     statusF.Execution = RunStatus.statuscode.completed;
 
                     statusF.Collect = RunStatus.statuscode.initialialized;
-                    if (modelosChVz.Count == 0)
-                        Ler();
+                    //if (modelosChVz.Count == 0)
+                    //    Ler();
+
+                    modelosChVz.Clear();
+                    LerTotal(pastaRaiz, true);
 
                     if (logF != null) logF.WriteLine(name + ": Iniciando cálculo de propagações!!!");
 
@@ -3926,7 +4073,8 @@ namespace ChuvaVazaoTools
 
             if (!System.IO.Directory.Exists(pastaSaida) || statusF.Creation != RunStatus.statuscode.completed)
             {
-                CriarCaso(statusF);
+                //CriarCaso(statusF);
+                CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF);
                 string user = System.Environment.UserName.ToString();
                 Tools.Tools.addHistory(Path.Combine(pastaSaida, user + ".txt"), System.Environment.UserName.ToString());
             }
@@ -3935,7 +4083,8 @@ namespace ChuvaVazaoTools
             {
                 statusF.Preparation = RunStatus.statuscode.initialialized;
 
-                Ler();
+                //Ler();
+                LerTotal(pastaRaiz);
 
                 CarregarPrecObserv();
                 PreencherPrecObserv();
@@ -3950,7 +4099,8 @@ namespace ChuvaVazaoTools
                     statusF.Preparation = RunStatus.statuscode.error;
                 else
                 {
-                    PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+                    //PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+                    PrecipitacaoPrevista_RTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), pastaSaida);
 
                     //Chamar Imagens Aqui ######################################
 
@@ -3975,7 +4125,38 @@ namespace ChuvaVazaoTools
 
             if (statusF.Execution != RunStatus.statuscode.completed)
             {
-                ExecutarTudo(statusF);
+                var pastaSmapTotal = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\SmapTotal";
+                if (name.Contains("d-1"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_d-1";
+                }
+                else if (name.Contains("PSAT"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_PSAT";
+                }
+                else if (name.Contains("Atualizado"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_Atualizado";
+                }
+
+                var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name + @"\SMAP";
+                var execOk = Path.Combine(pastaSmapTotal, "EXEC_OK.txt");
+
+                if (!Directory.Exists(pastaSmapTotal) || statusF.Execution == RunStatus.statuscode.error)
+                {
+                    //ExecutarTudo(statusF);
+                    ExecutarTudoTotal(pastaRaiz, statusF);
+                    if (statusF.Execution == RunStatus.statuscode.completed)
+                    {
+                        CopiarDiretorio(pastaSmap, pastaSmapTotal);
+                    }
+                }
+                else if (File.Exists(execOk) && statusF.Execution != RunStatus.statuscode.completed)
+                {
+                    CopiarDiretorio(pastaSmapTotal, pastaSmap);
+                    statusF.Execution = RunStatus.statuscode.completed;
+                }
+
                 if (statusF.Execution == RunStatus.statuscode.error)
                 {
                     logF.WriteLine("Erro no SMAP");
@@ -3997,7 +4178,8 @@ namespace ChuvaVazaoTools
 
                 if (logF != null) logF.WriteLine("EXECUCAO OK - PRECESSANDO RESULTADOS");
 
-                ProcessarResultados(pastaSaida, logF, runRev.rev, statusF);
+                //ProcessarResultados(pastaSaida, logF, runRev.rev, statusF);
+                ProcessarResultadosTeste(pastaSaida, logF, runRev.rev, statusF, true, pastaRaiz);
 
                 if (logF != null) logF.WriteLine("FINALIZADO");
 
@@ -4577,6 +4759,37 @@ namespace ChuvaVazaoTools
             }
         }
 
+        void CriarCasoSmapTotal(string mapas, RunStatus statusF = null)
+        {
+
+            if (statusF != null) statusF.Creation = RunStatus.statuscode.initialialized;
+
+            var modelos = new string[] { "SMAP" };
+
+            var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "")).ToList();
+
+            var dir = System.IO.Directory.GetDirectories(txtEntrada.Text);
+
+            if (!Directory.Exists(txtCaminho.Text)) Directory.CreateDirectory(txtCaminho.Text);
+
+            foreach (var d in dir)
+            {
+                var name = d.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries).Last().ToUpperInvariant();
+
+                if (modelos.Contains(name))
+                {
+
+                    AddLog("\tCopiando modelo: " + name);
+
+                    if (Directory.Exists(Path.Combine(txtCaminho.Text, name))) Directory.Delete(Path.Combine(txtCaminho.Text, name), true);
+
+                    SMAPDirectoryCopyTeste(d, Path.Combine(txtCaminho.Text, name), true, modes);
+                }
+            }
+
+            if (statusF != null) statusF.Creation = RunStatus.statuscode.completed;
+        }
+
         void CriarCaso(RunStatus statusF = null)
         {
 
@@ -5066,7 +5279,83 @@ namespace ChuvaVazaoTools
             }
 
         }
+        public void PrecipitacaoPrevista_RTotal(string pastaRaiz, string pastaSaida)
+        {
+            var data = dtAtual.Value.Date;
+            var modes = System.IO.Directory.GetDirectories(pastaRaiz).ToList();
 
+            var modelo = "*";
+
+            var existente = false;
+
+
+            existente = true;
+
+            if (existente)
+            {
+
+
+                foreach (var mod in modes)
+                {
+                    for (int i = 1; i <= 365; i++)
+                    {
+
+                        var dataPrev = data.AddDays(i);
+                        var raiznome = "p" + data.ToString("ddMMyy") + "a" + dataPrev.ToString("ddMMyy");
+                        var prevFiles = System.IO.Directory.GetFiles(mod, "*" + raiznome + ".dat", SearchOption.TopDirectoryOnly);
+                        var prevFiles_R = System.IO.Directory.GetFiles(mod, "*.dat", SearchOption.TopDirectoryOnly);
+                        string prevFile = null;
+                        if (prevFiles.Length != 0)
+                        {
+                            //Mapas_R(prevFiles, i, pastaSaida);
+                            Mapas_RTotal(prevFiles, i, pastaSaida, mod);
+
+                            if (prevFiles.Length == 0 && modelo == "*")
+                            {
+                                //MessageBox.Show("Nenhuma previsão encontrada");
+
+                                break;
+                            }
+                            else if (prevFiles.Length == 0 && modelo != "*")
+                            {
+
+                                AddLog("   Precipitação Prevista não encontrada: " + modelo + raiznome + ".dat");
+                                break;
+
+                            }
+
+                            else
+                            {
+
+                                prevFile = prevFiles[0];
+
+                            }
+
+                            if (modelo == "*")
+                            {
+                                modelo = "ETA40";
+
+                            }
+
+                            chuvas[dataPrev] = PrecipitacaoFactory.BuildFromEtaFile(prevFile);
+                            chuvas[dataPrev].Descricao = "PREV NUM - " + "ETA40_" + raiznome;
+
+
+                        }
+
+                    }
+                    RefreshPrecipList();
+                }
+
+            }
+            else
+            {
+
+                GerarPrevisaoConjunto();
+                //btnPrecConjunto_Click(sender, e);
+            }
+
+        }
         public void GravarPrec()
         {
 
@@ -5549,6 +5838,23 @@ namespace ChuvaVazaoTools
             CarregarPrecObserv();
         }
 
+        void CopiarDiretorio(string fonte, string dest)
+        {
+            foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                   SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+            foreach (string newPath in Directory.GetFiles(fonte, ".",
+               SearchOption.AllDirectories))
+            {
+                if (!File.Exists(newPath.Replace(fonte, dest)))
+                {
+                    File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                }
+            }
+            File.WriteAllText(Path.Combine(dest, "EXEC_OK.txt"), "ok");
+        }
+
         void ExecutarTudo(RunStatus statusF = null)
         {
 
@@ -5567,6 +5873,37 @@ namespace ChuvaVazaoTools
                 else
                 {
                     x.ColetarSaida();
+                    AddLog("\t Finalizado: " + x.Caminho);
+                }
+
+            });
+
+            if (statusF != null) statusF.Execution =
+                    modelosChVz.All(x => x.ErroNaExecucao == false) ? RunStatus.statuscode.completed : RunStatus.statuscode.error;
+
+            ;
+
+        }
+
+        void ExecutarTudoTotal(string raiz, RunStatus statusF = null)
+        {
+            string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+
+            if (statusF != null) statusF.Execution = RunStatus.statuscode.initialialized;
+
+            Parallel.ForEach(modelosChVz, x =>
+            {
+                AddLog("\t Executando: " + x.Caminho);
+                x.Executar();
+
+                if (x.ErroNaExecucao == true)
+                {
+                    AddLog(x.Caminho + " não executado");
+                    File.AppendAllText(Path.Combine(txtCaminho.Text, "error.log"), x.Caminho + " não executado\n");
+                }
+                else
+                {
+                    x.ColetarSaidaTotal(mod);
                     AddLog("\t Finalizado: " + x.Caminho);
                 }
 
@@ -5819,6 +6156,52 @@ namespace ChuvaVazaoTools
                 return null;
             }
         }
+        public object[,] ColetarResultadoTotal(string raiz)
+        {
+            try
+            {
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+
+                modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
+
+                var vaz = modelosChVz.SelectMany(x => x.Vazoes).ToList();
+                var minData = vaz.Min(x => x.Vazoes.Keys.Min());
+                var maxData = vaz.Max(x => x.Vazoes.Keys.Max());
+
+                //s += "\t" + string.Join("\t", vaz.Select(x => x.Nome)) + Environment.NewLine;
+
+                int rows = (int)(maxData - minData).TotalDays + 1;
+                int cols = vaz.Count();
+
+                object[,] results = new object[rows + 1, cols + 1];
+
+                for (int i = 0; i < cols; i++)
+                {
+                    results[0, i + 1] = vaz[i].Nome;
+                }
+
+                for (int d = 0; d < rows; d++)
+                {
+                    var dt = minData.AddDays(d);
+                    results[d + 1, 0] = dt;
+                    for (int i = 0; i < cols; i++)
+                    {
+                        if (vaz[i].Vazoes.ContainsKey(dt))
+                        {
+                            results[d + 1, i + 1] = vaz[i].Vazoes[dt];
+                        }
+                    }
+                }
+                AddLog("- Resultados coletados");
+
+                return results;
+            }
+            catch (Exception e)
+            {
+                AddLog("\t" + "Erro no método FrmMain/ColetarResultado: " + e.Message);
+                return null;
+            }
+        }
 
         private void btnCopiarResultados_Click(object sender, EventArgs e)
         {
@@ -5940,6 +6323,114 @@ namespace ChuvaVazaoTools
 
                     // Copy the subdirectories.
                     SMAPDirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        private static void SMAPDirectoryCopyTeste(string sourceDirName, string destDirName, bool copySubDirs, List<string> modes)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            if (dir.Name.Equals("Arq_Pos_Processamento", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // If the source directory does not exist, throw an exception.
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDirName);
+            }
+
+            // If the destination directory does not exist, create it.
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            // Get the file contents of the directory to copy.
+            if (dir.Name.Equals("ARQ_ENTRADA", StringComparison.OrdinalIgnoreCase))
+            {
+                FileInfo[] files = dir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    if (!file.Extension.EndsWith("dat", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Create the path to the new copy of the file.
+                        string temppath = Path.Combine(destDirName, file.Name);
+                        //if (file.Name.Contains("bat.conf"))
+                        //{
+                        //    var batconf = File.ReadAllLines(file.FullName).ToList();
+                        //    batconf.Add("arqPrev=1");
+                        //    File.WriteAllLines(temppath, batconf);
+                        //}
+                        if (file.Name.EndsWith("MODELOS_PRECIPITACAO.txt"))
+                        {
+                            var modeprecip = File.ReadAllLines(file.FullName).ToList();
+                            modeprecip.Clear();
+                            modeprecip.Add(modes.Count().ToString());
+                            foreach (var item in modes)
+                            {
+                                modeprecip.Add(item);
+                            }
+                            File.WriteAllLines(temppath, modeprecip);
+                        }
+                        else if (file.Name.EndsWith("_PMEDIA.txt"))
+                        {
+                            var pmediaTxt = File.ReadAllLines(file.FullName).ToList();
+
+                            foreach (var item in modes)
+                            {
+                                if (item == "VIES_VE")
+                                {
+                                    File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", "VIES.txt"), true);
+
+                                }
+                                else
+                                {
+                                    File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", item + ".txt"), true);
+                                }
+                            }
+                            file.CopyTo(temppath, true);
+                        }
+                        else
+                        {
+                            // Copy the file.
+                            file.CopyTo(temppath, true);
+                        }
+                    }
+                }
+            }
+
+            if (dir.Name.Equals("ARQ_SAIDA", StringComparison.OrdinalIgnoreCase))
+            {
+                FileInfo[] files = dir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    if (file.Name.EndsWith("_AJUSTE.txt", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Create the path to the new copy of the file.
+                        string temppath = Path.Combine(destDirName, file.Name);
+
+                        // Copy the file.
+                        file.CopyTo(temppath, true);
+                    }
+                }
+            }
+
+            // If copySubDirs is true, copy the subdirectories.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    // Create the subdirectory.
+                    string temppath = Path.Combine(destDirName, subdir.Name);
+
+                    // Copy the subdirectories.
+                    SMAPDirectoryCopyTeste(subdir.FullName, temppath, copySubDirs, modes);
                 }
             }
         }
@@ -6144,6 +6635,68 @@ namespace ChuvaVazaoTools
             ws.UsedRange.ClearContents();
 
             var res = ColetarResultado();
+            var resCPINS = ColetaMVP();
+            //var resCPINS2 = ColetaCPINS();
+            //modelosChVz
+
+            ws.Range[ws.Cells[2, "A"], ws.Cells[61, "C"]].value = resCPINS;
+
+            ws = wb.Worksheets["RESULTADOS"] as Microsoft.Office.Interop.Excel.Worksheet;
+
+            ws.Range[ws.Cells[1, 1], ws.Cells[res.GetLength(0), res.GetLength(1)]].Value = res;
+
+            ws = wb.Worksheets["Aux"] as Microsoft.Office.Interop.Excel.Worksheet;
+            (ws.Range[ws.Cells[3, 2], ws.Cells[3, 2]] as Excel.Range).Value2 = this.ArquivoPrevsBase;
+            (ws.Range[ws.Cells[4, 2], ws.Cells[4, 2]] as Excel.Range).Value2 = this.ArquivosDeEntradaPrevivaz;
+            (ws.Range[ws.Cells[5, 2], ws.Cells[5, 2]] as Excel.Range).Value2 = this.ArquivosDeSaida.Split('\\').LastOrDefault();
+
+            (ws.Range[ws.Cells[1, 2], ws.Cells[1, 2]] as Excel.Range).Value2 = this.DataSemanaPrevsBase ?? this.dtModelo.Value;
+
+            ws = wb.Worksheets["PREVS_SMAP"] as Microsoft.Office.Interop.Excel.Worksheet;
+            (ws.Range[ws.Cells[1, 2], ws.Cells[1, 2]] as Excel.Range).Value2 = this.dtModelo.Value;
+            try
+            {
+                foreach (dynamic conn in wb.Connections)
+                {
+                    conn.Refresh();
+                }
+            }
+            catch (Exception e)
+            {
+
+                e.ToString();
+            }
+
+        }
+
+        private void ColetaDeResultadosTotal(string raiz, Excel.Application app, out Excel.Workbook wb)
+        {
+            if (modelosChVz.Count == 0) LerTotal(raiz, true);
+
+            //new ExecutingProcess().ProcessResults(modelosChVz);
+
+
+            //wb = null;
+
+            //return;
+            //ExecutingProcess proc = new ExecutingProcess();
+
+            //var teste = ExcelModelo;
+            //var excelFile = Config.XltmResultado;
+            var excelFile = ExcelModelo;
+
+            wb = app.Workbooks.Add(excelFile);
+            while (!app.Ready)
+            {
+                System.Threading.Thread.Sleep(200);
+            }
+
+            var ws = wb.Worksheets["cpins"] as Microsoft.Office.Interop.Excel.Worksheet;
+
+            ws.Select();
+            ws.UsedRange.ClearContents();
+
+            var res = ColetarResultadoTotal(raiz);
             var resCPINS = ColetaMVP();
             //var resCPINS2 = ColetaCPINS();
             //modelosChVz
@@ -7592,6 +8145,383 @@ namespace ChuvaVazaoTools
             }
         }
 
+        private void ProcessarResultadosTeste(string pastaSaida, System.IO.TextWriter logF = null, int? revnum = null, RunStatus statusF = null, bool smap = false, string raiz = "")
+        {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var style = System.Globalization.NumberStyles.Any;
+            var check = cbx_Encadear_Previvaz.Checked;
+            Excel.Workbook wbCen = null;
+            Excel.Workbook wb = null;
+
+            if (this.pointer != null)
+            {
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                {
+                    if (proc.MainWindowHandle == this.pointer)
+                    {
+                        proc.Kill();
+                    }
+                }
+            }
+            var xlsApp = new Microsoft.Office.Interop.Excel.Application();
+            this.pointer = new IntPtr(xlsApp.Hwnd);
+
+            try
+            {
+                if (smap == true)
+                {
+                    modelosChVz.Clear();
+                    LerTotal(raiz, true);
+                }
+
+                //if (modelosChVz.Count == 0)
+                //    Ler(true);
+
+                int nextRevNum = 0;
+
+                if (!revnum.HasValue)
+                {
+                    var nextRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
+                    nextRevNum = nextRev.rev;
+                }
+                else
+                    nextRevNum = revnum.Value;
+
+                var currRev = Tools.Tools.GetCurrRev(this.DataSemanaPrevsBase.HasValue ? this.DataSemanaPrevsBase.Value.AddDays(-1) : dtAtual.Value);
+
+                int code = pastaSaida.GetHashCode();
+
+                while (!xlsApp.Ready)
+                {
+                    System.Threading.Thread.Sleep(200);
+                }
+
+                xlsApp.Visible = true;
+                xlsApp.ScreenUpdating = true;
+                xlsApp.DisplayAlerts = false;
+
+                var pathResult = Path.Combine(pastaSaida, $"CHUVAVAZAO_{code}.xlsm");
+
+                if (!File.Exists(pathResult) || statusF?.Collect != RunStatus.statuscode.completed)
+                {
+                    if (statusF != null) statusF.Collect = RunStatus.statuscode.initialialized;
+                    //ColetaDeResultados(xlsApp, out wb);
+                    ColetaDeResultadosTotal(raiz, xlsApp, out wb);
+                    wb.SaveAs(
+                        pathResult, wb.FileFormat
+                        );
+                }
+                else
+                {
+                    wb = xlsApp.Workbooks.Open(pathResult);
+                }
+                if (statusF != null) statusF.Collect = RunStatus.statuscode.completed;
+
+                var pathCen = Path.Combine(pastaSaida, $"CHUVAVAZAO_CENARIO_{code}.xlsm");
+
+                var prevsname = "prevs.rv" + nextRevNum.ToString();
+
+
+                if (!File.Exists(Path.Combine(pastaSaida, prevsname)) || !File.Exists(pathCen) || statusF?.Previvaz != RunStatus.statuscode.completed)
+                {
+                    try
+                    {
+                        if (statusF != null) statusF.Previvaz = RunStatus.statuscode.initialialized;
+                        xlsApp.DisplayAlerts = false;
+
+                        xlsApp.Run($"'CHUVAVAZAO_{code}.xlsm'!CriarCenario");
+
+                        wbCen = xlsApp.ActiveWorkbook;
+
+                        while (!xlsApp.Ready)
+                        {
+                            System.Threading.Thread.Sleep(2000);
+                        }
+
+                        try
+                        {
+                            foreach (Microsoft.Office.Interop.Excel.Name wbName in wbCen.Names)
+                            {
+                                if (wbName.Visible && wbName.Name == "_gravarPrevivaz") wbName.RefersToRange.Value = true;
+                            }
+                        }
+                        finally { }
+
+                        wbCen.SaveAs(
+                            pathCen, wb.FileFormat
+                            );
+
+                    }
+                    catch
+                    {
+                        AddLog("Erro criando planilha de cenarios");
+                        if (logF != null) logF.WriteLine("Erro criando planilha de cenarios");
+                        if (wbCen != null) wbCen.Close(SaveChanges: false);
+                        wb.Close(SaveChanges: false);
+
+                        return;
+                    }
+                    finally
+                    {
+                        if (wbCen != null) wbCen.Close(SaveChanges: false);
+                        wbCen = null;
+
+                        wb.Close(SaveChanges: false);
+                        wb = null;
+                    }
+
+
+
+                    var p = Program.GetPrevivazExPath(pathCen);
+
+                    if (p != null)
+                    {
+                        AddLog("EXECUCAO PREVIVAZ");
+                        if (logF != null) logF.WriteLine("EXECUCAO PREVIVAZ");
+                        if (check)
+                        {
+                            var teste = p.Item2 + "|true";
+                            var pre = System.Diagnostics.Process.Start(p.Item1, p.Item2 + "|true");
+                            pre.WaitForExit();
+                        }
+                        else
+                        {
+                            var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
+
+                            pr.WaitForExit();
+                        }
+                    }
+                    else
+                    {
+                        if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                        return;
+                    }
+
+                    if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
+                }
+
+                if (statusF?.Previvaz != RunStatus.statuscode.completed) return;
+
+                if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.initialialized;
+
+                if (!File.Exists(Path.Combine(pastaSaida, prevsname)))
+                    try
+                    {
+
+                        wbCen = xlsApp.Workbooks.Open(pathCen, ReadOnly: true);
+
+
+                        if (nextRevNum == 0 || (nextRevNum == 1 && currRev.rev != 0) || ((nextRevNum == 2 && currRev.rev != 0) && (nextRevNum == 2 && currRev.rev != 1)) || ((nextRevNum == 3 && currRev.rev != 0) && (nextRevNum == 3 && currRev.rev != 1) && (nextRevNum == 3 && currRev.rev != 2)))
+                        {
+                            xlsApp.Run($"'CHUVAVAZAO_CENARIO_{code}.xlsm'!ExportarPrevsM1", pastaSaida);
+                        }
+                        else
+                        {
+                            xlsApp.Run($"'CHUVAVAZAO_CENARIO_{code}.xlsm'!ExportarPrevs", pastaSaida);
+                        }
+
+                        var fprevs = Path.Combine(pastaSaida, "prevs.prv");
+
+                        if (File.Exists(fprevs))
+                        {
+
+                            if (File.Exists(Path.Combine(pastaSaida, prevsname))) File.Delete(Path.Combine(pastaSaida, prevsname));
+
+                            if (File.Exists(Path.Combine(pastaSaida, "prevs.prv")))
+                                System.IO.File.Move(Path.Combine(pastaSaida, "prevs.prv"), Path.Combine(pastaSaida, prevsname));
+
+                            var nomeDoCaso = pastaSaida.Split('\\').Last();
+
+                            if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
+                            //if (nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
+                            {
+
+                                var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                if (!System.IO.Directory.Exists(pathDestino)) Directory.CreateDirectory(pathDestino);
+                                File.Copy(Path.Combine(pastaSaida, prevsname), Path.Combine(pathDestino, prevsname));
+                                if (System.IO.File.Exists(Path.Combine(pastaSaida, "resumoENA.gif")))
+                                    File.Copy(Path.Combine(pastaSaida, "resumoENA.gif"), Path.Combine(pathDestino, "resumoENA.gif"));
+                            }
+
+                            AddLog(Path.Combine(pastaSaida, prevsname));
+                            if (logF != null) logF.WriteLine(Path.Combine(pastaSaida, prevsname));
+
+                            if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
+                        }
+                        else //deu ruim na exportação do Prevs. (provavelmente erro na execução do previvaz)
+                        {
+                            if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                            if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                            AddLog("Erro na execução do Previvaz");
+
+                            if (logF != null) logF.WriteLine("Erro na execução do Previvaz");
+
+                            if (wbCen != null)
+                            {
+                                wbCen.Close(SaveChanges: false);
+                                if (File.Exists(pathCen)) File.Delete(pathCen);
+                                wbCen = null;
+                            }
+
+                            throw new Exception();
+                        }
+                    }
+                    catch
+                    {
+                        if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                        if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                        AddLog("Erro na execução do Previvaz");
+
+                        if (logF != null) logF.WriteLine("Erro na execução do Previvaz");
+                        if (wbCen != null) { wbCen.Close(SaveChanges: false); }
+                    }
+
+                if (statusF?.Previvaz != RunStatus.statuscode.completed) return;
+
+                if (!File.Exists(Path.Combine(pastaSaida, "enasemanal.log")))
+                    try
+                    {
+                        if (wbCen == null) wbCen = xlsApp.Workbooks.Open(pathCen, ReadOnly: true);
+
+                        var valoresSemanais = wbCen.Worksheets["Cen1"].Range["B14", "N61"].Value as object[,];
+
+                        var enaText = "";
+                        for (int i = 1; i <= valoresSemanais.GetLength(0); i++)
+                        {
+                            for (int j = 1; j <= valoresSemanais.GetLength(1); j++)
+                            {
+                                enaText += valoresSemanais[i, j]?.ToString() + "\t";
+                            }
+                            enaText += "\r\n";
+                        }
+
+                        File.WriteAllText(Path.Combine(pastaSaida, "enasemanal.log"), enaText);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        AddLog("Erro em exportação de imagem");
+                        if (logF != null) logF.WriteLine("Erro em exportação de imagem");
+                        AddLog(ex.Message);
+                        if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                    }
+                ///DIARIO///
+                ///
+
+                if (!File.Exists(Path.Combine(pastaSaida, "enadiaria.log")))
+                    try
+                    {
+                        if (wbCen == null)
+                            wbCen = xlsApp.Workbooks.Open(pathCen, ReadOnly: true);
+
+                        if (wb == null)
+                            wb = xlsApp.Workbooks.Open(pathResult);
+
+                        var cen1 = wbCen.Worksheets["Cen1"] as Excel.Worksheet;
+                        var vals = cen1.Range["_cen1"].Value2;
+
+                        var resPr = wb.Worksheets["PREVIVAZ"] as Excel.Worksheet;
+
+                        resPr.Range["A2", "N321"].Value2 = vals;
+
+                        var wsprevs = wbCen.Worksheets["Prevs"] as Excel.Worksheet;
+                        var dats = wsprevs.Range["D3", "O3"].Value2;
+                        resPr.Range["C1", "N1"].Value2 = dats;
+                        wb.Save();
+
+                        wb.Activate();
+
+                        xlsApp.Run($"'CHUVAVAZAO_{code}.xlsm'!CriarCenarioDiario");
+                        Excel.Workbook wbCenDiario = xlsApp.ActiveWorkbook;
+
+                        var valoresDiarios = wbCenDiario.Worksheets["CenDiario"].Range["B14", "AB61"].Value as object[,];
+
+                        try
+                        {
+                            decimal valu;
+                            foreach (var valDia in valoresDiarios)
+                            {
+                                if (valDia != null)
+                                {
+                                    if (decimal.TryParse(valDia.ToString(), style, Culture.NumberFormat, out valu))
+                                        if (valu < 0)
+                                            throw new Exception("Erro ao criando Ena diaria");
+                                }
+                                else
+                                    continue;
+                            }
+                        }
+                        catch { }
+
+                        var enaText = "";
+                        for (int i = 1; i <= valoresDiarios.GetLength(0); i++)
+                        {
+                            for (int j = 1; j <= valoresDiarios.GetLength(1); j++)
+                            {
+                                enaText += valoresDiarios[i, j]?.ToString() + "\t";
+                            }
+                            enaText += "\r\n";
+                        }
+
+                        File.WriteAllText(Path.Combine(pastaSaida, "enadiaria.log"), enaText);
+
+                        if (wbCenDiario != null)
+                            wbCenDiario.Close(SaveChanges: false);
+
+                        if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.completed;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        AddLog("Erro em processamento de enas diárias");
+
+                        if (logF != null) logF.WriteLine("Erro em processamento de enas diárias");
+                        AddLog(ex.Message);
+                        if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                    }
+
+                //copia a pasta do C: para o H:
+                var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
+                var fonte = pastaSaida;
+                foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                    SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                foreach (string newPath in Directory.GetFiles(fonte, ".",
+                   SearchOption.AllDirectories))
+                {
+                    if (!File.Exists(newPath.Replace(fonte, dest)))
+                    {
+                        File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                    }
+                }
+
+
+            }
+            finally
+            {
+                if (wb != null)
+                {
+                    wb.Saved = true;
+                    wb.Close(SaveChanges: false);
+                }
+
+                if (wbCen != null)
+                {
+                    wbCen.Saved = true;
+                    wbCen.Close(SaveChanges: false);
+                }
+
+                if (xlsApp != null)
+                {
+                    xlsApp.DisplayAlerts = false;
+                    xlsApp.Quit();
+                    Helper.Release(xlsApp);
+                }
+            }
+        }
+
         private void autoExecPorPasta()
         {
             var logF = textLogger;
@@ -8776,6 +9706,76 @@ namespace ChuvaVazaoTools
             }
         }
 
+        public void Mapas_RTotal(string[] mapas, int count, string pastaSaida, string modelo)
+        {
+            var dir = System.IO.Path.Combine(pastaSaida);
+            string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+
+            var dirMod = System.IO.Path.Combine(dir, "SMAP");
+            string[] dir_Bacias = Directory.GetDirectories(dirMod);
+
+            DateTime data_atual = DateTime.Today;
+            var dirAcomp = Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_atual.ToString("yyyy"), data_atual.ToString("MM_yyyy"));
+
+            var DataAcomp = Path.Combine(dirAcomp, "ACOMPH_" + data_atual.ToString("dd-MM-yyyy") + ".xls");
+
+
+            //foreach (string arq_mapas in mapas)
+            //{
+            //    System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+
+            //    var data_mapa = r.Match(arq_mapas);
+
+            //    string mapa = data_mapa.ToString() + ".dat";
+
+            //    if (!File.Exists(Path.Combine(dir, mapa)))
+            //    {
+            //        // if (!File.Exists(DataAcomp) && count == 1)
+            //        //  {
+            //        //       psat_Dat(Path.Combine(dir));
+            //        //   }
+
+            //        File.Copy(arq_mapas, Path.Combine(dir, mapa));
+            //    }
+            //}
+
+
+
+            foreach (string bacias in dir_Bacias)
+            {
+
+                if (Directory.Exists(dirMod))
+                {
+
+                    string bacia = bacias.Split('\\').Last();
+                    var dir_Dest = Path.Combine(dirMod, bacia, "ARQ_ENTRADA");
+
+
+                    foreach (string arq_mapas in mapas)
+                    {
+                        System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+
+                        var data_mapa = r.Match(arq_mapas);
+
+                        string mapa = mod + "_" + data_mapa.ToString() + ".dat";
+
+                        if (!File.Exists(Path.Combine(dir_Dest, mapa)))
+                        {
+                            //  if (!File.Exists(DataAcomp) && count == 1)
+                            //  {
+                            //       psat_Dat(Path.Combine(dir_Dest));
+                            //    }
+
+                            File.Copy(arq_mapas, Path.Combine(dir_Dest, mapa));
+                        }
+                    }
+
+
+
+
+                }
+            }
+        }
         public void SalvarPrecObserv_R()
         {
             foreach (var modelo in modelosChVz)
