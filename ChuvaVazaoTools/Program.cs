@@ -1516,7 +1516,7 @@ namespace ChuvaVazaoTools
         {
             var frmMain = new FrmMain(true, excelFile, encad);
             frmMain.Run_ManualLinux(caminho, data, rvnum, logF, excelFile, encad);
-
+            frmMain.LinuxCallautoExec(caminho, data, rvnum, logF, excelFile, encad);
         }
         internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF, string excelFile, bool encad = false)
         {
@@ -2278,6 +2278,7 @@ namespace ChuvaVazaoTools
 
         //    cli.Send(msg);  //.SendMailAsync(msg);
         //}
+
     }
 
     public class LogFile : System.IO.TextWriter
@@ -2332,5 +2333,6 @@ namespace ChuvaVazaoTools
             System.Runtime.InteropServices.Marshal.ReleaseComObject(o);
         }
     }
+
 
 }

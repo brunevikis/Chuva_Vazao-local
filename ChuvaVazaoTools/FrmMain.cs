@@ -4452,7 +4452,7 @@ namespace ChuvaVazaoTools
                 {
                     conta++;
                 }
-            } while (Falha == true && conta < 2);
+            } while (Falha == true && conta < 3);
             logF.WriteLine("Rodadas  linuxCall Finalizadas");
         }
 
@@ -8770,6 +8770,469 @@ namespace ChuvaVazaoTools
                     Helper.Release(xlsApp);
                 }
             }
+        }
+
+        public void LinuxCallautoExec(string caminho, DateTime data, int rvnum, System.IO.TextWriter logF, string excelFile, bool encadeado, bool rodarPrevivaz = true)
+        {
+            //var logF = textLogger;
+            //var searchPath = "";
+            Boolean Falha = false;
+            logF.WriteLine("iniciando rodada linuxCallAutoExec");
+            var revnum = rvnum;
+            cbx_Encadear_Previvaz.Checked = encadeado;
+
+
+
+            var dir_saida = $@"C:\Files\16_Chuva_Vazao\LinuxCallAutoExec\{DateTime.Now:dd-MM-yyyy-HHmmss}";
+
+            if (!Directory.Exists(dir_saida))
+            {
+                Directory.CreateDirectory(dir_saida);
+            }
+
+            var dir_mapa = caminho;
+            int conta = 0;
+
+            do
+            {
+                var arquivosdats = Directory.GetFiles(dir_mapa, "*.dat");
+
+                if (arquivosdats.Length > 0)
+                {
+
+                    // dtAtual.Value = DateTime.Today.Date.AddDays(-3);
+                    dtAtual.Value = data;
+
+                    var nome_pasta = dir_mapa.Split('\\').Last();
+                    var name = nome_pasta;
+                    if (!nome_pasta.Contains("CVLinux"))
+                    {
+                        name = "CVLinux_" + nome_pasta;
+                    }
+
+                    var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
+
+                    var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(dtAtual.Value);
+
+                    IPrecipitacaoForm frm = null;
+                    frm = WaitForm2.CreateInstance(dtAtual.Value);
+
+                    PreencherVazObservada(out DateTime dataModelo, out string fonteVaz);
+
+                    var runRevMapas = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
+                    CarregarPrecRealMedia(dtAtual.Value.Date, out string modeloPrecReal);// runRev.rev.ToString()
+
+                    var pastaRaiz = dir_mapa;
+                    var pastaSaida = Path.Combine(dir_saida, name);
+
+                    var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+
+                    this.ArquivosDeEntradaModelo = System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao");//Modelos_Chuva_Vazao
+                    this.ArquivosDeEntradaPrevivaz = System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada");
+                    this.ArquivoPrevsBase = System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories)[0];
+                    this.DataSemanaPrevsBase = currRev.revDate;
+
+                    ArquivosDeSaida = pastaSaida;
+
+                    var statusF = new RunStatus(pastaSaida);
+                    if (statusF.Creation == RunStatus.statuscode.initialialized
+                        || statusF.Previvaz == RunStatus.statuscode.initialialized
+                        || statusF.PostProcessing == RunStatus.statuscode.initialialized
+                        || statusF.Preparation == RunStatus.statuscode.initialialized
+                        || statusF.Execution == RunStatus.statuscode.initialialized
+                        )
+                    {
+                        AddLog("Caso em execução: " + name);
+                        if (logF != null) logF.WriteLine("Caso em execução: " + name);
+                        //return;
+                    }
+                    else
+                    {
+
+                        if ((System.IO.Directory.Exists(pastaSaida) && statusF.PostProcessing == RunStatus.statuscode.completed))
+                        {
+                            AddLog("Caso já executado para essa data: " + name);
+                            logF.WriteLine("Caso já executado para essa data: " + name);
+
+
+                            //return;
+                        }
+                        else
+                        {
+                            logF.WriteLine("Iniciando " + name);
+
+                            if (!System.IO.Directory.Exists(pastaSaida) || statusF.Creation != RunStatus.statuscode.completed)
+                            {
+                                statusF.Creation = RunStatus.statuscode.initialialized;
+                                CriarCaso();
+                                statusF.Creation = RunStatus.statuscode.completed;
+                            }
+
+                            if (statusF.Preparation != RunStatus.statuscode.completed)
+                            {
+                                statusF.Preparation = RunStatus.statuscode.initialialized;
+
+                                try
+                                {
+                                    Ler();
+
+                                    CarregarPrecObserv();
+                                    PreencherPrecObserv();
+
+                                    PreencherVazObservada(out DateTime dtVaz, out _);
+
+                                    dtAtual.Value = dataModelo.AddDays(1);
+                                    dtModelo.Value = dtAtual.Value.Date;
+                                    Reiniciar(dtModelo.Value);
+
+
+                                    PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
+
+                                    PreencherPrecObserv();
+                                    SalvarPrecObserv_R();
+                                    SalvarVazObserv();
+                                    SalvarPrecPrev_R();
+
+                                    statusF.Preparation = RunStatus.statuscode.completed;
+                                }
+                                catch
+                                {
+                                    statusF.Preparation = RunStatus.statuscode.error;
+                                    Falha = true;
+                                }
+                            }
+                            if (statusF.Execution != RunStatus.statuscode.completed)
+                            {
+                                statusF.Execution = RunStatus.statuscode.initialialized;
+                                logF.WriteLine("EXECUTANDO-SMAP_AUTOEXEC: " + name);
+                                try
+                                {
+                                    ExecutarTudo_Manual();
+                                    if (statusF.Execution == RunStatus.statuscode.error)
+                                    {
+                                        logF.WriteLine("Erro no SMAP");
+                                        Falha = true;
+
+                                        //return;
+                                    }
+                                    if (File.Exists(Path.Combine(pastaSaida, "error.log")))
+                                    {
+                                        statusF.Execution = RunStatus.statuscode.error;
+                                        logF.WriteLine("Erro no SMAP");
+                                        Falha = true;
+
+                                        //return;
+
+                                    }
+                                    statusF.Execution = RunStatus.statuscode.completed;
+                                }
+                                catch
+                                {
+                                    statusF.Execution = RunStatus.statuscode.error;
+                                    Falha = true;
+                                }
+                            }
+                            if (statusF.Execution == RunStatus.statuscode.completed)
+                            {
+
+
+                                logF.WriteLine("PROCESSANDO RESULTADOS AUTOEXEC: " + name);
+                                try
+                                {
+                                    #region Propagacoes sem Excell
+                                    try
+                                    {
+                                        var check = cbx_Encadear_Previvaz.Checked;
+
+                                        List<Propagacao> propagacoes = null;
+                                        if (statusF.Preparation == RunStatus.statuscode.completed && statusF.Creation == RunStatus.statuscode.completed && statusF.Previvaz != RunStatus.statuscode.completed)
+                                        {
+                                            statusF.Collect = RunStatus.statuscode.initialialized;
+                                            if (modelosChVz.Count == 0)
+                                                Ler();
+                                            propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, ArquivosDeSaida, dtAtual.Value);
+                                            if (propagacoes.Count != 0 || propagacoes != null)
+                                            {
+                                                statusF.Execution = RunStatus.statuscode.completed;
+                                                statusF.Collect = RunStatus.statuscode.completed;
+                                            }
+
+
+                                            if (propagacoes.Count != 0 || propagacoes != null)
+                                            {
+                                                MemoryStream stream1 = new MemoryStream();
+                                                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<Propagacao>));
+
+                                                ser.WriteObject(stream1, propagacoes);
+                                                stream1.Position = 0;
+
+
+
+
+
+                                                if (statusF.Execution == RunStatus.statuscode.completed && statusF.Collect == RunStatus.statuscode.completed)
+                                                {
+                                                    File.WriteAllText(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt"), new StreamReader(stream1).ReadToEnd());
+
+                                                    statusF.Previvaz = RunStatus.statuscode.initialialized;
+
+                                                    var p = Program.GetPrevivazExPath(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt"));
+
+                                                    if (p != null)
+                                                    {
+                                                        var encad = cbx_Encadear_Previvaz.Checked;
+                                                        AddLog("EXECUCAO PREVIVAZ");
+                                                        if (logF != null) logF.WriteLine("EXECUCAO PREVIVAZ: " + name);
+                                                        if (encad)
+                                                        {
+                                                            var parametro = p.Item2 + "|true";
+                                                            var pre = System.Diagnostics.Process.Start(p.Item1, parametro);
+                                                            pre.WaitForExit();
+                                                        }
+                                                        else
+                                                        {
+                                                            var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
+
+                                                            pr.WaitForExit();
+                                                        }
+
+
+                                                        try
+                                                        {
+                                                            if (System.IO.File.Exists(Path.Combine(ArquivosDeSaida, "Previvaz2.txt")))
+                                                            {
+                                                                // var procId = pr.BasePriority;
+
+                                                                if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
+                                                            }
+                                                            else
+                                                            {
+                                                                statusF.Previvaz = RunStatus.statuscode.error;
+                                                                Falha = true;
+
+                                                                //return;
+                                                            }
+
+                                                        }
+                                                        catch (Exception e)
+                                                        {
+                                                            e.ToString();
+                                                            statusF.Previvaz = RunStatus.statuscode.error;
+                                                            Falha = true;
+
+                                                            //return;
+                                                        }
+                                                        if (statusF?.Previvaz != RunStatus.statuscode.completed)
+                                                        {
+                                                            statusF.Previvaz = RunStatus.statuscode.error;
+                                                            Falha = true;
+
+                                                            //return;
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (statusF != null && System.IO.Directory.Exists(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt")))
+                                                        {
+                                                            statusF.Previvaz = RunStatus.statuscode.error;
+                                                            Falha = true;
+
+                                                        }
+                                                        // return;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                statusF.Execution = RunStatus.statuscode.error;
+                                                statusF.Collect = RunStatus.statuscode.error;
+                                                Falha = true;
+
+                                                //throw new Exception("As propagações foram enviadas ao método e retornaram vazias ou com erro");
+                                                //return;
+                                            }
+                                        }
+
+
+                                        if (statusF.Creation == RunStatus.statuscode.completed &&
+                                            statusF.Execution == RunStatus.statuscode.completed &&
+                                            statusF.Preparation == RunStatus.statuscode.completed &&
+                                            statusF.Previvaz == RunStatus.statuscode.completed &&
+                                            statusF.PostProcessing != RunStatus.statuscode.completed
+                                            )
+                                        {
+                                            if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.initialialized;
+
+                                            if (System.IO.File.Exists(Path.Combine(ArquivosDeSaida, "Previvaz2.txt")))
+                                            {
+                                                var Read = System.IO.File.ReadAllText(Path.Combine(ArquivosDeSaida, "Previvaz2.txt"));
+                                                //testeRead.ReadToEnd();
+
+                                                DataContractJsonSerializer desser = new DataContractJsonSerializer(typeof(List<Propagacao>));
+                                                MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(Read));
+                                                propagacoes = ((List<Propagacao>)desser.ReadObject(ms)).ToList();
+
+                                                var prevsRv0Mes2 = ExportaPrevsPorPasta(propagacoes, ArquivosDeSaida, dtAtual.Value, runRev.revDate, revnum);
+                                                var prevsMesAtual = ExportaPrevsPorPasta(propagacoes, ArquivosDeSaida, dtAtual.Value, runRev.revDate, 5);
+                                                ExportaEnas(propagacoes, ArquivosDeSaida);
+                                                if (prevsRv0Mes2 != "")
+                                                {
+                                                    //try
+                                                    //{
+                                                    //    var nomeDoCaso = ArquivosDeSaida.Split('\\').Last();
+                                                    //    if (nomeDoCaso.StartsWith("SCP_"))
+                                                    //    {
+                                                    //        var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                                    //        if (!System.IO.Directory.Exists(pathDestino))
+                                                    //        {
+                                                    //            Directory.CreateDirectory(pathDestino);
+                                                    //            File.Copy(Path.Combine(ArquivosDeSaida, prevsRv0Mes2), Path.Combine(pathDestino, prevsRv0Mes2));
+                                                    //        }
+
+                                                    //    }
+                                                    //    else
+                                                    //    {
+                                                    //        if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                                                    //        if (statusF != null) statusF.Previvaz = RunStatus.statuscode.error;
+                                                    //        //return;
+                                                    //    }
+                                                    //}
+                                                    //catch
+                                                    //{
+                                                    //    if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.error;
+                                                    //   // return;
+                                                    //}
+
+                                                }
+                                                else
+                                                {
+                                                    if (statusF != null) 
+                                                    {
+                                                        statusF.PostProcessing = RunStatus.statuscode.error;
+
+                                                        Falha = true;
+
+                                                    }
+                                                    //return;
+                                                }
+
+                                                if (!File.Exists(Path.Combine(ArquivosDeSaida, "enasemanal.log")) || !File.Exists(Path.Combine(ArquivosDeSaida, "enadiaria.log")))
+                                                {
+                                                    if (statusF != null) 
+                                                    {
+                                                        statusF.PostProcessing = RunStatus.statuscode.error;
+                                                        Falha = true;
+                                                    }
+
+                                                    // return;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (statusF != null)
+                                                {
+                                                    statusF.PostProcessing = RunStatus.statuscode.error;
+                                                    Falha = true;
+
+                                                }
+                                                if (statusF != null)
+                                                {
+                                                    statusF.Previvaz = RunStatus.statuscode.error;
+                                                    Falha = true;
+
+                                                }
+                                                // return;
+                                            }
+
+                                            try
+                                            {
+                                                Salvar_Img(ArquivosDeSaida);
+                                                if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.completed;
+
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                statusF.PostProcessing = RunStatus.statuscode.error;
+                                                Falha = true;
+
+                                                // return;
+                                            }
+
+                                            //var email = Tools.Tools.SendMail(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt"), "Sucesso ao executar as propagações automáticas!", "Propagações sem Excell [AUTO]", "desenv");
+                                            //email.Wait();
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        statusF.Execution = RunStatus.statuscode.error;
+                                        Falha = true;
+
+                                        //var email = Tools.Tools.SendMail("", "ERRO: " + exce.Message, "Erro nas propagações sem Excell [AUTO]", "desenv");
+                                        //email.Wait();
+                                    }
+                                    #endregion
+
+                                }
+                                catch
+                                {
+
+
+                                }
+                            }
+                            else
+                            {
+                                if (logF != null) logF.WriteLine("SMAPS NAO EXECUTADOS");
+                            }
+
+                            if (statusF.Creation == RunStatus.statuscode.error
+                           || statusF.Previvaz == RunStatus.statuscode.error
+                           || statusF.PostProcessing == RunStatus.statuscode.error
+                           || statusF.Preparation == RunStatus.statuscode.error
+                           || statusF.Execution == RunStatus.statuscode.error
+                           || statusF.Collect == RunStatus.statuscode.error
+                           )
+                            {
+                                Falha = true;
+                            }
+                            else
+                            {
+                                var dest = caminho;
+                                var fonte = pastaSaida;
+                                foreach (string dirPath in Directory.GetDirectories(fonte, "*",
+                                                                    SearchOption.AllDirectories))
+                                    Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+
+                                foreach (string newPath in Directory.GetFiles(fonte, ".",
+                                   SearchOption.AllDirectories))
+                                {
+                                    if (!File.Exists(newPath.Replace(fonte, dest)))
+                                    {
+                                        File.Copy(newPath, newPath.Replace(fonte, dest), true);
+                                    }
+                                }
+                                logF.WriteLine(name + "FINALIZADO");
+                            }
+
+
+
+
+
+                        }
+                    }
+                }
+
+
+                if (Falha == true)
+                {
+                    conta++;
+                }
+            } while (Falha == true && conta < 3);
+            logF.WriteLine("Rodadas  LinuxCallAutoExec Finalizadas");
+            //---------------
+
+
+
         }
 
         private void autoExecPorPasta()
