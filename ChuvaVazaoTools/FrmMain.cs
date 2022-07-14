@@ -1208,7 +1208,7 @@ namespace ChuvaVazaoTools
 
                                 if (nomeDoCaso.StartsWith("SCP_CV_") || nomeDoCaso.StartsWith("SCP_CV2_") || nomeDoCaso.StartsWith("SCP_CV3_") || nomeDoCaso.StartsWith("SCP_CV4_") || nomeDoCaso.StartsWith("SCP_CV5_"))
                                 {
-                                    //var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                    //var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                     //if (!System.IO.Directory.Exists(pathDestino))
                                     //{
                                     //    Directory.CreateDirectory(pathDestino);
@@ -8192,7 +8192,7 @@ namespace ChuvaVazaoTools
                             //if (nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
                             {
                                 // var pathDestino = Path.Combine("L:\\cpas_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
-                                var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                 if (!System.IO.Directory.Exists(pathDestino)) Directory.CreateDirectory(pathDestino);
                                 File.Copy(Path.Combine(pastaSaida, prevsname), Path.Combine(pathDestino, prevsname));
                                 if (System.IO.File.Exists(Path.Combine(pastaSaida, "resumoENA.gif")))
@@ -8586,7 +8586,7 @@ namespace ChuvaVazaoTools
                             //if (nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
                             {
 
-                                var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                 if (!System.IO.Directory.Exists(pathDestino)) Directory.CreateDirectory(pathDestino);
                                 File.Copy(Path.Combine(pastaSaida, prevsname), Path.Combine(pathDestino, prevsname));
                                 if (System.IO.File.Exists(Path.Combine(pastaSaida, "resumoENA.gif")))
@@ -9547,7 +9547,7 @@ namespace ChuvaVazaoTools
                                                             var nomeDoCaso = ArquivosDeSaida.Split('\\').Last();
                                                             if (nomeDoCaso.StartsWith("SCP_"))
                                                             {
-                                                                var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                                                var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                                                 if (!System.IO.Directory.Exists(pathDestino))
                                                                 {
                                                                     Directory.CreateDirectory(pathDestino);
@@ -9843,7 +9843,7 @@ namespace ChuvaVazaoTools
                             if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
                             {
                                 //var pathDestino = Path.Combine("L:\\cpas_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
-                                var pathDestino = Path.Combine("X:\\AWS\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                 if (!System.IO.Directory.Exists(pathDestino)) Directory.CreateDirectory(pathDestino);
                                 File.Copy(Path.Combine(pastaSaida, prevsname), Path.Combine(pathDestino, prevsname));
                                 if (System.IO.File.Exists(Path.Combine(pastaSaida, "resumoENA.gif")))

@@ -70,12 +70,13 @@ namespace ChuvaVazaoTools
                     else if (args.Length > 2)
                     {
                         bool encad = false;
-                        string caminho = args[0];
-                        Console.WriteLine(caminho);
+                        string caminho = args[0].Replace('/', '\\');
+                        Console.WriteLine("Diretorio de Mapas: " + caminho);
                         var dados = args[1].Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         DateTime data = new DateTime(Convert.ToInt32(dados[2]), Convert.ToInt32(dados[1]), Convert.ToInt32(dados[0]));//yyyy-MM-dd
-                        Console.WriteLine(data.ToString("dd-MM-yyyy"));
+                        Console.WriteLine("Data Rodada: " + data.ToString("dd-MM-yyyy"));
                         int rvnum = Convert.ToInt32(args[2]);
+                        Console.WriteLine("Iniciando Processo");
 
                         if (args.Any(x => x.Equals("true", StringComparison.OrdinalIgnoreCase)))
                         {
@@ -83,6 +84,8 @@ namespace ChuvaVazaoTools
                         }
 
                         LinuxCall(caminho, data, rvnum, encad);
+                        Console.WriteLine("Processo Realizado com Sucesso!!!");
+
                     }
                     else
                     {
@@ -113,7 +116,7 @@ namespace ChuvaVazaoTools
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                
+
             }
         }
 
@@ -688,9 +691,11 @@ namespace ChuvaVazaoTools
 
                 if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF12")))
                 {
-                    logF.WriteLine("EURO 12");
-                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
-
+                    if (DateTime.Now > DateTime.Today.AddHours(14))
+                    {
+                        logF.WriteLine("EURO 12");
+                        logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
+                    }
                 }
                 else logF.WriteLine("EURO 12 OK");
 
@@ -1512,10 +1517,10 @@ namespace ChuvaVazaoTools
             }
         }
 
-        internal static void Run_LinuxCall(string caminho, DateTime data, int rvnum,System.IO.TextWriter logF, string excelFile, bool encad)
+        internal static void Run_LinuxCall(string caminho, DateTime data, int rvnum, System.IO.TextWriter logF, string excelFile, bool encad)
         {
             var frmMain = new FrmMain(true, excelFile, encad);
-            frmMain.Run_ManualLinux(caminho, data, rvnum, logF, excelFile, encad);
+            //frmMain.Run_ManualLinux(caminho, data, rvnum, logF, excelFile, encad);
             frmMain.LinuxCallautoExec(caminho, data, rvnum, logF, excelFile, encad);
         }
         internal static void AutoRun_R(DateTime date, System.IO.TextWriter logF, string excelFile, bool encad = false)
