@@ -978,7 +978,19 @@ namespace ChuvaVazaoTools
                     if (logF != null) logF.WriteLine(name + ": Preparação completa!!!");
 
                 }
+                List<string> configPrevsM2 = new List<string>();
 
+                DateTime semEstimada = dtModelo.Value.AddDays(-1);
+                while (semEstimada.DayOfWeek != DayOfWeek.Saturday)// volta até o sabado anterior
+                {
+                    semEstimada = semEstimada.AddDays(-1);
+                }
+                semEstimada = semEstimada.AddDays(6);//seta para sexta-feira
+
+                configPrevsM2.Add(this.ArquivosDeEntradaPrevivaz);
+                configPrevsM2.Add(currRev.revDate.ToString("dd-MM-yyyy HH:mm:ss"));
+                configPrevsM2.Add(semEstimada.ToString("dd-MM-yyyy HH:mm:ss"));
+                File.WriteAllLines(Path.Combine(pastaSaida,"configPrevsM2.txt"), configPrevsM2);
                 //btnSalvarPrecObserv_Click(null, null);
             }
 
@@ -1208,12 +1220,12 @@ namespace ChuvaVazaoTools
 
                                 if (nomeDoCaso.StartsWith("SCP_CV_") || nomeDoCaso.StartsWith("SCP_CV2_") || nomeDoCaso.StartsWith("SCP_CV3_") || nomeDoCaso.StartsWith("SCP_CV4_") || nomeDoCaso.StartsWith("SCP_CV5_"))
                                 {
-                                    //var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
-                                    //if (!System.IO.Directory.Exists(pathDestino))
-                                    //{
-                                    //    Directory.CreateDirectory(pathDestino);
-                                    // File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
-                                    //}
+                                    var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                    if (!System.IO.Directory.Exists(pathDestino))
+                                    {
+                                        Directory.CreateDirectory(pathDestino);
+                                        File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
+                                    }
                                     if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
 
                                 }
@@ -3832,8 +3844,9 @@ namespace ChuvaVazaoTools
             }
 
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value, incremento);
+            DateTime dtteste = DateTime.Today.AddDays(3);
             var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(dtAtual.Value);
-
+            var revteste = ChuvaVazaoTools.Tools.Tools.GetCurrRev(dtteste);
 
             IPrecipitacaoForm frm = null;
             frm = WaitForm2.CreateInstance(dtAtual.Value);

@@ -1166,15 +1166,15 @@ namespace ChuvaVazaoTools
                     //{
                     //    logF.WriteLine(ex.ToString());
                     //}
-                    //try
-                    //{
-                    //    frmMain.modelosChVz.Clear();
-                    //    frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasGEFS);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
 
                     //try
                     //{
@@ -1189,15 +1189,15 @@ namespace ChuvaVazaoTools
                     //{
                     //    logF.WriteLine(ex.ToString());
                     //}
-                    //try
-                    //{
-                    //    frmMain.modelosChVz.Clear();
-                    //    frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasGEFS);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     //
                 }
                 else if (File.Exists(Path.Combine(pastaSaida, "error.log")) || mapasCount.Count() <= 0)
