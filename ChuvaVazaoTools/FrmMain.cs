@@ -661,7 +661,8 @@ namespace ChuvaVazaoTools
 
 
             DateTime datModel;
-            var name = "SCP_CV"; // SELF Computational PROCESS
+            //var name = "SCP_CV"; // SELF Computational PROCESS
+            var name = "CV"; // SELF Computational PROCESS
 
             //Verifica a RV da rodada
             int incremento = 1;
@@ -802,7 +803,8 @@ namespace ChuvaVazaoTools
             }
             else if (d1 == true || exist_psat == true)
             {
-                if (offset == EnumRemo.RemocaoAtual && name == "SCP_CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
+                //if (offset == EnumRemo.RemocaoAtual && name == "SCP_CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
+                if (offset == EnumRemo.RemocaoAtual && name == "CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
                 {
                     name = name + "_PSAT";
                 }
@@ -865,7 +867,8 @@ namespace ChuvaVazaoTools
 
             //fim da selecao de rodada
 
-            var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
+           // var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
+            var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
             datModel = dataModelo;
 
@@ -1002,7 +1005,8 @@ namespace ChuvaVazaoTools
                 //statusF.Execution = RunStatus.statuscode.initialialized; //TODO: criar um status para o metodo automatico do executingProcess
                 if (logF != null) logF.WriteLine(name + ": Iniciando execução SMAP!!!");
 
-                var pastaSmapTotal = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\SmapTotal";
+                //var pastaSmapTotal = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\SmapTotal";
+                var pastaSmapTotal = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\SmapTotal";
                 if (name.Contains("d-1"))
                 {
                     pastaSmapTotal = pastaSmapTotal + "_d-1";
@@ -1016,7 +1020,8 @@ namespace ChuvaVazaoTools
                     pastaSmapTotal = pastaSmapTotal + "_Atualizado";
                 }
 
-                var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
+                //var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
+                var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name + @"\SMAP";
                 var execOk = Path.Combine(pastaSmapTotal, "EXEC_OK.txt");
 
 
@@ -1218,7 +1223,7 @@ namespace ChuvaVazaoTools
 
                                 var nomeDoCaso = pastaSaida.Split('\\').Last();
 
-                                if (nomeDoCaso.StartsWith("SCP_CV_") || nomeDoCaso.StartsWith("SCP_CV2_") || nomeDoCaso.StartsWith("SCP_CV3_") || nomeDoCaso.StartsWith("SCP_CV4_") || nomeDoCaso.StartsWith("SCP_CV5_"))
+                                if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
                                 {
                                     var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                     if (!System.IO.Directory.Exists(pathDestino))

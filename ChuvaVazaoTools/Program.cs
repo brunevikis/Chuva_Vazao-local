@@ -173,7 +173,7 @@ namespace ChuvaVazaoTools
 
                     if (hoje22.Day == agoraNow.Day && agoraNow.Hour < hoje22.Hour)
                     {
-                        if (prCount <= 10)
+                        if (prCount <= 4)
                         {
                             var newlogFile = @"H:\TI - Sistemas\UAT\ChuvaVazao\AutoExecRun.log";
                             var newlogF = new LogFile(newlogFile);
@@ -1051,33 +1051,33 @@ namespace ChuvaVazaoTools
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
-                    //try
-                    //{
-                    //    if (date.DayOfWeek != DayOfWeek.Thursday)
-                    //    {
-                    //        //rodada com offset na remoção de viés.
-                    //        frmMain.modelosChVz.Clear();
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
-                    //try
-                    //{
-                    //    if (date.DayOfWeek != DayOfWeek.Thursday)
-                    //    {
-                    //        //rodada com offset na remoção de viés.
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            //rodada com offset na remoção de viés.
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            //rodada com offset na remoção de viés.
 
-                    //        frmMain.modelosChVz.Clear();
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro_op);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro_op);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1087,32 +1087,32 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
-                    //try
-                    //{
-                    //    if (date.DayOfWeek != DayOfWeek.Thursday)
-                    //    {
-                    //        frmMain.modelosChVz.Clear();
-                    //        //rodada com offset na remoção de viés.
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemana);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
-                    //try
-                    //{
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            //rodada com offset na remoção de viés.
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemana);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
 
-                    //    if (date.DayOfWeek != DayOfWeek.Thursday)
-                    //    {
-                    //        frmMain.modelosChVz.Clear();
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaGFS);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaGFS);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1122,50 +1122,50 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
-                    //try
-                    //{
-                    //    frmMain.modelosChVz.Clear();
-                    //    frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasEuro_op);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
-                    //try
-                    //{
-                    //    frmMain.modelosChVz.Clear();
-                    //    frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGEFS);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasEuro_op);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGEFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
 
 
-                    //try
-                    //{
-                    //    frmMain.modelosChVz.Clear();
-                    //    frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGFS);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoDuasSemanasGFS);
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
 
-                    //
-                    //try
-                    //{
 
-                    //    if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
-                    //    {
-                    //        frmMain.modelosChVz.Clear();
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasEuro);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                    try
+                    {
+
+                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasEuro);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     try
                     {
                         frmMain.modelosChVz.Clear();
@@ -1176,19 +1176,19 @@ namespace ChuvaVazaoTools
                         logF.WriteLine(ex.ToString());
                     }
 
-                    //try
-                    //{
+                    try
+                    {
 
-                    //    if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
-                    //    {
-                    //        frmMain.modelosChVz.Clear();
-                    //        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasEuro);
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logF.WriteLine(ex.ToString());
-                    //}
+                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasEuro);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
                     try
                     {
                         frmMain.modelosChVz.Clear();
