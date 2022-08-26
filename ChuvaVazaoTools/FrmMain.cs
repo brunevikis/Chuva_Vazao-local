@@ -681,7 +681,7 @@ namespace ChuvaVazaoTools
 
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value, incremento);
             var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(dtAtual.Value);
-
+            var veriRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
             IPrecipitacaoForm frm = null;
             frm = WaitForm2.CreateInstance(dtAtual.Value);
             string horaPrev = "";
@@ -801,64 +801,51 @@ namespace ChuvaVazaoTools
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CV2", "CV2_GFS");
             }
-            else if (d1 == true || exist_psat == true)
+            else if (offset == EnumRemo.RemocaoTresSemanasGEFS)
             {
-                //if (offset == EnumRemo.RemocaoAtual && name == "SCP_CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
-                if (offset == EnumRemo.RemocaoAtual && name == "CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
-                {
-                    name = name + "_PSAT";
-                }
-                else if (offset == EnumRemo.RemocaoTresSemanasGEFS)
-                {
-                    name = name + "_GEFS";
-                    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
-                    name = name.Replace("CV_", "CV3_");
-                    pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_GEFS");
+                name = name + "_GEFS";
+                //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV3_");
+                pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_GEFS");
 
-                    if (currRev.revDate.Month != runRev.revDate.Month)
-                    {
-                        cbx_Encadear_Previvaz.Checked = true;
-                    }
-
-                }
-                else if (offset == EnumRemo.RemocaoTresSemanasEuro)
+                if (currRev.revDate.Month != runRev.revDate.Month)
                 {
-                    name = name + "_EURO";
-                    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
-                    name = name.Replace("CV_", "CV3_");
-                    pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_EURO");
-                    if (currRev.revDate.Month != runRev.revDate.Month)
-                    {
-                        cbx_Encadear_Previvaz.Checked = true;
-                    }
-                }
-                else if (offset == EnumRemo.RemocaoQuatroSemanasGEFS)
-                {
-                    name = name + "_GEFS";
-                    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
-                    name = name.Replace("CV_", "CV4_");
-                    pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_GEFS");
-                    if (currRev.revDate.Month != runRev.revDate.Month)
-                    {
-                        cbx_Encadear_Previvaz.Checked = true;
-                    }
-                }
-                else if (offset == EnumRemo.RemocaoQuatroSemanasEuro)
-                {
-                    name = name + "_EURO";
-                    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
-                    name = name.Replace("CV_", "CV4_");
-                    pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_EURO");
-                    if (currRev.revDate.Month != runRev.revDate.Month)
-                    {
-                        cbx_Encadear_Previvaz.Checked = true;
-                    }
-                }
-                else if (offset != EnumRemo.RemocaoAtual)
-                {
-                    return;
+                    cbx_Encadear_Previvaz.Checked = true;
                 }
 
+            }
+            else if (offset == EnumRemo.RemocaoTresSemanasEuro)
+            {
+                name = name + "_EURO";
+                //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV3_");
+                pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_EURO");
+                if (currRev.revDate.Month != runRev.revDate.Month)
+                {
+                    cbx_Encadear_Previvaz.Checked = true;
+                }
+            }
+            else if (offset == EnumRemo.RemocaoQuatroSemanasGEFS)
+            {
+                name = name + "_GEFS";
+                //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV4_");
+                pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_GEFS");
+                if (currRev.revDate.Month != runRev.revDate.Month)
+                {
+                    cbx_Encadear_Previvaz.Checked = true;
+                }
+            }
+            else if (offset == EnumRemo.RemocaoQuatroSemanasEuro)
+            {
+                name = name + "_EURO";
+                //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV4_");
+                pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_EURO");
+                if (currRev.revDate.Month != runRev.revDate.Month)
+                {
+                    cbx_Encadear_Previvaz.Checked = true;
+                }
             }
             else if (offset != EnumRemo.RemocaoAtual)
             {
@@ -867,7 +854,91 @@ namespace ChuvaVazaoTools
 
             //fim da selecao de rodada
 
-           // var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
+            if (exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+            {
+                var pastaVerfica = @"H:\Middle - Preço\16_Chuva_Vazao\" + veriRev.revDate.ToString("yyyy_MM") + @"\RV" + veriRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\CV_ACOMPH_FUNC_PSAT" ;
+                if (!Directory.Exists(pastaVerfica))
+                {
+                    if (offset == EnumRemo.RemocaoAtual)
+                    {
+                        name = name + "_PSAT";
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                }
+                else
+                {
+                    if (!File.Exists(Path.Combine(pastaVerfica,"trava.txt")))
+                    {
+                        name = name + "_PSAT";
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                ////if (offset == EnumRemo.RemocaoAtual && name == "SCP_CV_ACOMPH_FUNC" && exist_psat == true && DateTime.Today.DayOfWeek == DayOfWeek.Thursday)
+                //if (offset == EnumRemo.RemocaoAtual && name == "CV_ACOMPH_FUNC" && exist_psat == true)
+                //{
+                //    name = name + "_PSAT";
+                //}
+                //else if (offset == EnumRemo.RemocaoTresSemanasGEFS)
+                //{
+                //    name = name + "_GEFS";
+                //    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                //    name = name.Replace("CV_", "CV3_");
+                //    pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_GEFS");
+
+                //    if (currRev.revDate.Month != runRev.revDate.Month)
+                //    {
+                //        cbx_Encadear_Previvaz.Checked = true;
+                //    }
+
+                //}
+                //else if (offset == EnumRemo.RemocaoTresSemanasEuro)
+                //{
+                //    name = name + "_EURO";
+                //    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                //    name = name.Replace("CV_", "CV3_");
+                //    pastaRaiz = Path.Combine(pastaMapa, "CV3", "CV3_EURO");
+                //    if (currRev.revDate.Month != runRev.revDate.Month)
+                //    {
+                //        cbx_Encadear_Previvaz.Checked = true;
+                //    }
+                //}
+                //else if (offset == EnumRemo.RemocaoQuatroSemanasGEFS)
+                //{
+                //    name = name + "_GEFS";
+                //    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                //    name = name.Replace("CV_", "CV4_");
+                //    pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_GEFS");
+                //    if (currRev.revDate.Month != runRev.revDate.Month)
+                //    {
+                //        cbx_Encadear_Previvaz.Checked = true;
+                //    }
+                //}
+                //else if (offset == EnumRemo.RemocaoQuatroSemanasEuro)
+                //{
+                //    name = name + "_EURO";
+                //    //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                //    name = name.Replace("CV_", "CV4_");
+                //    pastaRaiz = Path.Combine(pastaMapa, "CV4", "CV4_EURO");
+                //    if (currRev.revDate.Month != runRev.revDate.Month)
+                //    {
+                //        cbx_Encadear_Previvaz.Checked = true;
+                //    }
+                //}
+                //else if (offset != EnumRemo.RemocaoAtual)
+                //{
+                //    return;
+                //}
+
+            }
+
+            // var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
             var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
             datModel = dataModelo;
@@ -931,6 +1002,10 @@ namespace ChuvaVazaoTools
                     //CriarCaso(statusF);
                     string user = System.Environment.UserName.ToString();
                     Tools.Tools.addHistory(Path.Combine(pastaSaida, user + ".txt"), System.Environment.UserName.ToString());
+                    if (offset == EnumRemo.RemocaoAtual && exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        Tools.Tools.addHistory(Path.Combine(pastaSaida, "trava.txt"), "rodadas travadas");
+                    }
                 }
                 catch
                 {
@@ -2925,7 +3000,13 @@ namespace ChuvaVazaoTools
                 }
 
                 List<DateTime> dias = new List<DateTime>();
-                for (DateTime d = dataInicio; d <= dataInicio.AddDays(25); d = d.AddDays(1))
+                var dataMax = propagacoes.Where(x => x.IdPosto == 1).Select(x => x.VazaoNatural.Last().Key);
+
+                DateTime dat25 = dataInicio.AddDays(25);
+
+                DateTime dataLimite = dataMax.First().Date > dat25 ? dataMax.First().Date : dat25;
+
+                for (DateTime d = dataInicio; d <= dataLimite; d = d.AddDays(1))
                 {
                     dias.Add(d);
                 }

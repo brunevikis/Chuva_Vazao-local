@@ -1051,6 +1051,7 @@ namespace ChuvaVazaoTools
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
+
                     try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
