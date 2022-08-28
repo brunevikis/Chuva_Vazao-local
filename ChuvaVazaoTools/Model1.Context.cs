@@ -18,8 +18,10 @@ namespace ChuvaVazaoTools
         public IPDOEntities1()
             : base("name=IPDOEntities1")
         {
+            var objectContext = (this as IObjectContextAdapter).ObjectContext;
+            objectContext.CommandTimeout = 180;
         }
-    
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
