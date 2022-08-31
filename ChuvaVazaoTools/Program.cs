@@ -67,6 +67,10 @@ namespace ChuvaVazaoTools
                         }
 
                     }
+                    else if (args.Length == 2)
+                    {
+                        ReportMapas(args[0], args[1]);
+                    }
                     else if (args.Length > 2)
                     {
                         bool encad = false;
@@ -1288,6 +1292,44 @@ namespace ChuvaVazaoTools
             {
                 logF.WriteLine(ex.ToString());
             }
+        }
+        internal static void ReportMapas(string modelo, string data)
+        {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            DateTime dia = new DateTime(Convert.ToInt32(data.Substring(0, 4)), Convert.ToInt32(data.Substring(4, 2)), Convert.ToInt32(data.Substring(6, 2)));
+
+            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+
+            var onedriveFolder = Path.Combine(oneDrivePath_ori, @"Pedro Modesto Enercore - PDF", modelo, dia.Year.ToString(), dia.Month.ToString("00"));
+            string arq = "";
+            switch (modelo)
+            {
+                case "NWPdaily":
+                    arq = data + ".pdf";
+                    break;
+                case "ECMWFext":
+                    arq = "ECMWF_" + data + ".pdf"; ;
+                    break;
+                case "GEFSext":
+                    arq = "GEFS_" + data + ".pdf"; ;
+                    break;
+                case "MERGEdif":
+                    arq = data + ".pdf";
+                    break;
+                case "MERGEweekdif":
+                    arq = "MERGEweekdif_" + dia.AddDays(-6).ToString("yyyyMMdd") + "a" + dia.ToString("yyyyMMdd") + ".pdf";
+                    onedriveFolder = Path.Combine(oneDrivePath_ori, @"Pedro Modesto Enercore - PDF", modelo, dia.Year.ToString());
+                    break;
+                default:
+                    break;
+            }
+            string arqFile = Path.Combine(onedriveFolder, arq);
+            if (arq != "" && File.Exists(arqFile))
+            {
+                var retornoEmail = Tools.Tools.SendMail(arqFile, "Seguem as previsões de precipitação", $"Previsão de precipitação - {modelo} - {dia:dd/MM/yyyy}", "preco");
+                retornoEmail.Wait(300000);
+            }
+
         }
 
         internal static void AutoReport(DateTime date, System.IO.TextWriter logF)

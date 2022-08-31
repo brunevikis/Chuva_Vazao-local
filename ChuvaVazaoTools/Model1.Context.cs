@@ -19,7 +19,7 @@ namespace ChuvaVazaoTools
             : base("name=IPDOEntities1")
         {
             var objectContext = (this as IObjectContextAdapter).ObjectContext;
-            objectContext.CommandTimeout = 180;
+            objectContext.CommandTimeout = 240;
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
