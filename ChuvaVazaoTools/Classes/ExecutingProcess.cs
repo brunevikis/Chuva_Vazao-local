@@ -29,7 +29,7 @@ namespace ChuvaVazaoTools.Classes
                 //Madeira
 
 
-                #region GRANDE
+                #region GRANDE (grande e parnaiba)
 
                 #region Camargos
                 var camargos = new Propagacao() { IdPosto = 1, NomePostoFluv = "CAMARGOS" };
@@ -141,7 +141,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #endregion
 
-                #region Tiête
+                #region Tiête (paranazao)
 
                 #region Guarapiranga
                 var Guarapiranga = new Propagacao() { IdPosto = 117, NomePostoFluv = "Guarapiranga" };
@@ -213,7 +213,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #endregion
 
-                #region Paranaiba
+                #region Paranaiba (grande parnaiba)
 
                 #region CorumbaIV
                 var CorumbaIV = new Propagacao() { IdPosto = 205, NomePostoFluv = "Corumba IV" };
@@ -353,7 +353,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #endregion
 
-                #region PARANAPANEMA
+                #region PARANAPANEMA(paranazao)
 
                 #region Jurumirim
                 var Jurumirim = new Propagacao() { IdPosto = 47, NomePostoFluv = "Jurumirim" };
@@ -434,7 +434,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region IGUACU
+                #region IGUACU(sul)
 
                 #region Santa Clara
                 var SantaClara = new Propagacao() { IdPosto = 71, NomePostoFluv = "Santa Clara" };

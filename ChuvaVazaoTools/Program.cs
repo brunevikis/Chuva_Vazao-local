@@ -1049,8 +1049,17 @@ namespace ChuvaVazaoTools
 
                 }
                 var mapasCount = Directory.GetFiles(pastaSaida, ".", SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
+                DateTime hoje = DateTime.Today;
+                Boolean exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", hoje.ToString("yyyy"), hoje.ToString("MM"), "psat_" + hoje.ToString("ddMMyyyy") + ".txt"));
 
+                if (exist_psat)
+                {
+                    logF.WriteLine("psat presente aguardando fim da atualização");
 
+                    Thread.Sleep(300000);
+                    logF.WriteLine("retomando processo...");
+
+                }
                 //frmMain.Run(logF, out _);
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
