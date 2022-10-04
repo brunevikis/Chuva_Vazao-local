@@ -650,7 +650,7 @@ namespace ChuvaVazaoTools
             internal statuscode Previvaz { get { return (statuscode)statuses[4]; } set { statuses[4] = (int)value; Save(); } }
             internal statuscode PostProcessing { get { return (statuscode)statuses[5]; } set { statuses[5] = (int)value; Save(); } }
         }
-
+        bool esperouPsat = false;
         public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual)
         {
             dtAtual.Value = DateTime.Today.Date;
@@ -938,7 +938,7 @@ namespace ChuvaVazaoTools
 
             }
 
-            // var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
+            //var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name;
             var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name;
 
             datModel = dataModelo;
@@ -997,6 +997,18 @@ namespace ChuvaVazaoTools
                 try
                 {
                     if (logF != null) logF.WriteLine(name + ": Copiando arquivos SMAP!!!");
+                    DateTime hoje = DateTime.Today;
+
+                    exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", hoje.ToString("yyyy"), hoje.ToString("MM"), "psat_" + hoje.ToString("ddMMyyyy") + ".txt"));
+
+                    if (exist_psat && esperouPsat == false)
+                    {
+                        logF.WriteLine("psat presente aguardando fim da atualização");
+
+                        Thread.Sleep(300000);
+                        logF.WriteLine("retomando processo...");
+                        esperouPsat = true;
+                    }
                     CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF);
                     //
                     //CriarCaso(statusF);
@@ -5191,6 +5203,10 @@ namespace ChuvaVazaoTools
                 {
                     if (Directory.Exists(pastaSaida))
                     {
+                        if (postoPlu.Codigo == "PSATBIGU")
+                        {
+
+                        }
                         var postoPrecip = GetPsatFuncenme(pastaSaida);
                         if (postoPrecip != null)
                         {
@@ -7310,8 +7326,14 @@ namespace ChuvaVazaoTools
                                {
 
                                    var cod_posto = tipo_vazoes.Where(x => x.Item2 == ori.Posto.ToString()).First();
-
-                                   var value = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == cod_posto.Item2 && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   decimal? value = 0;
+                                   try
+                                   {
+                                       value = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == cod_posto.Item2 && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   catch (Exception ex)
+                                   {
+                                   }
                                    if (cod_posto.Item2 == "34")
                                    {
                                        value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "243" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
@@ -7379,7 +7401,36 @@ namespace ChuvaVazaoTools
                                    {
                                        value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "62" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
                                    }
-
+                                   else if (cod_posto.Item2 == "122")
+                                   {
+                                       var paraibuna = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "121" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var stabrancaVNM = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "122" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = paraibuna + stabrancaVNM;
+                                   }
+                                   else if (cod_posto.Item2 == "130")
+                                   {
+                                       var anta = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "129" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var ilhapVNM = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "130" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = anta + ilhapVNM;
+                                   }
+                                   else if (cod_posto.Item2 == "203")
+                                   {
+                                       var tocos = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "201" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var lajes = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "202" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = tocos + lajes;
+                                   }
+                                   else if (cod_posto.Item2 == "81")
+                                   {
+                                       if (value == 0)
+                                       {
+                                           var saltoCaxias = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "222" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var saltoOsorio = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "78" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var saltoSantiago = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "77" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var baixoIg = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "81" && x.Tipo_Vazao == "VNM").Vazao;
+                                           value = saltoCaxias + saltoOsorio + saltoSantiago + baixoIg;
+                                       }
+                                       
+                                   }
                                    return value;
                                }).Sum();
                                 arqEntrada.posto.Vazoes[dt] = float.Parse(vazHidr.ToString().Replace('.', ','), Culture.NumberFormat);

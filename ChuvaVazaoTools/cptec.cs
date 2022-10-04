@@ -183,8 +183,9 @@ namespace ChuvaVazaoTools
             if (!File.Exists(Path.Combine(directoryToSaveGif, "LATE_funceme_INMET.gif")))
             {
                 var pr = PrecipitacaoFactory.BuildFromJsonData(dados, DateTime.Today);
-                var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO\\";
-                if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
+                var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO2\\";
+                if (!System.IO.Directory.Exists(localPath)) 
+                    System.IO.Directory.CreateDirectory(localPath);
 
                 var fanem = System.IO.Path.Combine(localPath, lateFunc + "Inmet_funceme_" + data.ToString("yyyyMMdd"));
                 pr.SalvarModeloBin(fanem);

@@ -285,7 +285,7 @@ namespace ChuvaVazaoTools
 
                     if (pr != null && (h.Count() == 0 || h.Any(y => y.Contains("EURO")) || (late == true && !File.Exists(Path.Combine(directoryToSaveGif, "LateFunceme.txt")))))
                     {
-                        var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO\\";
+                        var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO2\\";
                         if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
 
                         var fanem = System.IO.Path.Combine(localPath, horaFunc + "funceme_" + date.ToString("yyyyMMdd"));
@@ -1049,17 +1049,8 @@ namespace ChuvaVazaoTools
 
                 }
                 var mapasCount = Directory.GetFiles(pastaSaida, ".", SearchOption.AllDirectories).ToList();//verifica se os mapas das rodadas form gerados
-                DateTime hoje = DateTime.Today;
-                Boolean exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", hoje.ToString("yyyy"), hoje.ToString("MM"), "psat_" + hoje.ToString("ddMMyyyy") + ".txt"));
 
-                if (exist_psat)
-                {
-                    logF.WriteLine("psat presente aguardando fim da atualização");
 
-                    Thread.Sleep(300000);
-                    logF.WriteLine("retomando processo...");
-
-                }
                 //frmMain.Run(logF, out _);
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
@@ -1878,6 +1869,7 @@ namespace ChuvaVazaoTools
             var data = date;
             var localPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Conjunto_R_" + DateTime.Now.ToString("HHmmss"));
             var Conj_Zip = Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos.zip");
+            //var Conj_Zip = Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos_shadow.zip");
 
             var path_final = Path.Combine(path);
 

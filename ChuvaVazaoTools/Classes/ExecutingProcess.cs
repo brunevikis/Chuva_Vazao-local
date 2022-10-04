@@ -434,11 +434,11 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region IGUACU(sul)
+                #region IGUACU(sul)verficar talvez mudar tv saltocaxias
 
                 #region Santa Clara
                 var SantaClara = new Propagacao() { IdPosto = 71, NomePostoFluv = "Santa Clara" };
-                SantaClara.Modelo.Add(new ModeloSmap() { NomeVazao = "StaClara", TempoViagem = 0, FatorDistribuicao = 1f });
+                SantaClara.Modelo.Add(new ModeloSmap() { NomeVazao = "STACLARA", TempoViagem = 0, FatorDistribuicao = 1f });
                 propagacoes.Add(SantaClara);
                 #endregion
 
@@ -460,7 +460,7 @@ namespace ChuvaVazaoTools.Classes
                 // GB MUNHOZ
                 var FozAreia = new Propagacao() { IdPosto = 74, NomePostoFluv = "Foz de Areia" };
                 FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "FOA", TempoViagem = 0, FatorDistribuicao = 1 });
-                FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "UVitoria", TempoViagem = 17.4f, FatorDistribuicao = 1 });
+                FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "UVITORIA", TempoViagem = 17.4f, FatorDistribuicao = 1 });
                 propagacoes.Add(FozAreia);
                 #endregion
 
@@ -473,7 +473,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Salto Santiago
                 var SaltoSantiago = new Propagacao() { IdPosto = 77, NomePostoFluv = "Salto Santiago" };
-                SaltoSantiago.Modelo.Add(new ModeloSmap() { NomeVazao = "SCaxias", TempoViagem = 0, FatorDistribuicao = 0.258f });
+                SaltoSantiago.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.205f });
                 SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Jordao, TempoViagem = 9.6f });
                 SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Segredo, TempoViagem = 11.7f });
                 propagacoes.Add(SaltoSantiago);
@@ -481,21 +481,28 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Salto Osorio
                 var SaltoOsorio = new Propagacao() { IdPosto = 78, NomePostoFluv = "Salto Osorio" };
-                SaltoOsorio.Modelo.Add(new ModeloSmap() { NomeVazao = "SCaxias", TempoViagem = 0, FatorDistribuicao = 0.102f });
+                SaltoOsorio.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.081f });
                 SaltoOsorio.PostoMontantes.Add(new PostoMontante { Propaga = SaltoSantiago, TempoViagem = 10 });
                 propagacoes.Add(SaltoOsorio);
                 #endregion
 
-                #region Salto Caxias
+                #region Salto Caxias 
                 var SaltoCaxias = new Propagacao() { IdPosto = 222, NomePostoFluv = "Salto Caxias" };
-                SaltoCaxias.Modelo.Add(new ModeloSmap() { NomeVazao = "SCaxias", TempoViagem = 0, FatorDistribuicao = 0.640f });
-                SaltoCaxias.PostoMontantes.Add(new PostoMontante { Propaga = SaltoOsorio, TempoViagem = 0 });
+                SaltoCaxias.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.510f });
+                SaltoCaxias.PostoMontantes.Add(new PostoMontante { Propaga = SaltoOsorio, TempoViagem = 9.4f });///talvez zero no tv
                 propagacoes.Add(SaltoCaxias);
                 #endregion
 
+                #region baixo iguacu //verficar
+                var baixoig = new Propagacao() { IdPosto = 81, NomePostoFluv = "baixo iguacu" };
+                baixoig.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.204f });
+                baixoig.PostoMontantes.Add(new PostoMontante { Propaga = SaltoCaxias, TempoViagem = 5 });//verficar
+                propagacoes.Add(baixoig);
                 #endregion
 
-                #region URUGUAI
+                #endregion
+
+                #region URUGUAI(sul)
 
                 #region B. Grande
                 var BGrande = new Propagacao() { IdPosto = 215, NomePostoFluv = "B. Grande" };
@@ -579,7 +586,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region MADEIRA
+                #region MADEIRA(norte)
 
                 #region jirau
                 var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
@@ -622,7 +629,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region Xingu
+                #region Xingu(norte)
 
                 #region Pimental
                 var Piment = new Propagacao() { IdPosto = 288, NomePostoFluv = "Pimental" };
@@ -659,7 +666,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region Norte
+                #region Norte(norte)
 
                 #region Balbina
                 var Balb = new Propagacao() { IdPosto = 269, NomePostoFluv = "Balbina" };
@@ -701,7 +708,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region Paraguai
+                #region Paraguai(outras se)
 
                 #region Itiquira
                 var Itiquira = new Propagacao() { IdPosto = 259, NomePostoFluv = "Itiquira" };
@@ -729,7 +736,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region DOCE
+                #region DOCE(outras se)
 
                 #region CAndonga
                 var CAndonga = new Propagacao() { IdPosto = 149, NomePostoFluv = "CAndonga" };
@@ -788,7 +795,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region OUTRAS
+                #region OUTRAS(outras se)
 
                 #region ROSAL
                 var ROSAL = new Propagacao() { IdPosto = 196, NomePostoFluv = "ROSAL" };
@@ -804,7 +811,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region TOCANTINS
+                #region TOCANTINS(norte)
 
                 #region Serra da Mesa
                 var SerraMesa = new Propagacao() { IdPosto = 270, NomePostoFluv = "Serra da Mesa" };
@@ -859,7 +866,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region PARNAIBA
+                #region PARNAIBA(NE)
 
                 #region Irape
                 var Irape = new Propagacao() { IdPosto = 255, NomePostoFluv = "Irape" };
@@ -888,7 +895,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #endregion
 
-                #region SAO FRANCISCO
+                #region SAO FRANCISCO(NE)
 
                 #region Retiro Baixo
                 var RetiroBaixo = new Propagacao() { IdPosto = 155, NomePostoFluv = "Retiro Baixo" };
@@ -912,7 +919,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
-                #region PARANA
+                #region PARANA(paranazao)
 
                 #region Três Irmãos
                 var TresIrmaos = new Propagacao() { IdPosto = 243, NomePostoFluv = "Três Irmãos" };
@@ -981,7 +988,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #endregion
 
-                #region OSUL
+                #region OSUL(sul)
 
                 #region Enerstina
                 var enerstina = new Propagacao() { IdPosto = 110, NomePostoFluv = "Enerstina" };
@@ -1048,6 +1055,90 @@ namespace ChuvaVazaoTools.Classes
                 var saltPilao = new Propagacao() { IdPosto = 101, NomePostoFluv = "Salto Pilão" };
                 saltPilao.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTOPILAO", TempoViagem = 0, FatorDistribuicao = 1 });
                 propagacoes.Add(saltPilao);
+                #endregion
+
+                #endregion
+
+                #region Paraiba do sul(outras se)//verificar talvez ver tocos lajes
+
+                #region Paraibuna
+                var paraibuna = new Propagacao() { IdPosto = 121, NomePostoFluv = "paraibuna" };
+                paraibuna.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.873f });
+                propagacoes.Add(paraibuna);
+                #endregion
+
+                #region STA BRANCA
+                var staBranca = new Propagacao() { IdPosto = 122, NomePostoFluv = "santa branca" };
+                staBranca.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.127f });
+                staBranca.PostoMontantes.Add(new PostoMontante { Propaga = paraibuna, TempoViagem = 6 });///verificar
+                propagacoes.Add(staBranca);
+                #endregion
+
+                #region jaguari
+                var jaguari = new Propagacao() { IdPosto = 120, NomePostoFluv = "jaguari" };
+                jaguari.Modelo.Add(new ModeloSmap() { NomeVazao = "JAGUARI", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(jaguari);
+                #endregion
+
+                #region Funil paraiba
+                var Fun = new Propagacao() { IdPosto = 123, NomePostoFluv = "Funil paraiba" };
+                Fun.Modelo.Add(new ModeloSmap() { NomeVazao = "FUNIL", TempoViagem = 0, FatorDistribuicao = 1 });
+                Fun.PostoMontantes.Add(new PostoMontante { Propaga = staBranca, TempoViagem = 84 });///verificar
+                Fun.PostoMontantes.Add(new PostoMontante { Propaga = jaguari, TempoViagem = 72 });///verificar
+                propagacoes.Add(Fun);
+                #endregion
+
+                #region Sta Cecilia
+                var staceci = new Propagacao() { IdPosto = 125, NomePostoFluv = "sta cecilia" };
+                staceci.Modelo.Add(new ModeloSmap() { NomeVazao = "STACECILIA", TempoViagem = 0, FatorDistribuicao = 1 });
+                staceci.PostoMontantes.Add(new PostoMontante { Propaga = Fun, TempoViagem = 24 });///verificar
+                propagacoes.Add(staceci);
+                #endregion
+
+                #region Picada
+                var Picada = new Propagacao() { IdPosto = 197, NomePostoFluv = "Picada" };
+                Picada.Modelo.Add(new ModeloSmap() { NomeVazao = "PICADA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Picada);
+                #endregion
+
+                #region Sobragi
+                var Sobragi = new Propagacao() { IdPosto = 198, NomePostoFluv = "Sobragi" };
+                Sobragi.Modelo.Add(new ModeloSmap() { NomeVazao = "SOBRAGI", TempoViagem = 0, FatorDistribuicao = 1 });
+                Sobragi.PostoMontantes.Add(new PostoMontante { Propaga = Picada, TempoViagem = 5 });///verificar
+                propagacoes.Add(Sobragi);
+                #endregion
+
+                #region ANTA
+                var ANTA = new Propagacao() { IdPosto = 129, NomePostoFluv = "ANTA" };
+                ANTA.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.711f });
+                ANTA.PostoMontantes.Add(new PostoMontante { Propaga = Sobragi, TempoViagem = 6 });///verificar
+                ANTA.PostoMontantes.Add(new PostoMontante { Propaga = staceci, TempoViagem = 40 });///verificar
+                propagacoes.Add(ANTA);
+                #endregion
+
+                #region ilha pombos
+                var ilhaP = new Propagacao() { IdPosto = 130, NomePostoFluv = "ilha Pombos" };
+                ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.289f });
+                ilhaP.PostoMontantes.Add(new PostoMontante { Propaga = ANTA, TempoViagem = 10 });///verificar
+                propagacoes.Add(ilhaP);
+                #endregion
+
+                #region tocos
+                var tocos = new Propagacao() { IdPosto = 201, NomePostoFluv = "tocos" };
+                tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.68f });
+                propagacoes.Add(tocos);
+                #endregion
+
+                #region lajes
+                var lajes = new Propagacao() { IdPosto = 202, NomePostoFluv = "lajes" };
+                lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.32f });
+                propagacoes.Add(lajes);
+                #endregion
+
+                #region santana
+                var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };
+                santana.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.997f });
+                propagacoes.Add(santana);
                 #endregion
 
                 #endregion
@@ -2513,11 +2604,59 @@ namespace ChuvaVazaoTools.Classes
             //todo: confirmar a questão das data inicio das propagaçoes(confirmar se pega as datas certas de acordo com rodadas d-1 e depois do acomph)
             try
             {
+
+                #region paraiba do sul
+
+                #region santana
+
+                var santanaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJESTOCOS".ToUpper()).Select(x => x.Vazoes).First();
+                var vazAcomphtocos = dadosAcompH.Where(x => x.posto == 201).ToList();
+                var santanaLajes = propagacoes.Where(x => x.IdPosto == 203).FirstOrDefault();
+                var tocos = propagacoes.Where(x => x.IdPosto == 201).FirstOrDefault();
+                //santanaLajes.VazaoIncremental.Clear();
+                //santanaLajes.VazaoNatural.Clear();
+                //santanaLajes.calMedSemanal.Clear();
+                //santanaLajes.medSemanalIncremental.Clear();
+                //santanaLajes.medSemanalNatural.Clear();
+                try
+                {
+                    foreach (var dia in santanaSmap.Keys.ToList())
+                    {
+                        if (dia <= ultimoAcomph)
+                        {
+                            var valor = Convert.ToDouble(vazAcomphtocos.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                            santanaLajes.VazaoNatural[dia] = santanaSmap[dia] * 0.997f;
+                            //sCaxias.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                            santanaLajes.VazaoIncremental[dia] = santanaLajes.VazaoNatural[dia] - valor;
+
+
+                        }
+                        else
+                        {
+                            //sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
+                            //sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
+                            santanaLajes.VazaoNatural[dia] = santanaSmap[dia] * 0.997f;
+                            santanaLajes.VazaoIncremental[dia] = santanaLajes.VazaoNatural[dia] - tocos.VazaoNatural[dia];
+                        }
+
+                    }
+                }
+                catch
+                {
+
+                }
+               
+                CalcMediaMuskingun(santanaLajes);
+
+
+                #endregion
+
+                #endregion
                 #region iguacu
 
                 #region saltacaxias
 
-                var SaltocaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "SCaxias".ToUpper()).Select(x => x.Vazoes).First();
+                var SaltocaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BAIXOIG".ToUpper()).Select(x => x.Vazoes).First();
                 var vazAcomphCaxias = dadosAcompH.Where(x => x.posto == 222).ToList();
                 var sCaxias = propagacoes.Where(x => x.IdPosto == 222).FirstOrDefault();
                 sCaxias.VazaoIncremental.Clear();
@@ -2538,9 +2677,10 @@ namespace ChuvaVazaoTools.Classes
                     }
                     else
                     {
-                        sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
-                        sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
-
+                        //sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
+                        //sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
+                        sCaxias.VazaoNatural[dia] = SaltocaSmap[dia] * 0.51f;
+                        sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.51f;
                     }
 
                 }
