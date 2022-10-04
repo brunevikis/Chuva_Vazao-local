@@ -706,6 +706,29 @@ namespace ChuvaVazaoTools
             }
             catch (Exception ex)
             {
+
+                string argumentos = "taskkill /f /im chrome.exe";
+
+                //var letra_Dir = path.Split('\\').First();
+                //var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\";
+                //string executar = @"/C " + letra_Dir + " & cd " + path + @" & Rscript.exe " + path_Scripts + Comando;
+                string executar = @"/C "  + argumentos;
+                System.Diagnostics.Process pr = new System.Diagnostics.Process();
+
+                var prInfo = new System.Diagnostics.ProcessStartInfo();
+                prInfo.FileName = @"C:\Windows\System32\cmd.exe";
+                prInfo.UseShellExecute = true;
+               // prInfo.WorkingDirectory = path;
+                prInfo.Arguments = executar;
+                pr.StartInfo = prInfo;
+                pr.Start();
+                pr.WaitForExit();
+
+                // System.Diagnostics.Process.Start("cmd.exe", executar).WaitForExit(1200000);
+
+
+
+
                 //var p_count = Process.GetProcesses().Where(p => p.ProcessName.Contains("chrome")).ToList();
                 //int contagem = p_count.Count();
                 //while (contagem > 0)
