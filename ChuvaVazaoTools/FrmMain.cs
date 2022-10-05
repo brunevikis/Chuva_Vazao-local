@@ -651,6 +651,7 @@ namespace ChuvaVazaoTools
             internal statuscode PostProcessing { get { return (statuscode)statuses[5]; } set { statuses[5] = (int)value; Save(); } }
         }
         bool esperouPsat = false;
+        bool trava = false;
         public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual)
         {
             dtAtual.Value = DateTime.Today.Date;
@@ -854,7 +855,7 @@ namespace ChuvaVazaoTools
 
             //fim da selecao de rodada
 
-            if (exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+            if (exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday && trava == false)
             {
                 var pastaVerfica = @"H:\Middle - Preço\16_Chuva_Vazao\" + veriRev.revDate.ToString("yyyy_MM") + @"\RV" + veriRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\CV_ACOMPH_FUNC_PSAT" ;
                 if (!Directory.Exists(pastaVerfica))
@@ -1017,6 +1018,7 @@ namespace ChuvaVazaoTools
                     if (offset == EnumRemo.RemocaoAtual && exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
                     {
                         Tools.Tools.addHistory(Path.Combine(pastaSaida, "trava.txt"), "rodadas travadas");
+                        trava = true;
                     }
                 }
                 catch
@@ -5197,7 +5199,10 @@ namespace ChuvaVazaoTools
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(prec.Key);
                 string precipDado = "0.00";
                 var pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + prec.Key.ToString("yy-MM-dd") + @"\Mapas Acomph\madeira\funceme";
-
+                if (!Directory.Exists(pastaSaida))
+                {
+                    pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + prec.Key.ToString("yy-MM-dd") + @"\Mapas Acomph\madeira\PsatPreliminar";
+                }
 
                 foreach (var postoPlu in modelosChVz.SelectMany(x => x.PostosPlu))
                 {
@@ -5258,8 +5263,8 @@ namespace ChuvaVazaoTools
                     dadosPsat.Add(dad);
 
                 }
-                var funceme = Directory.GetFiles(pastaSaida).First();
-                var dados = File.ReadAllLines(funceme);
+                var ArqDado = Directory.GetFiles(pastaSaida).First();
+                var dados = File.ReadAllLines(ArqDado);
                 List<Tuple<string, string, string>> dadosfunceme = new List<Tuple<string, string, string>>();
                 foreach (var linha in dados)
                 {

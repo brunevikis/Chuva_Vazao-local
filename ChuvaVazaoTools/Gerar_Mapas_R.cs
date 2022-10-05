@@ -58,6 +58,8 @@ namespace ChuvaVazaoTools
                 File.Delete(Path.Combine(path_Conj, "error.log"));
             }
 
+            string funcemePsatPre = "funceme";
+
             try
             {
                 // Roda PSAT
@@ -74,14 +76,31 @@ namespace ChuvaVazaoTools
                 }
                 // dt_acomph = dt_acomph.AddDays(-1);
                 //Check if exist funceme of Today
+                //psat preliminar
+                logF.WriteLine("Verificando PsatPreliminar data atual");
+                bool temPsat = false;
+                var psatpre = Directory.GetFiles(Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS")).Where(x => x.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                if (psatpre.Count() > 0)
+                {
+                    temPsat = true;
+                    funcemePsatPre = "PsatPreliminar";
+                    logF.WriteLine("PsatPreliminar Encontrado!");
+                }
+
+
+                //fim psat preliminar
+
 
                 var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd")));
                 var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"));
 
                 logF.WriteLine("Verificando Funceme data atual");
-                if (funceme.Length != 0)
+                if (funceme.Length != 0 || temPsat == true) //(funceme.Length != 0)
                 {
-                    logF.WriteLine("Funceme Encontrado!");
+                    if (funceme.Length != 0)
+                    {
+                        logF.WriteLine("Funceme Encontrado!");
+                    }
                     //ultimo dia de atualização da previsão
 
                     logF.WriteLine("Tranferindo arquivos GEFS para Entrada");
@@ -303,14 +322,20 @@ namespace ChuvaVazaoTools
                     }
 
                     // Verifica Merge, caso não tenha usa o funceme
-                    logF.WriteLine("Verifica Funceme/Merge");
+                    logF.WriteLine("Verifica Funceme/Merge/PsatPreliminar");
                     DateTime dt_func = data_Atual;
                     // while (dt_func != dt_acomph)
                     //{
                     var Merge = Directory.GetFiles(Path.Combine(path_ModeloR, "merge", dt_func.ToString("yyyyMM"), dt_func.ToString("dd"))).Where(x => x.EndsWith(".dat"));
-                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "funceme"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "funceme"));
+                    //if (!Directory.Exists(Path.Combine(path_ArqPrev, "funceme"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "funceme"));
+                    if (!Directory.Exists(Path.Combine(path_ArqPrev, funcemePsatPre))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, funcemePsatPre));
 
-                    if (Merge.Count() > 0)
+                    if (temPsat)
+                    {
+                        string psatArq = $"imerg+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
+                        File.Copy(psatpre, Path.Combine(path_ArqPrev, funcemePsatPre, psatArq), true);
+                    }
+                    else if (Merge.Count() > 0)
                     {
                         foreach (var arq in Merge)
                         {
@@ -486,7 +511,8 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine("Acomph desatualizado, renoamendo arquivos");
                         var dirs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
-                        var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
+                        //var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
+                        var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, funcemePsatPre));
 
                         foreach (var arq in arq_funceme)
                         {

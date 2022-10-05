@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="ChuvaVazaoTools.exe" version="1.2.1.332" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="ChuvaVazaoTools.exe" version="1.2.1.334" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="Umbrella-512.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -15,16 +15,16 @@
       </applicationRequestMinimum>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
         <!--
-          Opções de Manifesto do UAC
-          Para alterar o nível de Controle de Conta de Usuário do Windows, substitua o nó
-          requestedExecutionLevel por um dos seguintes.
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
 
         <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
         <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
         <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
 
-         Para utilizar a Virtualização de Arquivos e Registro para manter a compatibilidade com versões anteriores,
-         exclua o nó requestedExecutionLevel.
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
     -->
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ChuvaVazaoTools.exe" size="759296">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ChuvaVazaoTools.exe" size="759808">
       <assemblyIdentity name="ChuvaVazaoTools" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>TSYlwGbzAOiBcxD67Pv0qCidTI5PitSw1M8o8J59z0c=</dsig:DigestValue>
+        <dsig:DigestValue>Fk59tDHIZ6H+e5/TfyC61Tj0lcO3JxnILXmSsY6Bm2Q=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -240,13 +240,13 @@
       <dsig:DigestValue>FNaLOJZeMSSN/hXPSkl5tMNPR0LqdV5f0E/Kvii7xHA=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="ChuvaVazaoTools.exe.config" size="6255">
+  <file name="ChuvaVazaoTools.exe.config" size="6245">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>g61gfHh6BNfagzUMno/g0jwyGt/gugh4iTbVCQj9e7M=</dsig:DigestValue>
+      <dsig:DigestValue>yzpAc2jysd4H8tKO87b7A7tOUo5MIvcd3zjCMR3Vanc=</dsig:DigestValue>
     </hash>
   </file>
   <file name="INICIALIZACAO.txt" size="810">
