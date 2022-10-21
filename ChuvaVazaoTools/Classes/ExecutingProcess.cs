@@ -2656,35 +2656,35 @@ namespace ChuvaVazaoTools.Classes
 
                 #region saltacaxias
 
-                var SaltocaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BAIXOIG".ToUpper()).Select(x => x.Vazoes).First();
-                var vazAcomphCaxias = dadosAcompH.Where(x => x.posto == 222).ToList();
-                var sCaxias = propagacoes.Where(x => x.IdPosto == 222).FirstOrDefault();
-                sCaxias.VazaoIncremental.Clear();
-                sCaxias.VazaoNatural.Clear();
-                sCaxias.calMedSemanal.Clear();
-                sCaxias.medSemanalIncremental.Clear();
-                sCaxias.medSemanalNatural.Clear();
+                //var SaltocaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BAIXOIG".ToUpper()).Select(x => x.Vazoes).First();
+                //var vazAcomphCaxias = dadosAcompH.Where(x => x.posto == 222).ToList();
+                //var sCaxias = propagacoes.Where(x => x.IdPosto == 222).FirstOrDefault();
+                //sCaxias.VazaoIncremental.Clear();
+                //sCaxias.VazaoNatural.Clear();
+                //sCaxias.calMedSemanal.Clear();
+                //sCaxias.medSemanalIncremental.Clear();
+                //sCaxias.medSemanalNatural.Clear();
 
-                foreach (var dia in SaltocaSmap.Keys.ToList())
-                {
-                    if (dia <= ultimoAcomph)
-                    {
-                        var valor = Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
-                        sCaxias.VazaoNatural[dia] = valor;
-                        sCaxias.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                //foreach (var dia in SaltocaSmap.Keys.ToList())
+                //{
+                //    if (dia <= ultimoAcomph)
+                //    {
+                //        var valor = Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                //        sCaxias.VazaoNatural[dia] = valor;
+                //        sCaxias.VazaoIncremental[dia] = (Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphCaxias.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
 
 
-                    }
-                    else
-                    {
-                        //sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
-                        //sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
-                        sCaxias.VazaoNatural[dia] = SaltocaSmap[dia] * 0.51f;
-                        sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.51f;
-                    }
+                //    }
+                //    else
+                //    {
+                //        //sCaxias.VazaoNatural[dia] = SaltocaSmap[dia];
+                //        //sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.64f;
+                //        sCaxias.VazaoNatural[dia] = SaltocaSmap[dia] * 0.51f;
+                //        sCaxias.VazaoIncremental[dia] = SaltocaSmap[dia] * 0.51f;
+                //    }
 
-                }
-                CalcMediaMuskingun(sCaxias);
+                //}
+                //CalcMediaMuskingun(sCaxias);
 
                 #endregion
 
