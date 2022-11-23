@@ -130,7 +130,7 @@ namespace ChuvaVazaoTools
             try
             {
                 var path = txtCaminho.Text;
-                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_","");
                 if (!System.IO.Directory.Exists(path))
                 {
                     MessageBox.Show("Caminho não existente");
@@ -325,6 +325,8 @@ namespace ChuvaVazaoTools
             RemocaoTresSemanasGEFS,
             RemocaoQuatroSemanasEuro,
             RemocaoQuatroSemanasGEFS,
+            RemocaoPuraEuro,
+            RemocaoPuraGEFS,
         };
 
         public void EuroSem(IPrecipitacaoForm frm)
@@ -758,6 +760,16 @@ namespace ChuvaVazaoTools
                 name = name + "_VIES_VE";
                 pastaRaiz = Path.Combine(pastaMapa, "CV", "CV_VIES_VE");
             }
+            else if (offset == EnumRemo.RemocaoPuraEuro)
+            {
+                name = name + "_PUROECMWF";
+                pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROECMWF");
+            }
+            else if (offset == EnumRemo.RemocaoPuraGEFS)
+            {
+                name = name + "_PUROGEFS";
+                pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROGEFS");
+            }
             else if (offset == EnumRemo.RemocaoUmaSemanaEuro)
             {
                 name = name + "_EURO";
@@ -1107,6 +1119,11 @@ namespace ChuvaVazaoTools
                 else if (name.Contains("Atualizado"))
                 {
                     pastaSmapTotal = pastaSmapTotal + "_Atualizado";
+                }
+
+                if (name.Contains("PURO"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_PURO";
                 }
 
                 //var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
@@ -5129,7 +5146,7 @@ namespace ChuvaVazaoTools
 
             var modelos = new string[] { "SMAP" };
 
-            var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "")).ToList();
+            var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_","")).ToList();
 
             var dir = System.IO.Directory.GetDirectories(txtEntrada.Text);
 
@@ -6257,7 +6274,7 @@ namespace ChuvaVazaoTools
 
         void ExecutarTudoTotal(string raiz, RunStatus statusF = null)
         {
-            string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+            string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_","");
 
             if (statusF != null) statusF.Execution = RunStatus.statuscode.initialialized;
 
@@ -6530,7 +6547,7 @@ namespace ChuvaVazaoTools
         {
             try
             {
-                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_","");
 
                 modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
 
@@ -10577,7 +10594,7 @@ namespace ChuvaVazaoTools
         public void Mapas_RTotal(string[] mapas, int count, string pastaSaida, string modelo)
         {
             var dir = System.IO.Path.Combine(pastaSaida);
-            string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "");
+            string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_","");
 
             var dirMod = System.IO.Path.Combine(dir, "SMAP");
             string[] dir_Bacias = Directory.GetDirectories(dirMod);

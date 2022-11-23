@@ -79,13 +79,19 @@ namespace ChuvaVazaoTools
                 //psat preliminar
                 logF.WriteLine("Verificando PsatPreliminar data atual");
                 bool temPsat = false;
-                var psatpre = Directory.GetFiles(Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS")).Where(x => x.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (psatpre.Count() > 0)
+                string psatPrelFolder = Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS");
+                string psatpre = "";
+                if (Directory.Exists(psatPrelFolder))
                 {
-                    temPsat = true;
-                    funcemePsatPre = "PsatPreliminar";
-                    logF.WriteLine("PsatPreliminar Encontrado!");
+                    psatpre = Directory.GetFiles(Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS")).Where(x => x.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (psatpre.Count() > 0)
+                    {
+                        temPsat = true;
+                        funcemePsatPre = "PsatPreliminar";
+                        logF.WriteLine("PsatPreliminar Encontrado!");
+                    }
                 }
+                
 
 
                 //fim psat preliminar
@@ -240,6 +246,11 @@ namespace ChuvaVazaoTools
                     logF.WriteLine("Tranferindo arquivos ECWMF OP para Entrada");
 
                     var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
+
+                    if (!Directory.Exists(EcmwfTempoOK))
+                    {
+                        Directory.CreateDirectory(EcmwfTempoOK);//para evitar de dar problemas na criação dos mapas caso o ecmwftempoOk não tenha baixado,a pasta é criada para não interromper o fluxo de verificação e é passado pra verificar o ecmwf meteologix
+                    }
                     var ecmwfTempArqs = Directory.GetFiles(EcmwfTempoOK, "ECMWFop_*").Where(x => x.EndsWith(".dat"));
 
 
@@ -437,9 +448,11 @@ namespace ChuvaVazaoTools
 
                     logF.WriteLine("CV_EURO_op Criada!");
 
+                    //testes mapasa sem remoção EURO E GEFS
+                    rvxPura(path_Conj, "GEFS", "CVPURO_PUROGEFS");
+                    rvxPura(path_Conj, "ECMWF", "CVPURO_PUROECMWF");
 
-
-
+                    //fim teste
 
 
 
@@ -613,6 +626,40 @@ namespace ChuvaVazaoTools
                 File.Move(arq, Path.Combine(dir, nome_Final));
 
             }
+        }
+
+        internal static void rvxPura(string path_Conj, string modelo, string nome_path)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            //    var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+            var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            Directory.CreateDirectory(path_cv);
+            var out_Modelo = Directory.GetFiles(Path.Combine(path_ArqSaida, modelo));
+            //var Modelo1 = out_Modelo.Where(File => !vies_cv1.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));
+            //var Modelo2 = Modelo1.Where(File => !vies_cv2.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));
+
+            //DateTime data_final = DateTime.Today.AddDays(-1);
+            //foreach (var arq_CV in vies_cv1)
+            //{
+            //    File.Copy(arq_CV, Path.Combine(path_cv, arq_CV.Split('\\').Last()), true);
+            //    var data_arq = DateTime.ParseExact(arq_CV.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+            //    if (data_arq >= data_final)
+            //    {
+            //        data_final = data_arq;
+            //    }
+            //}
+
+            foreach (var arq in out_Modelo)
+            {
+                //var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                //if (data_arq <= data_final)
+                //{
+                    File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+                //}
+            }
+
+
         }
 
         internal static void rvx1(string path_Conj, string modelo, string nome_path, string[] vies_cv1, string[] vies_cv2)

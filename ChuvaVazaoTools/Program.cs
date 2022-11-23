@@ -1088,6 +1088,8 @@ namespace ChuvaVazaoTools
                         logF.WriteLine(ex.ToString());
                     }
 
+                   
+
                     try
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
@@ -1228,6 +1230,27 @@ namespace ChuvaVazaoTools
                     {
                         frmMain.modelosChVz.Clear();
                         frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasGEFS);// remocao gefs cv4
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraEuro);//remocao euro puro
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraGEFS);//remocao gefs puro
+
                     }
                     catch (Exception ex)
                     {
