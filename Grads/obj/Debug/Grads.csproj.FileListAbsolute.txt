@@ -28,3 +28,9 @@ C:\Development\Chuva_vazao\trunk\Grads\obj\Debug\Grads.dll
 C:\Development\Chuva_vazao\trunk\Grads\obj\Debug\Grads.pdb
 C:\Development\Chuva_vazao\trunk\Grads\obj\Debug\Grads.csprojAssemblyReference.cache
 C:\Development\chuva_vazao\Grads\obj\Debug\Grads.csproj.AssemblyReference.cache
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\bin\Debug\Grads.dll
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\bin\Debug\Grads.pdb
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.csproj.AssemblyReference.cache
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.csproj.CoreCompileInputs.cache
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.dll
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.pdb
