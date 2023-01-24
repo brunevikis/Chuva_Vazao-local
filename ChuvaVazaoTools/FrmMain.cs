@@ -1575,7 +1575,7 @@ namespace ChuvaVazaoTools
         }
 
         static Dictionary<int, Tuple<int[], int>> postosIncrementais = new Dictionary<int, Tuple<int[], int>>(){ // <num posto, { postos montantes ... }, num posto inc >
-                    {34, new Tuple<int[], int>( new int[] {18, 33, 99, 241, 261}, 135)}, //i solteira
+                    {34, new Tuple<int[], int>( new int[] {18, 33, 99, 241, 261}, 139)}, //i solteira //antigo 135 mudou pois colocaram um posto exisstente com esse numero 
                     {243,new Tuple<int[], int>( new int[] {242}, 138)}, // 3 irmaos
                     {245,new Tuple<int[], int>( new int[] {34, 243}, 136)}, // jupia
                     {246,new Tuple<int[], int>( new int[] {245, 154}, 137)}, // p primaveira

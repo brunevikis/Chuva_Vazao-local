@@ -1141,6 +1141,14 @@ namespace ChuvaVazaoTools.Classes
                 propagacoes.Add(santana);
                 #endregion
 
+                #region Barra do Brauna
+
+                var bBrau = new Propagacao() { IdPosto = 135, NomePostoFluv = "Barra Brauna" };
+                bBrau.Modelo.Add(new ModeloSmap() { NomeVazao = "BBRAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(bBrau);
+
+                #endregion
+
                 #endregion
 
                 new AddLog("Propagação foi preenchida com sucesso!");
@@ -2467,7 +2475,7 @@ namespace ChuvaVazaoTools.Classes
                 var Hborden = new Propagacao() { IdPosto = 318, NomePostoFluv = "HBorden" };
                 propagacoes.Add(Hborden);
 
-                var iSolteiraInc = new Propagacao() { IdPosto = 135, NomePostoFluv = "iSolteiraInc" };
+                var iSolteiraInc = new Propagacao() { IdPosto = 139, NomePostoFluv = "iSolteiraInc" };
                 propagacoes.Add(iSolteiraInc);
 
                 var jupiaInc = new Propagacao() { IdPosto = 136, NomePostoFluv = "jupiaInc" };
@@ -4200,7 +4208,7 @@ namespace ChuvaVazaoTools.Classes
                         }
                     }
 
-                    else if (prop.IdPosto == 135)
+                    else if (prop.IdPosto == 139)
                     {
                         var p34 = propagacoes.Where(x => x.IdPosto == 34).Select(x => x.medSemanalIncremental).FirstOrDefault();
 
