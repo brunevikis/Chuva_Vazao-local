@@ -203,11 +203,14 @@ namespace ChuvaVazaoTools
 
                     //Euro 14 ONS dias 
 
+                    logF.WriteLine("Verificando arquivos ECMWF Ensemble ...");
 
                     var Euro_ONS = Directory.GetFiles(path_Dia, "ECMWF_*").Where(x => x.EndsWith(".dat"));
 
                     if (Euro_ONS != null && Euro_ONS.Count() >= 14)
                     {
+                        logF.WriteLine("Tranferindo arquivos ECWMF ONS para Entrada");
+
                         if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
                         foreach (var Euro in Euro_ONS)
                         {
@@ -223,29 +226,80 @@ namespace ChuvaVazaoTools
                     else
                     {
                         var ECMWFensemTempo = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF");
-                        var ecmwfEnsemTempArqs = Directory.GetFiles(ECMWFensemTempo, "ECMWF_*").Where(x => x.EndsWith(".dat"));
 
-                        if (ecmwfEnsemTempArqs != null && ecmwfEnsemTempArqs.Count() >= 14)
+                        if (Directory.Exists(ECMWFensemTempo))
                         {
-                            if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
-                            foreach (var EcmwfTempo in ecmwfEnsemTempArqs)
+                            var ecmwfEnsemTempArqs = Directory.GetFiles(ECMWFensemTempo, "ECMWF_*").Where(x => x.EndsWith(".dat"));
+                            if (ecmwfEnsemTempArqs != null && ecmwfEnsemTempArqs.Count() >= 14)
                             {
-                                System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
-                                var data_mapa = r.Match(EcmwfTempo);
-                                if (data_mapa.Success)
-                                {
-                                    File.Copy(EcmwfTempo, Path.Combine(path_ArqPrev, "ECMWF", EcmwfTempo.Split('\\').Last()), true);
-                                }
+                                logF.WriteLine("Tranferindo arquivos ECWMF Ensemble TempoOK para Entrada");
 
+                                if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
+                                foreach (var EcmwfTempo in ecmwfEnsemTempArqs)
+                                {
+                                    System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+                                    var data_mapa = r.Match(EcmwfTempo);
+                                    if (data_mapa.Success)
+                                    {
+                                        File.Copy(EcmwfTempo, Path.Combine(path_ArqPrev, "ECMWF", EcmwfTempo.Split('\\').Last()), true);
+                                    }
+
+                                }
                             }
+                        }
+                        else
+                        {
+                            var ECMWFensem_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-ENS00", "txt");
+
+                            if (Directory.Exists(ECMWFensem_DataStoreFolder))
+                            {
+                                var ecmwf_DataStoreArqs = Directory.GetFiles(ECMWFensem_DataStoreFolder, "ECMWF-ENS_*").Where(x => x.EndsWith(".dat"));
+                                if (ecmwf_DataStoreArqs != null && ecmwf_DataStoreArqs.Count() >= 14)
+                                {
+                                    logF.WriteLine("Tranferindo arquivos ECWMF Ensemble DATA STORE para Entrada");
+
+                                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
+                                    foreach (var EcmwfData in ecmwf_DataStoreArqs)
+                                    {
+                                        System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+                                        var data_mapa = r.Match(EcmwfData);
+                                        if (data_mapa.Success)
+                                        {
+                                            File.Copy(EcmwfData, Path.Combine(path_ArqPrev, "ECMWF", EcmwfData.Split('\\').Last().Replace("ECMWF-ENS", "ECMWF")), true);
+                                        }
+
+                                    }
+                                }
+                            }
+                            
                         }
 
                     }
+                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
+
+                    int ECMWFGridArqs = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWF")).Count();
+                    //if (ECMWFGridArqs < 14)
+                    //{
+                        logF.WriteLine("Transferidos " + ECMWFGridArqs.ToString() + " arquivos, os demais serão tranferidos do ECMWF extendido mais recente");
+
+                    //}
+
+                    logF.WriteLine("Transferindo arquivos ECWMF extendido...");
+
+                    var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
+
+                    int ECMWFGridArqs2 = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWF")).Count();
+
+                    int difer = ECMWFGridArqs2 - ECMWFGridArqs;
+
+                    logF.WriteLine("Transferidos " + difer.ToString() + " arquivos, Total: " + ECMWFGridArqs2.ToString() +" arquivos !");
+
 
                     // ECWMF OP
-                    logF.WriteLine("Tranferindo arquivos ECWMF OP para Entrada");
+                    logF.WriteLine("Verificando arquivos ECWMF OP ...");
 
                     var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
+                    var EcmwfOP_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-HRES00", "txt");///mudar
 
                     if (!Directory.Exists(EcmwfTempoOK))
                     {
@@ -257,7 +311,7 @@ namespace ChuvaVazaoTools
                     if (ecmwfTempArqs != null && ecmwfTempArqs.Count() >= 9)
                     {
                         if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
-                        logF.WriteLine("Utilizando arquivos Tempo OK");
+                        logF.WriteLine("Transferindo arquivos ECMWF OP Tempo OK");
 
                         foreach (var arqs in ecmwfTempArqs)
                         {
@@ -266,6 +320,28 @@ namespace ChuvaVazaoTools
                             File.Copy(arqs, Path.Combine(path_ArqPrev, "ECMWFop", nameFile), true);
                         }
                     }
+                    else if (Directory.Exists(EcmwfOP_DataStoreFolder))
+                    {
+                        var ecmwfOP_DataStoreArqs = Directory.GetFiles(EcmwfOP_DataStoreFolder, "ECMWF-HRES_*").Where(x => x.EndsWith(".dat"));
+
+                        if (ecmwfOP_DataStoreArqs != null && ecmwfOP_DataStoreArqs.Count() >= 9)
+                        {
+                            if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
+                            logF.WriteLine("Transferindo arquivos ECMWF OP DATA STORE");
+
+                            foreach (var EcmwfOpData in ecmwfOP_DataStoreArqs)
+                            {
+                                System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+                                var data_mapa = r.Match(EcmwfOpData);
+                                if (data_mapa.Success)
+                                {
+                                    File.Copy(EcmwfOpData, Path.Combine(path_ArqPrev, "ECMWFop", EcmwfOpData.Split('\\').Last().Replace("ECMWF-HRES", "ECMWFop")), true);
+                                }
+
+                            }
+                        }
+                      
+                    }
                     else
                     {
                         var ECMWFs = Directory.GetFiles(Path.Combine(path_ModeloR, "ECMWF00", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"))).Where(x => x.EndsWith(".dat"));
@@ -273,7 +349,7 @@ namespace ChuvaVazaoTools
                         if (ECMWFs != null)
                         {
                             if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
-                            logF.WriteLine("Utilizando arquivos meteologix");
+                            logF.WriteLine("Transferindo arquivos ECMWF OP  meteologix");
 
                             foreach (var ECMWF in ECMWFs)
                             {
@@ -300,8 +376,13 @@ namespace ChuvaVazaoTools
                         }
                     }
 
+                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
 
-                    var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
+                    int ECMWFOpGridArqs = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWFop")).Count();
+                   
+                    logF.WriteLine("Transferidos " + ECMWFOpGridArqs.ToString() + " arquivos !");
+
+                    //var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
                     //gfs
                     logF.WriteLine("Tranferindo arquivos GFS para Entrada");
                     if (!Directory.Exists(Path.Combine(path_ArqPrev, "GFS"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "GFS"));
