@@ -285,7 +285,7 @@ namespace ChuvaVazaoTools
 
                     if (pr != null && (h.Count() == 0 || h.Any(y => y.Contains("EURO")) || (late == true && !File.Exists(Path.Combine(directoryToSaveGif, "LateFunceme.txt")))))
                     {
-                        var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO2\\";
+                        var localPath = System.IO.Path.GetTempPath() + "FUNCEMEAUTO\\";
                         if (!System.IO.Directory.Exists(localPath)) System.IO.Directory.CreateDirectory(localPath);
 
                         var fanem = System.IO.Path.Combine(localPath, horaFunc + "funceme_" + date.ToString("yyyyMMdd"));
