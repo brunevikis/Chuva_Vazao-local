@@ -36,22 +36,35 @@ namespace ChuvaVazaoTools
             }
             // Date of VE
             int dias_ve = -1;
+            int ve_antecipada = 0;
+            DateTime[] feriados_ve = ChuvaVazaoTools.Tools.Tools.feriados;
 
             var runRev_Curr = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data_Atual);
 
+            ve_antecipada = feriados_ve.Contains(runRev_Curr.revDate) ? -2 : feriados_ve.Contains(runRev_Curr.revDate.AddDays(-1)) ? -3 : -1;
+            dias_ve = ve_antecipada;
             var cv1 = runRev_Curr.revDate.AddDays(dias_ve);
+            logF.WriteLine("VE_CV1 = " + cv1.ToString("dd/MM/yyyy"));
+
 
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual);
-            var cv2 = runRev.revDate.AddDays(-1);
+            ve_antecipada = feriados_ve.Contains(runRev.revDate) ? -2 : feriados_ve.Contains(runRev.revDate.AddDays(-1)) ? -3 : -1;
+            var cv2 = runRev.revDate.AddDays(ve_antecipada);
+            logF.WriteLine("VE_CV2 = " + cv2.ToString("dd/MM/yyyy"));
 
             var runRev3 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 2);
-            var cv3 = runRev3.revDate.AddDays(-1);
+            ve_antecipada = feriados_ve.Contains(runRev3.revDate) ? -2 : feriados_ve.Contains(runRev3.revDate.AddDays(-1)) ? -3 : -1;
+            var cv3 = runRev3.revDate.AddDays(ve_antecipada);
+            logF.WriteLine("VE_CV3 = " + cv3.ToString("dd/MM/yyyy"));
 
             var runRev4 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 3);
-            var cv4 = runRev4.revDate.AddDays(-1);
+            ve_antecipada = feriados_ve.Contains(runRev4.revDate) ? -2 : feriados_ve.Contains(runRev4.revDate.AddDays(-1)) ? -3 : -1;
+            var cv4 = runRev4.revDate.AddDays(ve_antecipada);
+            logF.WriteLine("VE_CV4 = " + cv4.ToString("dd/MM/yyyy"));
 
             var runRev5 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 4);
-            var cv5 = runRev5.revDate.AddDays(-1);
+            ve_antecipada = feriados_ve.Contains(runRev5.revDate) ? -2 : feriados_ve.Contains(runRev5.revDate.AddDays(-1)) ? -3 : -1;
+            var cv5 = runRev5.revDate.AddDays(ve_antecipada);
 
             if (File.Exists(Path.Combine(path_Conj, "error.log")))
             {
@@ -424,11 +437,15 @@ namespace ChuvaVazaoTools
 
                     if (temPsat)
                     {
+                        logF.WriteLine("Transferindo PsatPreliminar");
+
                         string psatArq = $"imerg+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
                         File.Copy(psatpre, Path.Combine(path_ArqPrev, funcemePsatPre, psatArq), true);
                     }
                     else if (Merge.Count() > 0)
                     {
+                        logF.WriteLine("Transferindo Merge");
+
                         foreach (var arq in Merge)
                         {
                             File.Copy(arq, Path.Combine(path_ArqPrev, "Funceme", arq.Split('\\').Last().Replace("merge", "funceme")), true);
@@ -436,6 +453,8 @@ namespace ChuvaVazaoTools
                     }
                     else
                     {
+                        logF.WriteLine("Transferindo Funceme");
+
                         var Func = Directory.GetFiles(Path.Combine(path_ModeloR, "funceme", dt_func.ToString("yyyyMM"), dt_func.ToString("dd"))).Where(x => x.EndsWith(".dat"));
                         string funcArq = "";
                         if (Func.Any(x => x.Contains("LATE_Inmet")))
