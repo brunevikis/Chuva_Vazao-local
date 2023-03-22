@@ -104,7 +104,7 @@ namespace ChuvaVazaoTools
                         logF.WriteLine("PsatPreliminar Encontrado!");
                     }
                 }
-                
+
 
 
                 //fim psat preliminar
@@ -284,7 +284,7 @@ namespace ChuvaVazaoTools
                                     }
                                 }
                             }
-                            
+
                         }
 
                     }
@@ -293,7 +293,7 @@ namespace ChuvaVazaoTools
                     int ECMWFGridArqs = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWF")).Count();
                     //if (ECMWFGridArqs < 14)
                     //{
-                        logF.WriteLine("Transferidos " + ECMWFGridArqs.ToString() + " arquivos, os demais serão tranferidos do ECMWF extendido mais recente");
+                    logF.WriteLine("Transferidos " + ECMWFGridArqs.ToString() + " arquivos, os demais serão tranferidos do ECMWF extendido mais recente");
 
                     //}
 
@@ -305,7 +305,7 @@ namespace ChuvaVazaoTools
 
                     int difer = ECMWFGridArqs2 - ECMWFGridArqs;
 
-                    logF.WriteLine("Transferidos " + difer.ToString() + " arquivos, Total: " + ECMWFGridArqs2.ToString() +" arquivos !");
+                    logF.WriteLine("Transferidos " + difer.ToString() + " arquivos, Total: " + ECMWFGridArqs2.ToString() + " arquivos !");
 
 
                     // ECWMF OP
@@ -353,7 +353,7 @@ namespace ChuvaVazaoTools
 
                             }
                         }
-                      
+
                     }
                     else
                     {
@@ -392,7 +392,7 @@ namespace ChuvaVazaoTools
                     if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
 
                     int ECMWFOpGridArqs = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWFop")).Count();
-                   
+
                     logF.WriteLine("Transferidos " + ECMWFOpGridArqs.ToString() + " arquivos !");
 
                     //var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
@@ -672,7 +672,8 @@ namespace ChuvaVazaoTools
 
 
                 }
-
+                var email = Tools.Tools.SendMail("", $"Mapas Gerados com Sucesso!{DateTime.Now: dd/MM/yyyy HH:mm:ss}", "SUCESSO AO GERAR MAPAS", "desenv");
+                email.Wait(30000);
                 logF.WriteLine("Mapas Gerados com Sucesso!");
 
             }
@@ -682,6 +683,8 @@ namespace ChuvaVazaoTools
 
 
                 File.WriteAllText(log_C, a.ToString());
+                var email = Tools.Tools.SendMail("", a.ToString(), "ERRO AO GERAR MAPAS", "desenv");
+                email.Wait(30000);
                 logF.WriteLine("Erro ao Gerar Mapas");
             }
 
@@ -755,7 +758,7 @@ namespace ChuvaVazaoTools
                 //var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
                 //if (data_arq <= data_final)
                 //{
-                    File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+                File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
                 //}
             }
 
