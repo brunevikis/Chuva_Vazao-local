@@ -725,6 +725,10 @@ namespace ChuvaVazaoTools
                 var fim_nome = nome.Split('.').First().Split('a').Last();
 
                 var nome_Final = "p" + dt_acomph.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                if (File.Exists(Path.Combine(dir, nome_Final)))
+                {
+                    File.Delete(Path.Combine(dir, nome_Final));
+                }
 
                 File.Move(arq, Path.Combine(dir, nome_Final));
 
