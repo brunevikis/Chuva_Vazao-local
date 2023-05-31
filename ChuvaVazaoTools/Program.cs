@@ -683,25 +683,25 @@ namespace ChuvaVazaoTools
 
             #region Download ECMWF Meteologix
 
-            //MODELO EURO
+            //MODELO EURO meteologix nao funciona responde
             try
             {
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF00")))
-                {
-                    logF.WriteLine("EURO 00");
-                    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _));
-                }
-                else logF.WriteLine("EURO 00 OK");
+                //if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF00")))
+                //{
+                //    logF.WriteLine("EURO 00");
+                //    logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _));
+                //}
+                //else logF.WriteLine("EURO 00 OK");
 
-                if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF12")))
-                {
-                    if (DateTime.Now > DateTime.Today.AddHours(14))
-                    {
-                        logF.WriteLine("EURO 12");
-                        logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
-                    }
-                }
-                else logF.WriteLine("EURO 12 OK");
+                //if (!System.IO.Directory.Exists(System.IO.Path.Combine(searchPath, "ECMWF12")))
+                //{
+                //    if (DateTime.Now > DateTime.Today.AddHours(14))
+                //    {
+                //        logF.WriteLine("EURO 12");
+                //        logF.WriteLine(cptec.DownloadMeteologixImgs(date, logF, out _, "12"));
+                //    }
+                //}
+                //else logF.WriteLine("EURO 12 OK");
 
             }
             catch (Exception ex)
