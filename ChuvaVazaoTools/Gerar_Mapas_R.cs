@@ -457,25 +457,27 @@ namespace ChuvaVazaoTools
 
                         var Func = Directory.GetFiles(Path.Combine(path_ModeloR, "funceme", dt_func.ToString("yyyyMM"), dt_func.ToString("dd"))).Where(x => x.EndsWith(".dat"));
                         string funcArq = "";
-                        if (Func.Any(x => x.Contains("LATE_Inmet")))
+                       
+                        
+                        if (Func.Any(x => x.Contains("LATE_funceme")))
+                        {
+                            funcArq = Func.Where(x => x.Contains("LATE_funceme")).First();
+                            File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", "funceme_" + funcArq.Split('\\').Last().Split('_').Last()), true);
+                        }
+                        else if(Func.Any(x => Path.GetFileName(x).StartsWith("funceme_")))
+                        {
+                            funcArq = Func.Where(x => Path.GetFileName(x).StartsWith("funceme_")).First();
+                            File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", funcArq.Split('\\').Last()), true);
+                        }
+                        else if (Func.Any(x => x.Contains("LATE_Inmet")))
                         {
                             funcArq = Func.Where(x => x.Contains("LATE_Inmet")).First();
                             File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", "funceme_" + funcArq.Split('\\').Last().Split('_').Last()), true);
                         }
-                        else if (Func.Any(x => x.Contains("Inmet_funceme")))
+                        else //if(Func.Any(x => x.Contains("Inmet_funceme")))
                         {
                             funcArq = Func.Where(x => x.Contains("Inmet_funceme")).First();
                             File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", "funceme_" + funcArq.Split('\\').Last().Split('_').Last()), true);
-                        }
-                        else if (Func.Any(x => x.Contains("LATE_")))
-                        {
-                            funcArq = Func.Where(x => x.Contains("LATE_")).First();
-                            File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", "funceme_" + funcArq.Split('\\').Last().Split('_').Last()), true);
-                        }
-                        else
-                        {
-                            funcArq = Func.Where(x => x.Contains("funceme_p")).First();
-                            File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", funcArq.Split('\\').Last()), true);
                         }
                         //foreach (var arq in Func)
                         //{
@@ -1086,6 +1088,7 @@ namespace ChuvaVazaoTools
 
             var letra_Dir = path.Split('\\').First();
             var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\";
+            //var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\testeBruno\";
             //string executar = @"/C " + letra_Dir + " & cd " + path + @" & Rscript.exe " + path_Scripts + Comando;
             string executar = @"/C " + @"Rscript.exe " + "\"" + path_Scripts + coms[0] + "\"" + argumentos;
             System.Diagnostics.Process pr = new System.Diagnostics.Process();
