@@ -1191,11 +1191,11 @@ namespace ChuvaVazaoTools
                     try
                     {
 
-                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
-                        {
+                        //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                       // {
                             frmMain.modelosChVz.Clear();
                             frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoTresSemanasEuro);//remocao euro cv3
-                        }
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -1215,11 +1215,11 @@ namespace ChuvaVazaoTools
                     try
                     {
 
-                        if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
-                        {
+                        //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        //{
                             frmMain.modelosChVz.Clear();
                             frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoQuatroSemanasEuro);//remocao euro cv4
-                        }
+                        //}
                     }
                     catch (Exception ex)
                     {
