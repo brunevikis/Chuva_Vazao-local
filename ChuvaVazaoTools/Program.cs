@@ -1087,8 +1087,8 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
+                    
 
-                   
 
                     try
                     {
@@ -1255,6 +1255,18 @@ namespace ChuvaVazaoTools
                     catch (Exception ex)
                     {
                         logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemoSmap);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        logF.WriteLine(ex.ToString());
+
                     }
                     //
                 }

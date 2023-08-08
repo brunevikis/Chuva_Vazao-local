@@ -122,6 +122,13 @@ namespace ChuvaVazaoTools
                     }
                     //ultimo dia de atualização da previsão
 
+                    //teste smapext
+                    logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada (testes)");
+
+                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+
+                    //fim teste
+
                     logF.WriteLine("Tranferindo arquivos GEFS para Entrada");
                     //Verifca o GEFS ONS, caso existir copia para os arquivos de entrada 
 
@@ -556,6 +563,14 @@ namespace ChuvaVazaoTools
 
                     //fim teste
 
+                    // tetes euro45m smapext
+                    if (temECEN45 == true)
+                    {
+                        rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+
+                    }
+
+                    // fim teste
 
 
 
@@ -769,6 +784,119 @@ namespace ChuvaVazaoTools
             }
 
 
+        }
+
+        internal static bool transferECMWFmembros(string path_Conj, string modelo, string nome_path)
+        {
+            DateTime data = DateTime.Today;
+            string ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ECENS45m_precip_{data:yyyyMMdd}T00";
+            int contagem = 0;
+            try
+            {
+                while (!Directory.Exists(ecenFolder) && contagem < 5)//procura diretorio até 5 dias atras
+                {
+                    data = data.AddDays(-1);
+                    ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ECENS45m_precip_{data:yyyyMMdd}T00";
+                    contagem++;
+                }
+
+                if (contagem >= 5)
+                {
+                    return false;
+                }
+                //var path_ArqSaida = @"C:\Files";//
+
+                //var out_ModeloFolder = Path.Combine(path_ArqSaida, modelo);
+
+                if (Directory.Exists(ecenFolder))
+                {
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        //nome_path = nome_path + 1.ToString("00");
+                        string search = modelo + i.ToString("00");
+                        var path_cv = Path.Combine(path_Conj, "grid", search);
+
+                        Directory.CreateDirectory(path_cv);
+
+                        //var out_Modelo = Directory.GetFiles(Path.Combine(path_ArqSaida, modelo), search + "*").OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture));
+                        var out_Modelo = Directory.GetFiles(ecenFolder, search + "*").OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture));
+
+                        DateTime data_final = DateTime.Today;
+
+                        string lastfile = "";
+                        foreach (var arq in out_Modelo)
+                        {
+                            var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                            if (data_arq > data_final)
+                            {
+                                var nome = arq.Split('\\').Last();
+
+                                var fim_nome = nome.Split('.').First().Split('a').Last();
+
+                                var nome_Final = search + "_p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                                File.Copy(arq, Path.Combine(path_cv, nome_Final), true);
+                                lastfile = Path.Combine(path_cv, nome_Final);
+                            }
+                        }
+                        int cont = Directory.GetFiles(path_cv).Count();
+                        while (cont < 45 && lastfile != "")
+                        {
+                            var data_arq = DateTime.ParseExact(lastfile.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                            var nome = lastfile.Split('\\').Last();
+
+                            var fim_nome = nome.Split('.').First().Split('a').Last();
+
+                            var nome_Final = search + "_p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
+                            File.Copy(lastfile, Path.Combine(path_cv, nome_Final), true);
+                            lastfile = Path.Combine(path_cv, nome_Final);
+
+                            cont = Directory.GetFiles(path_cv).Count();
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e )
+            {
+
+                return false;
+            }
+            
+
+        }
+
+        internal static void rvxSmapEXT(string path_Conj, string modelo, string nome_path)
+        {
+
+            var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+
+            for (int i = 0; i <= 10; i++)
+            {
+                string search = modelo + i.ToString("00");
+
+                var out_ModeloFolder = Path.Combine(path_ArqSaida, search);
+                //Directory.CreateDirectory(path_cv);
+                if (Directory.Exists(out_ModeloFolder))
+                {
+                    string nome_pathAlt = nome_path + i.ToString("00");
+                    var path_cv = Path.Combine(path_Conj, nome_pathAlt);
+
+                    Directory.CreateDirectory(path_cv);
+
+                    var out_Modelo = Directory.GetFiles(out_ModeloFolder);
+
+                    foreach (var arq in out_Modelo)
+                    {
+
+                        File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+
+                    }
+
+
+                }
+            }
         }
 
         internal static void rvx1(string path_Conj, string modelo, string nome_path, string[] vies_cv1, string[] vies_cv2)

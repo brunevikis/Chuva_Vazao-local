@@ -1383,18 +1383,35 @@ namespace ChuvaVazaoTools.Classes
 
                     while (SOatualMaior.DayOfWeek != DayOfWeek.Friday)
                         SOatualMaior = SOatualMaior.AddDays(+1);
-
-                    while (semanaNow <= SOatualMaior.AddDays(+14))//+7
+                    if (pastaSaida.Contains("_ECENS45"))
                     {
-                        if (semanaNow.DayOfWeek == DayOfWeek.Friday)
+                        while (semanaNow <= Pgacao.VazaoNatural.Keys.Last())//+7
                         {
-                            if (semanaNow <= SOatualMaior)
+                            if (semanaNow.DayOfWeek == DayOfWeek.Friday)
                             {
-                                Pgacao.calMedSemanal.Add(semanaNow, Pgacao.medSemanalNatural[semanaNow]);
+                                if (semanaNow <= SOatualMaior)
+                                {
+                                    Pgacao.calMedSemanal.Add(semanaNow, Pgacao.medSemanalNatural[semanaNow]);
+                                }
                             }
+                            semanaNow = semanaNow.AddDays(+1);
                         }
-                        semanaNow = semanaNow.AddDays(+1);
                     }
+                    else
+                    {
+                        while (semanaNow <= SOatualMaior.AddDays(+14))//+7
+                        {
+                            if (semanaNow.DayOfWeek == DayOfWeek.Friday)
+                            {
+                                if (semanaNow <= SOatualMaior)
+                                {
+                                    Pgacao.calMedSemanal.Add(semanaNow, Pgacao.medSemanalNatural[semanaNow]);
+                                }
+                            }
+                            semanaNow = semanaNow.AddDays(+1);
+                        }
+                    }
+
 
                     new AddLog("O método ExecutingProcess/RecalculaMediaNat foi executado com sucesso!");
                 }
@@ -1433,8 +1450,15 @@ namespace ChuvaVazaoTools.Classes
                                     if (Pgacao.medSemanalIncremental.ContainsKey(semanaNow))
                                     {
                                         vazaoCalc = SomaInc(Pgacao, semanaNow);
+                                        if (Pgacao.calMedSemanal.ContainsKey(semanaNow))
+                                        {
+                                            Pgacao.calMedSemanal[semanaNow] = vazaoCalc;
 
-                                        Pgacao.calMedSemanal.Add(semanaNow, vazaoCalc);
+                                        }
+                                        else
+                                        {
+                                            Pgacao.calMedSemanal.Add(semanaNow, vazaoCalc);
+                                        }
                                     }
 
                                 }
@@ -1443,7 +1467,14 @@ namespace ChuvaVazaoTools.Classes
                                 {
                                     if (Pgacao.medSemanalNatural.ContainsKey(semanaNow))
                                     {
-                                        Pgacao.calMedSemanal.Add(semanaNow, Pgacao.medSemanalNatural[semanaNow]);
+                                        if (Pgacao.calMedSemanal.ContainsKey(semanaNow))
+                                        {
+                                            Pgacao.calMedSemanal[semanaNow] = Pgacao.medSemanalNatural[semanaNow];
+                                        }
+                                        else
+                                        {
+                                            Pgacao.calMedSemanal.Add(semanaNow, Pgacao.medSemanalNatural[semanaNow]);
+                                        }
                                     }
                                 }
 
@@ -3931,7 +3962,7 @@ namespace ChuvaVazaoTools.Classes
                         while (SOatualMaior.DayOfWeek != DayOfWeek.Friday)
                             SOatualMaior = SOatualMaior.AddDays(+1);//até sexta(fim da semana)atual
                         DateTime semanaNow = SOatualMaior.AddDays(1);
-                        for (DateTime date = SOatualMaior.AddDays(1); date <= SOatualMaior.AddDays(14); date = date.AddDays(1))
+                        for (DateTime date = SOatualMaior.AddDays(1); date <= SOatualMaior.AddDays(14); date = date.AddDays(1))//talvez mexer aqui caso seja necessario ter mais dias de mvp 
                         {
                             if (date.DayOfWeek == DayOfWeek.Friday)
                             {
@@ -4038,7 +4069,7 @@ namespace ChuvaVazaoTools.Classes
                                         prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] + (mediaPon * (Math.Exp(fator)));
                                         fator += -0.4f;
                                     }
-                                    
+
                                 }
                             }
                             var vazNaturais = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);

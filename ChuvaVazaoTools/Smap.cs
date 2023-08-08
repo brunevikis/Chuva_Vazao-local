@@ -160,6 +160,14 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public override void ColetarSaidaMediaSmap(string mod)
+        {
+            foreach (var sb in SubBacias)
+            {
+
+                sb.CarregaSaida(ModelosPrecipitacao[0], true);
+            }
+        }
         public override void ColetarSaidaTotal(string mod)
         {
             foreach (var sb in SubBacias)
@@ -322,52 +330,86 @@ namespace ChuvaVazaoTools.SMAP
 
         //saida
         public Dictionary<DateTime, float> VazoesCal { get; set; }
+
+        public Dictionary<DateTime, float> VazoesCalSomaMedia { get; set; }
+        
         public Dictionary<DateTime, Ajuste> Ajustes { get; set; }
 
         private string ArquivosDeEntrada { get { return System.IO.Path.Combine(Caminho, "Arq_Entrada"); } }
         private string ArquivosDeSaida { get { return System.IO.Path.Combine(Caminho, "Arq_Saida"); } }
 
-        public void CarregaSaida(string modeloPrecipitacao)
+        public void CarregaSaida(string modeloPrecipitacao, bool media = false)
         {
 
             var ajustesFile = System.IO.Path.Combine(ArquivosDeSaida, Nome + "_AJUSTE.txt");
             var previsaoFile = System.IO.Path.Combine(ArquivosDeSaida, Nome + "_" + modeloPrecipitacao + "_PREVISAO.txt");
 
-            Ajustes = new Dictionary<DateTime, Ajuste>();
-            if (System.IO.File.Exists(ajustesFile))
+            if (media)
             {
-                System.IO.File.ReadLines(ajustesFile)
-                    .Skip(1)
-                    .Select(x => x.Split(' '))
-                    .Where(x => x.Length >= 5)
-                    .Select(x => new
+                if (VazoesCalSomaMedia != null)
+                {
+                    foreach (var dt in VazoesCalSomaMedia.Keys.ToList())
                     {
-                        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
-                        Tu = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo),
-                        Eb = float.Parse(x[2], System.Globalization.NumberFormatInfo.InvariantInfo),
-                        Sup = float.Parse(x[3], System.Globalization.NumberFormatInfo.InvariantInfo),
-                        Qaj = float.Parse(x[4], System.Globalization.NumberFormatInfo.InvariantInfo)
-                    }).ToList().ForEach(x => Ajustes[x.Data] = new Ajuste() { EB = x.Eb, Q = x.Qaj, SUP = x.Sup, TU = x.Tu });
+                        var vazAvg = VazoesCalSomaMedia[dt] / 11;
+                        Vazoes[dt] = vazAvg;
+                        VazoesCal[dt] = vazAvg;
+                    }
+                }
+            }
+            else
+            {
+                Ajustes = new Dictionary<DateTime, Ajuste>();
+                if (System.IO.File.Exists(ajustesFile))
+                {
+                    System.IO.File.ReadLines(ajustesFile)
+                        .Skip(1)
+                        .Select(x => x.Split(' '))
+                        .Where(x => x.Length >= 5)
+                        .Select(x => new
+                        {
+                            Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                            Tu = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo),
+                            Eb = float.Parse(x[2], System.Globalization.NumberFormatInfo.InvariantInfo),
+                            Sup = float.Parse(x[3], System.Globalization.NumberFormatInfo.InvariantInfo),
+                            Qaj = float.Parse(x[4], System.Globalization.NumberFormatInfo.InvariantInfo)
+                        }).ToList().ForEach(x => Ajustes[x.Data] = new Ajuste() { EB = x.Eb, Q = x.Qaj, SUP = x.Sup, TU = x.Tu });
+                }
+
+                VazoesCal = new Dictionary<DateTime, float>();
+                VazoesCalSomaMedia = VazoesCalSomaMedia == null ? new Dictionary<DateTime, float>() : VazoesCalSomaMedia;
+
+                if (System.IO.File.Exists(previsaoFile))//TODO calculo de media dos membros e colocar no  no dictionary vazoes  obs: ver qual tem mais dados só pra confirmar vazoescal ou vazoes e ver se vai aumentando os dias e repetindo ao percorrer pelo membros
+                {
+                    System.IO.File.ReadLines(previsaoFile)
+                        .Skip(1)
+                        .Select(x => x.Split(' '))
+                        .Where(x => x.Length >= 2)
+                        .Select(x => new
+                        {
+                            Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                            Qcal = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo)
+                        }).ToList().ForEach(x =>
+                        {
+                            VazoesCal[x.Data] = x.Qcal;
+                            Vazoes[x.Data] = x.Qcal;
+                            if (System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m"))
+                            {
+                                if (!VazoesCalSomaMedia.ContainsKey(x.Data))
+                                {
+                                    VazoesCalSomaMedia[x.Data] = x.Qcal;
+                                }
+                                else
+                                {
+                                    VazoesCalSomaMedia[x.Data] += x.Qcal;
+                                }
+                            }
+                        }
+                        );
+                }
             }
 
-            VazoesCal = new Dictionary<DateTime, float>();
-            if (System.IO.File.Exists(previsaoFile))
-            {
-                System.IO.File.ReadLines(previsaoFile)
-                    .Skip(1)
-                    .Select(x => x.Split(' '))
-                    .Where(x => x.Length >= 2)
-                    .Select(x => new
-                    {
-                        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
-                        Qcal = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo)
-                    }).ToList().ForEach(x =>
-                    {
-                        VazoesCal[x.Data] = x.Qcal;
-                        Vazoes[x.Data] = x.Qcal;
-                    }
-                    );
-            }
+
+
 
         }
 
