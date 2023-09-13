@@ -810,7 +810,7 @@ namespace ChuvaVazaoTools
 
                 if (Directory.Exists(ecenFolder))
                 {
-                    for (int i = 0; i <= 10; i++)
+                    for (int i = 0; i <= 9; i++)
                     {
                         //nome_path = nome_path + 1.ToString("00");
                         string search = modelo + i.ToString("00");
@@ -872,7 +872,7 @@ namespace ChuvaVazaoTools
 
             var path_ArqSaida = Path.Combine(path_Conj, "madeira");
 
-            for (int i = 0; i <= 10; i++)
+            for (int i = 0; i <= 9; i++)
             {
                 string search = modelo + i.ToString("00");
 

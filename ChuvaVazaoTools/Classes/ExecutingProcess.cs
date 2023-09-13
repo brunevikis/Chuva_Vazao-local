@@ -2572,7 +2572,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region adiciona cpins
-                AdicionaMPV(propagacoes, dadosAcompH);
+                bool ext = pastaSaida.Contains("_ECENS45");
+                AdicionaMPV(propagacoes, dadosAcompH, ext);
                 //AdicionaCPINS(propagacoes, dadosAcompH);
 
                 #endregion
@@ -2684,7 +2685,7 @@ namespace ChuvaVazaoTools.Classes
                 {
 
                 }
-               
+
                 CalcMediaMuskingun(santanaLajes);
 
 
@@ -3900,7 +3901,7 @@ namespace ChuvaVazaoTools.Classes
             }
         }
 
-        public void AdicionaMPV(List<Propagacao> propagacoes, List<CONSULTA_VAZAO> dadosAcomph)
+        public void AdicionaMPV(List<Propagacao> propagacoes, List<CONSULTA_VAZAO> dadosAcomph, bool ext = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
@@ -3962,13 +3963,13 @@ namespace ChuvaVazaoTools.Classes
                         while (SOatualMaior.DayOfWeek != DayOfWeek.Friday)
                             SOatualMaior = SOatualMaior.AddDays(+1);//até sexta(fim da semana)atual
                         DateTime semanaNow = SOatualMaior.AddDays(1);
-                        for (DateTime date = SOatualMaior.AddDays(1); date <= SOatualMaior.AddDays(14); date = date.AddDays(1))//talvez mexer aqui caso seja necessario ter mais dias de mvp 
+                        if (ext == true)// para smap ext
                         {
-                            if (date.DayOfWeek == DayOfWeek.Friday)
+                            for (DateTime date = SOatualMaior.AddDays(1); date <= dataFim; date = date.AddDays(1))
                             {
-
-                                if (date <= SOatualMaior.AddDays(14))
+                                if (date.DayOfWeek == DayOfWeek.Friday)
                                 {
+
                                     var vaz = prop.VazaoNatural.Where(x => x.Key >= date.AddDays(-6) && x.Key <= date);
 
                                     if (vaz.Count() == 7)
@@ -3978,6 +3979,26 @@ namespace ChuvaVazaoTools.Classes
                                 }
                             }
                         }
+                        else//sem smap ext
+                        {
+                            for (DateTime date = SOatualMaior.AddDays(1); date <= SOatualMaior.AddDays(14); date = date.AddDays(1))
+                            {
+                                if (date.DayOfWeek == DayOfWeek.Friday)
+                                {
+
+                                    if (date <= SOatualMaior.AddDays(14))
+                                    {
+                                        var vaz = prop.VazaoNatural.Where(x => x.Key >= date.AddDays(-6) && x.Key <= date);
+
+                                        if (vaz.Count() == 7)
+                                        {
+                                            prop.calMedSemanal[date] = vaz.Average(x => x.Value);//media das  semanas seguintes à atual
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (prop.IdPosto == 168 || prop.IdPosto == 169)
                         {
                             var vaz = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);
@@ -4143,7 +4164,7 @@ namespace ChuvaVazaoTools.Classes
 
                     prop.VazaoNatural[date] = prop.VazaoNatural[date.AddDays(-1)] * fator;
                 }
-               
+
                 //}
             }
             var vazNaturais = prop.VazaoNatural.Where(x => x.Key >= SOatualMaior.AddDays(-6) && x.Key <= SOatualMaior);

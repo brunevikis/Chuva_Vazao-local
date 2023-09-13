@@ -164,7 +164,7 @@ namespace ChuvaVazaoTools
 
                 if (mod.Contains("ECENS45m"))
                 {
-                    for (int i = 0; i <= 10; i++)
+                    for (int i = 0; i <= 9; i++)
                     {
                         string modAlt = mod + i.ToString("00");
                         modelosChVz.ForEach(x => x.ColetarSaidaTotal(modAlt));
@@ -6336,7 +6336,7 @@ namespace ChuvaVazaoTools
                 {
                     if (mod.Contains("ECENS45m"))
                     {
-                        for (int i = 0; i <= 10; i++)
+                        for (int i = 0; i <= 9; i++)
                         {
                             string modAlt = mod + i.ToString("00");
                             x.ColetarSaidaTotal(modAlt);

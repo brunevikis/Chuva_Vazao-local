@@ -350,7 +350,7 @@ namespace ChuvaVazaoTools.SMAP
                 {
                     foreach (var dt in VazoesCalSomaMedia.Keys.ToList())
                     {
-                        var vazAvg = VazoesCalSomaMedia[dt] / 11;
+                        var vazAvg = VazoesCalSomaMedia[dt] / 10;
                         Vazoes[dt] = vazAvg;
                         VazoesCal[dt] = vazAvg;
                     }
