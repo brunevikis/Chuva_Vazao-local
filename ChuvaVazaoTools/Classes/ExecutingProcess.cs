@@ -12,7 +12,16 @@ namespace ChuvaVazaoTools.Classes
 {
     class ExecutingProcess //: FrmMain
     {
-        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms)
+        static List<int> comPrevivaz = new List<int>()
+        {
+            287,  296,  291 ,279, 145, 288, 229, 290, 190,168,156,158 // 168,156,158 = calculo de sobradinho MVP etc
+        };
+        static List<int> regredidoDePrevivaz = new List<int>()
+        {
+            285,227,228,230,155 // 285 <-286 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
+        };
+
+        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
@@ -2583,6 +2592,43 @@ namespace ChuvaVazaoTools.Classes
                 GetPrevs(propagacoes, dataForms);
 
                 propagacoes = propagacoes.OrderBy(x => x.IdPosto).ToList();
+
+                if (pastaSaida.Contains("ECENS45"))
+                {
+                    DateTime dataEx = runrevDate.AddDays(7);
+                    //while (DataR.DayOfWeek != DayOfWeek.Friday) DataR = DataR.AddDays(1);
+
+                   // DataR = DataR.AddDays(14);
+
+                    foreach (var prop in propagacoes.Where(x => comPrevivaz.Any(y => y == x.IdPosto) || regredidoDePrevivaz.Any(z => z == x.IdPosto)))
+                    {
+                        if (prop.IdPosto == 228)
+                        {
+
+                        }
+                        if (prop.IdPosto == 287)
+                        {
+
+                        }
+                        var datas = prop.calMedSemanal.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                        datas.ForEach(x => prop.calMedSemanal.Remove(x));
+
+                        var datasN = prop.VazaoNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                        datasN.ForEach(x => prop.VazaoNatural.Remove(x));
+
+                        var datasI = prop.VazaoIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                        datasI.ForEach(x => prop.VazaoIncremental.Remove(x));
+
+                        var datasMI = prop.medSemanalIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                        datasMI.ForEach(x => prop.medSemanalIncremental.Remove(x));
+
+                        var datasMN = prop.medSemanalNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                        datasMN.ForEach(x => prop.medSemanalNatural.Remove(x));
+                        
+                    }
+                }
+
+
 
 
                 foreach (var propaga in propagacoes)// escreve os id de postos e suas medias serão usadas no previvaz em Para_STR.txt para consulta do usuário

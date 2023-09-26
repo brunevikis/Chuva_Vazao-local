@@ -125,7 +125,7 @@ namespace ChuvaVazaoTools
                     //teste smapext
                     logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada (testes)");
 
-                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+                    //bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
 
                     //fim teste
 
@@ -464,14 +464,14 @@ namespace ChuvaVazaoTools
 
                         var Func = Directory.GetFiles(Path.Combine(path_ModeloR, "funceme", dt_func.ToString("yyyyMM"), dt_func.ToString("dd"))).Where(x => x.EndsWith(".dat"));
                         string funcArq = "";
-                       
-                        
+
+
                         if (Func.Any(x => x.Contains("LATE_funceme")))
                         {
                             funcArq = Func.Where(x => x.Contains("LATE_funceme")).First();
                             File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", "funceme_" + funcArq.Split('\\').Last().Split('_').Last()), true);
                         }
-                        else if(Func.Any(x => Path.GetFileName(x).StartsWith("funceme_")))
+                        else if (Func.Any(x => Path.GetFileName(x).StartsWith("funceme_")))
                         {
                             funcArq = Func.Where(x => Path.GetFileName(x).StartsWith("funceme_")).First();
                             File.Copy(funcArq, Path.Combine(path_ArqPrev, "funceme", funcArq.Split('\\').Last()), true);
@@ -521,8 +521,10 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
                     executar_R(path_Conj, "madeira.r");
 
+                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
 
                     //Organização das Rodada para rvx+1
+
 
                     logF.WriteLine("Criando Pastas RVX+1");
 
@@ -563,14 +565,7 @@ namespace ChuvaVazaoTools
 
                     //fim teste
 
-                    // tetes euro45m smapext
-                    if (temECEN45 == true)
-                    {
-                        rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
-
-                    }
-
-                    // fim teste
+                    
 
 
 
@@ -632,7 +627,30 @@ namespace ChuvaVazaoTools
                     logF.WriteLine("CV_FUNC Criada!");
 
 
+                    // tetes euro45m smapext
+                    if (temECEN45 == true)
+                    {
+                        //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC", "CV_FUNC", "ECENS45m", cv1);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GEFS", "CV_VIES_VE", "ECENS45m",cv1);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GFS", "CV_GFS", "ECENS45m", cv1);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EURO", "CV_EURO", "ECENS45m",cv1);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EUROop", "CV_EUROop", "ECENS45m", cv1);
 
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m", cv2);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m", cv2);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GEFS", "CV2_GEFS", "ECENS45m", cv2);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GFS", "CV2_GFS", "ECENS45m", cv2);
+
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3);
+
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4);
+                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4);
+
+                    }
+
+                    // fim teste
 
 
                     //Completa com Funceme se não tiver acomph referente a data
@@ -789,6 +807,95 @@ namespace ChuvaVazaoTools
         internal static bool transferECMWFmembros(string path_Conj, string modelo, string nome_path)
         {
             DateTime data = DateTime.Today;
+            var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+
+            string ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
+            int contagem = 0;
+            try
+            {
+                while (!Directory.Exists(ecenFolder) && contagem < 5)//procura diretorio até 5 dias atras
+                {
+                    data = data.AddDays(-1);
+                    ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
+                    contagem++;
+                }
+
+                if (contagem >= 5)
+                {
+                    return false;
+                }
+                //var path_ArqSaida = @"C:\Files";//
+
+                //var out_ModeloFolder = Path.Combine(path_ArqSaida, modelo);
+
+                if (Directory.Exists(ecenFolder))
+                {
+                    for (int i = 0; i <= 9; i++)
+                    {
+                        //nome_path = nome_path + 1.ToString("00");
+                        string search = modelo + i.ToString("00");
+                        var path_cv = Path.Combine(path_Conj, "madeira", search);
+                        string clustFolder = Path.Combine(ecenFolder, "c" + i.ToString("00"));
+                        Directory.CreateDirectory(path_cv);
+
+                        //var out_Modelo = Directory.GetFiles(Path.Combine(path_ArqSaida, modelo), search + "*").OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture));
+                        var out_Modelo = Directory.GetFiles(clustFolder).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture));
+
+                        DateTime data_final = DateTime.Today;
+
+                        string lastfile = "";
+                        foreach (var arq in out_Modelo)
+                        {
+                            var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                            if (data_arq > data_final)
+                            {
+                                var nome = arq.Split('\\').Last();
+
+                                var fim_nome = nome.Split('.').First().Split('a').Last();
+
+                                var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                                File.Copy(arq, Path.Combine(path_cv, nome_Final), true);
+                                lastfile = Path.Combine(path_cv, nome_Final);
+                            }
+                        }
+                        int cont = Directory.GetFiles(path_cv).Count();
+                        while (cont < 55 && lastfile != "")
+                        {
+                            string MediaMERGE = @"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\avg";
+
+                            var data_arq = DateTime.ParseExact(lastfile.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                            string MergeFile = Path.Combine(MediaMERGE, "merge_mean_" + data_arq.Month.ToString("00") + ".dat");
+
+                            var nome = lastfile.Split('\\').Last();
+
+                            var fim_nome = nome.Split('.').First().Split('a').Last();
+
+                            var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
+                            File.Copy(MergeFile, Path.Combine(path_cv, nome_Final), true);
+                            lastfile = Path.Combine(path_cv, nome_Final);
+
+                            cont = Directory.GetFiles(path_cv).Count();
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
+
+
+        }
+
+        internal static bool transferECMWFmembrosAntigo(string path_Conj, string modelo, string nome_path)
+        {
+            DateTime data = DateTime.Today;
+            var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+
             string ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ECENS45m_precip_{data:yyyyMMdd}T00";
             int contagem = 0;
             try
@@ -858,12 +965,12 @@ namespace ChuvaVazaoTools
                 }
                 return false;
             }
-            catch (Exception e )
+            catch (Exception e)
             {
 
                 return false;
             }
-            
+
 
         }
 
@@ -891,6 +998,73 @@ namespace ChuvaVazaoTools
                     {
 
                         File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+
+                    }
+
+
+                }
+            }
+        }
+
+        internal static void rvxSmapExtByModel(string path_Conj, string modelo, string nome_path, string modeloBase,string clusterName, DateTime iniVE)
+        {                                           //raiz       // ECENS45m      //CVSMAP1_FUNC        //CV_FUNC    //FUNC_ECENS45m       
+            //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+            //rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC","CV_FUNC","FUNC_ENCENS45m");
+            var path_cvBase = Path.Combine(path_Conj, modeloBase);
+            var outModeloBase = Directory.GetFiles(path_cvBase);
+            //string smapFolder = Path.Combine(path_Conj, nome_path);
+            DateTime fimVE = iniVE.AddDays(14);
+
+            var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            //Directory.CreateDirectory(smapFolder);
+
+            //string previvazClust = Path.Combine(smapFolder, clusterName + "PREVIVAZ");
+            string previvazClust = Path.Combine(path_Conj, nome_path + clusterName + "10");
+            Directory.CreateDirectory(previvazClust);
+
+            foreach (var arq in outModeloBase)// 
+            {
+                var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                
+                
+                    File.Copy(arq, Path.Combine(previvazClust, arq.Split('\\').Last()), true);
+
+                
+
+            }
+
+            for (int i = 0; i <= 9; i++)
+            {
+                string search = modelo + i.ToString("00");
+
+                var out_ModeloFolder = Path.Combine(path_ArqSaida, search);
+                //Directory.CreateDirectory(path_cv);
+                if (Directory.Exists(out_ModeloFolder))
+                {
+                    //string nome_pathAlt = clusterName + i.ToString("00");
+                    string nome_pathAlt = nome_path + clusterName + i.ToString("00");
+                   // var path_cv = Path.Combine(smapFolder, nome_pathAlt);
+                    var path_cv = Path.Combine(path_Conj, nome_pathAlt);
+
+                    Directory.CreateDirectory(path_cv);
+
+                    var out_Modelo = Directory.GetFiles(out_ModeloFolder);
+
+                    foreach (var arq in out_Modelo)
+                    {
+
+                        File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+
+                    }
+
+                    foreach (var arq in outModeloBase)// substitui os dias referentes aos modelos e remoção de vies
+                    {
+                        var data_arq = DateTime.ParseExact(arq.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                        if (data_arq <= fimVE)
+                        {
+                            File.Copy(arq, Path.Combine(path_cv, arq.Split('\\').Last()), true);
+
+                        }
 
                     }
 

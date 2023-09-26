@@ -162,10 +162,34 @@ namespace ChuvaVazaoTools.SMAP
 
         public override void ColetarSaidaMediaSmap(string mod)
         {
+            List<string> baciaEx = new List<string>
+            {
+                "COLIDER",//
+                "Dardanelos",//
+                "Guaj-mirim",//
+                "Guapore",//
+                "Jirau2",//
+                "P_da_Beira",//
+                "PimentalT",//
+                "RondonII",//
+                "S.Antonio",//
+                "Samuel",//
+                "SMANOEL",//
+                "STOANTJARI",//
+                "UBESP"//
+            };
             foreach (var sb in SubBacias)
             {
+                if (baciaEx.Any(x => x == sb.Nome))
+                {
+                    string mode = ModelosPrecipitacao.Where(y => y.Contains("10")).First();
+                    sb.CarregaSaida(mode, false);
 
-                sb.CarregaSaida(ModelosPrecipitacao[0], true);
+                }
+                else
+                {
+                    sb.CarregaSaida(ModelosPrecipitacao[0], true);
+                }
             }
         }
         public override void ColetarSaidaTotal(string mod)
@@ -394,14 +418,18 @@ namespace ChuvaVazaoTools.SMAP
                             Vazoes[x.Data] = x.Qcal;
                             if (System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m"))
                             {
-                                if (!VazoesCalSomaMedia.ContainsKey(x.Data))
+                                if (!System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m10"))
                                 {
-                                    VazoesCalSomaMedia[x.Data] = x.Qcal;
+                                    if (!VazoesCalSomaMedia.ContainsKey(x.Data))
+                                    {
+                                        VazoesCalSomaMedia[x.Data] = x.Qcal;
+                                    }
+                                    else
+                                    {
+                                        VazoesCalSomaMedia[x.Data] += x.Qcal;
+                                    }
                                 }
-                                else
-                                {
-                                    VazoesCalSomaMedia[x.Data] += x.Qcal;
-                                }
+                             
                             }
                         }
                         );
