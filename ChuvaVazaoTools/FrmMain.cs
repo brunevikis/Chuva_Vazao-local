@@ -1547,6 +1547,22 @@ namespace ChuvaVazaoTools
 
                     try
                     {
+                        //
+                        if (logF != null) logF.WriteLine(name + ": Compactando arquivos SMAP!!!");
+
+                        var path_ConjSmap = Path.Combine(pastaSaida,"SMAP");
+
+                        if (File.Exists(Path.Combine(pastaSaida, "SMAP.zip")))
+                        {
+                            File.Delete(Path.Combine(pastaSaida, "SMAP.zip"));
+                        }
+                        System.IO.Compression.ZipFile.CreateFromDirectory(path_ConjSmap, Path.Combine(pastaSaida, "SMAP.zip"));
+                        //
+                        if (File.Exists(Path.Combine(pastaSaida, "SMAP.zip")))
+                        {
+                            Directory.Delete(path_ConjSmap, true);
+                        }
+
                         if (logF != null) logF.WriteLine(name + ": Copiando rodada para diretório compartilhado!!!");
 
                         var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");

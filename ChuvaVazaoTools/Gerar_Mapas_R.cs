@@ -122,12 +122,7 @@ namespace ChuvaVazaoTools
                     }
                     //ultimo dia de atualização da previsão
 
-                    //teste smapext
-                    logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada (testes)");
-
-                    //bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
-
-                    //fim teste
+                    
 
                     logF.WriteLine("Tranferindo arquivos GEFS para Entrada");
                     //Verifca o GEFS ONS, caso existir copia para os arquivos de entrada 
@@ -523,6 +518,7 @@ namespace ChuvaVazaoTools
 
                     bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
 
+
                     //Organização das Rodada para rvx+1
 
 
@@ -630,6 +626,9 @@ namespace ChuvaVazaoTools
                     // tetes euro45m smapext
                     if (temECEN45 == true)
                     {
+                        
+                        logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada");
+
                         //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC", "CV_FUNC", "ECENS45m", cv1);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GEFS", "CV_VIES_VE", "ECENS45m",cv1);
