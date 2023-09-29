@@ -1164,7 +1164,7 @@ namespace ChuvaVazaoTools
                     //CriarCaso(statusF);
                     string user = System.Environment.UserName.ToString();
                     Tools.Tools.addHistory(Path.Combine(pastaSaida, user + ".txt"), System.Environment.UserName.ToString());
-                    if (offset == EnumRemo.RemocaoAtual && exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+                    if (offset == EnumRemo.RemoSmap && exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
                     {
                         Tools.Tools.addHistory(Path.Combine(pastaSaida, "trava.txt"), "rodadas travadas");
                         trava = true;
