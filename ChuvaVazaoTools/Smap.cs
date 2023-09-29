@@ -170,7 +170,7 @@ namespace ChuvaVazaoTools.SMAP
                 "Guapore",//
                 "Jirau2",//
                 "P_da_Beira",//
-                "PimentalT",//
+                "PIMENTALT",//
                 "RondonII",//
                 "S.Antonio",//
                 "Samuel",//
@@ -180,7 +180,7 @@ namespace ChuvaVazaoTools.SMAP
             };
             foreach (var sb in SubBacias)
             {
-                if (baciaEx.Any(x => x == sb.Nome))
+                if (baciaEx.Any(x => x.ToUpper() == sb.Nome.ToUpper()))
                 {
                     string mode = ModelosPrecipitacao.Where(y => y.Contains("10")).First();
                     sb.CarregaSaida(mode, false);

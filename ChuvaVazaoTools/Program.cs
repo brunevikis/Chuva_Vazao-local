@@ -1080,8 +1080,8 @@ namespace ChuvaVazaoTools
                 {
                     try
                     {
-                        frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out var runIdT);// remocao a partir do dia atual
+                       // frmMain.modelosChVz.Clear();
+                        //frmMain.RunExecProcess(logF, out var runIdT);// remocao a partir do dia atual
                     }
                     catch (Exception ex)
                     {
@@ -1095,8 +1095,8 @@ namespace ChuvaVazaoTools
                         if (date.DayOfWeek != DayOfWeek.Thursday)
                         {
                             //rodada com offset na remoção de viés.
-                            frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro);//remocao euro
+                            //frmMain.modelosChVz.Clear();
+                            //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro);//remocao euro
                         }
                     }
                     catch (Exception ex)
@@ -1108,24 +1108,24 @@ namespace ChuvaVazaoTools
                     {
                         if (date.DayOfWeek != DayOfWeek.Thursday)
                         {
-                            frmMain.modelosChVz.Clear();
+                            //frmMain.modelosChVz.Clear();
+                            ////rodada com offset na remoção de viés.
+                            //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemana);//remocao GEFS(VIES-VE)
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
                             //rodada com offset na remoção de viés.
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemana);//remocao GEFS(VIES-VE)
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logF.WriteLine(ex.ToString());
-                    }
 
-                    try
-                    {
-                        if (date.DayOfWeek != DayOfWeek.Thursday)
-                        {
-                            //rodada com offset na remoção de viés.
-
-                            frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro_op);//remocao euro op
+                            //frmMain.modelosChVz.Clear();
+                            //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaEuro_op);//remocao euro op
                         }
                     }
                     catch (Exception ex)
@@ -1139,8 +1139,8 @@ namespace ChuvaVazaoTools
 
                         if (date.DayOfWeek != DayOfWeek.Thursday)
                         {
-                            frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaGFS);//remocao gfs
+                            //frmMain.modelosChVz.Clear();
+                            //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoUmaSemanaGFS);//remocao gfs
                         }
                     }
                     catch (Exception ex)

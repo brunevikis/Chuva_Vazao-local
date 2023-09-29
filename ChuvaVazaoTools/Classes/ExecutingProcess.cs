@@ -14,11 +14,11 @@ namespace ChuvaVazaoTools.Classes
     {
         static List<int> comPrevivaz = new List<int>()
         {
-            287,  296,  291 ,279, 145, 288, 229, 290, 190,168,156,158 // 168,156,158 = calculo de sobradinho MVP etc
+            287,  296,  291 ,279, 145, 288, 229, 290, 190 /*,168,156,158*/ // 168,156,158 = calculo de sobradinho MVP etc
         };
         static List<int> regredidoDePrevivaz = new List<int>()
         {
-            285,227,228,230,155 // 285 <-286 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
+            285,227,228,230 // 285 <-287 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
         };
 
         public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate)

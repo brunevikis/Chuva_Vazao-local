@@ -1006,10 +1006,10 @@ namespace ChuvaVazaoTools
 
             if (exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday && trava == false)
             {
-                var pastaVerfica = @"H:\Middle - Preço\16_Chuva_Vazao\" + veriRev.revDate.ToString("yyyy_MM") + @"\RV" + veriRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\CV_ACOMPH_FUNC_PSAT" ;
+                var pastaVerfica = @"H:\Middle - Preço\16_Chuva_Vazao\" + veriRev.revDate.ToString("yyyy_MM") + @"\RV" + veriRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\CV_ACOMPH_FUNC_ECENS45_PSAT";
                 if (!Directory.Exists(pastaVerfica))
                 {
-                    if (offset == EnumRemo.RemocaoAtual)
+                    if (offset == EnumRemo.RemoSmap)
                     {
                         name = name + "_PSAT";
                     }
@@ -1377,7 +1377,7 @@ namespace ChuvaVazaoTools
                                 if (encad)
                                 {
                                     var parametro = p.Item2 + "|true";
-                                    if (ArquivosDeSaida.Contains("_ECENS45"))
+                                    if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
                                     {
                                         parametro = parametro + "|ext";
                                     }
@@ -1386,7 +1386,7 @@ namespace ChuvaVazaoTools
                                 }
                                 else
                                 {
-                                    if (ArquivosDeSaida.Contains("_ECENS45"))
+                                    if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
                                     {
                                         var parametro = p.Item2 + "|ext";
                                         var pr = System.Diagnostics.Process.Start(p.Item1, parametro);
@@ -6959,20 +6959,35 @@ namespace ChuvaVazaoTools
                             }
                             File.WriteAllLines(temppath, modeprecip);
                         }
-                        else if (file.Name.EndsWith("_PMEDIA.txt"))
+                        else if (file.Name.EndsWith("_PMEDIA.txt") || file.Name.Contains("_PM.ECMWF"))
                         {
                             var pmediaTxt = File.ReadAllLines(file.FullName).ToList();
-
+                            string baciaName = file.Name.Split('_').First();
+                            baciaName = baciaName + "_";
                             foreach (var item in modes)
                             {
                                 if (item == "VIES_VE")
                                 {
-                                    File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", "VIES.txt"), true);
+                                    if (file.Name.EndsWith("_PMEDIA.txt"))
+                                    {
+                                        File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", "VIES.txt"), true);
+                                    }
+                                    else
+                                    {
+                                        File.Copy(file.FullName, Path.Combine(destDirName, baciaName + "VIES.txt"), true);
+                                    }
 
                                 }
                                 else
                                 {
-                                    File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", item + ".txt"), true);
+                                    if (file.Name.EndsWith("_PMEDIA.txt"))
+                                    {
+                                        File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", item + ".txt"), true);
+                                    }
+                                    else
+                                    {
+                                        File.Copy(file.FullName, Path.Combine(destDirName, baciaName + item + ".txt"), true);
+                                    }
                                 }
                             }
                             file.CopyTo(temppath, true);
