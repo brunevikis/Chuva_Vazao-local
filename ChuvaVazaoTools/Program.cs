@@ -964,10 +964,10 @@ namespace ChuvaVazaoTools
 
             if (DateTime.Now > DateTime.Today.AddHours(7))
             {
-                var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")));
+                //var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")));
                 var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd"));
                 var ETA40 = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")), "ETA40_*");
-
+                string pastaEta = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd"));
                 var frmMain = new FrmMain(true, encad);
 
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(date);
@@ -975,7 +975,8 @@ namespace ChuvaVazaoTools
                 //Verifica se já existe Acomph para o dia
                 if (!File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_verifica.ToString("yyyy"), data_verifica.ToString("MM_yyyy"), "ACOMPH_" + data_verifica.ToString("dd-MM-yyyy") + ".xls")))
                 {   // Verifica se Funceme e ETA40 já estão disponiveis
-                    if (funceme.Length != 0 && ETA40.Length > 1)
+                    //if (funceme.Length != 0 && ETA40.Length > 1)
+                    if ( ETA40.Length > 1)
                     {
                         pastaSaida = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph d-1\";
                         if (!Directory.Exists(pastaSaida))
@@ -1007,35 +1008,38 @@ namespace ChuvaVazaoTools
                     }
                     else
                     {
-                        if (DateTime.Now > DateTime.Today.AddMinutes(450))
-                        {
-                            if (!Directory.Exists(funcemeFolder))
-                            {
-                                Directory.CreateDirectory(funcemeFolder);
-                            }
-                            var euroOntem = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\ECMWF00", DateTime.Today.ToString("yyyyMM"), DateTime.Today.AddDays(-1).ToString("dd"));
-                            var euroBin_Ctl = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica", DateTime.Today.ToString("yyyyMM"), DateTime.Today.AddDays(-1).ToString("dd"), "ECMWF00");
-                            var obs_Funceme = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Funceme", DateTime.Today.ToString("yyyy"), DateTime.Today.ToString("MM"));
+                        //if (DateTime.Now > DateTime.Today.AddMinutes(450))
+                        //{
+                        //    if (!Directory.Exists(funcemeFolder))
+                        //    {
+                        //        Directory.CreateDirectory(funcemeFolder);
+                        //    }
+                        //    var euroOntem = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\ECMWF00", DateTime.Today.ToString("yyyyMM"), DateTime.Today.AddDays(-1).ToString("dd"));
+                        //    var euroBin_Ctl = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica", DateTime.Today.ToString("yyyyMM"), DateTime.Today.AddDays(-1).ToString("dd"), "ECMWF00");
+                        //    var obs_Funceme = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Funceme", DateTime.Today.ToString("yyyy"), DateTime.Today.ToString("MM"));
 
-                            var arqEuro = "pp" + DateTime.Today.AddDays(-1).ToString("yyyyMMdd") + "_0036";
-                            var nomeFunceme = "funceme_p" + DateTime.Today.ToString("ddMMyy") + "a" + DateTime.Today.ToString("ddMMyy") + ".dat";
-                            var funcemeBin_ctl = "funceme_" + DateTime.Today.ToString("yyyyMMdd");
+                        //    var arqEuro = "pp" + DateTime.Today.AddDays(-1).ToString("yyyyMMdd") + "_0036";
+                        //    var nomeFunceme = "funceme_p" + DateTime.Today.ToString("ddMMyy") + "a" + DateTime.Today.ToString("ddMMyy") + ".dat";
+                        //    var funcemeBin_ctl = "funceme_" + DateTime.Today.ToString("yyyyMMdd");
 
-                            File.Copy(Path.Combine(euroOntem, arqEuro + ".dat"), Path.Combine(funcemeFolder, nomeFunceme));
-                            File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".bin"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".bin"));
-                            File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".ctl"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".ctl"));
+                        //    File.Copy(Path.Combine(euroOntem, arqEuro + ".dat"), Path.Combine(funcemeFolder, nomeFunceme));
+                        //    File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".bin"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".bin"));
+                        //    File.Copy(Path.Combine(euroBin_Ctl, arqEuro + ".ctl"), Path.Combine(obs_Funceme, funcemeBin_ctl + ".ctl"));
 
-                            logF.WriteLine("Arquivos funceme não encontrados, subistituindo por euro");
-                            //var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
-                            //retornoEmail.Wait();
-                            AutoExec(date, logF, encad);
-                        }
-                        else
-                        {
-                            logF.WriteLine("Arquivos não encontrados");
-                            RunAutoRoutines("download");
-                        }
-
+                        //    logF.WriteLine("Arquivos funceme não encontrados, subistituindo por euro");
+                        //    //var retornoEmail = Tools.Tools.SendMail("", "Arquivos funceme não encontrados, substituindo por euro", "Funceme não encontrado [AUTO]", "preco");
+                        //    //retornoEmail.Wait();
+                        //    AutoExec(date, logF, encad);
+                        //}
+                        //else
+                        //{
+                        //    logF.WriteLine("Arquivos não encontrados");
+                        //    RunAutoRoutines("download");
+                        //}
+                        logF.WriteLine("Arquivos ETA00 ONS não encontrados pasta: " + pastaEta);
+                        logF.WriteLine("Uma nova tentativa sera feita em minutos");
+                        logF.WriteLine("encerrando execução!!!");
+                        return;
                     }
 
                 }

@@ -459,7 +459,11 @@ namespace ChuvaVazaoTools
 
                         var Func = Directory.GetFiles(Path.Combine(path_ModeloR, "funceme", dt_func.ToString("yyyyMM"), dt_func.ToString("dd"))).Where(x => x.EndsWith(".dat"));
                         string funcArq = "";
-
+                        if (Func == null || Func.Count() == 0)
+                        {
+                            logF.WriteLine("Arquivos psatPreliminar e funceme não encontrados");
+                            throw new NotImplementedException("Arquivos psatPreliminar e funceme não encontrados");
+                        }
 
                         if (Func.Any(x => x.Contains("LATE_funceme")))
                         {
@@ -517,7 +521,11 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "madeira.r");
 
                     bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
-
+                    if (temECEN45 == false)
+                    {
+                        logF.WriteLine("Arquivos ENS_Est_rv\\Clusters não encontrados");
+                        throw new NotImplementedException("Arquivos ENS_Est_rv\\Clusters não encontrados");
+                    }
 
                     //Organização das Rodada para rvx+1
 

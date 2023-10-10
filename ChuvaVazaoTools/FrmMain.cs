@@ -752,7 +752,8 @@ namespace ChuvaVazaoTools
 
             var runRevMapas = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
 
-            CarregarPrecRealMedia(dtAtual.Value.Date, out string modeloPrecReal);
+            //CarregarPrecRealMedia(dtAtual.Value.Date, out string modeloPrecReal);
+            string modeloPrecReal = GetModeloPrec(dtAtual.Value.Date);
 
             //var pastaMapa = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; //Mapas Acomph
             // var pastaRaiz = @"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\16_Chuva_Vazao\" + runRevMapas.revDate.ToString("yyyy_MM") + @"\RV" + runRevMapas.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\Mapas Acomph"; // "Mapas Acomph";
@@ -1162,7 +1163,7 @@ namespace ChuvaVazaoTools
                         esperouPsat = true;
                     }
 
-                    smapExecutado = CopySmapExecuted(runRev,pastaSaida);
+                    smapExecutado = CopySmapExecuted(runRev, pastaSaida);
                     if (!smapExecutado)
                     {
                         CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF);
@@ -1196,7 +1197,7 @@ namespace ChuvaVazaoTools
                 {
                     //Ler();
                     LerTotal(pastaRaiz);
-                    CarregarPrecObserv();
+                    CarregarPrecObserv(false);
                     PreencherPrecObserv();
 
                     //btnConsultarVazObserv_Click(sender, e);
@@ -5072,17 +5073,30 @@ namespace ChuvaVazaoTools
             Reiniciar(dtModelo.Value);
         }
 
-        public void CarregarPrecObserv()
+        public void CarregarPrecObserv(bool refresh = true)
         {
 
             for (DateTime data = dtModelo.Value.Date; data <= dtAtual.Value.Date; data = data.AddDays(1))
             {
                 //CarregarPrecReal(data, out _);
-                chuvas[data] = CarregarPrecRealMedia(data, out _);
+                if (refresh)
+                {
+                    chuvas[data] = CarregarPrecRealMedia(data, out _);
+                }
+                else
+                {
+                    var precs = new Precipitacao();
+                    precs.Data = data;
+                    precs.Descricao = "";
+
+                    chuvas[data] = precs;
+                }
 
             }
-
-            RefreshPrecipList();
+            if (refresh)
+            {
+                RefreshPrecipList();
+            }
 
             AddLog("- Precipitação MERGE Carregada");
         }
@@ -5153,6 +5167,36 @@ namespace ChuvaVazaoTools
             modelosChVz.ForEach(x => x.SalvarVazaoObservada());
 
             AddLog("- Arquivos de Vazao Observada Salva");
+        }
+        public string GetModeloPrec(DateTime data)
+        {
+            string modelo = "FUNC";
+
+            DateTime data_Atual = DateTime.Today;
+            var runRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data);
+
+            //else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, "Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip")))//"Modelos_Chuva_Vazao_"+ data_Atual.ToString("yyyyMMdd")+".zip"
+            // else if(File.Exists(Path.Combine(@"\\cgclsfsr03.comgas.local\SoftsPRD1\Compass\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_"+ runRev.revDate.ToString("yyyyMM")+"_RV"+runRev.rev, @"Modelos_Chuva_Vazao\CPINS\Arq_Saida", data_Atual.ToString("dd-MM-yyyy")+"_PLANILHA_USB.txt")))
+            if (File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\MPV\Arq_Saida", data_Atual.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt")))
+            {
+
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    modelo = "FUNC_Atualizado";
+
+                }
+                else
+                {
+                    modelo = "FUNC";
+                }
+                return modelo;
+            }
+            else
+            {
+                modelo = "FUNC";
+                return modelo;
+            }
+
         }
 
         public Precipitacao CarregarPrecRealMedia(DateTime data, out string modelo)
@@ -7076,7 +7120,7 @@ namespace ChuvaVazaoTools
                                             copiouH = true;
                                             fileReplace = Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", item + ".txt");
                                         }
-                                        else if(!File.Exists(Path.Combine(destDirName, baciaName + item + ".txt")))
+                                        else if (!File.Exists(Path.Combine(destDirName, baciaName + item + ".txt")))
                                         {
                                             //File.Copy(file.FullName, Path.Combine(destDirName, file.Name).Replace("PMEDIA.txt", item + ".txt"), true);
                                             File.Copy(fileReplace, Path.Combine(destDirName, baciaName + item + ".txt"), true);
@@ -7090,7 +7134,7 @@ namespace ChuvaVazaoTools
                                             copiouH = true;
                                             fileReplace = Path.Combine(destDirName, baciaName + item + ".txt");
                                         }
-                                        else if(!File.Exists(Path.Combine(destDirName, baciaName + item + ".txt")))
+                                        else if (!File.Exists(Path.Combine(destDirName, baciaName + item + ".txt")))
                                         {
                                             //File.Copy(file.FullName, Path.Combine(destDirName, baciaName + item + ".txt"), true);
                                             File.Copy(fileReplace, Path.Combine(destDirName, baciaName + item + ".txt"), true);
