@@ -820,14 +820,14 @@ namespace ChuvaVazaoTools
             int contagem = 0;
             try
             {
-                while (!Directory.Exists(ecenFolder) && contagem < 5)//procura diretorio até 5 dias atras
+                while (!Directory.Exists(ecenFolder) && contagem < 16)//procura diretorio até 5 dias atras
                 {
                     data = data.AddDays(-1);
                     ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
                     contagem++;
                 }
 
-                if (contagem >= 5)
+                if (contagem >= 16)
                 {
                     return false;
                 }
