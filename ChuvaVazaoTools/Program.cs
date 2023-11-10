@@ -2125,6 +2125,7 @@ namespace ChuvaVazaoTools
                 {
                     DirectoryCopy(dir, Path.Combine(path_final, dir.Split('\\').Last()), true);
                 }
+               
 
                 var log_C = Path.Combine(path_final, "logC.txt");
 
@@ -2140,6 +2141,17 @@ namespace ChuvaVazaoTools
                 foreach (var file in files)
                 {
                     File.Copy(file, Path.Combine(path_final, file.Split('\\').Last()));
+                }
+
+                string dataECMWFcluster = "";
+                if (File.Exists(Path.Combine(path_final, "data.txt")))
+                {
+                    dataECMWFcluster = File.ReadAllText(Path.Combine(path_final, "data.txt"));
+                    List<string> linhas = new List<string>();
+                    linhas.Add("ok");
+                    linhas.Add(dataECMWFcluster);
+                    File.WriteAllLines(log_C, linhas);
+                    File.Delete(Path.Combine(path_final, "data.txt"));
                 }
             }
             else

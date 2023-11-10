@@ -837,6 +837,7 @@ namespace ChuvaVazaoTools
 
                 if (Directory.Exists(ecenFolder))
                 {
+                    File.WriteAllText(Path.Combine(path_Conj, "data.txt"), "ECMWF_CLUSTER:" + data.ToString("dd/MM/yyyy"));
                     for (int i = 0; i <= 9; i++)
                     {
                         //nome_path = nome_path + 1.ToString("00");
