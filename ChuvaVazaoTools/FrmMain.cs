@@ -1298,7 +1298,8 @@ namespace ChuvaVazaoTools
                 if (modelosChVz.Count == 0)
                     LerTotal(pastaRaiz);
 
-                if (!Directory.Exists(pastaSmapTotal) || statusF.Execution == RunStatus.statuscode.error)
+                //if (!Directory.Exists(pastaSmapTotal) || statusF.Execution == RunStatus.statuscode.error)
+                if (!smapExecutado || statusF.Execution == RunStatus.statuscode.error)
                 {
                     DateTime datini = DateTime.Now;
                     //ExecutarTudo(statusF);
@@ -1307,6 +1308,17 @@ namespace ChuvaVazaoTools
                     {
                         CopiarDiretorio(pastaSmap, pastaSmapTotal);
                         System.IO.Compression.ZipFile.CreateFromDirectory(pastaSmapTotal, pastaSmapTotal + ".zip");
+                            try
+                            {
+                                if (Directory.Exists(pastaSmapTotal))
+                                {
+                                    Directory.Delete(pastaSmapTotal, true);
+                                }
+                            }
+                            catch 
+                            {
+
+                            }
                     }
                     DateTime datfim = DateTime.Now;
                     File.WriteAllText(Path.Combine(pastaSaida, "SMAPTEMPO.txt"), datini.ToString("dd-MM-yyyy HH:mm:ss") + "---" + datfim.ToString("dd-MM-yyyy HH:mm:ss"));
