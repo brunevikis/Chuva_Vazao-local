@@ -290,7 +290,8 @@ namespace ChuvaVazaoTools
 
                         var fanem = System.IO.Path.Combine(localPath, horaFunc + "funceme_" + date.ToString("yyyyMMdd"));
                         pr.SalvarModeloBin(fanem);
-                        Grads.ConvertCtlToImg(fanem, "FUNCEME" + funEuro, "Precipacao observada entre " + date.AddDays(-1).ToString("dd/MM") + " e " + date.ToString("dd/MM"), horaFunc + "funceme.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs")); cptec.CopyGifs(localPath, directoryToSaveGif);
+                        Grads.ConvertCtlToImg(fanem, "FUNCEME" + funEuro, "Precipacao observada entre " + date.AddDays(-1).ToString("dd/MM") + " e " + date.ToString("dd/MM"), horaFunc + "funceme.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
+                        cptec.CopyGifs(localPath, directoryToSaveGif);
                         cptec.CopyBin(localPath, System.IO.Path.Combine(Config.CaminhoFunceme, date.Year.ToString("0000"), date.Month.ToString("00")));
 
                         var remo = new PrecipitacaoConjunto(config);
@@ -352,9 +353,21 @@ namespace ChuvaVazaoTools
                         Directory.CreateDirectory(oneDrive_Gif);
                     }
 
-                    foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
+                    try
+                    {
+                        foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                         SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                        {
+                            if (!File.Exists(newPath.Replace(directoryToSaveGif, oneDrive_Gif)))
+                            {
+                                File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                            }
+
+                        }
+                    }
+                    catch { }
+                    
+                   
 
                 }
 

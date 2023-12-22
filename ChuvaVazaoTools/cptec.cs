@@ -189,7 +189,8 @@ namespace ChuvaVazaoTools
 
                 var fanem = System.IO.Path.Combine(localPath, lateFunc + "Inmet_funceme_" + data.ToString("yyyyMMdd"));
                 pr.SalvarModeloBin(fanem);
-                Grads.ConvertCtlToImg(fanem, "FUNCEME_INMET", "Precipacao observada entre " + data.AddDays(-1).ToString("dd/MM") + " e " + data.ToString("dd/MM"), lateFunc + "funceme_INMET.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs")); cptec.CopyGifs(localPath, directoryToSaveGif);
+                Grads.ConvertCtlToImg(fanem, "FUNCEME_INMET", "Precipacao observada entre " + data.AddDays(-1).ToString("dd/MM") + " e " + data.ToString("dd/MM"), lateFunc + "funceme_INMET.gif", System.IO.Path.Combine(Config.CaminhoAuxiliar, "CREATE_GIF.gs"));
+                cptec.CopyGifs(localPath, directoryToSaveGif);
                 cptec.CopyBin(localPath, System.IO.Path.Combine(Config.CaminhoFunceme, data.Year.ToString("0000"), data.Month.ToString("00")));
                 System.IO.Directory.Delete(localPath, true);
 
@@ -1345,7 +1346,12 @@ namespace ChuvaVazaoTools
             //Copy all the files & Replaces any files with the same name
             foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                 SearchOption.AllDirectories))
-                File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+            {
+                if (!File.Exists(newPath.Replace(directoryToSaveGif, oneDrive_Gif)))
+                {
+                    File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                }
+            }
             //
 
             if (log != null) log.WriteLine("OK");
@@ -1496,7 +1502,12 @@ namespace ChuvaVazaoTools
                         //Copy all the files & Replaces any files with the same name
                         foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                             SearchOption.AllDirectories))
-                            File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
+                        {
+                            if (!File.Exists(newPath.Replace(directoryToSaveGif, direDrivePath)))
+                            {
+                                File.Copy(newPath, newPath.Replace(directoryToSaveGif, direDrivePath), true);
+                            }
+                        }
                         //
                         //Now Create all of the directories
                         foreach (string dirPath in Directory.GetDirectories(directoryToSaveGif, "*",
@@ -1506,7 +1517,13 @@ namespace ChuvaVazaoTools
                         //Copy all the files & Replaces any files with the same name
                         foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                             SearchOption.AllDirectories))
-                            File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                        {
+                            if (!File.Exists(newPath.Replace(directoryToSaveGif, oneDrive_Gif)))
+                            {
+                                File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                            }
+                        }
+                            
                         //
 
 
@@ -1607,7 +1624,10 @@ namespace ChuvaVazaoTools
 
                     foreach (var gif in System.IO.Directory.GetFiles(directoryToSaveGif, "*.gif"))
                     {
-                        File.Copy(gif, Path.Combine(oneDrive_Gif, gif.Split('\\').Last()), true);
+                        if (!File.Exists(Path.Combine(oneDrive_Gif, gif.Split('\\').Last())))
+                        {
+                            File.Copy(gif, Path.Combine(oneDrive_Gif, gif.Split('\\').Last()), true);
+                        }
                     }
 
 
@@ -1719,7 +1739,12 @@ namespace ChuvaVazaoTools
                     //Copy all the files & Replaces any files with the same name
                     foreach (string newPath in Directory.GetFiles(directoryToSaveGif, ".",
                         SearchOption.AllDirectories))
-                        File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                    {
+                        if (!File.Exists(newPath.Replace(directoryToSaveGif, oneDrive_Gif)))
+                        {
+                            File.Copy(newPath, newPath.Replace(directoryToSaveGif, oneDrive_Gif), true);
+                        }
+                    }
                     //
 
                     CopyBin(dest, directoryToSaveBin);
