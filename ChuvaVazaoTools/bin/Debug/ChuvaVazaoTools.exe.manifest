@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="ChuvaVazaoTools.exe" version="1.2.1.368" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="ChuvaVazaoTools.exe" version="1.2.1.369" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="Umbrella-512.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -62,7 +62,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Jna+KFsPdD9gVnQNqODNY7+RXvwZXUha+uTIDqEaaOA=</dsig:DigestValue>
+        <dsig:DigestValue>t4ZDk1U2s9FnMTldh73Edq3jluNhLuNH8gIrQDzHAM0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -240,13 +240,13 @@
       <dsig:DigestValue>FNaLOJZeMSSN/hXPSkl5tMNPR0LqdV5f0E/Kvii7xHA=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="ChuvaVazaoTools.exe.config" size="6257">
+  <file name="ChuvaVazaoTools.exe.config" size="6187">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>rCCdLmObX634pSS8Ozew5tunBzpJyCXRa3nN/ZNeXyI=</dsig:DigestValue>
+      <dsig:DigestValue>GDdj/ub9RFrM/+IhTQQacxSD9gn3BLuzYaIBmCPK/lw=</dsig:DigestValue>
     </hash>
   </file>
   <file name="INICIALIZACAO.txt" size="810">
