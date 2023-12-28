@@ -108,10 +108,13 @@ namespace ChuvaVazaoTools
 
 
                 //fim psat preliminar
-
+                var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"));
+                if (!Directory.Exists(funcemeFolder))
+                {
+                    Directory.CreateDirectory(funcemeFolder);
+                }
 
                 var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd")));
-                var funcemeFolder = Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_Atual.ToString("yyyyMM"), data_Atual.ToString("dd"));
 
                 logF.WriteLine("Verificando Funceme data atual");
                 if (funceme.Length != 0 || temPsat == true) //(funceme.Length != 0)
