@@ -138,7 +138,7 @@ namespace ChuvaVazaoTools
             {
                 case "download":
                     logF.WriteLine("Iniciando AutoDownload");//System.Environment.UserName   H:\TI - Sistemas\UAT\ChuvaVazao\Log
-                    Tools.Tools.addHistory(@"C:\LOGS SISTEMAS\Chuva Vazao" + "\\downloadViaSelf.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de fazer o download(download) via Self Enforcing");
+                    //Tools.Tools.addHistory(@"C:\LOGS SISTEMAS\Chuva Vazao" + "\\downloadViaSelf.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "- tentativa de fazer o download(download) via Self Enforcing");
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Down.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar o download via Self Enforcing");
 
                     AutoDownload(data, logF);

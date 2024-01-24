@@ -1308,17 +1308,17 @@ namespace ChuvaVazaoTools
                     {
                         CopiarDiretorio(pastaSmap, pastaSmapTotal);
                         System.IO.Compression.ZipFile.CreateFromDirectory(pastaSmapTotal, pastaSmapTotal + ".zip");
-                            try
+                        try
+                        {
+                            if (Directory.Exists(pastaSmapTotal))
                             {
-                                if (Directory.Exists(pastaSmapTotal))
-                                {
-                                    Directory.Delete(pastaSmapTotal, true);
-                                }
+                                Directory.Delete(pastaSmapTotal, true);
                             }
-                            catch 
-                            {
+                        }
+                        catch
+                        {
 
-                            }
+                        }
                     }
                     DateTime datfim = DateTime.Now;
                     File.WriteAllText(Path.Combine(pastaSaida, "SMAPTEMPO.txt"), datini.ToString("dd-MM-yyyy HH:mm:ss") + "---" + datfim.ToString("dd-MM-yyyy HH:mm:ss"));
@@ -1373,7 +1373,7 @@ namespace ChuvaVazaoTools
 
                     if (logF != null) logF.WriteLine(name + ": Iniciando cálculo de propagações!!!");
 
-                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate);
+                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate, runRev.rev);
                     if (propagacoes.Count != 0 || propagacoes != null)
                     {
                         statusF.Execution = RunStatus.statuscode.completed;
@@ -1403,7 +1403,24 @@ namespace ChuvaVazaoTools
                         if (statusF.Execution == RunStatus.statuscode.completed && statusF.Collect == RunStatus.statuscode.completed)
                         {
                             File.WriteAllText(Path.Combine(pastaSaida, "Propagacoes_Automaticas.txt"), new StreamReader(stream1).ReadToEnd());
-                            if (logF != null) logF.WriteLine(name + ": Propagações concluídas, iniciando processo PREVIVAZ!!!");
+                            //if (logF != null) logF.WriteLine(name + ": Propagações concluídas, iniciando processo PREVIVAZ!!!");
+
+                            if (logF != null) logF.WriteLine(name + ": Propagações concluídas, exportando DADVAZ !!!");
+
+                            try
+                            {
+                                
+                                ExecutingProcess exportaDADVAZ = new ExecutingProcess();
+                                exportaDADVAZ.ExportaDadvaz(pastaSaida, propagacoes, runRev.revDate, modelosChVz, runRev.rev);
+                                if (logF != null) logF.WriteLine(name + ": DADVAZ concluído,  iniciando processo PREVIVAZ!!!");
+
+                            }
+                            catch (Exception edad)
+                            {
+
+                                if (logF != null) logF.WriteLine(name + $": ERRO ao exportar DADVAZ : {edad.Message} !!!");
+                                
+                            }
 
                             statusF.Previvaz = RunStatus.statuscode.initialialized;
 
@@ -9972,7 +9989,7 @@ namespace ChuvaVazaoTools
                                                 statusF.Collect = RunStatus.statuscode.initialialized;
                                                 if (modelosChVz.Count == 0)
                                                     Ler();
-                                                propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, ArquivosDeSaida, dtAtual.Value, runRev.revDate);
+                                                propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, ArquivosDeSaida, dtAtual.Value, runRev.revDate, runRev.rev);
                                                 if (propagacoes.Count != 0 || propagacoes != null)
                                                 {
                                                     statusF.Execution = RunStatus.statuscode.completed;

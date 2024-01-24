@@ -1,0 +1,166 @@
+﻿name;Bacia;ndadvaz;nprevs;fator
+CAMARGOS       ;Grande;1;1;1
+ITUTINGA       ;Grande;2;2;0
+FUNIL-GRANDE   ;Grande;4;211;1
+FURNAS         ;Grande;6;6;1
+M. DE MORAES   ;Grande;7;7;0,377
+ESTREITO       ;Grande;8;8;0,087
+JAGUARA        ;Grande;9;9;0,036
+IGARAPAVA      ;Grande;10;10;0,103
+VOLTA GRANDE   ;Grande;11;11;0,23
+P. COLOMBIA    ;Grande;12;12;0,167
+CACONDE        ;Grande;14;14;0,61
+E. DA CUNHA    ;Grande;15;15;0,39
+A.S.OLIVEIRA   ;Grande;16;16;0,004
+MARIMBONDO     ;Grande;17;17;0,996
+A. VERMELHA    ;Grande;18;18;1
+BATALHA        ;Paranaíba;20;22;0,615
+SERRA FACAO    ;Paranaíba;21;251;0,385
+EMBORCACAO     ;Paranaíba;24;24;1
+NOVA PONTE     ;Paranaíba;25;25;1
+MIRANDA        ;Paranaíba;26;206;0,04
+CAPIM BRANC1   ;Paranaíba;27;207;0,005
+CAPIM BRANC2   ;Paranaíba;28;28;0,012
+CORUMBA IV     ;Paranaíba;29;205;1
+CORUMBA I      ;Paranaíba;30;209;1
+ITUMBIARA      ;Paranaíba;31;31;0,943
+CACH.DOURADA   ;Paranaíba;32;32;0,109
+SAO SIMAO      ;Paranaíba;33;33;0,891
+I. SOLTEIRA    ;Alto Paraná;34;34;0,94
+BARRA BONITA   ;Tietê;37;237;1
+A.S. LIMA      ;Tietê;38;238;0,342
+IBITINGA       ;Tietê;39;239;0,658
+PROMISSAO      ;Tietê;40;240;0,717
+NAVANHANDAVA   ;Tietê;42;242;0,283
+TRES IRMAOS    ;Tietê;43;243;0,06
+JUPIA          ;Alto Paraná;45;245;1
+P. PRIMAVERA   ;Baixo Paraná;46;246;1
+A.A. LAYDNER   ;Paranapanema;47;47;1
+PIRAJU         ;Paranapanema;48;48;0,046
+CHAVANTES      ;Paranapanema;49;49;0,954
+L.N. GARCEZ    ;Paranapanema;50;50;0,778
+CANOAS II      ;Paranapanema;51;51;0,061
+CANOAS I       ;Paranapanema;52;52;0,13
+MAUA           ;Paranapanema;57;57;1
+CAPIVARA       ;Paranapanema;61;61;1
+TAQUARUCU      ;Paranapanema;62;62;0,299
+ROSANA         ;Paranapanema;63;63;0,701
+ITAIPU         ;Baixo Paraná;66;266;1
+STA CLARA PR   ;Iguaçu;71;71;1
+FUNDAO         ;Iguaçu;72;72;0,039
+JORDAO         ;Iguaçu;73;73;0,157
+G.B. MUNHOZ    ;Iguaçu;74;74;1
+SEGREDO        ;Iguaçu;76;76;0,804
+SLT.SANTIAGO   ;Iguaçu;77;77;0,205
+SALTO OSORIO   ;Iguaçu;78;78;0,081
+SALTO CAXIAS   ;Iguaçu;82;222;0,51
+BAIXO IGUACU   ;Iguaçu;83;81;0,204
+BARRA GRANDE   ;Uruguai;86;215;1
+SAO ROQUE      ;Uruguai;88;88;0,745
+GARIBALDI      ;Uruguai;89;89;0,165
+CAMPOS NOVOS   ;Uruguai;90;216;0,09
+MACHADINHO     ;Uruguai;91;217;1
+ITA            ;Uruguai;92;92;1
+PASSO FUNDO    ;Uruguai;93;93;0,586
+MONJOLINHO     ;Uruguai;94;220;0,414
+QUEBRA QUEIX   ;Uruguai;95;286;1
+CASTRO ALVES   ;Jacuí;97;98;1
+MONTE CLARO    ;Jacuí;98;97;0,887
+14 DE JULHO    ;Jacuí;99;284;0,113
+SAO JOSE       ;Uruguai;101;102;0,963
+PASSO S JOAO   ;Uruguai;102;103;0,037
+FOZ CHAPECO    ;Uruguai;103;94;1
+EDGARD SOUZA   ;Alto Tietê;107;161;0,624
+TRAICAO        ;Alto Tietê;108;104;0
+PEDREIRA       ;Alto Tietê;109;109;0
+ERNESTINA      ;Jacuí;110;110;1
+PASSO REAL     ;Jacuí;111;111;1
+JACUI          ;Jacuí;112;112;0,02
+ITAUBA         ;Jacuí;113;113;0,464
+D. FRANCISCA   ;Jacuí;114;114;0,516
+G.P. SOUZA     ;Capivari;115;115;1
+GUARAPIRANGA   ;Alto Tietê;117;117;0,12
+BILLINGS       ;Alto Tietê;118;118;0,146
+HENRY BORDEN   ;Alto Tietê;119;318;0
+JAGUARI        ;Paraíba do Sul;120;120;1
+PARAIBUNA      ;Paraíba do Sul;121;121;0,873
+SANTA BRANCA   ;Paraíba do Sul;122;122;0,127
+FUNIL          ;Paraíba do Sul;123;123;1
+LAJES          ;Paraíba do Sul;124;202;0,32
+STA CECILIA    ;Paraíba do Sul;125;125;1
+PICADA         ;Paraíba do Sul;126;197;1
+SOBRAGI        ;Paraíba do Sul;127;198;1
+SIMPLICIO      ;Paraíba do Sul;129;129;0,711
+ILHA POMBOS    ;Paraíba do Sul;130;130;0,289
+NILO PECANHA   ;Paraíba do Sul;131;131;0
+P. PASSOS      ;Paraíba do Sul;133;306;0
+SALTO GRANDE   ;Doce;134;134;1
+P. ESTRELA     ;Doce;135;263;0
+CANDONGA       ;Doce;139;149;1
+BAGUARI        ;Doce;141;141;0,456
+AIMORES        ;Doce;143;148;0,195
+MASCARENHAS    ;Doce;144;144;0,349
+FONTES C       ;Paraíba do Sul;146;303;0
+FONTES AB      ;Paraíba do Sul;147;303;0
+IRAPE          ;Jequitinhonha;148;255;1
+SAO DOMINGOS   ;Paraná;153;154;1
+ITAPEBI        ;Jequitinhonha;154;188;1
+RETIRO BAIXO   ;São Francisco;155;155;1
+TRES MARIAS    ;São Francisco;156;156;1
+QUEIMADO       ;São Francisco;162;158;1
+SOBRADINHO     ;São Francisco;169;168;1
+ITAPARICA      ;São Francisco;172;172;0
+MOXOTO         ;São Francisco;173;176;0
+P.AFONSO 123   ;São Francisco;174;176;0
+P.AFONSO 4     ;São Francisco;175;176;0
+XINGO          ;São Francisco;178;178;0
+TOCOS          ;Paraíba do Sul;180;201;0,68
+SANTANA        ;Paraíba do Sul;181;203;0,317
+VIGARIO        ;Paraíba do Sul;182;316;0
+#N/D;Paraíba do Sul;183;303;0
+BARRA BRAUNA   ;Paraíba do Sul;185;135;1
+P. CAVALO      ;Paraguaçu;189;254;1
+B. ESPERANCA   ;Parnaíba;190;190;1
+GUILMAN-AMOR   ;Doce;192;262;0,978
+SA CARVALHO    ;Doce;193;183;0,022
+JAURU          ;Paraguai;195;295;1
+GUAPORE        ;Madeira;196;296;1
+CORUMBA III    ;Paranaíba;203;23;0,1
+CACH.CALDEIR   ;Araguari;204;204;0,989
+SALTO PILAO    ;Itajaí-Açu;215;101;1
+ROSAL          ;Itabapoana;217;196;1
+SINOP          ;Madeira;227;227;0,915
+COLIDER        ;Madeira;228;228;0,085
+TELES PIRES    ;Madeira;229;229;0,991
+SAO MANOEL     ;Madeira;230;230;0,009
+SLT VERDINHO   ;Paranaíba;241;241;0,077
+OURINHOS       ;Paranapanema;249;249;0,031
+SERRA MESA     ;Tocantins;251;270;1
+CANA BRAVA     ;Tocantins;252;191;0,056
+SAO SALVADOR   ;Tocantins;253;253;0,055
+PEIXE ANGIC    ;Tocantins;257;257;0,434
+LAJEADO        ;Tocantins;261;273;0,455
+SALTO          ;Paranaíba;262;294;0,923
+ESTREITO TOC   ;Tocantins;267;271;1
+CURUA-UNA      ;Amazonas;272;277;1
+TUCURUI        ;Tocantins;275;275;1
+RONDON II      ;Madeira;276;145;1
+BALBINA        ;Amazonas;277;269;1
+MANSO          ;Paraguai;278;278;1
+SAMUEL         ;Madeira;279;279;1
+COARACY NUNE   ;Araguari;280;280;0,003
+PONTE PEDRA    ;Paraguai;281;281;1
+STA CLARA MG   ;Mucuri;283;283;1
+FERREIRA GOM   ;Araguari;284;297;0,008
+JIRAU          ;Madeira;285;285;1
+STO ANT JARI   ;Amazonas;286;290;1
+STO ANTONIO    ;Madeira;287;287;1
+BELO MONTE     ;Xingu;288;288;0
+ESPORA         ;Paranaíba;290;99;1
+ITIQUIRA I     ;Paraguai;304;259;1
+ITIQUIRA II    ;Paraguai;305;252;0
+DARDANELOS     ;Madeira;310;291;1
+CACU           ;Paranaíba;311;247;0,894
+B. COQUEIROS   ;Paranaíba;312;248;0,037
+PIMENTAL       ;Xingu;314;288;1
+FOZ R. CLARO   ;Paranaíba;315;261;0,069

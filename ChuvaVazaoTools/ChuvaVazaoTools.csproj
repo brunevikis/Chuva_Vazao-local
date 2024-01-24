@@ -26,7 +26,7 @@
     <ProductName>ChuvaVazao</ProductName>
     <PublisherName>Compass</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>371</ApplicationRevision>
+    <ApplicationRevision>373</ApplicationRevision>
     <ApplicationVersion>1.2.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -133,8 +133,16 @@
       <DependentUpon>ChuvaViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\AddLog.cs" />
+    <Compile Include="Classes\BaseDeck.cs" />
+    <Compile Include="Classes\BaseRegister.cs" />
+    <Compile Include="Classes\Dadvaz.cs" />
+    <Compile Include="Classes\Data.cs" />
+    <Compile Include="Classes\DeckFile.cs" />
+    <Compile Include="Classes\DiaInicial.cs" />
+    <Compile Include="Classes\DocumentFactory.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\ExecutingProcess.cs" />
+    <Compile Include="Classes\Vazoes.cs" />
     <Compile Include="CONSULTA_VAZAO.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

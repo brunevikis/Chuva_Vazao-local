@@ -21,7 +21,7 @@ namespace ChuvaVazaoTools.Classes
             285,227,228,230 // 285 <-287 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
         };
 
-        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate)
+        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate, int revnum = 0)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
@@ -165,7 +165,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Billings
-                var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };
+                var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };//vai usar um fator de 0.146 na geração do dadvaz (foi fator calculado pq faz uma conta com usina que ainda não foi incluida nas propoçoes)
                 Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.183f });
                 propagacoes.Add(Billings);
                 #endregion
@@ -1145,7 +1145,7 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region santana
-                var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };
+                var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };// vai usar fator de 0.317 para o dadvaz (calculado de fator de santana - fator de tocos)
                 santana.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.997f });
                 propagacoes.Add(santana);
                 #endregion
@@ -1158,6 +1158,13 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
 
+                #region Suiça
+
+                //var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
+                //suica.Modelo.Add(new ModeloSmap() { NomeVazao = "Suica", TempoViagem = 0, FatorDistribuicao = 1 });
+                //propagacoes.Add(suica);
+
+                #endregion
                 #endregion
 
                 new AddLog("Propagação foi preenchida com sucesso!");
@@ -2546,7 +2553,7 @@ namespace ChuvaVazaoTools.Classes
                 todoPosto = todoPosto.Union(dadosAcompH.Select(x => x.posto));
                 foreach (var item in todoPosto)
                 {
-                    if (propagacoes.All(x => !x.IdPosto.Equals(item)) || item == 22 /*|| item == 222 */|| item == 248)//estes postos são Smap mas sao tratados como previvaz
+                    if (propagacoes.All(x => !x.IdPosto.Equals(item))/* || item == 22 /*|| item == 222 || item == 248 */)//estes postos são Smap mas sao tratados como previvaz
                     {
                         if (item != 81 && item != 227 && item != 228)//estes postos nao possuem serão incluidos no método GetPrevs, pois seus dados serão obtidos atraves do prevs oficial
                         {
@@ -2566,16 +2573,18 @@ namespace ChuvaVazaoTools.Classes
 
                 foreach (var prop in propagacoesAux)
                 {
-                    if (prop.IdPosto == 22 /*|| prop.IdPosto == 222*/ || prop.IdPosto == 248)
-                    {
-                        var remove = propagacoes.Where(x => x.IdPosto == prop.IdPosto).FirstOrDefault();
-                        propagacoes.Remove(remove);// substitui os dados desses postos pelos novos dados com a semana calculada como previvaz
-                        propagacoes.Add(prop);
-                    }
-                    else
-                    {
-                        propagacoes.Add(prop);
-                    }
+                    //if (prop.IdPosto == 22 /*|| prop.IdPosto == 222*/ || prop.IdPosto == 248)
+                    //{
+                    //    var remove = propagacoes.Where(x => x.IdPosto == prop.IdPosto).FirstOrDefault();
+                    //    propagacoes.Remove(remove);// substitui os dados desses postos pelos novos dados com a semana calculada como previvaz
+                    //    propagacoes.Add(prop);
+                    //}
+                    //else
+                    //{
+                    //    propagacoes.Add(prop);
+                    //}
+                    propagacoes.Add(prop);
+
                 }
 
                 #endregion
@@ -2587,7 +2596,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
                 PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH);//propagação da bacia tocantins, madeira, jeq_Parnaiba
-
+                //ExportaDadvaz(pastaSaida, propagacoes, runrevDate, modelos, revnum);
 
                 GetPrevs(propagacoes, dataForms);
 
@@ -2598,7 +2607,7 @@ namespace ChuvaVazaoTools.Classes
                     DateTime dataEx = runrevDate.AddDays(7);
                     //while (DataR.DayOfWeek != DayOfWeek.Friday) DataR = DataR.AddDays(1);
 
-                   // DataR = DataR.AddDays(14);
+                    // DataR = DataR.AddDays(14);
 
                     foreach (var prop in propagacoes.Where(x => comPrevivaz.Any(y => y == x.IdPosto) || regredidoDePrevivaz.Any(z => z == x.IdPosto)))
                     {
@@ -2624,7 +2633,7 @@ namespace ChuvaVazaoTools.Classes
 
                         var datasMN = prop.medSemanalNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
                         datasMN.ForEach(x => prop.medSemanalNatural.Remove(x));
-                        
+
                     }
                 }
 
@@ -2680,6 +2689,210 @@ namespace ChuvaVazaoTools.Classes
             }
         }
 
+        public List<DadvazPrevs> GetDadvazPrevs()
+        {
+            string csv = @"H:\TI - Sistemas\UAT\ChuvaVazao\DADVAZ_para_CHUVA.csv";
+            var csvLines = File.ReadAllLines(csv).Skip(1).ToList();
+            List<DadvazPrevs> dadPrevs = new List<DadvazPrevs>();
+
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+
+            foreach (var cl in csvLines)
+            {
+                var campos = cl.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                DadvazPrevs dadPre = new DadvazPrevs();
+                dadPre.NomeUsina = campos[0];
+                dadPre.Bacia = campos[1];
+                dadPre.NumDadvaz = Convert.ToInt32(campos[2]);
+                dadPre.NumPrevs = Convert.ToInt32(campos[3]);
+                dadPre.Fator = Convert.ToDouble(campos[4], Culture.NumberFormat);
+                dadPrevs.Add(dadPre);
+            }
+
+            return dadPrevs;
+        }
+
+        public void ExportaDadvaz(string pastaSaida, List<Propagacao> propagacoes, DateTime dataFim, List<ModeloChuvaVazao> modelos, int revnum)
+        {
+            List<Tuple<DateTime, double, double, double>> dadosMPV = GetMPV();
+            List<DadvazPrevs> dadPrevs = GetDadvazPrevs();
+            if (dadosMPV.Count() > 0 && dadPrevs.Count() > 0)
+            {
+                foreach (var dad in dadPrevs)
+                {
+                    for (DateTime dt = dataFim.AddDays(-6); dt <= dataFim; dt = dt.AddDays(1)) //foreach (var dad in dadPrevs)
+                    {
+                        if (!dad.Vazao.ContainsKey(dt)) dad.Vazao[dt] = 0;
+
+                        int numeroProp = dad.NumPrevs;
+                        double vazao = 0;
+                        if (numeroProp == 22 || numeroProp == 248)
+                        {
+
+                        }
+                        if (numeroProp == 271 || numeroProp == 275 || numeroProp == 285)//muskingun
+                        {
+                            vazao = propagacoes.Where(x => x.IdPosto == numeroProp).Select(x => x.VazaoIncremental[dt]).FirstOrDefault();
+                            dad.Vazao[dt] = vazao;
+                            continue;
+                        }
+                        else if (numeroProp == 168)//sobradinho
+                        {
+                            var dMPV = dadosMPV.Where(x => x.Item1.Date == dt.Date).FirstOrDefault();
+                            if (dMPV != null)
+                            {
+                                vazao = dMPV.Item2 + dMPV.Item4;
+                            }
+                            dad.Vazao[dt] = vazao;
+                            continue;
+                        }
+                        else
+                        {
+                            if (dad.Fator == 0)
+                            {
+                                dad.Vazao[dt] = 0;
+                            }
+                            else
+                            {
+                                var prop = propagacoes.Where(x => x.IdPosto == numeroProp).FirstOrDefault();
+                                if (prop != null)
+                                {
+                                    if (prop.Modelo.Count() == 1)
+                                    {
+                                        var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == prop.Modelo[0].NomeVazao.ToUpper()).First();
+                                        dad.Vazao[dt] = modeloSmap.Vazoes[dt] * dad.Fator;
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        foreach (var ms in prop.Modelo)
+                                        {
+                                            var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == ms.NomeVazao.ToUpper()).First();
+
+
+                                            if (ms.TempoViagem == 0 )
+                                                dad.Vazao[dt] += modeloSmap.Vazoes[dt] * ms.FatorDistribuicao;
+                                            else
+                                            {
+                                                var dmenor = dt.AddDays(-(1 + Math.Floor(ms.TempoViagem / 24))).Date;
+                                                //var dmenor = dt.AddHours(-ms.TempoViagem).Date;
+                                                var dmaior = dmenor.AddDays(1);
+
+                                                if (!dad.Vazao.ContainsKey(dt)) dad.Vazao[dt] = 0;
+                                                var horaatraso = (ms.TempoViagem % 24);
+                                                if (modeloSmap.Vazoes.ContainsKey(dmaior) && modeloSmap.Vazoes.ContainsKey(dmenor))
+                                                {
+                                                    dad.Vazao[dt] += modeloSmap.Vazoes[dmenor] * horaatraso / 24f;
+                                                    dad.Vazao[dt] += modeloSmap.Vazoes[dmaior] * (24f - horaatraso) / 24f;
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                    
+                                }
+                                else
+                                {
+                                    dad.Vazao[dt] = 0;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                string dadvazFile = @"H:\TI - Sistemas\UAT\ChuvaVazao\dadvaz.dat";
+                
+
+                for (DateTime dt = dataFim.AddDays(-6); dt <= dataFim; dt = dt.AddDays(1))
+                {
+                    string newdadvazName = $"dadvaz_RV{revnum}_{dt:ddMMyyyy}.dat";
+                    Compass.CommomLibrary.Dadvaz.Dadvaz dadvaz = Compass.CommomLibrary.DocumentFactory.Create(dadvazFile) as Compass.CommomLibrary.Dadvaz.Dadvaz;
+
+                    var vazoes = dadvaz.BlocoVazoes.ToList();
+                    var comment = vazoes.First().Comment;
+                    Dictionary<int, int> usiTipoVaz = new Dictionary<int, int>();
+                    dadvaz.BlocoVazoes.ToList().ForEach(x =>
+                    {
+                        if (!usiTipoVaz.ContainsKey(x.Usina)) usiTipoVaz[x.Usina] = x.TipoVaz;
+
+                    });
+
+                    dadvaz.BlocoVazoes.Clear();
+
+                    var dataLine = dadvaz.BlocoData.First();
+                    dataLine.Dia = dt.Day;
+                    dataLine.Mes = dt.Month;
+                    dataLine.Ano = dt.Year;
+
+                    var diaLine = dadvaz.BlocoDia.First();
+                    int dia = 0;
+                    switch (dt.DayOfWeek)
+                    {
+                        case DayOfWeek.Saturday:
+                            dia = 1;
+                            break;
+                        case DayOfWeek.Sunday:
+                            dia = 2;
+                            break;
+                        case DayOfWeek.Monday:
+                            dia = 3;
+                            break;
+                        case DayOfWeek.Tuesday:
+                            dia = 4;
+                            break;
+                        case DayOfWeek.Wednesday:
+                            dia = 5;
+                            break;
+                        case DayOfWeek.Thursday:
+                            dia = 6;
+                            break;
+                        case DayOfWeek.Friday:
+                            dia = 7;
+                            break;
+                        default:
+                            dia = 1;
+                            break;
+
+                    }
+                    diaLine.diainicial = dia;
+                    foreach(var usi in usiTipoVaz.Keys)//foreach (var dad in dadPrevs)
+                    {
+                        var dad = dadPrevs.Where(x => x.NumDadvaz == usi).FirstOrDefault();
+                        if (dad != null)
+                        {
+                            for (DateTime dtdad = dt; dtdad <= dataFim; dtdad = dtdad.AddDays(1))
+                            {
+                                var newVaz = new Compass.CommomLibrary.Dadvaz.VazoesLine();
+                                newVaz.DiaInic = $"{dtdad.Day:00}";
+                                newVaz.DiaFinal = $"F";
+                                newVaz.Usina = dad.NumDadvaz;
+                                newVaz.Nome = dad.NomeUsina;
+                                newVaz.TipoVaz = usiTipoVaz[dad.NumDadvaz];
+                                newVaz.Vazao = (float)dad.Vazao[dtdad];
+                                dadvaz.BlocoVazoes.Add(newVaz);
+                            }
+                        }
+
+                    }
+
+                    var zerados = dadvaz.BlocoVazoes.Where(x => x.Vazao == 0).GroupBy(x => x.Usina).ToList();
+
+                    foreach (var zs in zerados)
+                    {
+                        foreach (var z in zs.Where(x => x != zs.First()))
+                        {
+                            dadvaz.BlocoVazoes.Remove(z);
+                        }
+                    }
+
+
+                    dadvaz.BlocoVazoes.First().Comment = comment;
+                    dadvaz.SaveToFile(Path.Combine(pastaSaida,newdadvazName));
+
+                }
+            }
+
+        }
         public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
@@ -3947,6 +4160,50 @@ namespace ChuvaVazaoTools.Classes
             }
         }
 
+        public List<Tuple<DateTime, double, double, double>> GetMPV()
+        {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            List<Tuple<DateTime, double, double, double>> dados = new List<Tuple<DateTime, double, double, double>>();
+
+            try
+            {
+                var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(DateTime.Today);
+
+                var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
+
+                var PathModelo = Path.Combine(pastaBase, "Modelos_Chuva_Vazao", "MPV", "Arq_Saida");
+                DateTime dt_CPINS = DateTime.Today;
+                var Arquivo = Path.Combine(PathModelo, dt_CPINS.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+
+                while (!File.Exists(Arquivo)) // busca o txt com dados do cpins mais recente
+                {
+                    dt_CPINS = dt_CPINS.AddDays(-1);
+                    Arquivo = Path.Combine(PathModelo, dt_CPINS.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt");
+                }
+
+                var TxtCpins = File.ReadAllLines(Arquivo);
+
+                var Num_linhas = TxtCpins.Length;
+
+
+                for (int i = 0; i <= Num_linhas - 1; i++)
+                {
+                    var Separa = TxtCpins[i].Split(';');
+                    var d = double.Parse(Separa[0], Culture.NumberFormat);            //no txt a data esta codificada pelo excel 
+                    var data = DateTime.FromOADate(d);         // esse passo converte para datetime  
+                    var dado = new Tuple<DateTime, double, double, double>(data, Convert.ToDouble(Separa[1], Culture.NumberFormat), Convert.ToDouble(Separa[2], Culture.NumberFormat), Convert.ToDouble(Separa[3], Culture.NumberFormat));
+                    dados.Add(dado);
+                }
+            }
+            catch (Exception e)
+            {
+
+                e.Message.ToString();
+            }
+            return dados;
+
+        }
+
         public void AdicionaMPV(List<Propagacao> propagacoes, List<CONSULTA_VAZAO> dadosAcomph, bool ext = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
@@ -4449,6 +4706,21 @@ public class PostoMontante
 {
     public Propagacao Propaga { get; set; }
     public double TempoViagem { get; set; }
+}
+
+public class DadvazPrevs
+{
+    public DadvazPrevs()
+    {
+        Vazao = new Dictionary<DateTime, double>() ;
+    }
+    public string NomeUsina { get; set; }
+    public string Bacia { get; set; }
+    public int NumDadvaz { get; set; }
+    public int NumPrevs { get; set; }
+    public double Fator { get; set; }
+    public Dictionary<DateTime, double> Vazao { get; set; }
+
 }
 
 public class ModeloSmap
