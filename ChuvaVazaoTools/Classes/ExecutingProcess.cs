@@ -1160,9 +1160,9 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Suiça
 
-                //var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
-                //suica.Modelo.Add(new ModeloSmap() { NomeVazao = "Suica", TempoViagem = 0, FatorDistribuicao = 1 });
-                //propagacoes.Add(suica);
+                var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
+                suica.Modelo.Add(new ModeloSmap() { NomeVazao = "Suica", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(suica);
 
                 #endregion
                 #endregion
