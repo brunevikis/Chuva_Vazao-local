@@ -663,7 +663,8 @@ namespace ChuvaVazaoTools
             {
                 if (!horasToDownload.Contains(hora)) continue;
                 //Verifica qual pasta será utilizada
-                var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+                //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+                var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
 
                 var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
                 if (!Directory.Exists(oneDrive))

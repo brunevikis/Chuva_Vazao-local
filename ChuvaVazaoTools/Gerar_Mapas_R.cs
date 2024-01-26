@@ -20,7 +20,8 @@ namespace ChuvaVazaoTools
             var path_Acomph = @"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico\";
             var path_ModeloR = Path.Combine(path_Previsao, "Modelo_R");
 
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");//C:\Enercore\Energy Core Trading
+            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";//C:\Enercore\Energy Core Trading
             //C:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
             //var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
             //if (!Directory.Exists(oneDrive))
@@ -1218,7 +1219,8 @@ namespace ChuvaVazaoTools
         internal static void GEFS_Ext(DateTime cv, string path)
         {
             var dt = DateTime.Today.AddDays(-1);
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            // var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
             //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
             var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
             if (!Directory.Exists(oneDrive))
@@ -1324,7 +1326,8 @@ namespace ChuvaVazaoTools
         {
             var dt = DateTime.Today;
             var data_final = DateTime.Today;
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
             //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
             var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
             if (!Directory.Exists(oneDrive))

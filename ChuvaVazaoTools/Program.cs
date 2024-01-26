@@ -905,7 +905,8 @@ namespace ChuvaVazaoTools
         {
             var dt = DateTime.Today;
             var caminho_p = Path.Combine(@"P:\Trading\Acompanhamento Metereologico Semanal\spiderman", dt.ToString("yyyy_MM_dd"));
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
 
             var oneDrive = Path.Combine(oneDrivePath_ori, @"Compass\Pedro\NOAA\");
 
@@ -1535,7 +1536,8 @@ namespace ChuvaVazaoTools
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             DateTime dia = new DateTime(Convert.ToInt32(data.Substring(0, 4)), Convert.ToInt32(data.Substring(4, 2)), Convert.ToInt32(data.Substring(6, 2)));
 
-            var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
 
             var onedriveFolder = Path.Combine(oneDrivePath_ori, @"Pedro Modesto Enercore - PDF", modelo, dia.Year.ToString(), dia.Month.ToString("00"));
             string arq = "";
