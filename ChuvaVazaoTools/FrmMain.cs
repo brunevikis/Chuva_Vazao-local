@@ -1643,7 +1643,7 @@ namespace ChuvaVazaoTools
                     {
                         if (logF != null) logF.WriteLine(name + ": FINALIZADO!!!");
 
-                        Salvar_Img(pastaSaida);
+                       // Salvar_Img(pastaSaida);
                         if (statusF != null) statusF.PostProcessing = RunStatus.statuscode.completed;
 
                     }
@@ -2875,11 +2875,11 @@ namespace ChuvaVazaoTools
                                                                 "JEQUITINHONHA (SE)", "AMAZONAS (SE)", "SÃO FRANCISCO (SE)",
                                                                 "TOCANTINS (SE)", "IGUAÇU", "JACUÍ", "URUGUAI", "CAPIVARI",
                                                                 "ITAJAÍ-AÇU", "PARANAPANEMA (S)", "SÃO FRANCISCO (NE)", "JEQUITINHONHA (NE)",
-                                                                "PARNAÍBA", "PARAGUAÇU", "TOCANTINS (N)", "AMAZONAS (N)", "ARAGUARI", "XINGU" };
+                                                                "PARNAÍBA", "PARAGUAÇU", "TOCANTINS (N)", "AMAZONAS (N)", "ARAGUARI", "XINGU","SANTA MARIA VITORIA" };
 
 
                 List<string> subMercados = new List<string>() { "SE/CO", "S", "NE", "N" };
-                List<string> sudeste = new List<string>() { "TOCANTINS (SE)", "SÃO FRANCISCO (SE)", "JEQUITINHONHA (SE)", "PARAGUAI", "DOCE", "MUCURI", "ITABAPOANA", "PARAÍBA DO SUL", "ALTO TIETÊ" };
+                List<string> sudeste = new List<string>() { "TOCANTINS (SE)", "SÃO FRANCISCO (SE)", "JEQUITINHONHA (SE)", "PARAGUAI", "DOCE", "MUCURI", "ITABAPOANA", "PARAÍBA DO SUL", "ALTO TIETÊ", "SANTA MARIA VITORIA" };
                 List<string> madeira = new List<string>() { "AMAZONAS (SE)" };//tem calculo (-total de tele pires)
                 List<string> parana = new List<string>() { "GRANDE", "PARANAÍBA", "TIETÊ", "ALTO PARANÁ" };//tem calculo
                 List<string> paranapanema = new List<string>() { "PARANAPANEMA (SE)" };//Tem calculo
