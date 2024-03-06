@@ -695,32 +695,32 @@ namespace ChuvaVazaoTools
                         MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
                     }
 
+                    var dirs_cvs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
 
-
-
-
-
-                }
-
-                var dirs_cvs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
-
-                foreach (var dir in dirs_cvs)
-                {
-                    var name_cv = dir.Split('\\').Last().Split('_').First();
-
-                    if (!Directory.Exists(Path.Combine(path_Conj, name_cv)))
+                    foreach (var dir in dirs_cvs)
                     {
-                        Directory.CreateDirectory(Path.Combine(path_Conj, name_cv));
-                    }
+                        var name_cv = dir.Split('\\').Last().Split('_').First();
 
-                    DirectoryCopy(dir, Path.Combine(path_Conj, name_cv, dir.Split('\\').Last()), true);
-                    Directory.Delete(dir, true);
+                        if (!Directory.Exists(Path.Combine(path_Conj, name_cv)))
+                        {
+                            Directory.CreateDirectory(Path.Combine(path_Conj, name_cv));
+                        }
+
+                        DirectoryCopy(dir, Path.Combine(path_Conj, name_cv, dir.Split('\\').Last()), true);
+                        Directory.Delete(dir, true);
+
+
+                    }
+                    var email = Tools.Tools.SendMail("", $"Mapas Gerados com Sucesso!{DateTime.Now: dd/MM/yyyy HH:mm:ss}", "SUCESSO AO GERAR MAPAS", "desenv");
+                    email.Wait(30000);
+                    logF.WriteLine("Mapas Gerados com Sucesso!");
+
+
 
 
                 }
-                var email = Tools.Tools.SendMail("", $"Mapas Gerados com Sucesso!{DateTime.Now: dd/MM/yyyy HH:mm:ss}", "SUCESSO AO GERAR MAPAS", "desenv");
-                email.Wait(30000);
-                logF.WriteLine("Mapas Gerados com Sucesso!");
+
+               
 
             }
             catch (Exception a)
