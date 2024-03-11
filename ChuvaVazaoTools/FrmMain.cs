@@ -2871,11 +2871,11 @@ namespace ChuvaVazaoTools
             {
                 List<string> ordemBacias = new List<string>() { "GRANDE", "PARANAÍBA", "ALTO TIETÊ", "TIETÊ",
                                                                 "PARANAPANEMA (SE)", "ALTO PARANÁ", "BAIXO PARANÁ",
-                                                                "PARAÍBA DO SUL", "ITABAPOANA", "MUCURI", "DOCE", "PARAGUAI",
+                                                                "PARAÍBA DO SUL", "ITABAPOANA", "MUCURI","SANTA MARIA VITORIA", "DOCE", "PARAGUAI",
                                                                 "JEQUITINHONHA (SE)", "AMAZONAS (SE)", "SÃO FRANCISCO (SE)",
                                                                 "TOCANTINS (SE)", "IGUAÇU", "JACUÍ", "URUGUAI", "CAPIVARI",
                                                                 "ITAJAÍ-AÇU", "PARANAPANEMA (S)", "SÃO FRANCISCO (NE)", "JEQUITINHONHA (NE)",
-                                                                "PARNAÍBA", "PARAGUAÇU", "TOCANTINS (N)", "AMAZONAS (N)", "ARAGUARI", "XINGU","SANTA MARIA VITORIA" };
+                                                                "PARNAÍBA", "PARAGUAÇU", "TOCANTINS (N)", "AMAZONAS (N)", "ARAGUARI", "XINGU" };
 
 
                 List<string> subMercados = new List<string>() { "SE/CO", "S", "NE", "N" };
