@@ -1303,6 +1303,7 @@ namespace ChuvaVazaoTools
                 {
                     DateTime datini = DateTime.Now;
                     //ExecutarTudo(statusF);
+                    
                     ExecutarTudoTotal(pastaRaiz, statusF);
                     if (statusF.Execution == RunStatus.statuscode.completed)
                     {
@@ -6622,11 +6623,17 @@ namespace ChuvaVazaoTools
             {
                 AddLog("\t Executando: " + x.Caminho);
                 x.Executar();
-
+                //x.Executar_SMAP_R();
                 if (x.ErroNaExecucao == true)
                 {
                     AddLog(x.Caminho + " não executado");
                     File.AppendAllText(Path.Combine(txtCaminho.Text, "error.log"), x.Caminho + " não executado\n");
+                    //
+                    if (statusF != null)
+                    {
+                        statusF.Execution = RunStatus.statuscode.error;
+                    }
+                    //
                 }
                 else
                 {
@@ -6648,7 +6655,7 @@ namespace ChuvaVazaoTools
             });
 
             if (statusF != null) statusF.Execution =
-                        modelosChVz.All(x => x.ErroNaExecucao == false) ? RunStatus.statuscode.completed : RunStatus.statuscode.error;
+                        modelosChVz.Any(x => x.ErroNaExecucao == true) ? RunStatus.statuscode.error :  RunStatus.statuscode.completed;
 
             ;
 

@@ -1421,8 +1421,8 @@ namespace ChuvaVazaoTools
                     //remoção PURA
                     try
                     {
-                        frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraEuro);//remocao euro puro
+                        //frmMain.modelosChVz.Clear();
+                        //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraEuro);//remocao euro puro
 
                     }
                     catch (Exception ex)
@@ -1431,8 +1431,8 @@ namespace ChuvaVazaoTools
                     }
                     try
                     {
-                        frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraGEFS);//remocao gefs puro
+                        //frmMain.modelosChVz.Clear();
+                        //frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraGEFS);//remocao gefs puro
 
                     }
                     catch (Exception ex)

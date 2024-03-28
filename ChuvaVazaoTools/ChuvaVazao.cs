@@ -27,6 +27,7 @@ namespace ChuvaVazaoTools
         public abstract void SalvarParametros();
 
         public abstract void Executar();
+        public abstract void Executar_SMAP_R();
         public virtual async Task ExecutarAsync()
         {
             await Task.Factory.StartNew(() => Executar());

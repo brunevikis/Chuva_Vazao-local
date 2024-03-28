@@ -72,6 +72,96 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public override void Executar_SMAP_R()
+        {
+            //batsmap-desktop.exe
+            //bin
+            //logs
+            //Arq_Saida
+
+
+            //var f = System.IO.Path.Combine(Config.SmapApp, "batsmap-desktop.exe");
+            //var d1 = System.IO.Path.Combine(Config.SmapApp, "bin");
+
+            //var fb = System.IO.Path.Combine(Caminho, "batsmap-desktop.exe");
+            //var d1b = System.IO.Path.Combine(Caminho, "bin");
+
+
+            var d2b = System.IO.Path.Combine(Caminho, "logs");
+            var d3b = System.IO.Path.Combine(Caminho, "Arq_Saida");
+
+            var logFile = System.IO.Path.Combine(d2b, "SMAP.log");
+
+
+            //if (!System.IO.File.Exists(fb)) System.IO.File.Copy(f, fb, true);
+
+            //if (!System.IO.Directory.Exists(d1b)) System.IO.Directory.CreateDirectory(d1b);
+            //System.IO.Directory.EnumerateFiles(d1).ToList().ForEach(x =>
+            //{
+            //    System.IO.File.Copy(x,
+            //        System.IO.Path.Combine(d1b, System.IO.Path.GetFileName(x))
+            //        , true);
+            //});
+
+            //if (!System.IO.Directory.Exists(d2b)) System.IO.Directory.CreateDirectory(d2b);
+
+            //if (!System.IO.Directory.Exists(d3b)) System.IO.Directory.CreateDirectory(d3b);
+
+            //if (System.IO.File.Exists(logFile)) System.IO.File.Delete(logFile);
+
+            //executar
+
+            string argumentos = " \"" + Caminho + "\"";
+            var coms = "smap_R.r";
+
+
+
+
+            var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\";
+            //var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\testeBruno\";
+            //string executar = @"/C " + letra_Dir + " & cd " + path + @" & Rscript.exe " + path_Scripts + Comando;
+            string executar = @"/C " + @"Rscript.exe " + "\"" + path_Scripts + coms + "\"" + argumentos;
+
+            System.Diagnostics.Process pr = new System.Diagnostics.Process();
+
+            var prInfo = new System.Diagnostics.ProcessStartInfo();
+            prInfo.FileName = @"C:\Windows\System32\cmd.exe";
+            prInfo.UseShellExecute = false;
+            prInfo.WorkingDirectory = Caminho;
+            prInfo.CreateNoWindow = true;
+            prInfo.Arguments = executar;
+            prInfo.RedirectStandardOutput = true;
+            prInfo.RedirectStandardInput = true;
+            pr.StartInfo = prInfo;
+            pr.Start();
+
+            while (true && !pr.HasExited)
+            {
+
+                if (!pr.StandardOutput.EndOfStream)
+                {
+
+                    var l = pr.StandardOutput.ReadLine();
+
+                    Execucao += l + Environment.NewLine;
+
+                    if (l.Contains("nao sera executada") || l.Contains("Finalizando programa"))
+                    {
+                        pr.StandardInput.Write(ConsoleKey.Enter.ToString());
+
+                        if (l.Contains("nao sera executada")) this.ErroNaExecucao = true;
+                        else this.ErroNaExecucao = false;
+
+                        break;
+                    }
+                }
+            }
+
+            pr.WaitForExit();
+
+
+        }
+
         public override void Executar()
         {
             //batsmap-desktop.exe
@@ -505,9 +595,9 @@ namespace ChuvaVazaoTools.SMAP
 
         public void Write(string filePath)
         {
-            var txt = Data.ToString("dd/MM/yyyy") + "\r\n" +
-                DiasPassados.ToString() + "\r\n" +
-                DiasPrevisao.ToString() + "\r\n" +
+            var txt = Data.ToString("dd/MM/yyyy").PadRight(15) + "'data da rodada\r\n" +
+                DiasPassados.ToString().PadRight(15) + "'dia de inicialização do aquecimento do modelo\r\n" +
+                DiasPrevisao.ToString().PadRight(15) + "'número de dias de previsão\r\n" +
                 Ebin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'ebin\r\n" +
                 Supin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'supin\r\n" +
                 Tuin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'tuin\r\n";
