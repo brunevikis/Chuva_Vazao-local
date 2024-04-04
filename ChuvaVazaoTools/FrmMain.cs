@@ -685,7 +685,7 @@ namespace ChuvaVazaoTools
         }
         bool esperouPsat = false;
         bool trava = false;
-        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual)
+        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual,bool shadow = false)
         {
             dtAtual.Value = DateTime.Today.Date;
             cbx_Encadear_Previvaz.Checked = false;
@@ -1003,6 +1003,11 @@ namespace ChuvaVazaoTools
                 return;
             }
 
+            if (shadow)
+            {
+                name = name + "_shadow";
+            }
+
             //fim da selecao de rodada
 
             if (exist_psat == true && DateTime.Today.DayOfWeek != DayOfWeek.Sunday && trava == false)
@@ -1166,7 +1171,7 @@ namespace ChuvaVazaoTools
                     smapExecutado = CopySmapExecuted(runRev, pastaSaida);
                     if (!smapExecutado)
                     {
-                        CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF);
+                        CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF, shadow);
                     }
                     else
                     {
@@ -1289,6 +1294,13 @@ namespace ChuvaVazaoTools
                     pastaSmapTotal = pastaSmapTotal + "_ECENS45";
                 }
 
+                //shadow
+                if (name.Contains("shadow"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_shadow";
+                }
+                //
+
                 //var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
                 var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name + @"\SMAP";
                 var execOk = Path.Combine(pastaSmapTotal, "EXEC_OK.txt");
@@ -1304,7 +1316,7 @@ namespace ChuvaVazaoTools
                     DateTime datini = DateTime.Now;
                     //ExecutarTudo(statusF);
                     
-                    ExecutarTudoTotal(pastaRaiz, statusF);
+                    ExecutarTudoTotal(pastaRaiz, statusF,shadow);
                     if (statusF.Execution == RunStatus.statuscode.completed)
                     {
                         CopiarDiretorio(pastaSmap, pastaSmapTotal);
@@ -1549,7 +1561,7 @@ namespace ChuvaVazaoTools
 
                                 if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
                                 {
-                                    if (!nomeDoCaso.Contains("PURO"))
+                                    if (!nomeDoCaso.Contains("PURO") && !nomeDoCaso.Contains("shadow"))
                                     {
                                         var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                         if (!System.IO.Directory.Exists(pathDestino))
@@ -5420,7 +5432,7 @@ namespace ChuvaVazaoTools
             }
         }
 
-        void CriarCasoSmapTotal(string mapas, RunStatus statusF = null)
+        void CriarCasoSmapTotal(string mapas, RunStatus statusF = null, bool shadow = false)
         {
 
             if (statusF != null) statusF.Creation = RunStatus.statuscode.initialialized;
@@ -5446,7 +5458,7 @@ namespace ChuvaVazaoTools
 
                     if (Directory.Exists(Path.Combine(txtCaminho.Text, name))) Directory.Delete(Path.Combine(txtCaminho.Text, name), true);
 
-                    SMAPDirectoryCopyTeste(d, Path.Combine(txtCaminho.Text, name), true, modes);
+                    SMAPDirectoryCopyTeste(d, Path.Combine(txtCaminho.Text, name), true, modes, shadow);
                 }
             }
 
@@ -5485,6 +5497,13 @@ namespace ChuvaVazaoTools
             {
                 pastaSmapTotal = pastaSmapTotal + "_ECENS45";
             }
+
+            //shadow
+            if (name.Contains("shadow"))
+            {
+                pastaSmapTotal = pastaSmapTotal + "_shadow";
+            }
+            //
 
             string zipSmap = pastaSmapTotal + ".zip";
 
@@ -6612,7 +6631,7 @@ namespace ChuvaVazaoTools
 
         }
 
-        void ExecutarTudoTotal(string raiz, RunStatus statusF = null)
+        void ExecutarTudoTotal(string raiz, RunStatus statusF = null, bool shadow = false)
         {
             //string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
             string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "");
@@ -6622,8 +6641,14 @@ namespace ChuvaVazaoTools
             Parallel.ForEach(modelosChVz, x =>
             {
                 AddLog("\t Executando: " + x.Caminho);
-                x.Executar();
-                //x.Executar_SMAP_R();
+                if (shadow)
+                {
+                    x.Executar_SMAP_R();
+                }
+                else
+                {
+                    x.Executar();
+                }
                 if (x.ErroNaExecucao == true)
                 {
                     AddLog(x.Caminho + " não executado");
@@ -7072,8 +7097,9 @@ namespace ChuvaVazaoTools
             }
         }
 
-        private static void SMAPDirectoryCopyTeste(string sourceDirName, string destDirName, bool copySubDirs, List<string> modes)
+        private static void SMAPDirectoryCopyTeste(string sourceDirName, string destDirName, bool copySubDirs, List<string> modes, bool shadow = false)
         {
+            bool alteraBat = shadow;
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
 
@@ -7106,10 +7132,10 @@ namespace ChuvaVazaoTools
                     {
                         // Create the path to the new copy of the file.
                         string temppath = Path.Combine(destDirName, file.Name);
-                        //if (file.Name.Contains("bat.conf"))
+                        //if (file.Name.Contains("bat.conf") && alteraBat == true)
                         //{
                         //    var batconf = File.ReadAllLines(file.FullName).ToList();
-                        //    batconf.Add("arqPrev=1");
+                        //    batconf.Add("ajusta_precipitacao=1");
                         //    File.WriteAllLines(temppath, batconf);
                         //}
                         if (file.Name.EndsWith("MODELOS_PRECIPITACAO.txt"))
@@ -7180,6 +7206,12 @@ namespace ChuvaVazaoTools
                             }
                             //file.CopyTo(temppath, true);
                         }
+                        else if (file.Name.Contains("bat.conf") && alteraBat == true)
+                        {
+                            var batconf = File.ReadAllLines(file.FullName).ToList();
+                            batconf.Add("ajusta_precipitacao=1");
+                            File.WriteAllLines(temppath, batconf);
+                        }
                         else
                         {
                             // Copy the file.
@@ -7214,7 +7246,7 @@ namespace ChuvaVazaoTools
                     string temppath = Path.Combine(destDirName, subdir.Name);
 
                     // Copy the subdirectories.
-                    SMAPDirectoryCopyTeste(subdir.FullName, temppath, copySubDirs, modes);
+                    SMAPDirectoryCopyTeste(subdir.FullName, temppath, copySubDirs, modes, alteraBat);
                 }
             }
         }

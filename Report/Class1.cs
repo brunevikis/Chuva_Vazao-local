@@ -565,6 +565,47 @@ namespace Report
             }
 
         }
+
+        public static string[] buscaPrevTempoOk(string caminho, DateTime datref, string complemento, int cont, string camTempoOk)
+        {
+            var camConj = camTempoOk;
+
+            string observadoFunc = Path.Combine(caminho, DateTime.Today.ToString("yyyy_MM_dd"), "OBSERVADO", "funceme.gif");
+            string observadoOns = Path.Combine(caminho, DateTime.Today.ToString("yyyy_MM_dd"), "OBSERVADO", "ons.gif");
+
+            var conjunto = Directory.GetFiles(camConj, "*.gif");
+
+            var imgsConj = new string[conjunto.Length - cont + 1];
+
+            if (datref.Date == DateTime.Today.Date)
+            {
+                if (File.Exists(observadoFunc))
+                {
+                    imgsConj[0] = (observadoFunc);
+                }
+                else
+                {
+                    imgsConj[0] = (observadoOns);
+                }
+                for (int i = 1; i <= imgsConj.Count(); i++)
+                {
+                    var arqConj = Path.Combine(camConj, "prev" + i + ".gif");
+                    if (File.Exists(arqConj)) imgsConj[i] = (arqConj);
+                }
+                return imgsConj;
+            }
+            else
+            {
+                for (int i = 1; i <= imgsConj.Count(); i++)
+                {
+                    var arqConj = Path.Combine(camConj, "prev" + i + ".gif");
+                    if (File.Exists(arqConj)) imgsConj[i - 1] = (arqConj);
+                    if (i == imgsConj.Count()) imgsConj[i - 1] = (@"P:\Marcos.Albarracin\Relatorio Final\quadBranco.gif");
+                }
+                return imgsConj;
+            }
+
+        }
         public static string[] buscaPrev(string caminho, DateTime datref, string complemento, int cont)
         {
             var camConj = Path.Combine(caminho, datref.ToString("yyyy_MM_dd"), complemento);
@@ -714,12 +755,17 @@ namespace Report
 
                     try
                     {
+                        var camTempoOk = Path.Combine(onedriveroot, @"Acompanhamento_de_Precipitacao\Previsao", data.ToString("yyyy"), data.ToString("MM"), data.ToString("dd"), "ECMWFop");
+                        var camTempoOkOntem = Path.Combine(onedriveroot, @"Acompanhamento_de_Precipitacao\Previsao", data1.ToString("yyyy"), data1.ToString("MM"), data1.ToString("dd"), "ECMWFop");
+
                         // doc.InserirSubtitulo2("Previsão por modelo (ECMWF Operativo) do dia " + data1.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEcwmf, 3));
+                        //doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data1, camEcwmf, 3));
+                        doc.InserirImagens(1, imgsConj1 = buscaPrevTempoOk(caminhoSpider, data1, camEcwmf, 0,camTempoOkOntem));
                         doc.InserirMeioEspaco();
 
                         // doc.InserirSubtitulo2("Previsão por modelo (ECMWF Operativo) do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                        //doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                        doc.InserirImagens(1, imgsConj = buscaPrevTempoOk(caminhoSpider, data, camEcwmf, 0,camTempoOk));
                     }
                     catch { }
 
@@ -1214,7 +1260,7 @@ namespace Report
 
 
 
-            if (Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)) && Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12)))
+            if (Directory.Exists(Path.Combine(camNOAA, GefsNOAA12)) && Directory.Exists(Path.Combine(camNOAA, GfsNOAA12)) /*&& Directory.Exists(Path.Combine(caminhoSpider, data.ToString("yyyy_MM_dd"), camEcwmf12))*/)
             {
                 var qtdGefsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GefsNOAA12), "*.gif").ToList();
                 var qtdGfsNOAA12 = Directory.GetFiles(Path.Combine(camNOAA, GfsNOAA12), "*.gif").ToList();
@@ -1276,19 +1322,19 @@ namespace Report
 
                     doc.InserirParte2("Previsão de precipitação pelo modelo EUROPEU (ECMWF) 00z e 12z do dia " + data.ToString("dd/MM/yyyy"));
 
-                    try
-                    {
-                        //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
-                        doc.InserirMeioEspaco();
+                    //try
+                    //{
+                    //    //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 00z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj1 = buscaPrev(caminhoSpider, data, camEcwmf, 3));
+                    //    doc.InserirMeioEspaco();
 
-                        //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
-                        doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
-                    }
-                    catch { }
+                    //    //doc.InserirSubtitulo2("Previsão por modelo (ECMWF) 12z do dia " + data.ToString("dd/MM/yyyy"));
+                    //    doc.InserirImagens(1, imgsConj = buscaPrev(caminhoSpider, data, camEcwmf12, 3));
+                    //}
+                    //catch { }
 
-                    //doc.InserirEspaco();
-                    doc.InserirMeioEspaco();
+                    ////doc.InserirEspaco();
+                    //doc.InserirMeioEspaco();
                     #region mapas nao utilizados
                     //doc.InserirParte2("Previsão de precipitação pelo modelo REGIONAL (ETA40)");
                     //try

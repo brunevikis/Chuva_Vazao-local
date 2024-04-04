@@ -1442,6 +1442,169 @@ namespace ChuvaVazaoTools
 
 
                     //fim remoçao PURA
+
+
+                    //=============rodadas shadow=============
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemoSmap,true);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        logF.WriteLine(ex.ToString());
+
+                    }
+
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            //rodada com offset na remoção de viés.
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro,true);//remocao cvsamp1euro
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            //rodada com offset na remoção de viés.
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGEFS,true);//remocao cvsamp1GEFS(VIES-VE)
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            //rodada com offset na remoção de viés.
+
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro_op,true);//remocao cvsmap1euro op
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+
+                    try
+                    {
+
+                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        {
+                            frmMain.modelosChVz.Clear();
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGFS, true);//remocao cvsmap1gfs
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro, true);//remocao euro cv2smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGEFS, true);//remocao gefs cv2smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro_op, true);//remocao euro op cv2smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGFS, true);//remocao gfs cv2smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+
+                        //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        // {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasEuro, true);//remocao euro cv3smap
+                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasGEFS, true);//remocao gefs cv3smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+
+                        //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
+                        //{
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasEuro, true);//remocao euro cv4smap
+                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasGEFS, true);// remocao gefs cv4smap
+                    }
+                    catch (Exception ex)
+                    {
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    //=============fim rodadas shadow==========
                 }
                 else if (File.Exists(Path.Combine(pastaSaida, "error.log")) || mapasCount.Count() <= 0)
                 {
