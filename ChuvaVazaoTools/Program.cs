@@ -972,6 +972,7 @@ namespace ChuvaVazaoTools
             ///Rodada automática
             /// 
             var pastaSaida = "";
+            string pastaBaseRodadas = "";
             var data_verifica = DateTime.Today;
 
 
@@ -985,6 +986,7 @@ namespace ChuvaVazaoTools
                 var frmMain = new FrmMain(true, encad);
 
                 var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(date);
+                pastaBaseRodadas = @"H:\Middle - Preço\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd");
 
                 //Verifica se já existe Acomph para o dia
                 if (!File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_verifica.ToString("yyyy"), data_verifica.ToString("MM_yyyy"), "ACOMPH_" + data_verifica.ToString("dd-MM-yyyy") + ".xls")))
@@ -1328,6 +1330,7 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
+                    
 
                     try
                     {
@@ -1417,6 +1420,20 @@ namespace ChuvaVazaoTools
                         logF.WriteLine(ex.ToString());
                     }
                     //fim remocao cvsmap
+
+                    //teste exportar enas 
+                    try
+                    {
+                        frmMain.ExportaResultadosEnasRodadas(logF, pastaBaseRodadas, pastaSaida);
+                    }
+                    catch (Exception ex)
+                    {
+
+                        logF.WriteLine(ex.ToString());
+                    }
+
+                    //
+
 
                     //remoção PURA
                     try

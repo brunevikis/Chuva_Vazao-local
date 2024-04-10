@@ -685,6 +685,185 @@ namespace ChuvaVazaoTools
         }
         bool esperouPsat = false;
         bool trava = false;
+
+        public void ExportaResultadosEnasRodadas(System.IO.TextWriter logF,string pastaBase, string pastaMapas)
+        {
+            string planilha = @"C:\Sistemas\ResumoEna\Resumo-ENAauto.xlsm";
+            DateTime date = DateTime.Today;
+            string dirImagens = $@"C:\Sistemas\ResumoEna\imagens\{date:dd-MM-yyyy}";
+
+            Directory.CreateDirectory(dirImagens);
+
+            var listaDeImagens = Path.Combine(dirImagens, "Lista.txt");
+            if (!File.Exists(listaDeImagens))
+            {
+                File.WriteAllText(listaDeImagens,string.Empty);
+            }
+
+            var lista = File.ReadAllLines(listaDeImagens).ToList();
+
+            string modo = "pos acomph";
+            string complemento = "";
+
+            bool enviar = false;
+            if (pastaMapas.Contains("d-1"))
+            {
+                modo = "pre acomph";
+                complemento = "d-1";
+            }
+
+            List<string> preAcomphRanges = new List<string> 
+            {
+                "C5:W12",
+                "C15:W22",
+                "C25:W32",
+                "C35:W42",
+                "C45:W52",
+                "C55:W62",
+                "C65:W72",
+                "C75:W82",
+                "C85:W92",
+                "C95:W102",
+                "C105:W112",
+                "C115:W122",
+                "C125:W132",
+            };
+
+            List<string> posAcomphRanges = new List<string>
+            {
+                "Z5:AT12",
+                "Z15:AT22",
+                "Z25:AT32",
+                "Z35:AT42",
+                "Z45:AT52",
+                "Z55:AT62",
+                "Z65:AT72",
+                "Z75:AT82",
+                "Z85:AT92",
+                "Z95:AT102",
+                "Z105:AT112",
+                "Z115:AT122",
+                "Z125:AT132",
+            };
+
+            List<string> ranges = new List<string>();
+
+            if (modo == "pre acomph")
+            {
+                ranges = preAcomphRanges;
+            }
+            else
+            {
+                ranges = posAcomphRanges;
+            }
+            //if (Directory.Exists(dirImagens))
+            //{
+            //    Directory.Delete(dirImagens, true);
+            //}
+
+            Microsoft.Office.Interop.Excel.Workbook wb = null;
+
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            string xlsName = Path.GetFileName(planilha);
+            try
+            {
+
+                excel.DisplayAlerts = false;
+                excel.Visible = true;
+                excel.ScreenUpdating = true;
+                Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Open(planilha);
+
+                wb = excel.ActiveWorkbook;
+                var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets["ENA"];
+                wkSheet.Select();
+                wkSheet.Range["dataRodada"].Value = date;
+                wkSheet.Range["I2"].Value = pastaBase;
+                wkSheet.Range["Acomph"].Value = modo;
+
+                string texto = "";
+                List<Tuple<string, string>> pares = new List<Tuple<string, string>>();
+                int num = 1;
+
+
+                excel.Run($"'{xlsName}'!loadWeekly");
+                excel.Run($"'{xlsName}'!pld");
+
+                foreach (var rng in ranges)
+                {
+                    //Excel.Range r = wb.ActiveSheet.Range["C5:W12"];
+                    Excel.Range r = wb.ActiveSheet.Range[rng];
+                    string nome = wkSheet.Range[rng.Split(':')[0]].Value;
+                    int row = wkSheet.Range[rng.Split(':')[0]].Row + 1;
+                    int col = wkSheet.Range[rng.Split(':')[0]].Column + 1;
+
+                    if (wkSheet.Range[wkSheet.Cells[row, col], wkSheet.Cells[row, col]].Text != "#N/D")
+                    {
+                        nome = nome.Replace('\n', '-') + complemento;
+                        string imagePath = Path.Combine(dirImagens, $@"{nome}.jpg");
+
+                        r.CopyPicture(Excel.XlPictureAppearance.xlScreen,
+                                       Excel.XlCopyPictureFormat.xlBitmap);
+
+                        if (Clipboard.GetDataObject() != null)
+                        {
+                            IDataObject data = Clipboard.GetDataObject();
+
+                            if (data.GetDataPresent(DataFormats.Bitmap) && !File.Exists(imagePath))
+                            {
+                                Image image = (Image)data.GetData(DataFormats.Bitmap, true);
+                                //this.pictureBox1.Image = image;
+                                image.Save(imagePath,
+                                    System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                                //texto = texto + $"<img src=cid:myImageID{num} height=352 width=954>";
+                                texto = texto + $"<img src=cid:myImageID{num} height=176 width=954>";
+                                pares.Add(new Tuple<string, string>($"myImageID{num}", imagePath));
+                                num++;
+                                enviar = true;
+                                lista.Add(imagePath);
+                            }
+
+                        }
+
+                    }
+                   
+                }
+
+                wb.Close(SaveChanges: false);
+                //workbook.Close();
+                excel.Quit();
+
+                if (enviar == true)
+                {
+                    var bodyHtml = $@"<html>
+                              <body>
+                                <table width=""100%"">
+                                <tr>
+                                    <td style=""font-style:arial; color:black; font-weight:bold"">
+                                   Acompanhamento Resultado ENA CHUVA-VAZÃO {modo.ToUpper()} <br>
+                                    {texto}
+                                    </td>
+                                </tr>
+                                </table>
+                                </body>
+                                </html>";
+
+                    var email = Tools.Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
+                    email.Wait(30000);
+
+                    //await Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
+
+                    File.WriteAllLines(listaDeImagens, lista);
+                }
+                //===================
+            }
+            catch (Exception e)
+            {
+                wb.Close();
+                excel.Quit();
+            }
+
+        }
         public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual,bool shadow = false)
         {
             dtAtual.Value = DateTime.Today.Date;

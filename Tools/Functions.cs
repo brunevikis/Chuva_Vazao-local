@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,91 @@ namespace ChuvaVazaoTools.Tools
 {
     public static class Tools
     {
+        public static async Task SendMailImageList(string attach, string body, string subject, string receiversGroup, List<Tuple<string, string>> pares)
+        {
+            System.Net.Mail.SmtpClient cli = new System.Net.Mail.SmtpClient();
+
+            cli.Host = "smtp.gmail.com";
+            cli.Port = 587;
+            // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
+            cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
+
+            cli.EnableSsl = true;
+
+            // receiversGroup = "desenv";
+
+            var msg = new System.Net.Mail.MailMessage()
+            {
+                Subject = subject,
+            };
+
+
+            if (attach.Contains(";"))
+            {
+                foreach (var att in attach.Split(';'))
+                {
+                    if (File.Exists(att))
+                        msg.Attachments.Add(new System.Net.Mail.Attachment(att));
+                }
+            }
+
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+
+            foreach (var par in pares)
+            {
+
+
+                //create Alrternative HTML view
+
+                //Add Image
+                LinkedResource theEmailImage = new LinkedResource(par.Item2);
+                theEmailImage.ContentId = par.Item1;
+
+                //Add the Image to the Alternate view
+                htmlView.LinkedResources.Add(theEmailImage);
+
+                //Add view to the Email Message
+
+            }
+            msg.AlternateViews.Add(htmlView);
+
+            msg.Body = body;
+
+            msg.Sender = msg.From = new System.Net.Mail.MailAddress("cpas.robot@gmail.com");
+
+            var receivers = ConfigurationManager.AppSettings[receiversGroup];
+
+            foreach (var receiver in receivers.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (!string.IsNullOrWhiteSpace(receiver.Trim()))
+                    msg.To.Add(new System.Net.Mail.MailAddress(receiver.Trim()));
+            }
+
+            if (body.Contains("html"))
+                msg.IsBodyHtml = true;
+
+
+
+
+
+            int trials = 3;
+            int sleepTime = 1000 * 60;
+            int trial = 0;
+            while (trial++ < trials)
+            {
+                try
+                {
+                    await cli.SendMailAsync(msg);
+                    break;
+                }
+                catch (Exception e)
+                {
+
+                    System.Threading.Thread.Sleep(sleepTime);
+                }
+            }
+
+        }
         public static async Task SendMail(string attach, string body, string subject, string receiversGroup)
         {
             System.Net.Mail.SmtpClient cli = new System.Net.Mail.SmtpClient();
