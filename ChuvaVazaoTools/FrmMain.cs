@@ -688,6 +688,7 @@ namespace ChuvaVazaoTools
 
         public void ExportaResultadosEnasRodadas(System.IO.TextWriter logF,string pastaBase, string pastaMapas)
         {
+            logF.WriteLine("INICIANDO ROTINA DE EXPORTAÇÃO DE RESULTADOS ENA");
             string planilha = @"C:\Sistemas\ResumoEna\Resumo-ENAauto.xlsm";
             DateTime date = DateTime.Today;
             string dirImagens = $@"C:\Sistemas\ResumoEna\imagens\{date:dd-MM-yyyy}";
@@ -761,9 +762,22 @@ namespace ChuvaVazaoTools
             //    Directory.Delete(dirImagens, true);
             //}
 
+            //foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+            //{
+            //    proc.Kill();
+            //    //if (proc.MainWindowHandle == this.pointer)
+            //    //{
+            //    //    proc.Kill();
+            //    //}
+            //}
+
             Microsoft.Office.Interop.Excel.Workbook wb = null;
+            // Microsoft.Office.Interop.Excel.Workbook workbook;
+            Microsoft.Office.Interop.Excel.Workbooks workbooks = null;
 
             Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            this.pointer = new IntPtr(excel.Hwnd);
+
             string xlsName = Path.GetFileName(planilha);
             try
             {
@@ -771,10 +785,15 @@ namespace ChuvaVazaoTools
                 excel.DisplayAlerts = false;
                 excel.Visible = true;
                 excel.ScreenUpdating = true;
-                Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Open(planilha);
+                // Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Open(planilha);
+                //workbook = excel.Workbooks.Open(planilha);
+                workbooks = excel.Workbooks;
+                wb = workbooks.Open(planilha);
 
-                wb = excel.ActiveWorkbook;
-                var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets["ENA"];
+                //wb = excel.ActiveWorkbook;
+               // wb = excel.ActiveWorkbook;
+                //var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets["ENA"];
+                var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)wb.Sheets["ENA"];
                 wkSheet.Select();
                 wkSheet.Range["dataRodada"].Value = date;
                 wkSheet.Range["I2"].Value = pastaBase;
@@ -786,7 +805,9 @@ namespace ChuvaVazaoTools
 
 
                 excel.Run($"'{xlsName}'!loadWeekly");
+                excel.Calculate();
                 excel.Run($"'{xlsName}'!pld");
+                excel.Calculate();
 
                 foreach (var rng in ranges)
                 {
@@ -830,8 +851,33 @@ namespace ChuvaVazaoTools
                 }
 
                 wb.Close(SaveChanges: false);
-                //workbook.Close();
+                //workbook.Close(SaveChanges: false);
                 excel.Quit();
+                Helper.Release(excel);
+
+                //Marshal.ReleaseComObject(wb);
+                //Marshal.ReleaseComObject(workbooks);
+                //Marshal.ReleaseComObject(excel);
+
+
+
+                //excel = null;
+                //wb = null;
+                //workbooks = null;
+                //wkSheet = null;
+
+
+                //GC.Collect();
+                //GC.WaitForPendingFinalizers();
+
+                //foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                //{
+                //    proc.Kill();
+                //    //if (proc.MainWindowHandle == this.pointer)
+                //    //{
+                //    //    proc.Kill();
+                //    //}
+                //}
 
                 if (enviar == true)
                 {
@@ -848,19 +894,54 @@ namespace ChuvaVazaoTools
                                 </body>
                                 </html>";
 
-                    var email = Tools.Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
+                    logF.WriteLine("ENVIANDO E-MAIL");
+
+                    var email = Tools.Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "preco", pares);//TODO: preco
                     email.Wait(30000);
 
                     //await Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
 
                     File.WriteAllLines(listaDeImagens, lista);
+                    logF.WriteLine("E-MAIL ENVIADO COM SUCESSO");
+                    logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
+
+                }
+                else
+                {
+                    logF.WriteLine("SEM NOVOS RESULTADOS");
+
+                    logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
+                }
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                {
+                    if (proc.MainWindowHandle == this.pointer)
+                    {
+                        proc.Kill();
+                    }
                 }
                 //===================
             }
             catch (Exception e)
             {
-                wb.Close();
+                //wb.Close();
+                //excel.Quit();
+                logF.WriteLine("ERRO EXPORTAÇÃO DE RESULTADOS ENA: "+ e.Message.ToString());
+
+                wb.Close(SaveChanges: false);
+                //workbook.Close(SaveChanges: false);
                 excel.Quit();
+                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                {
+                    if (proc.MainWindowHandle == this.pointer)
+                    {
+                        proc.Kill();
+                    }
+                }
+                if (Directory.Exists(dirImagens))
+                {
+                    Directory.Delete(dirImagens, true);
+                }
+
             }
 
         }
