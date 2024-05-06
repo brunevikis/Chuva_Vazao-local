@@ -829,7 +829,7 @@ namespace ChuvaVazaoTools
                         {
                             IDataObject data = Clipboard.GetDataObject();
 
-                            if (data.GetDataPresent(DataFormats.Bitmap) && !File.Exists(imagePath))
+                            if (data.GetDataPresent(DataFormats.Bitmap) && lista.All(x => !x.Contains(imagePath)))
                             {
                                 Image image = (Image)data.GetData(DataFormats.Bitmap, true);
                                 //this.pictureBox1.Image = image;
@@ -939,7 +939,18 @@ namespace ChuvaVazaoTools
                 }
                 if (Directory.Exists(dirImagens))
                 {
-                    Directory.Delete(dirImagens, true);
+                    var arqsDel = Directory.GetFiles(dirImagens).ToList();
+                    foreach (var arq in arqsDel)
+                    {
+                        if (arq.Contains("Lista.txt"))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            File.Delete(arq);
+                        }
+                    }
                 }
 
             }
@@ -1579,8 +1590,9 @@ namespace ChuvaVazaoTools
                     ExecutarTudoTotal(pastaRaiz, statusF,shadow);
                     if (statusF.Execution == RunStatus.statuscode.completed)
                     {
-                        CopiarDiretorio(pastaSmap, pastaSmapTotal);
-                        System.IO.Compression.ZipFile.CreateFromDirectory(pastaSmapTotal, pastaSmapTotal + ".zip");
+                        //CopiarDiretorio(pastaSmap, pastaSmapTotal);
+                        //System.IO.Compression.ZipFile.CreateFromDirectory(pastaSmapTotal, pastaSmapTotal + ".zip");
+                        System.IO.Compression.ZipFile.CreateFromDirectory(pastaSmap, pastaSmapTotal + ".zip");
                         try
                         {
                             if (Directory.Exists(pastaSmapTotal))
