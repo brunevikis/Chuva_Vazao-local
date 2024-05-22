@@ -191,7 +191,7 @@ namespace ChuvaVazaoTools.SMAP
                 System.IO.File.Copy(x,
                     System.IO.Path.Combine(d1b, System.IO.Path.GetFileName(x))
                     , true);
-           });
+            });
 
             if (!System.IO.Directory.Exists(d2b)) System.IO.Directory.CreateDirectory(d2b);
 
@@ -286,7 +286,7 @@ namespace ChuvaVazaoTools.SMAP
         {
             foreach (var sb in SubBacias)
             {
-                
+
                 sb.CarregaSaida(ModelosPrecipitacao.Where(x => x == mod).First());
             }
         }
@@ -446,11 +446,26 @@ namespace ChuvaVazaoTools.SMAP
         public Dictionary<DateTime, float> VazoesCal { get; set; }
 
         public Dictionary<DateTime, float> VazoesCalSomaMedia { get; set; }
-        
+        public List<float> ProbClusters { get; set; }
+
         public Dictionary<DateTime, Ajuste> Ajustes { get; set; }
 
         private string ArquivosDeEntrada { get { return System.IO.Path.Combine(Caminho, "Arq_Entrada"); } }
         private string ArquivosDeSaida { get { return System.IO.Path.Combine(Caminho, "Arq_Saida"); } }
+        public List<float> GetProbclusters()
+        {
+            List<float> probs = new List<float>();
+            string probsFile = $@"C:\Sistemas\ChuvaVazao\prob.dat";
+            System.IO.File.ReadLines(probsFile)
+                        .Where(x => x.Length >= 5)
+                        .ToList().ForEach(x =>
+                        {
+                            float pb = float.Parse(x, System.Globalization.NumberFormatInfo.InvariantInfo);
+                            probs.Add(pb);
+                        });
+
+            return probs;
+        }
 
         public void CarregaSaida(string modeloPrecipitacao, bool media = false)
         {
@@ -464,7 +479,8 @@ namespace ChuvaVazaoTools.SMAP
                 {
                     foreach (var dt in VazoesCalSomaMedia.Keys.ToList())
                     {
-                        var vazAvg = VazoesCalSomaMedia[dt] / 10;
+                        // var vazAvg = VazoesCalSomaMedia[dt] / 10;
+                        var vazAvg = VazoesCalSomaMedia[dt];
                         Vazoes[dt] = vazAvg;
                         VazoesCal[dt] = vazAvg;
                     }
@@ -491,6 +507,7 @@ namespace ChuvaVazaoTools.SMAP
 
                 VazoesCal = new Dictionary<DateTime, float>();
                 VazoesCalSomaMedia = VazoesCalSomaMedia == null ? new Dictionary<DateTime, float>() : VazoesCalSomaMedia;
+                ProbClusters = ProbClusters == null ? GetProbclusters() : ProbClusters;
 
                 if (System.IO.File.Exists(previsaoFile))//TODO calculo de media dos membros e colocar no  no dictionary vazoes  obs: ver qual tem mais dados só pra confirmar vazoescal ou vazoes e ver se vai aumentando os dias e repetindo ao percorrer pelo membros
                 {
@@ -509,17 +526,19 @@ namespace ChuvaVazaoTools.SMAP
                             if (System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m"))
                             {
                                 if (!System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m10"))
-                                {
+                                {//todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
+                                    //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                                    int numCluster = Convert.ToInt32(modeloPrecipitacao.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries)[1]);
                                     if (!VazoesCalSomaMedia.ContainsKey(x.Data))
                                     {
-                                        VazoesCalSomaMedia[x.Data] = x.Qcal;
+                                        VazoesCalSomaMedia[x.Data] = x.Qcal * ProbClusters[numCluster];
                                     }
                                     else
                                     {
-                                        VazoesCalSomaMedia[x.Data] += x.Qcal;
+                                        VazoesCalSomaMedia[x.Data] += x.Qcal * ProbClusters[numCluster];
                                     }
                                 }
-                             
+
                             }
                         }
                         );

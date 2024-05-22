@@ -524,6 +524,8 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
                     executar_R(path_Conj, "madeira.r");
 
+                    logF.WriteLine("Copiando arquivos ENS_Est_rv Clusters e probabilidades");
+
                     bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
                     if (temECEN45 == false)
                     {
@@ -820,14 +822,18 @@ namespace ChuvaVazaoTools
             DateTime data = DateTime.Today;
             var path_ArqSaida = Path.Combine(path_Conj, "madeira");
 
+            string sitemasFolder = $@"C:\Sistemas\ChuvaVazao";
             string ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
+            string ecenProbDat = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Arq_Saida\ECMWF\Clust\prob.dat";
             int contagem = 0;
             try
             {
-                while (!Directory.Exists(ecenFolder) && contagem < 16)//procura diretorio até 5 dias atras
+                while (!Directory.Exists(ecenFolder) && !File.Exists(ecenProbDat) && contagem < 16)//procura diretorio até 16 dias atras
                 {
                     data = data.AddDays(-1);
                     ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
+                    ecenProbDat = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Arq_Saida\ECMWF\Clust\prob.dat";
+
                     contagem++;
                 }
 
@@ -839,7 +845,7 @@ namespace ChuvaVazaoTools
 
                 //var out_ModeloFolder = Path.Combine(path_ArqSaida, modelo);
 
-                if (Directory.Exists(ecenFolder))
+                if (Directory.Exists(ecenFolder) && File.Exists(ecenProbDat))
                 {
                     File.WriteAllText(Path.Combine(path_Conj, "data.txt"), "ECMWF_CLUSTER:" + data.ToString("dd/MM/yyyy"));
                     for (int i = 0; i <= 9; i++)
@@ -890,6 +896,10 @@ namespace ChuvaVazaoTools
                             cont = Directory.GetFiles(path_cv).Count();
                         }
                     }
+
+                    File.Copy(ecenProbDat, Path.Combine(path_Conj, "prob.dat"), true);
+                    File.Copy(ecenProbDat, Path.Combine(sitemasFolder, "prob.dat"), true);
+
                     return true;
                 }
                 return false;
