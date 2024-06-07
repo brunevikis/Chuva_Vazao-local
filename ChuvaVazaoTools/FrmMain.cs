@@ -7481,6 +7481,11 @@ namespace ChuvaVazaoTools
                         else if (file.Name.Contains("bat.conf") && alteraBat == true)
                         {
                             var batconf = File.ReadAllLines(file.FullName).ToList();
+                            if (batconf.Any(x => x.Contains("ajusta_precipitacao")))
+                            {
+                                string remover = batconf.Where(x => x.Contains("ajusta_precipitacao")).FirstOrDefault();
+                                batconf.Remove(remover);
+                            }
                             batconf.Add("ajusta_precipitacao=1");
                             File.WriteAllLines(temppath, batconf);
                         }
