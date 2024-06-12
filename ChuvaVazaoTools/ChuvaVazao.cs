@@ -77,7 +77,7 @@ namespace ChuvaVazaoTools
                         new
                         {
                             Data = DateTime.ParseExact(x[1], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
-                            Prec = x[3].Contains('-') ? (float?)null :
+                            Prec = x[3].Contains('-') ? (float?)null : x[3].Contains("NA") ? 0.0f :
                                 float.Parse(x[3], System.Globalization.NumberFormatInfo.InvariantInfo),
                         }).ToList().ForEach(x =>
                             Preciptacao[x.Data] = x.Prec
@@ -94,7 +94,7 @@ namespace ChuvaVazaoTools
                         new
                         {
                             Data = DateTime.ParseExact(x[1], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
-                            Prec = x[3].Contains('-') ? (float?)null :
+                            Prec = x[3].Contains('-') ? (float?)null : x[3].Contains("NA")? 0.0f:
                                 float.Parse(x[3], System.Globalization.NumberFormatInfo.InvariantInfo),
                         }).ToList().ForEach(x =>
                             Preciptacao[x.Data] = x.Prec
