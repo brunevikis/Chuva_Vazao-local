@@ -30,7 +30,6 @@ C:\Development\Chuva_vazao\trunk\Tools\obj\Debug\Tools.csprojAssemblyReference.c
 C:\Development\chuva_vazao\Tools\obj\Debug\Tools.csproj.AssemblyReference.cache
 C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\bin\Debug\Tools.dll
 C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\bin\Debug\Tools.pdb
-C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\obj\Debug\Tools.csproj.AssemblyReference.cache
 C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\obj\Debug\Tools.csproj.CoreCompileInputs.cache
 C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\obj\Debug\Tools.dll
 C:\Development\chuva_vazao\Chuva_Vazao-local\Tools\obj\Debug\Tools.pdb

@@ -956,7 +956,7 @@ namespace ChuvaVazaoTools
             }
 
         }
-        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual,bool shadow = false)
+        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual,bool smapR = false)
         {
             dtAtual.Value = DateTime.Today.Date;
             cbx_Encadear_Previvaz.Checked = false;
@@ -1274,10 +1274,10 @@ namespace ChuvaVazaoTools
                 return;
             }
 
-            if (shadow)
-            {
-                name = name + "_shadow";
-            }
+            //if (shadow)
+            //{
+            //    name = name + "_shadow";
+            //}
 
             //fim da selecao de rodada
 
@@ -1442,7 +1442,7 @@ namespace ChuvaVazaoTools
                     smapExecutado = CopySmapExecuted(runRev, pastaSaida);
                     if (!smapExecutado)
                     {
-                        CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF, shadow);
+                        CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF, smapR);
                     }
                     else
                     {
@@ -1587,7 +1587,7 @@ namespace ChuvaVazaoTools
                     DateTime datini = DateTime.Now;
                     //ExecutarTudo(statusF);
                     
-                    ExecutarTudoTotal(pastaRaiz, statusF,shadow);
+                    ExecutarTudoTotal(pastaRaiz, statusF,smapR);
                     if (statusF.Execution == RunStatus.statuscode.completed)
                     {
                         //CopiarDiretorio(pastaSmap, pastaSmapTotal);
@@ -1835,7 +1835,7 @@ namespace ChuvaVazaoTools
                                 {
                                     if (!nomeDoCaso.Contains("PURO") /*&& !nomeDoCaso.Contains("shadow")*/)
                                     {
-                                        if (nomeDoCaso.Contains("shadow") && (nomeDoCaso.Contains("CV3") || nomeDoCaso.Contains("CV4")))
+                                        if (nomeDoCaso.Contains("shadow"))
                                         {
                                             var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
                                             if (!System.IO.Directory.Exists(pathDestino))
@@ -4008,15 +4008,24 @@ namespace ChuvaVazaoTools
 
                 DateTime Data = DateTime.Today;
                 var rev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(Data);
+
                 DateTime inicioMes = new DateTime(rev.revDate.Year, rev.revDate.Month, 1);//data da Rv0 do mês
+                DateTime inicioMesseguinte = inicioMes.AddMonths(1);
 
                 var semanaZero = inicioMes;
+                var semanaZero2 = inicioMesseguinte;
 
                 while (semanaZero.DayOfWeek != DayOfWeek.Saturday)
                 {
                     semanaZero = semanaZero.AddDays(-1);
                 }
                 semanaZero = semanaZero.AddDays(6);//termino da semana rv0 do mês
+
+                while (semanaZero2.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    semanaZero2 = semanaZero2.AddDays(-1);
+                }
+                semanaZero2 = semanaZero2.AddDays(6);//termino da semana rv0 do mês seguinte
 
                 var numSem = ChuvaVazaoTools.Tools.Tools.GetSemNumberAndYear(semanaZero);
                 var SemanasPrevs = ChuvaVazaoTools.Tools.Tools.GetNumDatSem(semanaZero, numSem.Item1);// as doze semanasde previsão após execução do previvaz
@@ -4070,6 +4079,48 @@ namespace ChuvaVazaoTools
 
                 }
                 File.WriteAllText(Path.Combine(camSaida, prevsname), sb.ToString());
+
+                //teste prevs mes seguinte para rodada pura
+                if (indice == 0 && camSaida.ToUpper().Contains("PURO") && SemanasPrevs.Any(x => x.Item1 == semanaZero2))
+                {
+                    int index = SemanasPrevs.IndexOf(SemanasPrevs.Where(x => x.Item1.Equals(semanaZero2)).First());
+
+                    var prevsnameSeg = "prevs_MesSeguinte.rv0";
+
+
+                    if (File.Exists(Path.Combine(camSaida, prevsnameSeg)))
+                    {
+                        File.Delete(Path.Combine(camSaida, prevsnameSeg));
+                    }
+
+                    StringBuilder sbs = new StringBuilder();
+
+                    foreach (var p in propagacoes)
+                    {
+                        DateTime semanaProc = semanaZero2;
+                        List<Double> vazoes = new List<double>();
+
+                        for (int i = index; i <= index + 5; i++)
+                        {
+                            var vaz = p.calMedSemanal.ContainsKey(semanaProc) ? Math.Round(p.calMedSemanal[semanaProc]) : Math.Round(p.calMedSemanal[p.calMedSemanal.Keys.Last()]);
+                            vazoes.Add(vaz);
+                            semanaProc = semanaProc.AddDays(7);
+                        }
+                        sbs.AppendFormat("{0,6}{1,5}{2,10}{3,10}{4,10}{5,10}{6,10}{7,10}{8}",
+                                p.IdPosto.ToString(),
+                                p.IdPosto.ToString(),
+                               vazoes[0],
+                               vazoes[1],
+                               vazoes[2],
+                               vazoes[3],
+                               vazoes[4],
+                               vazoes[5],
+                                Environment.NewLine);
+
+                    }
+                    File.WriteAllText(Path.Combine(camSaida, prevsnameSeg), sbs.ToString());
+                }
+                //
 
                 if (exportaMesAnt)
                 {//exporta o prevs referenta ao mes anterior  o numero 5 é apenas para os usuarios diferenciarem do prevs correto 
@@ -5718,7 +5769,7 @@ namespace ChuvaVazaoTools
             }
         }
 
-        void CriarCasoSmapTotal(string mapas, RunStatus statusF = null, bool shadow = false)
+        void CriarCasoSmapTotal(string mapas, RunStatus statusF = null, bool smapR = false)
         {
 
             if (statusF != null) statusF.Creation = RunStatus.statuscode.initialialized;
@@ -5744,7 +5795,7 @@ namespace ChuvaVazaoTools
 
                     if (Directory.Exists(Path.Combine(txtCaminho.Text, name))) Directory.Delete(Path.Combine(txtCaminho.Text, name), true);
 
-                    SMAPDirectoryCopyTeste(d, Path.Combine(txtCaminho.Text, name), true, modes, shadow);
+                    SMAPDirectoryCopyTeste(d, Path.Combine(txtCaminho.Text, name), true, modes, smapR);
                 }
             }
 
@@ -6917,7 +6968,7 @@ namespace ChuvaVazaoTools
 
         }
 
-        void ExecutarTudoTotal(string raiz, RunStatus statusF = null, bool shadow = false)
+        void ExecutarTudoTotal(string raiz, RunStatus statusF = null, bool smapR = false)
         {
             //string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
             string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "");
@@ -6927,7 +6978,7 @@ namespace ChuvaVazaoTools
             Parallel.ForEach(modelosChVz, x =>
             {
                 AddLog("\t Executando: " + x.Caminho);
-                if (shadow)
+                if (smapR)
                 {
                     x.Executar_SMAP_R();
                 }
@@ -7383,9 +7434,9 @@ namespace ChuvaVazaoTools
             }
         }
 
-        private static void SMAPDirectoryCopyTeste(string sourceDirName, string destDirName, bool copySubDirs, List<string> modes, bool shadow = false)
+        private static void SMAPDirectoryCopyTeste(string sourceDirName, string destDirName, bool copySubDirs, List<string> modes, bool smapR = false)
         {
-            bool alteraBat = shadow;
+            bool alteraBat = smapR;
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
             DirectoryInfo[] dirs = dir.GetDirectories();
 
