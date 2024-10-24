@@ -21,7 +21,7 @@ namespace ChuvaVazaoTools.Classes
             285,227,228,230 // 285 <-287 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
         };
 
-        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate, int revnum = 0)
+        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate, int revnum = 0, bool shadow = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
@@ -598,10 +598,25 @@ namespace ChuvaVazaoTools.Classes
                 #region MADEIRA(norte)
 
                 #region jirau
+                //var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
+                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "JIRAU2", TempoViagem = 0, FatorDistribuicao = 1 });
+                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
+                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
+                //propagacoes.Add(Jirau);
+                //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
+                string nomeVazao = "JIRAU";
+
                 var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
-                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "JIRAU2", TempoViagem = 0, FatorDistribuicao = 1 });
+                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = nomeVazao, TempoViagem = 0, FatorDistribuicao = 1 });
                 Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
                 Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
+                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
+
+                //if (shadow == true)
+                //{
+                //    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
+                //}
+
                 propagacoes.Add(Jirau);
                 #endregion
 
@@ -2595,7 +2610,7 @@ namespace ChuvaVazaoTools.Classes
                 //AdicionaCPINS(propagacoes, dadosAcompH);
 
                 #endregion
-                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH);//propagação da bacia tocantins, madeira, jeq_Parnaiba
+                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH,shadow);//propagação da bacia tocantins, madeira, jeq_Parnaiba
                 //ExportaDadvaz(pastaSaida, propagacoes, runrevDate, modelos, revnum);
 
                 GetPrevs(propagacoes, dataForms);
@@ -2770,7 +2785,7 @@ namespace ChuvaVazaoTools.Classes
                                             var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == ms.NomeVazao.ToUpper()).First();
 
 
-                                            if (ms.TempoViagem == 0 )
+                                            if (ms.TempoViagem == 0)
                                                 dad.Vazao[dt] += modeloSmap.Vazoes[dt] * ms.FatorDistribuicao;
                                             else
                                             {
@@ -2789,7 +2804,7 @@ namespace ChuvaVazaoTools.Classes
 
                                         }
                                     }
-                                    
+
                                 }
                                 else
                                 {
@@ -2801,7 +2816,7 @@ namespace ChuvaVazaoTools.Classes
                     }
                 }
                 string dadvazFile = @"H:\TI - Sistemas\UAT\ChuvaVazao\dadvaz.dat";
-                
+
 
                 for (DateTime dt = dataFim.AddDays(-6); dt <= dataFim; dt = dt.AddDays(1))
                 {
@@ -2855,7 +2870,7 @@ namespace ChuvaVazaoTools.Classes
 
                     }
                     diaLine.diainicial = dia;
-                    foreach(var usi in usiTipoVaz.Keys)//foreach (var dad in dadPrevs)
+                    foreach (var usi in usiTipoVaz.Keys)//foreach (var dad in dadPrevs)
                     {
                         var dad = dadPrevs.Where(x => x.NumDadvaz == usi).FirstOrDefault();
                         if (dad != null)
@@ -2887,13 +2902,13 @@ namespace ChuvaVazaoTools.Classes
 
 
                     dadvaz.BlocoVazoes.First().Comment = comment;
-                    dadvaz.SaveToFile(Path.Combine(pastaSaida,newdadvazName));
+                    dadvaz.SaveToFile(Path.Combine(pastaSaida, newdadvazName));
 
                 }
             }
 
         }
-        public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH)
+        public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH, bool shadow = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var ultimoAcomph = dadosAcompH.Select(x => x.data).Last();
@@ -3709,6 +3724,10 @@ namespace ChuvaVazaoTools.Classes
 
                 var PbGm = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "P_DA_BEIRA".ToUpper()).Select(x => x.Vazoes).First();
                 List<double> PbGmCoef = new List<double> { 0.375, 0.625, 0 };
+                if (shadow == true)
+                {
+                    PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
+                }
                 vazaoPassada = 0;
                 for (int i = 0; i < 2; i++)
                 {
@@ -3762,6 +3781,10 @@ namespace ChuvaVazaoTools.Classes
                 GmJi = auxiliar;
 
                 List<double> GmJiCoef = new List<double> { 0.375, 0.625, 0 };
+                if (shadow == true)
+                {
+                    GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
+                }
                 vazaoPassada = 0;
                 for (int i = 0; i < 2; i++)
                 {
@@ -3783,9 +3806,47 @@ namespace ChuvaVazaoTools.Classes
                 }
                 #endregion
 
+                #region Amaru_mayu
+
+                var AmaruSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "AMARU_MAYU".ToUpper()).Select(x => x.Vazoes).FirstOrDefault();
+                //if (AmaruSmap != null && shadow == true)
+                if (AmaruSmap != null)
+                {
+                    
+                    List<double> AmaruSmapCoef = new List<double> { 0.35236355811671099536, 0.56608358393819646626, 0.08155285794509256614 };
+                  
+                    vazaoPassada = 0;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        foreach (var dat in AmaruSmap.Keys.ToList())
+                        {
+                            if (dat == AmaruSmap.Keys.First())
+                            {
+                                vazaoPassada = AmaruSmap[dat];
+                                AmaruSmap[dat] = AmaruSmap[dat];
+                            }
+                            else
+                            {
+                                double vazao = 0;
+                                vazao = AmaruSmap[dat] * AmaruSmapCoef[0] + vazaoPassada * AmaruSmapCoef[1] + AmaruSmap[dat.AddDays(-1)] * AmaruSmapCoef[2];
+                                vazaoPassada = AmaruSmap[dat];
+                                AmaruSmap[dat] = (float)vazao;
+                            }
+                        }
+                    }
+                }
+
+                #endregion
+
                 #region JIRAU
-                var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "JIRAU2".ToUpper()).Select(x => x.Vazoes).First();
+                //var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "JIRAU2".ToUpper()).Select(x => x.Vazoes).First();
+                //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
+                string nomeVazao = "JIRAU";
+
+                var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == nomeVazao.ToUpper()).Select(x => x.Vazoes).First();
                 var jirau = propagacoes.Where(x => x.IdPosto == 285).FirstOrDefault();
+
+
 
                 jirau.VazaoIncremental.Clear();
                 jirau.VazaoNatural.Clear();
@@ -3803,8 +3864,20 @@ namespace ChuvaVazaoTools.Classes
                     }
                     else
                     {
-                        jirau.VazaoIncremental[dia] = JirauSmap[dia] + GmJi[dia];
-                        jirau.VazaoNatural[dia] = JirauSmap[dia] + GmJi[dia];
+                        //jirau.VazaoIncremental[dia] = JirauSmap[dia] + GmJi[dia];
+                        //jirau.VazaoNatural[dia] = JirauSmap[dia] + GmJi[dia];
+                        //if (AmaruSmap != null && shadow == true)
+                        if (AmaruSmap != null)
+                        {
+                            jirau.VazaoIncremental[dia] = JirauSmap[dia] + GmJi[dia] + AmaruSmap[dia];
+                            jirau.VazaoNatural[dia] = JirauSmap[dia] + GmJi[dia] + AmaruSmap[dia];
+                        }
+                        else
+                        {
+                            jirau.VazaoIncremental[dia] = JirauSmap[dia] + GmJi[dia];
+                            jirau.VazaoNatural[dia] = JirauSmap[dia] + GmJi[dia];
+                        }
+
                     }
 
                 }
@@ -4712,7 +4785,7 @@ public class DadvazPrevs
 {
     public DadvazPrevs()
     {
-        Vazao = new Dictionary<DateTime, double>() ;
+        Vazao = new Dictionary<DateTime, double>();
     }
     public string NomeUsina { get; set; }
     public string Bacia { get; set; }

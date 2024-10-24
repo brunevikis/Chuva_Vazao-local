@@ -266,7 +266,9 @@ namespace ChuvaVazaoTools.SMAP
                 "Samuel",//
                 "SMANOEL",//
                 "STOANTJARI",//
-                "UBESP"//
+                "UBESP",//
+                "Amaru_mayu",
+                "Jirau"
             };
             foreach (var sb in SubBacias)
             {

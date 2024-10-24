@@ -123,6 +123,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.button15 = new System.Windows.Forms.Button();
             this.txtExcel = new System.Windows.Forms.TextBox();
+            this.button16 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -158,7 +159,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(391, 6);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(538, 238);
+            this.listView1.Size = new System.Drawing.Size(685, 265);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.List;
@@ -191,7 +192,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 26);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(938, 253);
+            this.tabPage1.Size = new System.Drawing.Size(1085, 280);
             this.tabPage1.TabIndex = 4;
             this.tabPage1.Text = "Execução";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -297,7 +298,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(938, 253);
+            this.tabPage2.Size = new System.Drawing.Size(1085, 280);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Precipitação";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -326,7 +327,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(3, 3);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(932, 247);
+            this.panel5.Size = new System.Drawing.Size(1079, 274);
             this.panel5.TabIndex = 9;
             // 
             // bt_MapasR
@@ -524,7 +525,7 @@
             this.listView_PrecPrev.Location = new System.Drawing.Point(154, 64);
             this.listView_PrecPrev.MultiSelect = false;
             this.listView_PrecPrev.Name = "listView_PrecPrev";
-            this.listView_PrecPrev.Size = new System.Drawing.Size(614, 180);
+            this.listView_PrecPrev.Size = new System.Drawing.Size(614, 207);
             this.listView_PrecPrev.TabIndex = 6;
             this.listView_PrecPrev.UseCompatibleStateImageBehavior = false;
             this.listView_PrecPrev.View = System.Windows.Forms.View.Details;
@@ -546,7 +547,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 26);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(938, 253);
+            this.tabPage3.Size = new System.Drawing.Size(1085, 280);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Vazão";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -561,7 +562,7 @@
             this.btnConsultarVazObserv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnConsultarVazObserv.Location = new System.Drawing.Point(3, 3);
             this.btnConsultarVazObserv.Name = "btnConsultarVazObserv";
-            this.btnConsultarVazObserv.Size = new System.Drawing.Size(932, 247);
+            this.btnConsultarVazObserv.Size = new System.Drawing.Size(1079, 274);
             this.btnConsultarVazObserv.TabIndex = 11;
             // 
             // btnAtualizarRDHBD
@@ -621,7 +622,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 26);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(938, 253);
+            this.tabPage4.Size = new System.Drawing.Size(1085, 280);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Avançado";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -638,7 +639,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(932, 247);
+            this.panel4.Size = new System.Drawing.Size(1079, 274);
             this.panel4.TabIndex = 12;
             // 
             // button2
@@ -699,7 +700,7 @@
             this.tabPage5.Controls.Add(this.btnTempView);
             this.tabPage5.Location = new System.Drawing.Point(4, 26);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(938, 253);
+            this.tabPage5.Size = new System.Drawing.Size(1085, 280);
             this.tabPage5.TabIndex = 5;
             this.tabPage5.Text = "Temp.";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -753,6 +754,7 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.button16);
             this.panel3.Controls.Add(this.btn_PorPastaSemPrevivaz);
             this.panel3.Controls.Add(this.button14);
             this.panel3.Controls.Add(this.button13);
@@ -1222,6 +1224,16 @@
             this.txtExcel.Size = new System.Drawing.Size(832, 20);
             this.txtExcel.TabIndex = 10;
             // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(423, 231);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(107, 32);
+            this.button16.TabIndex = 24;
+            this.button16.Text = "psatGif";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1367,6 +1379,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.TextBox txtExcel;
+        private System.Windows.Forms.Button button16;
     }
 }
 
