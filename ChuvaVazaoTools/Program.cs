@@ -1466,7 +1466,28 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine(ex.ToString());
                     }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaEuro, true, shadow);//remocao euro com ve padrao quarta
+                    }
+                    catch (Exception ex)
+                    {
 
+                        logF.WriteLine(ex.ToString());
+
+                    }
+                    try
+                    {
+                        frmMain.modelosChVz.Clear();
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaGEFS, true, shadow);//remocao gefs com ve padrao quarta
+                    }
+                    catch (Exception ex)
+                    {
+
+                        logF.WriteLine(ex.ToString());
+
+                    }
                     //=============fim rodadas oficiais smap.R==========
 
                     #endregion

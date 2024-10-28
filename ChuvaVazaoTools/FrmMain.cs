@@ -131,7 +131,7 @@ namespace ChuvaVazaoTools
             {
                 var path = txtCaminho.Text;
                 //string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
-                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "");
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "").Replace("CVSMAP0_", "");
 
                 if (!System.IO.Directory.Exists(path))
                 {
@@ -349,6 +349,8 @@ namespace ChuvaVazaoTools
             RemocaoSmapUmaSemanaEuro,
             RemocaoSmapUmaSemanaEuro_op,
             RemocaoSmapUmaSemanaGFS,
+            RemocaoCV0SmapUmaSemanaEuro,
+            RemocaoCV0SmapUmaSemanaGEFS,
             RemocaoSmapDuasSemanasEuro,
             RemocaoSmapDuasSemanasEuro_op,
             RemocaoSmapDuasSemanasGEFS,
@@ -992,6 +994,12 @@ namespace ChuvaVazaoTools
             frm = WaitForm2.CreateInstance(dtAtual.Value);
             string horaPrev = "";
 
+            //bloqueia execução de rodada cv0(remoção padrão quarta feira) e a revisão diferente de RV0
+            if (runRev.rev != 0 &&(offset == EnumRemo.RemocaoCV0SmapUmaSemanaGEFS || offset == EnumRemo.RemocaoCV0SmapUmaSemanaEuro))
+            {
+                return;
+            }
+
             /*try
             {
                 if (frm.TemEta00 && frm.TemGefs00)
@@ -1192,6 +1200,21 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45GFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_GFSECENS45m");
+            }
+            //smapcv0(ve quarta-feira)
+            else if (offset == EnumRemo.RemocaoCV0SmapUmaSemanaEuro)
+            {
+                name = name + "_ECENS45EURO";
+                // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV0_");
+                pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_EUROECENS45m");
+            }
+            else if (offset == EnumRemo.RemocaoCV0SmapUmaSemanaGEFS)
+            {
+                name = name + "_ECENS45GEFS";
+                // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
+                name = name.Replace("CV_", "CV0_");
+                pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_GEFSECENS45m");
             }
             //smapcv2
             else if (offset == EnumRemo.RemocaoSmapDuasSemanasEuro)
@@ -1568,6 +1591,10 @@ namespace ChuvaVazaoTools
                     pastaSmapTotal = pastaSmapTotal + "_ECENS45";
                 }
 
+                if (name.Contains("CV0"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_CV0";
+                }
                 //shadow
                 if (name.Contains("shadow"))
                 {
@@ -1834,7 +1861,7 @@ namespace ChuvaVazaoTools
 
                                 var nomeDoCaso = pastaSaida.Split('\\').Last();
 
-                                if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_"))
+                                if (nomeDoCaso.StartsWith("CV_") || nomeDoCaso.StartsWith("CV2_") || nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_") || nomeDoCaso.StartsWith("CV5_") || nomeDoCaso.StartsWith("CV0_"))
                                 {
                                     if (!nomeDoCaso.Contains("PURO") /*&& !nomeDoCaso.Contains("shadow")*/)
                                     {
@@ -1963,7 +1990,7 @@ namespace ChuvaVazaoTools
             {
                 statusF.Execution = RunStatus.statuscode.error;
                 var email = Tools.Tools.SendMail("", "ERRO: " + exce.Message, "Erro nas propagações sem Excell [AUTO]", "desenv");
-                email.Wait();
+                email.Wait(300000);
             }
             #endregion
 
@@ -5780,7 +5807,7 @@ namespace ChuvaVazaoTools
             var modelos = new string[] { "SMAP" };
 
             // var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "")).ToList();
-            var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "")).ToList();
+            var modes = System.IO.Directory.GetDirectories(mapas).Select(x => x.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "").Replace("CVSMAP0_", "")).ToList();
 
 
             var dir = System.IO.Directory.GetDirectories(txtEntrada.Text);
@@ -5836,6 +5863,10 @@ namespace ChuvaVazaoTools
             if (name.Contains("ECENS45"))
             {
                 pastaSmapTotal = pastaSmapTotal + "_ECENS45";
+            }
+            if (name.Contains("CV0"))
+            {
+                pastaSmapTotal = pastaSmapTotal + "_CV0";
             }
 
             //shadow
@@ -11393,7 +11424,7 @@ namespace ChuvaVazaoTools
         {
             var dir = System.IO.Path.Combine(pastaSaida);
             //string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
-            string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "");
+            string mod = modelo.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "").Replace("CVSMAP0_", "");
 
             var dirMod = System.IO.Path.Combine(dir, "SMAP");
             string[] dir_Bacias = Directory.GetDirectories(dirMod);

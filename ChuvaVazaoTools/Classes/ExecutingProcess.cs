@@ -604,7 +604,7 @@ namespace ChuvaVazaoTools.Classes
                 //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
                 //propagacoes.Add(Jirau);
                 //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
-                string nomeVazao = "JIRAU";
+                string nomeVazao = "JIRAU2";
 
                 var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
                 Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = nomeVazao, TempoViagem = 0, FatorDistribuicao = 1 });
@@ -3841,7 +3841,7 @@ namespace ChuvaVazaoTools.Classes
                 #region JIRAU
                 //var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "JIRAU2".ToUpper()).Select(x => x.Vazoes).First();
                 //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
-                string nomeVazao = "JIRAU";
+                string nomeVazao = "JIRAU2";
 
                 var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == nomeVazao.ToUpper()).Select(x => x.Vazoes).First();
                 var jirau = propagacoes.Where(x => x.IdPosto == 285).FirstOrDefault();

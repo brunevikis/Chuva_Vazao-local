@@ -46,7 +46,10 @@ namespace ChuvaVazaoTools
             ve_antecipada = feriados_ve.Contains(runRev_Curr.revDate) ? -2 : feriados_ve.Contains(runRev_Curr.revDate.AddDays(-1)) ? -3 : -1;
             dias_ve = ve_antecipada;
             var cv1 = runRev_Curr.revDate.AddDays(dias_ve);
+            var cvx = cv1.AddDays(-1);
+
             logF.WriteLine("VE_CV1 = " + cv1.ToString("dd/MM/yyyy"));
+            logF.WriteLine("VE_CVX = " + cvx.ToString("dd/MM/yyyy"));
 
 
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual);
@@ -543,7 +546,7 @@ namespace ChuvaVazaoTools
                     //}
 
 
-                    
+
                     //Completa Historico Arq Entrada
 
                     // Hist_Entrada("ECMWF", path_Conj, path_Previsao, data_Atual);
@@ -556,7 +559,14 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
                     // executar_R(path_Conj, "vies_ve_woutGEFS.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy"));
                     logF.WriteLine("Vies VE" + cv1.ToString("dd/MM/yy") + "   " + cv2.ToString("dd/MM/yy"));
-                    executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
+                    if (runRev.rev == 0)
+                    {
+                        executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy") + " " + cvx.ToString("dd/MM/yy"));
+                    }
+                    else
+                    {
+                        executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
+                    }
                     executar_R(path_Conj, "madeira.r");
 
                     logF.WriteLine("Copiando arquivos ENS_Est_rv Clusters e probabilidades");
@@ -585,6 +595,7 @@ namespace ChuvaVazaoTools
 
                     var vies_cv3 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv3.ToString("dd-MM")));
                     var vies_cv4 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv4.ToString("dd-MM")));
+                    var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
 
 
 
@@ -603,6 +614,17 @@ namespace ChuvaVazaoTools
                     rvx1(path_Conj, "ECMWFop", "CV_EUROop", vies_cv1, vies_cv2);
 
                     logF.WriteLine("CV_EURO_op Criada!");
+
+                    if (runRev.rev == 0 )
+                    {
+                        rvx1(path_Conj, "GEFS", "CV0_VIES_VE", vies_cvx, vies_cv2);
+
+                        logF.WriteLine("CV0_VIES_VE Criada!");
+
+                        rvx1(path_Conj, "ECMWF", "CV0_EURO", vies_cvx, vies_cv2);
+
+                        logF.WriteLine("CV0_EURO Criada!");
+                    }
 
                     //testes mapasa sem remoção EURO E GEFS
                     rvxPura(path_Conj, "GEFS", "CVPURO_PUROGEFS");
@@ -684,6 +706,13 @@ namespace ChuvaVazaoTools
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GFS", "CV_GFS", "ECENS45m", cv1);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EURO", "CV_EURO", "ECENS45m", cv1);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EUROop", "CV_EUROop", "ECENS45m", cv1);
+
+                        if (runRev.rev == 0)
+                        {
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_GEFS", "CV0_VIES_VE", "ECENS45m", cvx);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m", cvx);
+                        }
+                        
 
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m", cv2);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m", cv2);
@@ -1002,7 +1031,7 @@ namespace ChuvaVazaoTools
 
                                 var fim_nome = nome.Split('.').First().Split('a').Last();
 
-                                var nome_Final = search+"_p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                                var nome_Final = search + "_p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
                                 File.Copy(arq, Path.Combine(path_cv, nome_Final), true);
                                 lastfile = Path.Combine(path_cv, nome_Final);
                             }
@@ -1020,7 +1049,7 @@ namespace ChuvaVazaoTools
 
                             var fim_nome = nome.Split('.').First().Split('a').Last();
 
-                            var nome_Final = search+"_p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
+                            var nome_Final = search + "_p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
                             File.Copy(MergeFile, Path.Combine(path_cv, nome_Final), true);
                             lastfile = Path.Combine(path_cv, nome_Final);
 
