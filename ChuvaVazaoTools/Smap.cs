@@ -274,7 +274,7 @@ namespace ChuvaVazaoTools.SMAP
             {
                 if (baciaEx.Any(x => x.ToUpper() == sb.Nome.ToUpper()))
                 {
-                    string mode = ModelosPrecipitacao.Where(y => y.Contains("10")).First();
+                    string mode = ModelosPrecipitacao.Where(y => y.Contains(mod+"10")).First();
                     sb.CarregaSaida(mode, false);
 
                 }

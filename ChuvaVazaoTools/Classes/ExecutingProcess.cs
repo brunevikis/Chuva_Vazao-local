@@ -3723,11 +3723,12 @@ namespace ChuvaVazaoTools.Classes
                 #region  principe da Beira - Guajará Mirim
 
                 var PbGm = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "P_DA_BEIRA".ToUpper()).Select(x => x.Vazoes).First();
-                List<double> PbGmCoef = new List<double> { 0.375, 0.625, 0 };
-                if (shadow == true)
-                {
-                    PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
-                }
+                //List<double> PbGmCoef = new List<double> { 0.375, 0.625, 0 };
+                List<double> PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
+                //if (shadow == true)
+                //{
+                //    PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
+                //}
                 vazaoPassada = 0;
                 for (int i = 0; i < 2; i++)
                 {
@@ -3780,11 +3781,12 @@ namespace ChuvaVazaoTools.Classes
                 auxiliar[dataAux] = auxiliar[dataAux.AddDays(1)];
                 GmJi = auxiliar;
 
-                List<double> GmJiCoef = new List<double> { 0.375, 0.625, 0 };
-                if (shadow == true)
-                {
-                    GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
-                }
+                //List<double> GmJiCoef = new List<double> { 0.375, 0.625, 0 };
+                List<double> GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
+                //if (shadow == true)
+                //{
+                //    GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
+                //}
                 vazaoPassada = 0;
                 for (int i = 0; i < 2; i++)
                 {
@@ -3816,7 +3818,7 @@ namespace ChuvaVazaoTools.Classes
                     List<double> AmaruSmapCoef = new List<double> { 0.35236355811671099536, 0.56608358393819646626, 0.08155285794509256614 };
                   
                     vazaoPassada = 0;
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 7; i++)
                     {
                         foreach (var dat in AmaruSmap.Keys.ToList())
                         {
