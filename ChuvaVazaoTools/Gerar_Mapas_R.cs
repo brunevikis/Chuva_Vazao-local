@@ -554,6 +554,13 @@ namespace ChuvaVazaoTools
 
                     //transferECMWFmembrosShadow(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
 
+                    try
+                    {
+                        Tools.Tools.ManageOneDrive("stop");// para execução do onedrive para otimizar o uso da maquina nos processos de geração de mapas e rodadas 
+                    }
+                    catch { }
+                    
+
                     logF.WriteLine("Executando Script");
                     executar_R(path_Conj, "formato_novo.r");
                     executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
@@ -595,7 +602,6 @@ namespace ChuvaVazaoTools
 
                     var vies_cv3 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv3.ToString("dd-MM")));
                     var vies_cv4 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv4.ToString("dd-MM")));
-                    var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
 
 
 
@@ -617,6 +623,8 @@ namespace ChuvaVazaoTools
 
                     if (runRev.rev == 0 )
                     {
+                        var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
+
                         rvx1(path_Conj, "GEFS", "CV0_VIES_VE", vies_cvx, vies_cv2);
 
                         logF.WriteLine("CV0_VIES_VE Criada!");
@@ -1548,7 +1556,7 @@ namespace ChuvaVazaoTools
             return data_final;
         }
 
-
+        
 
         static void executar_R(string path, string Comando)
         {

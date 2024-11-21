@@ -104,10 +104,10 @@ namespace ChuvaVazaoTools.Tools
             cli.Port = 587;
             cli.EnableSsl = true;
             cli.UseDefaultCredentials = false;
-           // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
+            // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
             cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
 
-            
+
 
 
             var msg = new System.Net.Mail.MailMessage()
@@ -494,6 +494,47 @@ new DateTime(2033,11,20),
 new DateTime(2033,12,25),
 
             };
+        public static void ManageOneDrive(string option)
+        {
+            if (option == "stop")
+            {
+                string argumentos = "taskkill /f /im OneDrive.exe";
+
+                string executar = @"/C " + argumentos;
+
+                System.Diagnostics.Process pr = new System.Diagnostics.Process();
+
+                var prInfo = new System.Diagnostics.ProcessStartInfo();
+                prInfo.FileName = @"C:\Windows\System32\cmd.exe";
+                prInfo.UseShellExecute = false;
+
+                prInfo.Arguments = executar;
+                prInfo.CreateNoWindow = true;
+           
+                pr.StartInfo = prInfo;
+                pr.Start();
+                pr.WaitForExit();
+            }
+            else if (option == "start")
+            {
+                string argumentos = @"/background";
+                System.Diagnostics.Process pr = new System.Diagnostics.Process();
+
+                var prInfo = new System.Diagnostics.ProcessStartInfo();
+                //prInfo.FileName = @"C:\Windows\System32\cmd.exe";
+                prInfo.FileName = Environment.ExpandEnvironmentVariables(@"%UserProfile%\AppData\Local\Microsoft\OneDrive\OneDrive.exe");
+                prInfo.UseShellExecute = false;
+                prInfo.Arguments = argumentos;
+                prInfo.CreateNoWindow = true;
+                prInfo.RedirectStandardOutput = true;
+                prInfo.RedirectStandardInput = true;
+                pr.StartInfo = prInfo;
+                pr.Start();
+                pr.WaitForExit(10000);
+                pr.Close();
+            }
+
+        }
 
         public static Tuple<int, int, int> GetHorasPatamares(DateTime ini, DateTime fim, bool patamares2019)
         {
@@ -837,7 +878,7 @@ new DateTime(2033,12,25),
         public int MesSeguinte { get; set; }
         public int AnoSeguinte { get; set; }
 
-        
+
     }
 
     /*public class Acomph

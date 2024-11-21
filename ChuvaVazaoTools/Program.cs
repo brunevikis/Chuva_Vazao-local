@@ -991,14 +991,26 @@ namespace ChuvaVazaoTools
 
         internal static async void AutoExec(DateTime date, System.IO.TextWriter logF, bool encad = false, bool shadow = false)
         {
+            
             ///Rodada automática
             /// 
             var pastaSaida = "";
             string pastaBaseRodadas = "";
             var data_verifica = DateTime.Today;
+            var data_VE = DateTime.Today;
+            int ve_antecipada = 0;
             string tipoRodada = shadow == true ? "_shadow" : "";
 
+            while (data_VE.DayOfWeek != DayOfWeek.Friday)
+            {
+                data_VE = data_VE.AddDays(1);
+            }
 
+            DateTime[] feriados_ve = ChuvaVazaoTools.Tools.Tools.feriados;
+
+            ve_antecipada = feriados_ve.Contains(data_VE) ? -2 : feriados_ve.Contains(data_VE.AddDays(-1)) ? -3 : -1;
+
+            data_VE = data_VE.AddDays(ve_antecipada);
 
             if (DateTime.Now > DateTime.Today.AddHours(7))
             {
@@ -1121,6 +1133,9 @@ namespace ChuvaVazaoTools
                 //return;
                 if (File.Exists(Path.Combine(pastaSaida, "logC.txt")) && !File.Exists(Path.Combine(pastaSaida, "error.log")))
                 {
+
+
+
                     #region rodadas inutilizadas 
                     //try
                     //{
@@ -1302,11 +1317,12 @@ namespace ChuvaVazaoTools
 
                     try
                     {
-                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        //if (date.DayOfWeek != DayOfWeek.Thursday)
+                        if (date.DayOfWeek != data_VE.DayOfWeek)
                         {
                             //rodada com offset na remoção de viés.
                             frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro, true,shadow);//remocao cvsamp1euro
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro, true, shadow);//remocao cvsamp1euro
                         }
                     }
                     catch (Exception ex)
@@ -1316,11 +1332,12 @@ namespace ChuvaVazaoTools
 
                     try
                     {
-                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        //if (date.DayOfWeek != DayOfWeek.Thursday)
+                        if (date.DayOfWeek != data_VE.DayOfWeek)
                         {
                             frmMain.modelosChVz.Clear();
                             //rodada com offset na remoção de viés.
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGEFS, true,shadow);//remocao cvsamp1GEFS(VIES-VE)
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGEFS, true, shadow);//remocao cvsamp1GEFS(VIES-VE)
                         }
                     }
                     catch (Exception ex)
@@ -1330,7 +1347,8 @@ namespace ChuvaVazaoTools
 
                     try
                     {
-                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        //if (date.DayOfWeek != DayOfWeek.Thursday)
+                        if (date.DayOfWeek != data_VE.DayOfWeek)
                         {
                             //rodada com offset na remoção de viés.
 
@@ -1347,7 +1365,8 @@ namespace ChuvaVazaoTools
                     try
                     {
 
-                        if (date.DayOfWeek != DayOfWeek.Thursday)
+                        //if (date.DayOfWeek != DayOfWeek.Thursday)
+                        if (date.DayOfWeek != data_VE.DayOfWeek)
                         {
                             frmMain.modelosChVz.Clear();
                             frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGFS, true, shadow);//remocao cvsmap1gfs
@@ -1706,6 +1725,22 @@ namespace ChuvaVazaoTools
                 {
                     Directory.Delete(pastaSaida, true);
                 }
+
+                //verifica se ja existe processo do onedrive aberto e se esta na hora de ser iniciado
+
+                var prCount = Process.GetProcesses().Where(p => p.ProcessName.Contains("OneDrive")).Count();
+                if (prCount == 0 && DateTime.Now >= DateTime.Today.AddHours(15))
+                {
+                    try
+                    {
+                        Tools.Tools.ManageOneDrive("start");//reinicia o onedrive caso esteja desativado (no processo de geração de mapas e rodadas, onedrive é desligado por questão de otimização de recursos da maquina)
+                    }
+                    catch(Exception e ) 
+                    {
+                        e.Message.ToString();
+                    }
+                }
+
             }
         }
 
