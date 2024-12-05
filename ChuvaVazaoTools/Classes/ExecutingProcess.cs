@@ -1184,20 +1184,19 @@ namespace ChuvaVazaoTools.Classes
 
                 #region juruena salto apiacas
 
-                if (shadow == true)
-                {
-                    #region Juruena
-                    var Juruena = new Propagacao() { IdPosto = 226, NomePostoFluv = "JURUENA" };
-                    Juruena.Modelo.Add(new ModeloSmap() { NomeVazao = "JURUENA", TempoViagem = 0, FatorDistribuicao = 1 });
-                    propagacoes.Add(Juruena);
-                    #endregion
 
-                    #region SAPIACAS
-                    var SAPIACAS = new Propagacao() { IdPosto = 225, NomePostoFluv = "SAPIACAS" };
-                    SAPIACAS.Modelo.Add(new ModeloSmap() { NomeVazao = "SAPIACAS", TempoViagem = 0, FatorDistribuicao = 1 });
-                    propagacoes.Add(SAPIACAS);
-                    #endregion
-                }
+                #region Juruena
+                var Juruena = new Propagacao() { IdPosto = 226, NomePostoFluv = "JURUENA" };
+                Juruena.Modelo.Add(new ModeloSmap() { NomeVazao = "JURUENA", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(Juruena);
+                #endregion
+
+                #region SAPIACAS
+                var SAPIACAS = new Propagacao() { IdPosto = 225, NomePostoFluv = "SAPIACAS" };
+                SAPIACAS.Modelo.Add(new ModeloSmap() { NomeVazao = "SAPIACAS", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(SAPIACAS);
+                #endregion
+
 
 
                 #endregion
@@ -2635,75 +2634,75 @@ namespace ChuvaVazaoTools.Classes
 
                 #region adiciona postos caculados
 
-                if (shadow == true)
+
+
+                var estrela = propagacoes.Where(x => x.IdPosto == 260).FirstOrDefault();
+                if (estrela == null)
                 {
-                    var estrela = propagacoes.Where(x => x.IdPosto == 260).FirstOrDefault();
-                    if (estrela == null)
-                    {
-                        estrela = new Propagacao() { IdPosto = 260, NomePostoFluv = "estrela" };
-                        propagacoes.Add(estrela);
-                    }
-                    
-
-
-
-                    var paranapanema = propagacoes.Where(x => x.IdPosto == 53).FirstOrDefault();
-                    if (paranapanema == null)
-                    {
-                        paranapanema = new Propagacao() { IdPosto = 53, NomePostoFluv = "paranapanema" };
-                        propagacoes.Add(paranapanema);
-                    }
-
-                    var p241Srverdinho = propagacoes.Where(x => x.IdPosto == 241).First();
-                    var p48Piraju = propagacoes.Where(x => x.IdPosto == 48).First();
-
-                    foreach (var dia in p48Piraju.VazaoNatural.Keys.ToList())
-                    {
-                        paranapanema.VazaoNatural[dia] = p48Piraju.VazaoNatural[dia];
-                    }
-
-                    foreach (var dia in p48Piraju.VazaoIncremental.Keys.ToList())
-                    {
-                        paranapanema.VazaoIncremental[dia] = p48Piraju.VazaoIncremental[dia];
-                    }
-
-                    foreach (var dia in p48Piraju.calMedSemanal.Keys.ToList())
-                    {
-                        paranapanema.calMedSemanal[dia] = p48Piraju.calMedSemanal[dia];
-                    }
-                    foreach (var dia in p48Piraju.medSemanalIncremental.Keys.ToList())
-                    {
-                        paranapanema.medSemanalIncremental[dia] = p48Piraju.medSemanalIncremental[dia];
-                    }
-                    foreach (var dia in p48Piraju.medSemanalNatural.Keys.ToList())
-                    {
-                        paranapanema.medSemanalNatural[dia] = p48Piraju.medSemanalNatural[dia];
-                    }/////////////////
-
-                    foreach (var dia in p241Srverdinho.VazaoNatural.Keys.ToList())
-                    {
-                        estrela.VazaoNatural[dia] = p241Srverdinho.VazaoNatural[dia] * 0.68;
-                    }
-
-                    foreach (var dia in p241Srverdinho.VazaoIncremental.Keys.ToList())
-                    {
-                        estrela.VazaoIncremental[dia] = p241Srverdinho.VazaoIncremental[dia] * 0.68;
-                    }
-
-                    foreach (var dia in p241Srverdinho.calMedSemanal.Keys.ToList())
-                    {
-                        estrela.calMedSemanal[dia] = p241Srverdinho.calMedSemanal[dia] * 0.68;
-                    }
-                    foreach (var dia in p241Srverdinho.medSemanalIncremental.Keys.ToList())
-                    {
-                        estrela.medSemanalIncremental[dia] = p241Srverdinho.medSemanalIncremental[dia] * 0.68;
-                    }
-                    foreach (var dia in p241Srverdinho.medSemanalNatural.Keys.ToList())
-                    {
-                        estrela.medSemanalNatural[dia] = p241Srverdinho.medSemanalNatural[dia] * 0.68;
-                    }
-
+                    estrela = new Propagacao() { IdPosto = 260, NomePostoFluv = "estrela" };
+                    propagacoes.Add(estrela);
                 }
+
+
+
+
+                var paranapanema = propagacoes.Where(x => x.IdPosto == 53).FirstOrDefault();
+                if (paranapanema == null)
+                {
+                    paranapanema = new Propagacao() { IdPosto = 53, NomePostoFluv = "paranapanema" };
+                    propagacoes.Add(paranapanema);
+                }
+
+                var p241Srverdinho = propagacoes.Where(x => x.IdPosto == 241).First();
+                var p48Piraju = propagacoes.Where(x => x.IdPosto == 48).First();
+
+                foreach (var dia in p48Piraju.VazaoNatural.Keys.ToList())
+                {
+                    paranapanema.VazaoNatural[dia] = p48Piraju.VazaoNatural[dia];
+                }
+
+                foreach (var dia in p48Piraju.VazaoIncremental.Keys.ToList())
+                {
+                    paranapanema.VazaoIncremental[dia] = p48Piraju.VazaoIncremental[dia];
+                }
+
+                foreach (var dia in p48Piraju.calMedSemanal.Keys.ToList())
+                {
+                    paranapanema.calMedSemanal[dia] = p48Piraju.calMedSemanal[dia];
+                }
+                foreach (var dia in p48Piraju.medSemanalIncremental.Keys.ToList())
+                {
+                    paranapanema.medSemanalIncremental[dia] = p48Piraju.medSemanalIncremental[dia];
+                }
+                foreach (var dia in p48Piraju.medSemanalNatural.Keys.ToList())
+                {
+                    paranapanema.medSemanalNatural[dia] = p48Piraju.medSemanalNatural[dia];
+                }/////////////////
+
+                foreach (var dia in p241Srverdinho.VazaoNatural.Keys.ToList())
+                {
+                    estrela.VazaoNatural[dia] = p241Srverdinho.VazaoNatural[dia] * 0.68;
+                }
+
+                foreach (var dia in p241Srverdinho.VazaoIncremental.Keys.ToList())
+                {
+                    estrela.VazaoIncremental[dia] = p241Srverdinho.VazaoIncremental[dia] * 0.68;
+                }
+
+                foreach (var dia in p241Srverdinho.calMedSemanal.Keys.ToList())
+                {
+                    estrela.calMedSemanal[dia] = p241Srverdinho.calMedSemanal[dia] * 0.68;
+                }
+                foreach (var dia in p241Srverdinho.medSemanalIncremental.Keys.ToList())
+                {
+                    estrela.medSemanalIncremental[dia] = p241Srverdinho.medSemanalIncremental[dia] * 0.68;
+                }
+                foreach (var dia in p241Srverdinho.medSemanalNatural.Keys.ToList())
+                {
+                    estrela.medSemanalNatural[dia] = p241Srverdinho.medSemanalNatural[dia] * 0.68;
+                }
+
+
 
                 #endregion
 
