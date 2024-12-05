@@ -10,7 +10,7 @@ namespace ChuvaVazaoTools
 {
     class Gerar_Mapas_R
     {
-        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF)
+        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false)
         {
 
             DateTime data_Atual = DateTime.Today;
@@ -562,7 +562,16 @@ namespace ChuvaVazaoTools
                     
 
                     logF.WriteLine("Executando Script");
-                    executar_R(path_Conj, "formato_novo.r");
+
+                    if (shadow == true)
+                    {
+                        executar_R(path_Conj, "formato_novo_shadow.r");
+                    }
+                    else
+                    {
+                        executar_R(path_Conj, "formato_novo.r");
+                    }
+
                     executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
                     // executar_R(path_Conj, "vies_ve_woutGEFS.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy"));
                     logF.WriteLine("Vies VE" + cv1.ToString("dd/MM/yy") + "   " + cv2.ToString("dd/MM/yy"));

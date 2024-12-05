@@ -7005,7 +7005,7 @@ namespace ChuvaVazaoTools
         void ExecutarTudoTotal(string raiz, RunStatus statusF = null, bool smapR = false)
         {
             //string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
-            string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "");
+            string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "").Replace("CVSMAP0_", "");
 
             if (statusF != null) statusF.Execution = RunStatus.statuscode.initialialized;
 
@@ -8137,7 +8137,7 @@ namespace ChuvaVazaoTools
                 x => System.IO.Path.GetFileName(x.CaminhoArquivo).ToUpperInvariant(),
                 y => y.Arquivo.ToUpperInvariant(), (x, y) => new { posto = x, config = y }))
             {
-                if (arqEntrada.config.Arquivo == "COLIDER.TXT")
+                if (arqEntrada.config.Arquivo == "JURUENA.TXT")
                 {
 
                 }

@@ -2418,7 +2418,7 @@ namespace ChuvaVazaoTools
 
             System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(localPath, "Conjunto - PastasEArquivos.zip"), Path.Combine(localPath, "Conjunto - PastasEArquivos"));
 
-            ChuvaVazaoTools.Gerar_Mapas_R.Gerar_R(Path.Combine(localPath, "Conjunto - PastasEArquivos"), LogF);
+            ChuvaVazaoTools.Gerar_Mapas_R.Gerar_R(Path.Combine(localPath, "Conjunto - PastasEArquivos"), LogF, shadow);
 
             var dirs = Directory.GetDirectories(Path.Combine(localPath, "Conjunto - PastasEArquivos"));
 
