@@ -694,6 +694,7 @@ namespace ChuvaVazaoTools
             string planilha = @"C:\Sistemas\ResumoEna\Resumo-ENAauto.xlsm";
             DateTime date = DateTime.Today;
             string dirImagens = $@"C:\Sistemas\ResumoEna\imagens\{date:dd-MM-yyyy}";
+            int contagem = 0;
 
             Directory.CreateDirectory(dirImagens);
 
@@ -754,10 +755,12 @@ namespace ChuvaVazaoTools
             if (modo == "pre acomph")
             {
                 ranges = preAcomphRanges;
+                contagem = 13;//numero de rodadas possiveis no total até o momento
             }
             else
             {
                 ranges = posAcomphRanges;
+                contagem = 26;//numero de rodadas possiveis no total até o momento
             }
             //if (Directory.Exists(dirImagens))
             //{
@@ -773,117 +776,119 @@ namespace ChuvaVazaoTools
             //    //}
             //}
 
-            Microsoft.Office.Interop.Excel.Workbook wb = null;
-            // Microsoft.Office.Interop.Excel.Workbook workbook;
-            Microsoft.Office.Interop.Excel.Workbooks workbooks = null;
-
-            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
-            this.pointer = new IntPtr(excel.Hwnd);
-
-            string xlsName = Path.GetFileName(planilha);
-            try
+            if (lista.Count() < contagem)//ainda existem rodadas para exportar
             {
+                Microsoft.Office.Interop.Excel.Workbook wb = null;
+                // Microsoft.Office.Interop.Excel.Workbook workbook;
+                Microsoft.Office.Interop.Excel.Workbooks workbooks = null;
 
-                excel.DisplayAlerts = false;
-                excel.Visible = true;
-                excel.ScreenUpdating = true;
-                // Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Open(planilha);
-                //workbook = excel.Workbooks.Open(planilha);
-                workbooks = excel.Workbooks;
-                wb = workbooks.Open(planilha);
+                Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                this.pointer = new IntPtr(excel.Hwnd);
 
-                //wb = excel.ActiveWorkbook;
-                // wb = excel.ActiveWorkbook;
-                //var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets["ENA"];
-                var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)wb.Sheets["ENA"];
-                wkSheet.Select();
-                wkSheet.Range["dataRodada"].Value = date;
-                wkSheet.Range["I2"].Value = pastaBase;
-                wkSheet.Range["Acomph"].Value = modo;
-
-                string texto = "";
-                List<Tuple<string, string>> pares = new List<Tuple<string, string>>();
-                int num = 1;
-
-
-                excel.Run($"'{xlsName}'!loadWeekly");
-                excel.Calculate();
-                excel.Run($"'{xlsName}'!pld");
-                excel.Calculate();
-
-                foreach (var rng in ranges)
+                string xlsName = Path.GetFileName(planilha);
+                try
                 {
-                    //Excel.Range r = wb.ActiveSheet.Range["C5:W12"];
-                    Excel.Range r = wb.ActiveSheet.Range[rng];
-                    string nome = wkSheet.Range[rng.Split(':')[0]].Value;
-                    int row = wkSheet.Range[rng.Split(':')[0]].Row + 1;
-                    int col = wkSheet.Range[rng.Split(':')[0]].Column + 1;
 
-                    if (wkSheet.Range[wkSheet.Cells[row, col], wkSheet.Cells[row, col]].Text != "#N/D")
+                    excel.DisplayAlerts = false;
+                    excel.Visible = true;
+                    excel.ScreenUpdating = true;
+                    // Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks.Open(planilha);
+                    //workbook = excel.Workbooks.Open(planilha);
+                    workbooks = excel.Workbooks;
+                    wb = workbooks.Open(planilha);
+
+                    //wb = excel.ActiveWorkbook;
+                    // wb = excel.ActiveWorkbook;
+                    //var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Sheets["ENA"];
+                    var wkSheet = (Microsoft.Office.Interop.Excel.Worksheet)wb.Sheets["ENA"];
+                    wkSheet.Select();
+                    wkSheet.Range["dataRodada"].Value = date;
+                    wkSheet.Range["I2"].Value = pastaBase;
+                    wkSheet.Range["Acomph"].Value = modo;
+
+                    string texto = "";
+                    List<Tuple<string, string>> pares = new List<Tuple<string, string>>();
+                    int num = 1;
+
+
+                    excel.Run($"'{xlsName}'!loadWeekly");
+                    excel.Calculate();
+                    excel.Run($"'{xlsName}'!pld");
+                    excel.Calculate();
+
+                    foreach (var rng in ranges)
                     {
-                        nome = nome.Replace('\n', '-') + complemento;
-                        string imagePath = Path.Combine(dirImagens, $@"{nome}.jpg");
+                        //Excel.Range r = wb.ActiveSheet.Range["C5:W12"];
+                        Excel.Range r = wb.ActiveSheet.Range[rng];
+                        string nome = wkSheet.Range[rng.Split(':')[0]].Value;
+                        int row = wkSheet.Range[rng.Split(':')[0]].Row + 1;
+                        int col = wkSheet.Range[rng.Split(':')[0]].Column + 1;
 
-                        r.CopyPicture(Excel.XlPictureAppearance.xlScreen,
-                                       Excel.XlCopyPictureFormat.xlBitmap);
-
-                        if (Clipboard.GetDataObject() != null)
+                        if (wkSheet.Range[wkSheet.Cells[row, col], wkSheet.Cells[row, col]].Text != "#N/D")
                         {
-                            IDataObject data = Clipboard.GetDataObject();
+                            nome = nome.Replace('\n', '-') + complemento;
+                            string imagePath = Path.Combine(dirImagens, $@"{nome}.jpg");
 
-                            if (data.GetDataPresent(DataFormats.Bitmap) && lista.All(x => !x.Contains(imagePath)))
+                            r.CopyPicture(Excel.XlPictureAppearance.xlScreen,
+                                           Excel.XlCopyPictureFormat.xlBitmap);
+
+                            if (Clipboard.GetDataObject() != null)
                             {
-                                Image image = (Image)data.GetData(DataFormats.Bitmap, true);
-                                //this.pictureBox1.Image = image;
-                                image.Save(imagePath,
-                                    System.Drawing.Imaging.ImageFormat.Jpeg);
+                                IDataObject data = Clipboard.GetDataObject();
 
-                                //texto = texto + $"<img src=cid:myImageID{num} height=352 width=954>";
-                                texto = texto + $"<img src=cid:myImageID{num} height=176 width=954>";
-                                pares.Add(new Tuple<string, string>($"myImageID{num}", imagePath));
-                                num++;
-                                enviar = true;
-                                lista.Add(imagePath);
+                                if (data.GetDataPresent(DataFormats.Bitmap) && lista.All(x => !x.Contains(imagePath)))
+                                {
+                                    Image image = (Image)data.GetData(DataFormats.Bitmap, true);
+                                    //this.pictureBox1.Image = image;
+                                    image.Save(imagePath,
+                                        System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                                    //texto = texto + $"<img src=cid:myImageID{num} height=352 width=954>";
+                                    texto = texto + $"<img src=cid:myImageID{num} height=176 width=954>";
+                                    pares.Add(new Tuple<string, string>($"myImageID{num}", imagePath));
+                                    num++;
+                                    enviar = true;
+                                    lista.Add(imagePath);
+                                }
+
                             }
 
                         }
 
                     }
 
-                }
+                    wb.Close(SaveChanges: false);
+                    //workbook.Close(SaveChanges: false);
+                    excel.Quit();
+                    Helper.Release(excel);
 
-                wb.Close(SaveChanges: false);
-                //workbook.Close(SaveChanges: false);
-                excel.Quit();
-                Helper.Release(excel);
-
-                //Marshal.ReleaseComObject(wb);
-                //Marshal.ReleaseComObject(workbooks);
-                //Marshal.ReleaseComObject(excel);
+                    //Marshal.ReleaseComObject(wb);
+                    //Marshal.ReleaseComObject(workbooks);
+                    //Marshal.ReleaseComObject(excel);
 
 
 
-                //excel = null;
-                //wb = null;
-                //workbooks = null;
-                //wkSheet = null;
+                    //excel = null;
+                    //wb = null;
+                    //workbooks = null;
+                    //wkSheet = null;
 
 
-                //GC.Collect();
-                //GC.WaitForPendingFinalizers();
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
 
-                //foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
-                //{
-                //    proc.Kill();
-                //    //if (proc.MainWindowHandle == this.pointer)
-                //    //{
-                //    //    proc.Kill();
-                //    //}
-                //}
+                    //foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                    //{
+                    //    proc.Kill();
+                    //    //if (proc.MainWindowHandle == this.pointer)
+                    //    //{
+                    //    //    proc.Kill();
+                    //    //}
+                    //}
 
-                if (enviar == true)
-                {
-                    var bodyHtml = $@"<html>
+                    if (enviar == true)
+                    {
+                        var bodyHtml = $@"<html>
                               <body>
                                 <table width=""100%"">
                                 <tr>
@@ -896,66 +901,74 @@ namespace ChuvaVazaoTools
                                 </body>
                                 </html>";
 
-                    logF.WriteLine("ENVIANDO E-MAIL");
+                        logF.WriteLine("ENVIANDO E-MAIL");
 
-                    var email = Tools.Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "preco", pares);//TODO: preco
-                    email.Wait(30000);
+                        var email = Tools.Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "preco", pares);//TODO: preco
+                        email.Wait(30000);
 
-                    //await Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
+                        //await Tools.SendMailImageList("", bodyHtml, "Acompanhamento Resultado ENA CHUVA-VAZÃO", "desenv", pares);//TODO: preco
 
-                    File.WriteAllLines(listaDeImagens, lista);
-                    logF.WriteLine("E-MAIL ENVIADO COM SUCESSO");
-                    logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
+                        File.WriteAllLines(listaDeImagens, lista);
+                        logF.WriteLine("E-MAIL ENVIADO COM SUCESSO");
+                        logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
 
-                }
-                else
-                {
-                    logF.WriteLine("SEM NOVOS RESULTADOS");
-
-                    logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
-                }
-                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
-                {
-                    if (proc.MainWindowHandle == this.pointer)
-                    {
-                        proc.Kill();
                     }
+                    else
+                    {
+                        logF.WriteLine("SEM NOVOS RESULTADOS");
+
+                        logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
+                    }
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                    {
+                        if (proc.MainWindowHandle == this.pointer)
+                        {
+                            proc.Kill();
+                        }
+                    }
+                    //===================
                 }
-                //===================
+                catch (Exception e)
+                {
+                    //wb.Close();
+                    //excel.Quit();
+                    logF.WriteLine("ERRO EXPORTAÇÃO DE RESULTADOS ENA: " + e.Message.ToString());
+
+                    wb.Close(SaveChanges: false);
+                    //workbook.Close(SaveChanges: false);
+                    excel.Quit();
+                    foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
+                    {
+                        if (proc.MainWindowHandle == this.pointer)
+                        {
+                            proc.Kill();
+                        }
+                    }
+                    if (Directory.Exists(dirImagens))
+                    {
+                        var arqsDel = Directory.GetFiles(dirImagens).ToList();
+                        foreach (var arq in arqsDel)
+                        {
+                            if (arq.Contains("Lista.txt"))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                File.Delete(arq);
+                            }
+                        }
+                    }
+
+                }
             }
-            catch (Exception e)
+            else
             {
-                //wb.Close();
-                //excel.Quit();
-                logF.WriteLine("ERRO EXPORTAÇÃO DE RESULTADOS ENA: " + e.Message.ToString());
+                logF.WriteLine("NÃO EXISTEM NOVAS RODADAS");
 
-                wb.Close(SaveChanges: false);
-                //workbook.Close(SaveChanges: false);
-                excel.Quit();
-                foreach (System.Diagnostics.Process proc in System.Diagnostics.Process.GetProcessesByName("Excel"))
-                {
-                    if (proc.MainWindowHandle == this.pointer)
-                    {
-                        proc.Kill();
-                    }
-                }
-                if (Directory.Exists(dirImagens))
-                {
-                    var arqsDel = Directory.GetFiles(dirImagens).ToList();
-                    foreach (var arq in arqsDel)
-                    {
-                        if (arq.Contains("Lista.txt"))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            File.Delete(arq);
-                        }
-                    }
-                }
-
+                logF.WriteLine("FIM DA ROTINA DE EXPORTAÇÃO");
             }
+
 
         }
         public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false)
@@ -3200,7 +3213,7 @@ namespace ChuvaVazaoTools
             {
                 List<string> ordemBacias = new List<string>() { "GRANDE", "PARANAÍBA", "ALTO TIETÊ", "TIETÊ",
                                                                 "PARANAPANEMA (SE)", "ALTO PARANÁ", "BAIXO PARANÁ",
-                                                                "PARAÍBA DO SUL", "ITABAPOANA", "MUCURI","SANTA MARIA VITORIA", "DOCE", "PARAGUAI",
+                                                                "PARAÍBA DO SUL", "ITABAPOANA", "MUCURI","SANTA MARIA DA VITORIA", "DOCE", "PARAGUAI",
                                                                 "JEQUITINHONHA (SE)", "AMAZONAS (SE)", "SÃO FRANCISCO (SE)",
                                                                 "TOCANTINS (SE)", "IGUAÇU", "JACUÍ", "URUGUAI", "CAPIVARI",
                                                                 "ITAJAÍ-AÇU", "PARANAPANEMA (S)", "SÃO FRANCISCO (NE)", "JEQUITINHONHA (NE)",
@@ -3208,14 +3221,14 @@ namespace ChuvaVazaoTools
 
 
                 List<string> subMercados = new List<string>() { "SE/CO", "S", "NE", "N" };
-                List<string> sudeste = new List<string>() { "TOCANTINS (SE)", "SÃO FRANCISCO (SE)", "JEQUITINHONHA (SE)", "PARAGUAI", "DOCE", "MUCURI", "ITABAPOANA", "PARAÍBA DO SUL", "ALTO TIETÊ", "SANTA MARIA VITORIA" };
+                List<string> sudeste = new List<string>() { "TOCANTINS (SE)", "SÃO FRANCISCO (SE)", "JEQUITINHONHA (SE)", "PARAGUAI", "DOCE", "MUCURI", "ITABAPOANA", "PARAÍBA DO SUL", "ALTO TIETÊ", "SANTA MARIA DA VITORIA" };
                 List<string> madeira = new List<string>() { "AMAZONAS (SE)" };//tem calculo (-total de tele pires)
                 List<string> parana = new List<string>() { "GRANDE", "PARANAÍBA", "TIETÊ", "ALTO PARANÁ" };//tem calculo
                 List<string> paranapanema = new List<string>() { "PARANAPANEMA (SE)" };//Tem calculo
                 List<string> sul = new List<string>() { "PARANAPANEMA (S)", "IGUAÇU" };//tem calculo (somar com total do sul)
                 List<string> iguacu = new List<string>() { "PARANAPANEMA (S)", "IGUAÇU" };
                 List<string> norte = new List<string>() { "TOCANTINS (N)" };
-                List<string> Belomonte = new List<string>() { "AMAZONAS - BELO MONTE" };//tem calculo
+                List<string> Belomonte = new List<string>() { "XINGU" };//tem calculo
                 List<string> manaus = new List<string>() { "ARAGUARI", "AMAZONAS (N)" };//tem calculo (-valor calculado em belo monte)
                                                                                         //enasemanal
                 #region enasemanal
@@ -3277,7 +3290,7 @@ namespace ChuvaVazaoTools
                     }
 
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                     "ENA (MWmed)");
                 var dats = enasemanal.Where(x => x.DadoEna.Count() == 12).Select(x => x.DadoEna).First();
                 foreach (var item in dats.Keys.ToList())
@@ -3291,7 +3304,7 @@ namespace ChuvaVazaoTools
                 }
                 for (int s = 0; s < 4; s++)
                 {
-                    enaSem.AppendFormat("{0,-21}",
+                    enaSem.AppendFormat("{0,-22}",
                     subMercados[s]);
                     foreach (var item in dats.Keys.ToList())
                     {
@@ -3325,8 +3338,8 @@ namespace ChuvaVazaoTools
                             }
                             else
                             {
-                                enaSem.AppendFormat("{0,-21}",
-                                       bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString());
+                                enaSem.AppendFormat("{0,-22}",
+                                       bac.Replace("XINGU", "XINGU").ToString());
                                 foreach (var item in dats.Keys.ToList())
                                 {
                                     double resultado = 0;
@@ -3335,7 +3348,7 @@ namespace ChuvaVazaoTools
                                     {
                                         resultado += post.DadoEna[item];
                                     }
-                                    Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString(), item, resultado);
+                                    Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "XINGU").ToString(), item, resultado);
                                     ReeDados.Add(rDado);
 
                                     enaSem.AppendFormat("{0,15}",
@@ -3351,9 +3364,9 @@ namespace ChuvaVazaoTools
                     }
                 }
 
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                     "ENA (MWmed)"); enaSem.AppendLine();
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "SUDESTE");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3370,7 +3383,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "MADEIRA");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3391,7 +3404,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "TELES PIRES");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3408,7 +3421,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "ITAIPÚ");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3427,7 +3440,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "PARANA");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3450,7 +3463,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "PARANAPANEMA");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3472,7 +3485,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "SUL");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3494,7 +3507,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
               "IGUAÇU");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3512,7 +3525,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "NORDESTE");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3529,7 +3542,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "NORTE");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3546,7 +3559,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                 "BELO MONTE");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3566,7 +3579,7 @@ namespace ChuvaVazaoTools
                         enaSem.AppendLine();
                     }
                 }
-                enaSem.AppendFormat("{0,-21}",
+                enaSem.AppendFormat("{0,-22}",
                "MANAUS");
                 foreach (var item in dats.Keys.ToList())
                 {
@@ -3687,7 +3700,7 @@ namespace ChuvaVazaoTools
 
                 }
 
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                     "ENA (MWmed)");
                 //var dats = enasemanal.Where(x => x.DadoEna.Count() == 12).Select(x => x.DadoEna).First();
                 foreach (var item in dias)
@@ -3701,7 +3714,7 @@ namespace ChuvaVazaoTools
                 }
                 for (int s = 0; s < 4; s++)
                 {
-                    enaDia.AppendFormat("{0,-21}",
+                    enaDia.AppendFormat("{0,-22}",
                     subMercados[s]);
                     foreach (var item in dias)
                     {
@@ -3735,8 +3748,8 @@ namespace ChuvaVazaoTools
                             }
                             else
                             {
-                                enaDia.AppendFormat("{0,-21}",
-                                       bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString());
+                                enaDia.AppendFormat("{0,-22}",
+                                       bac.Replace("XINGU", "XINGU").ToString());
                                 foreach (var item in dias)
                                 {
                                     double resultado = 0;
@@ -3745,7 +3758,7 @@ namespace ChuvaVazaoTools
                                     {
                                         resultado += post.DadoEna[item];
                                     }
-                                    Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "AMAZONAS - BELO MONTE").ToString(), item, resultado);
+                                    Tuple<string, DateTime, double> rDado = new Tuple<string, DateTime, double>(bac.Replace("XINGU", "XINGU").ToString(), item, resultado);
                                     ReeDadoDia.Add(rDado);
 
                                     enaDia.AppendFormat("{0,15}",
@@ -3761,9 +3774,9 @@ namespace ChuvaVazaoTools
                     }
                 }
 
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                     "ENA (MWmed)"); enaDia.AppendLine();
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "SUDESTE");
                 foreach (var item in dias)
                 {
@@ -3780,7 +3793,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "MADEIRA");
                 foreach (var item in dias)
                 {
@@ -3801,7 +3814,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "TELES PIRES");
                 foreach (var item in dias)
                 {
@@ -3818,7 +3831,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "ITAIPÚ");
                 foreach (var item in dias)
                 {
@@ -3837,7 +3850,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "PARANA");
                 foreach (var item in dias)
                 {
@@ -3860,7 +3873,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "PARANAPANEMA");
                 foreach (var item in dias)
                 {
@@ -3882,7 +3895,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "SUL");
                 foreach (var item in dias)
                 {
@@ -3904,7 +3917,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
               "IGUAÇU");
                 foreach (var item in dias)
                 {
@@ -3922,7 +3935,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "NORDESTE");
                 foreach (var item in dias)
                 {
@@ -3939,7 +3952,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "NORTE");
                 foreach (var item in dias)
                 {
@@ -3956,7 +3969,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                 "BELO MONTE");
                 foreach (var item in dias)
                 {
@@ -3976,7 +3989,7 @@ namespace ChuvaVazaoTools
                         enaDia.AppendLine();
                     }
                 }
-                enaDia.AppendFormat("{0,-21}",
+                enaDia.AppendFormat("{0,-22}",
                "MANAUS");
                 foreach (var item in dias)
                 {
