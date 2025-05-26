@@ -1081,6 +1081,15 @@ namespace ChuvaVazaoTools.Classes
                 propagacoes.Add(saltPilao);
                 #endregion
 
+                //
+
+
+                #region Salto RS
+                var saltRS = new Propagacao() { IdPosto = 221, NomePostoFluv = "Salto RS" };
+                saltRS.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTORS", TempoViagem = 0, FatorDistribuicao = 1 });
+                propagacoes.Add(saltRS);
+                #endregion
+
                 #endregion
 
                 #region Paraiba do sul(outras se)//verificar talvez ver tocos lajes

@@ -2487,6 +2487,21 @@ namespace ChuvaVazaoTools
                         p.VazaoNatural[d] = p34 + p243;
                     }
 
+                    else if (p.IdPosto == 224)//calculo da vazao de canastra (224) usando como base a vazao de SaltoRS (221) (max(0; min(vaz221 -1 ; 12))
+                    {
+                        var p221 = GetMediaSemanal(Propagacoes, 221, d);
+                        double vazCal = p221 - 1;
+                        if (vazCal >= 12)
+                        {
+                            vazCal = 12;
+                        }
+                        if (vazCal <= 0)
+                        {
+                            vazCal = 0;
+                        }
+                        p.VazaoNatural[d] = vazCal;
+                    }
+
                     //else if (p.IdPosto == 21)
                     //{
                     //    var p123 = GetMediaSemanal(Propagacoes, 123, d);
