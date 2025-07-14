@@ -132,8 +132,20 @@ namespace ChuvaVazaoTools
                 logF.WriteLine("Verificando PsatPreliminar data atual");
                 bool temPsat = false;
                 string psatPrelFolder = Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS");
+                string psatPrelFolderK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "IMERG+GEFS");
                 string psatpre = "";
-                if (Directory.Exists(psatPrelFolder))
+
+                if (Directory.Exists(psatPrelFolderK))
+                {
+                    psatpre = Directory.GetFiles(psatPrelFolderK).Where(x => x.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (psatpre.Count() > 0)
+                    {
+                        temPsat = true;
+                        funcemePsatPre = "PsatPreliminar";
+                        logF.WriteLine("PsatPreliminar Encontrado via HEADNODE!");
+                    }
+                }
+                else if (Directory.Exists(psatPrelFolder))
                 {
                     psatpre = Directory.GetFiles(Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS")).Where(x => x.EndsWith(".dat", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     if (psatpre.Count() > 0)
@@ -173,6 +185,21 @@ namespace ChuvaVazaoTools
 
                     var GEFS_NOAA = Path.Combine(path_Previsao, "Modelo_R\\GEFS00");
                     var GEFS_NOAA_05 = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "GEFS_0.5_00");
+                    var GEFS_05_K = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "GEFS_0.5_00");
+
+                    if (Directory.Exists(GEFS_05_K))
+                    {
+                        var GEFS_05_KDats = Directory.GetFiles(GEFS_05_K, "GEFS_*").Where(x => x.EndsWith(".dat"));
+                        if (GEFS_05_KDats.Count() > 1)
+                        {
+                            GEFS_NOAA_05 = GEFS_05_K;
+                            logF.WriteLine("GEFS Encontrado via HEADNODE!");
+                        }
+                        else
+                        {
+                            logF.WriteLine("Buscando GEFS via Repositorio ONEDRIVE!");
+                        }
+                    }
 
                     //var path_ArqPrev = Path.Combine(path_Conj, "Arq_Entrada\\Previsao");
                     var path_ArqPrev = Path.Combine(path_Conj, "grid");
@@ -307,7 +334,14 @@ namespace ChuvaVazaoTools
                         else
                         {
                             var ECMWFensem_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-ENS00", "txt");
+                            var ECMWFensem_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-ENS00");
 
+                            if (Directory.Exists(ECMWFensem_DataStoreK))
+                            {
+                                ECMWFensem_DataStoreFolder = ECMWFensem_DataStoreK;
+                                logF.WriteLine("ECWMF Ensemble DATA STORE Encontrado via HEADNODE!");
+
+                            }
                             if (Directory.Exists(ECMWFensem_DataStoreFolder))
                             {
                                 var ecmwf_DataStoreArqs = Directory.GetFiles(ECMWFensem_DataStoreFolder, "ECMWF-ENS_*").Where(x => x.EndsWith(".dat"));
@@ -358,6 +392,15 @@ namespace ChuvaVazaoTools
                     var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
                     var EcmwfOP_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-HRES00", "txt");///mudar
 
+                    var EcmwfOP_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-HRES00");
+                    string complementoOP = "ECWMF op DATA STORE Encontrado!";
+
+                    if (Directory.Exists(EcmwfOP_DataStoreK))
+                    {
+                        EcmwfOP_DataStoreFolder = EcmwfOP_DataStoreK;
+                        complementoOP = "ECWMF op DATA STORE Encontrado via HEADNODE!";
+                    }
+
                     if (!Directory.Exists(EcmwfTempoOK))
                     {
                         Directory.CreateDirectory(EcmwfTempoOK);//para evitar de dar problemas na criação dos mapas caso o ecmwftempoOk não tenha baixado,a pasta é criada para não interromper o fluxo de verificação e é passado pra verificar o ecmwf meteologix
@@ -383,6 +426,8 @@ namespace ChuvaVazaoTools
 
                         if (ecmwfOP_DataStoreArqs != null && ecmwfOP_DataStoreArqs.Count() >= 9)
                         {
+                            logF.WriteLine(complementoOP);
+
                             if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWFop"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWFop"));
                             logF.WriteLine("Transferindo arquivos ECMWF OP DATA STORE");
 
@@ -442,13 +487,43 @@ namespace ChuvaVazaoTools
                     //var data_ecmwf_ext = ECMWF_Ext(cv2, Path.Combine(path_ArqPrev, "ECMWF"), -dias_ve + 13);
                     //gfs
                     logF.WriteLine("Tranferindo arquivos GFS para Entrada");
-                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "GFS"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "GFS"));
-                    var GFS_NOAA = Directory.GetFiles(Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "GFS00", "txt")).Where(x => x.EndsWith(".dat"));
 
-                    foreach (var arq in GFS_NOAA)
+                    if (!Directory.Exists(Path.Combine(path_ArqPrev, "GFS"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "GFS"));
+
+                    var GFS_NOAA_K = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "GFS00");
+
+                    var GFS_FOLDER = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "GFS00", "txt");
+
+                    if (Directory.Exists(GFS_NOAA_K))
                     {
-                        File.Copy(arq, Path.Combine(path_ArqPrev, "GFS", arq.Split('\\').Last()), true);
+                        var GFS_NOAA_Karqs = Directory.GetFiles(GFS_NOAA_K).Where(x => x.EndsWith(".dat"));
+                        if (GFS_NOAA_Karqs.Count() > 14)
+                        {
+                            GFS_FOLDER = GFS_NOAA_K;
+                            logF.WriteLine("Transferindo arquivos GFS via HEADNODE!");
+
+                        }
                     }
+
+                    if (Directory.Exists(GFS_FOLDER))
+                    {
+                        var GFS_NOAA = Directory.GetFiles(GFS_FOLDER).Where(x => x.EndsWith(".dat"));
+
+                        if (GFS_NOAA.Count() > 14)// verifica de novo para o caso de não existir a pasta no HEADNODE e por tanto esta tentando usar do onedrive
+                        {
+                            foreach (var arq in GFS_NOAA)
+                            {
+                                File.Copy(arq, Path.Combine(path_ArqPrev, "GFS", arq.Split('\\').Last()), true);
+                            }
+                        }
+                        else
+                        {
+                            throw new NotImplementedException("Arquivos GFS não encontrados");
+                        }
+                    }
+                    
+
+
                     //Descompactar o Zip Com dat
 
 
@@ -559,7 +634,7 @@ namespace ChuvaVazaoTools
                         Tools.Tools.ManageOneDrive("stop");// para execução do onedrive para otimizar o uso da maquina nos processos de geração de mapas e rodadas 
                     }
                     catch { }
-                    
+
 
                     logF.WriteLine("Executando Script");
 
@@ -630,7 +705,7 @@ namespace ChuvaVazaoTools
 
                     logF.WriteLine("CV_EURO_op Criada!");
 
-                    if (runRev.rev == 0 )
+                    if (runRev.rev == 0)
                     {
                         var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
 
@@ -729,7 +804,7 @@ namespace ChuvaVazaoTools
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_GEFS", "CV0_VIES_VE", "ECENS45m", cvx);
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m", cvx);
                         }
-                        
+
 
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m", cv2);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m", cv2);
@@ -1565,7 +1640,7 @@ namespace ChuvaVazaoTools
             return data_final;
         }
 
-        
+
 
         static void executar_R(string path, string Comando)
         {
