@@ -10,7 +10,7 @@ namespace ChuvaVazaoTools
 {
     class Gerar_Mapas_R
     {
-        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false)
+        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false, bool merge = false)
         {
 
             DateTime data_Atual = DateTime.Today;
@@ -132,7 +132,10 @@ namespace ChuvaVazaoTools
                 logF.WriteLine("Verificando PsatPreliminar data atual");
                 bool temPsat = false;
                 string psatPrelFolder = Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS");
-                string psatPrelFolderK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "IMERG+GEFS");
+
+                string compIMERG_MERGE = merge == true ? "MERGE+GEFS" : "IMERG+GEFS";
+                string psatPrelFolderK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), compIMERG_MERGE);
+
                 string psatpre = "";
 
                 if (Directory.Exists(psatPrelFolderK))
@@ -556,7 +559,14 @@ namespace ChuvaVazaoTools
 
                     if (temPsat)
                     {
-                        logF.WriteLine("Transferindo PsatPreliminar");
+                        if (merge == true)
+                        {
+                            logF.WriteLine("Transferindo MERGE+GEFS");
+                        }
+                        else
+                        {
+                            logF.WriteLine("Transferindo PsatPreliminar");
+                        }
 
                         string psatArq = $"imerg+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
                         File.Copy(psatpre, Path.Combine(path_ArqPrev, funcemePsatPre, psatArq), true);
@@ -631,7 +641,7 @@ namespace ChuvaVazaoTools
 
                     try
                     {
-                        Tools.Tools.ManageOneDrive("stop");// para execução do onedrive para otimizar o uso da maquina nos processos de geração de mapas e rodadas 
+                        //Tools.Tools.ManageOneDrive("stop");// para execução do onedrive para otimizar o uso da maquina nos processos de geração de mapas e rodadas 
                     }
                     catch { }
 

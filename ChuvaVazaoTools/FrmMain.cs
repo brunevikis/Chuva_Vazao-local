@@ -971,11 +971,11 @@ namespace ChuvaVazaoTools
 
 
         }
-        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false)
+        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false, bool merge = false)
         {
             dtAtual.Value = DateTime.Today.Date;
             cbx_Encadear_Previvaz.Checked = false;
-            string tipoRodada = shadow == true ? "_shadow" : "";
+            string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : "";
 
             runId = null;
             if (logF != null) logF.WriteLine("INICIANDO RODADA AUTOMÁTICA SELF PROCESS");
@@ -1008,7 +1008,7 @@ namespace ChuvaVazaoTools
             string horaPrev = "";
 
             //bloqueia execução de rodada cv0(remoção padrão quarta feira) e a revisão diferente de RV0
-            if (runRev.rev != 0 &&(offset == EnumRemo.RemocaoCV0SmapUmaSemanaGEFS || offset == EnumRemo.RemocaoCV0SmapUmaSemanaEuro))
+            if (runRev.rev != 0 && (offset == EnumRemo.RemocaoCV0SmapUmaSemanaGEFS || offset == EnumRemo.RemocaoCV0SmapUmaSemanaEuro))
             {
                 return;
             }
@@ -1039,7 +1039,7 @@ namespace ChuvaVazaoTools
             //Nome para rodada
             name = name + horaPrev;
 
-            PreencherVazObservada(out DateTime dataModelo, out string fonteVaz,shadow);
+            PreencherVazObservada(out DateTime dataModelo, out string fonteVaz, shadow);
 
             name = name + "_" + fonteVaz.ToUpper();
 
@@ -1070,13 +1070,13 @@ namespace ChuvaVazaoTools
             if (dataModelo < dtAtual.Value.Date.AddDays(-1))
             {
                 name = name + "_d-1";
-                pastaRaiz = Path.Combine(pastaMapa + " d-1"+ tipoRodada, "CV", "CV_FUNC");
-                pastaMapa = (pastaMapa + " d-1"+ tipoRodada);
+                pastaRaiz = Path.Combine(pastaMapa + " d-1" + tipoRodada, "CV", "CV_FUNC");
+                pastaMapa = (pastaMapa + " d-1" + tipoRodada);
                 d1 = true;
             }
             else
             {
-                pastaRaiz = Path.Combine(pastaMapa+ tipoRodada, "CV", "CV_FUNC");
+                pastaRaiz = Path.Combine(pastaMapa + tipoRodada, "CV", "CV_FUNC");
                 pastaMapa = pastaMapa + tipoRodada;
             }
 
@@ -1317,6 +1317,11 @@ namespace ChuvaVazaoTools
                 name = name + "_shadow";
                 complementoModelos = "_shadow";
             }
+            if (merge)
+            {
+                name = name + "_merge";
+                
+            }
 
             //fim da selecao de rodada
 
@@ -1516,7 +1521,7 @@ namespace ChuvaVazaoTools
                     PreencherPrecObserv();
 
                     //btnConsultarVazObserv_Click(sender, e);
-                    PreencherVazObservada(out _, out _,shadow);
+                    PreencherVazObservada(out _, out _, shadow);
 
 
                     dtAtual.Value = datModel.AddDays(1);
@@ -1614,6 +1619,10 @@ namespace ChuvaVazaoTools
                     pastaSmapTotal = pastaSmapTotal + "_shadow";
                 }
                 //
+                if (name.Contains("merge"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_merge";
+                }
 
                 //var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
                 var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name + @"\SMAP";
@@ -5903,6 +5912,10 @@ namespace ChuvaVazaoTools
                 pastaSmapTotal = pastaSmapTotal + "_shadow";
             }
             //
+            if (name.Contains("merge"))
+            {
+                pastaSmapTotal = pastaSmapTotal + "_merge";
+            }
 
             string zipSmap = pastaSmapTotal + ".zip";
 
