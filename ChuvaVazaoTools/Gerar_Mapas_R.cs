@@ -193,7 +193,7 @@ namespace ChuvaVazaoTools
                     if (Directory.Exists(GEFS_05_K))
                     {
                         var GEFS_05_KDats = Directory.GetFiles(GEFS_05_K, "GEFS_*").Where(x => x.EndsWith(".dat"));
-                        if (GEFS_05_KDats.Count() > 1)
+                        if (GEFS_05_KDats.Count() > 14)
                         {
                             GEFS_NOAA_05 = GEFS_05_K;
                             logF.WriteLine("GEFS Encontrado via HEADNODE!");

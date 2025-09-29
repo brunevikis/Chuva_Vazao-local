@@ -172,10 +172,10 @@ namespace ChuvaVazaoTools
 
                     var prCount = Process.GetProcesses().Where(p => p.ProcessName.Contains("ChuvaVazaoTools")).Count();
                     Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing");
-                    DateTime hoje22 = DateTime.Today.AddHours(22);
+                    DateTime hoje23 = DateTime.Today.AddHours(23);
                     DateTime agoraNow = DateTime.Now;
 
-                    if (hoje22.Day == agoraNow.Day && agoraNow.Hour < hoje22.Hour)
+                    if (hoje23.Day == agoraNow.Day && agoraNow.Hour < hoje23.Hour)
                     {
                         if (prCount <= 4)
                         {
