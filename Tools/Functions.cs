@@ -389,6 +389,7 @@ new DateTime(2025,10,12),
 new DateTime(2025,11,02),
 new DateTime(2025,11,15),
 new DateTime(2025,11,20),
+new DateTime(2025,12,19),//data colocada apenas para ajustar com uma pontualidade do ons logo não é um feriado
 new DateTime(2025,12,25),
 new DateTime(2026,01,01),
 new DateTime(2026,02,17),
