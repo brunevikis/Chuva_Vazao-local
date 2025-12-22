@@ -46,6 +46,12 @@ namespace ChuvaVazaoTools
             ve_antecipada = feriados_ve.Contains(runRev_Curr.revDate) ? -2 : feriados_ve.Contains(runRev_Curr.revDate.AddDays(-1)) ? -3 : -1;
             dias_ve = ve_antecipada;
             var cv1 = runRev_Curr.revDate.AddDays(dias_ve);
+
+            if (cv1.Date == new DateTime (2025,12,23).Date || cv1.Date == new DateTime(2025,12,30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
+            {
+                cv1 = cv1.AddDays(-1);
+            }
+
             var cvx = cv1.AddDays(-1);
 
             logF.WriteLine("VE_CV1 = " + cv1.ToString("dd/MM/yyyy"));
@@ -55,6 +61,12 @@ namespace ChuvaVazaoTools
             var runRev = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual);
             ve_antecipada = feriados_ve.Contains(runRev.revDate) ? -2 : feriados_ve.Contains(runRev.revDate.AddDays(-1)) ? -3 : -1;
             var cv2 = runRev.revDate.AddDays(ve_antecipada);
+
+            if (cv2.Date == new DateTime(2025, 12, 30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
+            {
+                cv2 = cv2.AddDays(-1);
+            }
+
             logF.WriteLine("VE_CV2 = " + cv2.ToString("dd/MM/yyyy"));
 
             var runRev3 = ChuvaVazaoTools.Tools.Tools.GetNextRev(data_Atual, 2);

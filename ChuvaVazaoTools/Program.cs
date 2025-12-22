@@ -1034,6 +1034,11 @@ namespace ChuvaVazaoTools
 
             data_VE = data_VE.AddDays(ve_antecipada);
 
+            if (data_VE.Date == new DateTime(2025, 12, 23).Date || data_VE.Date == new DateTime(2025, 12, 30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
+            {
+                data_VE = data_VE.AddDays(-1);
+            }
+
             if (DateTime.Now > DateTime.Today.AddHours(7))
             {
                 //var funceme = Directory.GetFiles(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\funceme\", data_verifica.ToString("yyyyMM"), data_verifica.ToString("dd")));
