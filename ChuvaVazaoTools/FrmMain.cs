@@ -971,11 +971,13 @@ namespace ChuvaVazaoTools
 
 
         }
-        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false, bool merge = false)
+        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false, bool merge = false, bool cfs = false)
         {
             dtAtual.Value = DateTime.Today.Date;
             cbx_Encadear_Previvaz.Checked = false;
-            string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : "";
+            //string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : "";
+            string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : cfs == true ? "_CFS" : "";
+
 
             runId = null;
             if (logF != null) logF.WriteLine("INICIANDO RODADA AUTOMÁTICA SELF PROCESS");
@@ -1322,6 +1324,11 @@ namespace ChuvaVazaoTools
                 name = name + "_merge";
                 
             }
+            if (cfs)
+            {
+                name = name + "_CFS";
+
+            }
 
             //fim da selecao de rodada
 
@@ -1478,7 +1485,7 @@ namespace ChuvaVazaoTools
                     {
                         logF.WriteLine("psat presente aguardando fim da atualização");
 
-                        Thread.Sleep(300000);
+                        Thread.Sleep(60000);
                         logF.WriteLine("retomando processo...");
                         esperouPsat = true;
                     }
@@ -1623,7 +1630,10 @@ namespace ChuvaVazaoTools
                 {
                     pastaSmapTotal = pastaSmapTotal + "_merge";
                 }
-
+                if (name.Contains("CFS"))
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_CFS";
+                }
                 //var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\testeSE_Bruno\" + name + @"\SMAP";
                 var pastaSmap = @"C:\Files\16_Chuva_Vazao\" + runRev.revDate.ToString("yyyy_MM") + @"\RV" + runRev.rev.ToString() + @"\" + DateTime.Now.ToString("yy-MM-dd") + @"\" + name + @"\SMAP";
                 var execOk = Path.Combine(pastaSmapTotal, "EXEC_OK.txt");
@@ -5915,6 +5925,10 @@ namespace ChuvaVazaoTools
             if (name.Contains("merge"))
             {
                 pastaSmapTotal = pastaSmapTotal + "_merge";
+            }
+            if (name.Contains("CFS"))
+            {
+                pastaSmapTotal = pastaSmapTotal + "_CFS";
             }
 
             string zipSmap = pastaSmapTotal + ".zip";

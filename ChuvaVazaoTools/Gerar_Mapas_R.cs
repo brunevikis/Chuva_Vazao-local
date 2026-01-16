@@ -10,7 +10,7 @@ namespace ChuvaVazaoTools
 {
     class Gerar_Mapas_R
     {
-        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false, bool merge = false)
+        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false, bool merge = false, bool cfs = false)
         {
 
             DateTime data_Atual = DateTime.Today;
@@ -47,10 +47,10 @@ namespace ChuvaVazaoTools
             dias_ve = ve_antecipada;
             var cv1 = runRev_Curr.revDate.AddDays(dias_ve);
 
-            if (cv1.Date == new DateTime (2025,12,23).Date || cv1.Date == new DateTime(2025,12,30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
-            {
-                cv1 = cv1.AddDays(-1);
-            }
+            //if (cv1.Date == new DateTime (2025,12,23).Date || cv1.Date == new DateTime(2025,12,30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
+            //{
+            //    cv1 = cv1.AddDays(-1);
+            //}
 
             var cvx = cv1.AddDays(-1);
 
@@ -62,10 +62,10 @@ namespace ChuvaVazaoTools
             ve_antecipada = feriados_ve.Contains(runRev.revDate) ? -2 : feriados_ve.Contains(runRev.revDate.AddDays(-1)) ? -3 : -1;
             var cv2 = runRev.revDate.AddDays(ve_antecipada);
 
-            if (cv2.Date == new DateTime(2025, 12, 30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
-            {
-                cv2 = cv2.AddDays(-1);
-            }
+            //if (cv2.Date == new DateTime(2025, 12, 30).Date)//todo: retirar esse if no dia 01 de janeiro apos radadas acomph
+            //{
+            //    cv2 = cv2.AddDays(-1);
+            //}
 
             logF.WriteLine("VE_CV2 = " + cv2.ToString("dd/MM/yyyy"));
 
@@ -536,7 +536,7 @@ namespace ChuvaVazaoTools
                             throw new NotImplementedException("Arquivos GFS não encontrados");
                         }
                     }
-                    
+
 
 
                     //Descompactar o Zip Com dat
@@ -683,7 +683,7 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "madeira.r");
 
                     logF.WriteLine("Copiando arquivos ENS_Est_rv Clusters e probabilidades");
-                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m",cfs);
 
                     if (temECEN45 == false)
                     {
@@ -833,18 +833,35 @@ namespace ChuvaVazaoTools
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GEFS", "CV2_GEFS", "ECENS45m", cv2);
                         rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GFS", "CV2_GFS", "ECENS45m", cv2);
 
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3);
+                       // if (runRev4.rev == 0)
+                       // {
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3, cfs);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3, cfs);
+                       // }
+                        //else
+                        //{
+                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3);
+                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3);
+                        //}
 
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4);
+                       // if (runRev5.rev == 0 || runRev5.rev == 1)
+                       // {
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4, cfs);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4, cfs);
+                       // }
+                        //else
+                        //{
+                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4);
+                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4);
+                        //}
+                        
 
                     }
 
                     // fim teste
 
 
-                    //Completa com Funceme se não tiver acomph referente a data
+                    //Completa com Funceme ou psatpreliminar se não tiver acomph referente a data
 
                     if (data_Atual != dt_acomph)
                     {
@@ -853,7 +870,7 @@ namespace ChuvaVazaoTools
                         //var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
                         var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, funcemePsatPre));
 
-                        foreach (var arq in arq_funceme)
+                        foreach (var arq in arq_funceme)//ajusta as datas dos dats para as rodadas pré acomph
                         {
                             foreach (var dir in dirs)
                             {
@@ -995,7 +1012,7 @@ namespace ChuvaVazaoTools
 
         }
 
-        internal static bool transferECMWFmembros(string path_Conj, string modelo, string nome_path)
+        internal static bool transferECMWFmembros(string path_Conj, string modelo, string nome_path, bool usarCFS = false)
         {
             DateTime data = DateTime.Today;
             var path_ArqSaida = Path.Combine(path_Conj, "madeira");
@@ -1004,6 +1021,25 @@ namespace ChuvaVazaoTools
             string ecenFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Clusters";
             string ecenProbDat = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv\Arq_Saida\ECMWF\Clust\prob.dat";
             int contagem = 0;
+
+            DateTime dataCFS = DateTime.Today;
+            string cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+            int contCfs = 0;
+            List<string> out_CFS = new List<string>();
+
+            while (!Directory.Exists(cfsFolderK) && contCfs < 4)//procura diretorio até 4 dias atras
+            {
+                dataCFS = dataCFS.AddDays(-1);
+                cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+
+                contCfs++;
+            }
+
+            if (Directory.Exists(cfsFolderK))
+            {
+                out_CFS = Directory.GetFiles(cfsFolderK).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+            }
+
             try
             {
                 while (!Directory.Exists(ecenFolder) && !File.Exists(ecenProbDat) && contagem < 16)//procura diretorio até 16 dias atras
@@ -1055,24 +1091,59 @@ namespace ChuvaVazaoTools
                             }
                         }
                         int cont = Directory.GetFiles(path_cv).Count();
-                        while (cont < 55 && lastfile != "")
+
+                        if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45 && usarCFS == true)
                         {
-                            string MediaMERGE = @"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\avg";
 
-                            var data_arq = DateTime.ParseExact(lastfile.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                            foreach (var cfs in out_CFS)
+                            {
+                                var dtCfs = DateTime.ParseExact(cfs.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
 
-                            string MergeFile = Path.Combine(MediaMERGE, "merge_mean_" + data_arq.Month.ToString("00") + ".dat");
+                                if (dtCfs > data_final)
+                                {
+                                    var nome = cfs.Split('\\').Last();
+                                    var fim_nome = nome.Split('.').First().Split('a').Last();
+                                    var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                                    string arquivoFinal = Path.Combine(path_cv, nome_Final);
 
-                            var nome = lastfile.Split('\\').Last();
+                                    if (!File.Exists(arquivoFinal))//copia apenas os arquivos que ainda faltam para completar os 55 dias 
+                                    {
+                                        File.Copy(cfs, arquivoFinal, true);
+                                    }
 
-                            var fim_nome = nome.Split('.').First().Split('a').Last();
+                                    cont = Directory.GetFiles(path_cv).Count();
+                                    if (cont == 55)
+                                    {
+                                        break;
+                                    }
+                                }
 
-                            var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
-                            File.Copy(MergeFile, Path.Combine(path_cv, nome_Final), true);
-                            lastfile = Path.Combine(path_cv, nome_Final);
 
-                            cont = Directory.GetFiles(path_cv).Count();
+                            }
+
                         }
+                        else
+                        {
+                            while (cont < 55 && lastfile != "")
+                            {
+                                string MediaMERGE = @"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\avg";
+
+                                var data_arq = DateTime.ParseExact(lastfile.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                                string MergeFile = Path.Combine(MediaMERGE, "merge_mean_" + data_arq.Month.ToString("00") + ".dat");
+
+                                var nome = lastfile.Split('\\').Last();
+
+                                var fim_nome = nome.Split('.').First().Split('a').Last();
+
+                                var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + data_arq.AddDays(1).ToString("ddMMyy") + ".dat";
+                                File.Copy(MergeFile, Path.Combine(path_cv, nome_Final), true);
+                                lastfile = Path.Combine(path_cv, nome_Final);
+
+                                cont = Directory.GetFiles(path_cv).Count();
+                            }
+                        }
+
                     }
 
                     File.Copy(ecenProbDat, Path.Combine(path_Conj, "prob.dat"), true);
@@ -1302,7 +1373,7 @@ namespace ChuvaVazaoTools
             }
         }
 
-        internal static void rvxSmapExtByModel(string path_Conj, string modelo, string nome_path, string modeloBase, string clusterName, DateTime iniVE)
+        internal static void rvxSmapExtByModel(string path_Conj, string modelo, string nome_path, string modeloBase, string clusterName, DateTime iniVE, bool usarCFS = false)
         {                                           //raiz       // ECENS45m      //CVSMAP1_FUNC        //CV_FUNC    //FUNC_ECENS45m       
             //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
             //rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC","CV_FUNC","FUNC_ENCENS45m");
@@ -1364,7 +1435,53 @@ namespace ChuvaVazaoTools
 
                     }
 
+                    //todo: copiar arquivos CFS somente dos dias restantes para completar a partir do ultimo dia dos clusters , criar varival para rastrear e saber de qual dia deve começar a copiar
+                    //essa função sera usada somente em casos que a cv3 e cv4 forem rv0 e rv1
 
+                    if (usarCFS == true)
+                    {
+                        DateTime dataCFS = DateTime.Today;
+                        DateTime data_final = DateTime.Today;
+
+                        string cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+                        int contCfs = 0;
+                        List<string> out_CFS = new List<string>();
+
+                        while (!Directory.Exists(cfsFolderK) && contCfs < 4)//procura diretorio até 4 dias atras
+                        {
+                            dataCFS = dataCFS.AddDays(-1);
+                            cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+
+                            contCfs++;
+                        }
+
+                        if (Directory.Exists(cfsFolderK))
+                        {
+                            out_CFS = Directory.GetFiles(cfsFolderK).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+                        }
+
+                        if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45)
+                        {
+
+                            foreach (var cfs in out_CFS)
+                            {
+                                var dtCfs = DateTime.ParseExact(cfs.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                                if (dtCfs > data_final)
+                                {
+                                    var nome = cfs.Split('\\').Last();
+                                    var fim_nome = nome.Split('.').First().Split('a').Last();
+                                    var nome_Final = "p" + data_final.ToString("ddMMyy") + "a" + fim_nome + ".dat";
+                                    string arquivoFinal = Path.Combine(path_cv, nome_Final);
+
+                                    if (!File.Exists(arquivoFinal))//copia apenas os arquivos que ainda faltam para completar todos os dias disponiveis 
+                                    {
+                                        File.Copy(cfs, arquivoFinal, true);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

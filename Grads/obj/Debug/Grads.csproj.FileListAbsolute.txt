@@ -33,3 +33,4 @@ C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\bin\Debug\Grads.pdb
 C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.csproj.CoreCompileInputs.cache
 C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.dll
 C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.pdb
+C:\Development\chuva_vazao\Chuva_Vazao-local\Grads\obj\Debug\Grads.csproj.AssemblyReference.cache
