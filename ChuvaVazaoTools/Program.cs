@@ -1778,18 +1778,18 @@ namespace ChuvaVazaoTools
 
                 //verifica se ja existe processo do onedrive aberto e se esta na hora de ser iniciado
 
-                var prCount = Process.GetProcesses().Where(p => p.ProcessName.Contains("OneDrive")).Count();
-                if (prCount == 0 && DateTime.Now >= DateTime.Today.AddHours(15))
-                {
-                    try
-                    {
-                        Tools.Tools.ManageOneDrive("start");//reinicia o onedrive caso esteja desativado (no processo de geração de mapas e rodadas, onedrive é desligado por questão de otimização de recursos da maquina)
-                    }
-                    catch (Exception e)
-                    {
-                        e.Message.ToString();
-                    }
-                }
+                //var prCount = Process.GetProcesses().Where(p => p.ProcessName.Contains("OneDrive")).Count();
+                //if (prCount == 0 && DateTime.Now >= DateTime.Today.AddHours(15))
+                //{
+                //    try
+                //    {
+                //        Tools.Tools.ManageOneDrive("start");//reinicia o onedrive caso esteja desativado (no processo de geração de mapas e rodadas, onedrive é desligado por questão de otimização de recursos da maquina)
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        e.Message.ToString();
+                //    }
+                //}
 
             }
         }

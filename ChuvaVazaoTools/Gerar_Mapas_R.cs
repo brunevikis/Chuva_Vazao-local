@@ -683,7 +683,7 @@ namespace ChuvaVazaoTools
                     executar_R(path_Conj, "madeira.r");
 
                     logF.WriteLine("Copiando arquivos ENS_Est_rv Clusters e probabilidades");
-                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m",cfs);
+                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m",true);
 
                     if (temECEN45 == false)
                     {
@@ -835,8 +835,8 @@ namespace ChuvaVazaoTools
 
                        // if (runRev4.rev == 0)
                        // {
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3, cfs);
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3, cfs);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3, true);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3, true);
                        // }
                         //else
                         //{
@@ -846,8 +846,8 @@ namespace ChuvaVazaoTools
 
                        // if (runRev5.rev == 0 || runRev5.rev == 1)
                        // {
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4, cfs);
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4, cfs);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4, true);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4, true);
                        // }
                         //else
                         //{

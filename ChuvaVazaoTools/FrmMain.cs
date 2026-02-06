@@ -1909,13 +1909,30 @@ namespace ChuvaVazaoTools
                                         }
                                         else if (!nomeDoCaso.Contains("shadow"))
                                         {
-                                            var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
-                                            if (!System.IO.Directory.Exists(pathDestino))
+                                            if (nomeDoCaso.ToUpper().Contains("_CFS"))
                                             {
-                                                Directory.CreateDirectory(pathDestino);
-                                                File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
+                                                if (nomeDoCaso.StartsWith("CV3_") || nomeDoCaso.StartsWith("CV4_"))
+                                                {
+                                                    var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                                    if (!System.IO.Directory.Exists(pathDestino))
+                                                    {
+                                                        Directory.CreateDirectory(pathDestino);
+                                                        File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
+                                                    }
+                                                    if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
+                                                }
                                             }
-                                            if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
+                                            else
+                                            {
+                                                var pathDestino = Path.Combine("K:\\enercore_ctl_common", "auto", DateTime.Today.ToString("yyyyMMdd") + "_" + nomeDoCaso);
+                                                if (!System.IO.Directory.Exists(pathDestino))
+                                                {
+                                                    Directory.CreateDirectory(pathDestino);
+                                                    File.Copy(Path.Combine(pastaSaida, prevs), Path.Combine(pathDestino, prevs));
+                                                }
+                                                if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
+                                            }
+                                           
                                         }
 
                                     }
