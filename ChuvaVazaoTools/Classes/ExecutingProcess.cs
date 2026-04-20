@@ -2652,7 +2652,12 @@ namespace ChuvaVazaoTools.Classes
                     propagacoes.Add(estrela);
                 }
 
-
+                var fozPrata = propagacoes.Where(x => x.IdPosto == 96).FirstOrDefault();
+                if (fozPrata == null)
+                {
+                    fozPrata = new Propagacao() { IdPosto = 96, NomePostoFluv = "foz do parta" };
+                    propagacoes.Add(fozPrata);
+                }
 
 
                 var paranapanema = propagacoes.Where(x => x.IdPosto == 53).FirstOrDefault();
@@ -2712,7 +2717,23 @@ namespace ChuvaVazaoTools.Classes
                 }
 
 
+                var p97monte = propagacoes.Where(x => x.IdPosto == 97).First();
+                var p98castro = propagacoes.Where(x => x.IdPosto == 98).First();
 
+                foreach (var dia in p97monte.VazaoNatural.Keys.ToList())
+                {// = (p97 - p98) / (12113.7 - 7742,6)*3765
+                    fozPrata.VazaoNatural[dia] = (p97monte.VazaoNatural[dia] - p98castro.VazaoNatural[dia]) / (12113.7 - 7742.6) * 3765;
+                }
+
+                foreach (var dia in p97monte.VazaoIncremental.Keys.ToList())
+                {
+                    fozPrata.VazaoIncremental[dia] = fozPrata.VazaoNatural[dia];
+                }
+
+                foreach (var dia in p97monte.calMedSemanal.Keys.ToList())
+                {
+                    fozPrata.calMedSemanal[dia] = (p97monte.calMedSemanal[dia] - p98castro.calMedSemanal[dia]) / (12113.7 - 7742.6) * 3765;
+                }
                 #endregion
 
                 propagacoes = propagacoes.OrderBy(x => x.IdPosto).ToList();

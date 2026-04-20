@@ -3094,6 +3094,23 @@ namespace ChuvaVazaoTools
                         }
 
                     }
+                    else if (p.IdPosto == 96)
+                    {
+                        var p97 = GetMediaSemanal(Propagacoes, 97, d);
+                        var p98 = GetMediaSemanal(Propagacoes, 98, d);
+
+                        p.VazaoNatural[d] = (p97 - p98) / (12113.7 - 7742.6) * 3765;
+
+                        if (p.VazaoNatural[d] <= 0)
+                        {
+                            p.VazaoNatural[d] = 0;
+                        }
+                        else if (p.VazaoNatural[d] <= 1)
+                        {
+                            p.VazaoNatural[d] = 1;
+                        }
+
+                    }
                 }
 
             }
