@@ -278,7 +278,7 @@ namespace ChuvaVazaoTools
 
                         }
                     }
-                    GEFS_Ext(cv2, Path.Combine(path_ArqPrev, "GEFS"));
+                    GEFS_Ext(cv2, Path.Combine(path_ArqPrev, "GEFS"), logF);
 
                     //ETA 10 ONS dias 
 
@@ -1617,52 +1617,97 @@ namespace ChuvaVazaoTools
 
         }
 
-        internal static void GEFS_Ext(DateTime cv, string path)
+        internal static void GEFS_Ext(DateTime cv, string path, System.IO.TextWriter logF)//todo : busca pelo gefs do cv_temp do k
         {
             var dt = DateTime.Today.AddDays(-1);
-            // var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
-            //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-            var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
-            if (!Directory.Exists(oneDrive))
-            {
-                oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
-            }
 
-            var oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-            while (!Directory.Exists(oneDrive_gefs))
-            {
-                dt = dt.AddDays(-1);
-                oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-            }
-            if (Directory.Exists(oneDrive_gefs))
-            {
-                var files_gefs = Directory.GetFiles(oneDrive_gefs);
-                while (files_gefs.Count() < 30)
-                {
-                    dt = dt.AddDays(-1);
-                    oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
-                    files_gefs = Directory.GetFiles(oneDrive_gefs);
-                }
+            logF.WriteLine("Buscando arquivos GEFSext para Entrada");
 
-                var arqs = Directory.GetFiles(path);
-                //for (int i = 0; i <= dias; i++)
-                for (int i = 0; i <= files_gefs.Count(); i++)
+
+            var GEFS_05_K = Path.Combine("K:\\cv_temp", dt.ToString("yyyyMMdd"), "GEFS_0.5_00");
+            if (Directory.Exists(GEFS_05_K))
+            {
+                if (Directory.Exists(GEFS_05_K))
                 {
-                    var data = DateTime.Today.AddDays(i + 1);
-                    if (!File.Exists(Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
+
+                    var files_gefs = Directory.GetFiles(GEFS_05_K);
+                    while (files_gefs.Count() < 30)
                     {
-                        var file_gefs = files_gefs.Where(x => x.Contains(data.ToString("ddMMyy") + ".dat")).FirstOrDefault();
-                        try
-                        {
-                            File.Copy(file_gefs, Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"));
-                        }
-                        catch { }
-                        //File.Copy(Path.Combine(Modelo_R, "MCP", "prec_mct1318_" + data.Month.ToString().PadLeft(2, '0') + ".dat"), Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"), true);
+                        dt = dt.AddDays(-1);
+                        GEFS_05_K = Path.Combine("K:\\cv_temp", dt.ToString("yyyyMMdd"), "GEFS_0.5_00");
+                        files_gefs = Directory.GetFiles(GEFS_05_K);
+                    }
+                    logF.WriteLine("Tranferindo arquivos GEFSext via HEADNODE para Entrada");
 
+                    var arqs = Directory.GetFiles(path);
+                    //for (int i = 0; i <= dias; i++)
+                    for (int i = 0; i <= files_gefs.Count(); i++)
+                    {
+                        var data = DateTime.Today.AddDays(i + 1);
+                        if (!File.Exists(Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
+                        {
+                            var file_gefs = files_gefs.Where(x => x.Contains(data.ToString("ddMMyy") + ".dat")).FirstOrDefault();
+                            try
+                            {
+                                File.Copy(file_gefs, Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"));
+                            }
+                            catch { }
+                            //File.Copy(Path.Combine(Modelo_R, "MCP", "prec_mct1318_" + data.Month.ToString().PadLeft(2, '0') + ".dat"), Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"), true);
+
+                        }
                     }
                 }
             }
+            else
+            {
+                dt = DateTime.Today.AddDays(-1);
+
+                // var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
+                var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
+                //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
+                var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
+                if (!Directory.Exists(oneDrive))
+                {
+                    oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
+                }
+
+                var oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+                while (!Directory.Exists(oneDrive_gefs))
+                {
+                    dt = dt.AddDays(-1);
+                    oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+                }
+                if (Directory.Exists(oneDrive_gefs))
+                {
+                    var files_gefs = Directory.GetFiles(oneDrive_gefs);
+                    while (files_gefs.Count() < 30)
+                    {
+                        dt = dt.AddDays(-1);
+                        oneDrive_gefs = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "GEFS_0.5_00");
+                        files_gefs = Directory.GetFiles(oneDrive_gefs);
+                    }
+                    logF.WriteLine("Tranferindo arquivos GEFSext via ONEDRIVE para Entrada");
+
+                    var arqs = Directory.GetFiles(path);
+                    //for (int i = 0; i <= dias; i++)
+                    for (int i = 0; i <= files_gefs.Count(); i++)
+                    {
+                        var data = DateTime.Today.AddDays(i + 1);
+                        if (!File.Exists(Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat")))
+                        {
+                            var file_gefs = files_gefs.Where(x => x.Contains(data.ToString("ddMMyy") + ".dat")).FirstOrDefault();
+                            try
+                            {
+                                File.Copy(file_gefs, Path.Combine(path, "GEFS_p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"));
+                            }
+                            catch { }
+                            //File.Copy(Path.Combine(Modelo_R, "MCP", "prec_mct1318_" + data.Month.ToString().PadLeft(2, '0') + ".dat"), Path.Combine(path, "p" + DateTime.Today.ToString("ddMMyy") + "a" + data.ToString("ddMMyy") + ".dat"), true);
+
+                        }
+                    }
+                }
+            }
+            
         }
         internal static void MCP(DateTime cv, string path, string Modelo_R)
         {
