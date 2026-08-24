@@ -125,6 +125,76 @@ namespace ChuvaVazaoTools
             }
         }
 
+        public void LerTotalCSV(string raiz, Boolean manual = false)
+        {
+            try
+            {
+                var path = txtCaminho.Text;
+                //string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP_", "");
+                string mod = raiz.Split('\\').Last().Replace("CV_", "").Replace("CV2_", "").Replace("CV3_", "").Replace("CV4_", "").Replace("CVPURO_", "").Replace("CVSMAP1_", "").Replace("CVSMAP2_", "").Replace("CVSMAP3_", "").Replace("CVSMAP4_", "").Replace("CVSMAP0_", "");
+
+                if (!System.IO.Directory.Exists(path))
+                {
+                    MessageBox.Show("Caminho não existente");
+                    return;
+                }
+
+                modelosChVz.Clear();
+
+                var modelos = System.IO.Directory.GetDirectories(path);
+
+                foreach (var modelo in modelos)
+                {
+
+                    var nomeModelo = modelo.Replace(System.IO.Path.GetDirectoryName(modelo), "").Remove(0, 1);
+
+                    if (nomeModelo.StartsWith("SMAP", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var bacias = System.IO.Directory.GetDirectories(modelo);
+                        foreach (var bacia in bacias)
+                        {
+
+                            modelosChVz.Add(new ChuvaVazaoTools.SMAP.ModeloSmap(bacia, manual,true));
+
+                        }
+                    }
+
+                    AddLog("\t" + modelo);
+                }
+
+
+                if (mod.Contains("ECENS45m"))
+                {
+                    for (int i = 0; i <= 9; i++)
+                    {
+                        string modAlt = mod + i.ToString("00");
+                        modelosChVz.ForEach(x => x.ColetarSaidaTotal(modAlt));
+                    }
+                    modelosChVz.ForEach(x => x.ColetarSaidaMediaSmap(mod));
+                }
+                else
+                {
+                    modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
+                }
+
+                // modelosChVz.ForEach(x => x.ColetarSaida());
+                //modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
+
+                listView1.Items.Clear();
+
+                listView1.Items.AddRange(modelosChVz.Select(x => new ModeloItemView(x)).ToArray());
+
+                dtModelo.Value = modelosChVz.Min(x => x.DataPrevisao);
+
+                AddLog("- Modelos Carregados");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                AddLog("\t" + "Erro no método FrmMain/Ler: " + e.Message);
+            }
+        }
+
         public void LerTotal(string raiz, Boolean manual = false)
         {
             try
@@ -2754,7 +2824,7 @@ namespace ChuvaVazaoTools
 
 
 
-                    else if (p.IdPosto == 131)
+                    else if (p.IdPosto == 131)// colocar a conta de acordo com o regras do gevazp e limitar a conta a zero caso negativa 
                     {
                         var p316 = GetMediaSemanal(Propagacoes, 316, d);
 

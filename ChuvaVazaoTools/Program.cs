@@ -206,7 +206,7 @@ namespace ChuvaVazaoTools
                             var newlogF = new LogFile(newlogFile);
                             newlogF.WriteLine("Iniciando AutoRoutine SHADOW");
 
-                            AutoExec(data, newlogF, shadow: true);
+                            AutoExec(data, newlogF, shadow: true, csv: true);
                             Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
                         }
                     }
@@ -1034,7 +1034,7 @@ namespace ChuvaVazaoTools
             }
         }
 
-        internal static async void AutoExec(DateTime date, System.IO.TextWriter logF, bool encad = false, bool shadow = false, bool merge = false,bool cfs = false)
+        internal static async void AutoExec(DateTime date, System.IO.TextWriter logF, bool encad = false, bool shadow = false, bool merge = false, bool cfs = false, bool csv = false)
         {
 
             ///Rodada automática
@@ -1044,7 +1044,7 @@ namespace ChuvaVazaoTools
             var data_verifica = DateTime.Today;
             var data_VE = DateTime.Today;
             int ve_antecipada = 0;
-            string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : cfs == true ? "_CFS": "";
+            string tipoRodada = shadow == true ? "_shadow" : merge == true ? "_merge" : cfs == true ? "_CFS" : "";
 
             while (data_VE.DayOfWeek != DayOfWeek.Friday)
             {
@@ -1086,7 +1086,7 @@ namespace ChuvaVazaoTools
                             logF.WriteLine("Executando Mapas R Acomph d-1");
                             Directory.CreateDirectory(pastaSaida);
 
-                            Conjunto_R(pastaSaida, date, logF, shadow, merge, cfs);
+                            Conjunto_R(pastaSaida, date, logF, shadow, merge, cfs, csv);
 
                             var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
                             var fonte = pastaSaida;
@@ -1153,7 +1153,7 @@ namespace ChuvaVazaoTools
                         logF.WriteLine("Executando Mapas R Acomph");
                         Directory.CreateDirectory(pastaSaida);
 
-                        Conjunto_R(pastaSaida, date, logF, shadow, merge,cfs);
+                        Conjunto_R(pastaSaida, date, logF, shadow, merge, cfs, csv);
 
                         var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
                         var fonte = pastaSaida;
@@ -1356,7 +1356,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemoSmap, true, shadow, merge,cfs);
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemoSmap, true, shadow, merge, cfs);
                     }
                     catch (Exception ex)
                     {
@@ -1372,7 +1372,7 @@ namespace ChuvaVazaoTools
                         {
                             //rodada com offset na remoção de viés.
                             frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro, true, shadow, merge,cfs);//remocao cvsamp1euro
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro, true, shadow, merge, cfs);//remocao cvsamp1euro
                         }
                     }
                     catch (Exception ex)
@@ -1387,7 +1387,7 @@ namespace ChuvaVazaoTools
                         {
                             frmMain.modelosChVz.Clear();
                             //rodada com offset na remoção de viés.
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGEFS, true, shadow, merge,cfs);//remocao cvsamp1GEFS(VIES-VE)
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGEFS, true, shadow, merge, cfs);//remocao cvsamp1GEFS(VIES-VE)
                         }
                     }
                     catch (Exception ex)
@@ -1403,7 +1403,7 @@ namespace ChuvaVazaoTools
                             //rodada com offset na remoção de viés.
 
                             frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro_op, true, shadow, merge,cfs);//remocao cvsmap1euro op
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaEuro_op, true, shadow, merge, cfs);//remocao cvsmap1euro op
                         }
                     }
                     catch (Exception ex)
@@ -1419,7 +1419,7 @@ namespace ChuvaVazaoTools
                         if (date.DayOfWeek != data_VE.DayOfWeek)
                         {
                             frmMain.modelosChVz.Clear();
-                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGFS, true, shadow, merge,cfs);//remocao cvsmap1gfs
+                            frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapUmaSemanaGFS, true, shadow, merge, cfs);//remocao cvsmap1gfs
                         }
                     }
                     catch (Exception ex)
@@ -1430,7 +1430,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro, true, shadow, merge,cfs);//remocao euro cv2smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro, true, shadow, merge, cfs);//remocao euro cv2smap
                     }
                     catch (Exception ex)
                     {
@@ -1440,7 +1440,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGEFS, true, shadow, merge,cfs);//remocao gefs cv2smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGEFS, true, shadow, merge, cfs);//remocao gefs cv2smap
                     }
                     catch (Exception ex)
                     {
@@ -1450,7 +1450,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro_op, true, shadow, merge,cfs);//remocao euro op cv2smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasEuro_op, true, shadow, merge, cfs);//remocao euro op cv2smap
                     }
                     catch (Exception ex)
                     {
@@ -1460,7 +1460,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGFS, true, shadow, merge,cfs);//remocao gfs cv2smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapDuasSemanasGFS, true, shadow, merge, cfs);//remocao gfs cv2smap
                     }
                     catch (Exception ex)
                     {
@@ -1473,7 +1473,7 @@ namespace ChuvaVazaoTools
                         //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
                         // {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasEuro, true, shadow, merge,cfs);//remocao euro cv3smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasEuro, true, shadow, merge, cfs);//remocao euro cv3smap
                         //}
                     }
                     catch (Exception ex)
@@ -1484,7 +1484,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasGEFS, true, shadow, merge,cfs);//remocao gefs cv3smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapTresSemanasGEFS, true, shadow, merge, cfs);//remocao gefs cv3smap
                     }
                     catch (Exception ex)
                     {
@@ -1497,7 +1497,7 @@ namespace ChuvaVazaoTools
                         //if (date.DayOfWeek == DayOfWeek.Tuesday || date.DayOfWeek == DayOfWeek.Friday)
                         //{
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasEuro, true, shadow, merge,cfs);//remocao euro cv4smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasEuro, true, shadow, merge, cfs);//remocao euro cv4smap
                         //}
                     }
                     catch (Exception ex)
@@ -1508,7 +1508,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasGEFS, true, shadow, merge,cfs);// remocao gefs cv4smap
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoSmapQuatroSemanasGEFS, true, shadow, merge, cfs);// remocao gefs cv4smap
                     }
                     catch (Exception ex)
                     {
@@ -1518,7 +1518,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraEuro, true, shadow, merge,cfs);//remocao euro puro
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraEuro, true, shadow, merge, cfs);//remocao euro puro
 
                     }
                     catch (Exception ex)
@@ -1528,7 +1528,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraGEFS, true, shadow, merge,cfs);//remocao gefs puro
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoPuraGEFS, true, shadow, merge, cfs);//remocao gefs puro
 
                     }
                     catch (Exception ex)
@@ -1538,7 +1538,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaEuro, true, shadow, merge,cfs);//remocao euro com ve padrao quarta
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaEuro, true, shadow, merge, cfs);//remocao euro com ve padrao quarta
                     }
                     catch (Exception ex)
                     {
@@ -1549,7 +1549,7 @@ namespace ChuvaVazaoTools
                     try
                     {
                         frmMain.modelosChVz.Clear();
-                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaGEFS, true, shadow, merge,cfs);//remocao gefs com ve padrao quarta
+                        frmMain.RunExecProcess(logF, out _, FrmMain.EnumRemo.RemocaoCV0SmapUmaSemanaGEFS, true, shadow, merge, cfs);//remocao gefs com ve padrao quarta
                     }
                     catch (Exception ex)
                     {
@@ -2447,12 +2447,16 @@ namespace ChuvaVazaoTools
 
         }
 
-        internal static void Conjunto_R(string path, DateTime date, TextWriter LogF, bool shadow = false, bool merge = false, bool cfs = false)
+        internal static void Conjunto_R(string path, DateTime date, TextWriter LogF, bool shadow = false, bool merge = false, bool cfs = false, bool csv = false)
         {
             var data = date;
             var localPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Conjunto_R_" + DateTime.Now.ToString("HHmmss"));
             string tipoRodada = shadow == true ? "_shadow" : "";
-
+            if (csv == true)
+            {
+                tipoRodada = "_csv";
+                shadow = false;
+            }
             var Conj_Zip = Path.Combine($@"H:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos{tipoRodada}.zip");
             //var Conj_Zip = Path.Combine(@"H:\Middle - Preço\16_Chuva_Vazao\Conjunto-PastasEArquivos_shadow.zip");
 
@@ -2468,7 +2472,7 @@ namespace ChuvaVazaoTools
 
             System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(localPath, "Conjunto - PastasEArquivos.zip"), Path.Combine(localPath, "Conjunto - PastasEArquivos"));
 
-            ChuvaVazaoTools.Gerar_Mapas_R.Gerar_R(Path.Combine(localPath, "Conjunto - PastasEArquivos"), LogF, shadow, merge,cfs);
+            ChuvaVazaoTools.Gerar_Mapas_R.Gerar_R(Path.Combine(localPath, "Conjunto - PastasEArquivos"), LogF, shadow, merge, cfs, csv);
 
             var dirs = Directory.GetDirectories(Path.Combine(localPath, "Conjunto - PastasEArquivos"));
 

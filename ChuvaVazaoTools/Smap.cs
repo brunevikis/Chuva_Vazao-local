@@ -72,6 +72,55 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public ModeloSmap(string path, Boolean manual = false, Boolean csv = false)
+        {
+            Caminho = path;
+
+            PostosPlu = new List<PostoPlu>();
+
+            var caso = System.IO.Directory.GetFiles(ArquivosDeEntrada, "sub_bacias.csv")[0];
+
+            SubBacias =
+            System.IO.File.ReadLines(caso)
+                .Skip(1)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x =>
+                {
+                    var subbaciaNome = x;
+                    var subbacia = new SubBacia(path, subbaciaNome, manual,csv);
+                    return subbacia;
+                }).ToList();
+
+
+            PostosPlu = SubBacias.SelectMany(x => x.Postos).ToList();
+
+
+            foreach (var posto in PostosPlu)
+            {
+                var existingFiles = System.IO.Directory.GetFiles(Caminho,"precipitacao_observada.csv", System.IO.SearchOption.AllDirectories);
+
+                if (existingFiles.Length > 0)
+                {
+                    posto.CarregarCSV(existingFiles[0],posto.Codigo, manual);
+                    posto.l1 = "";
+                }
+            }
+
+            var modelos = System.IO.Directory.GetFiles(ArquivosDeEntrada, "precipitacao_prevista.csv")[0];
+
+            ModelosPrecipitacao = System.IO.File.ReadLines(modelos)
+                  .Skip(1)/*.Take(1)*/
+                  .Where(x => !string.IsNullOrWhiteSpace(x))
+                  .Select(x => x.Split(';')[2])//campo cenario
+                  .Distinct().ToList();
+
+
+            Vazoes = SubBacias.Cast<IArqVazao>();
+
+
+        }
+
         public override void Executar_SMAP_R()
         {
             //batsmap-desktop.exe
@@ -431,6 +480,38 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public SubBacia(string path, string subbacia, Boolean manual = false, Boolean csv = false)
+        {
+            // TODO: Complete member initialization
+            this.Caminho = path;
+            this.Nome = subbacia;
+
+            //inicializacao
+            var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, "inicializacao.csv");
+            var data_rodadasFile = System.IO.Path.Combine(ArquivosDeEntrada, "datas_rodadas.csv");
+
+            var data_dias = System.IO.File.ReadLines(data_rodadasFile).Skip(1).ToList()[1].Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            DateTime dataIni = DateTime.ParseExact(data_dias[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+            int diasPrev = int.Parse(data_dias[1]);
+
+            Inicializacao = new InicializacaoSubBacia(iniFile, dataIni, diasPrev,subbacia, csv);
+
+            var postosFile = System.IO.Path.Combine(ArquivosDeEntrada, "postos_plu.csv");
+
+            Postos = System.IO.File.ReadLines(postosFile).Where(x => x.StartsWith(subbacia))
+                            .Select(x => x.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                            .Where(x => x.Length >= 3)
+                            .Select(x =>
+                                new PostoPlu()
+                                {
+                                    Codigo = x[1],
+                                    Peso = x[2]
+                                }).ToList();
+
+            vazRealizadas = new VazoesRealizadas(System.IO.Path.Combine("vazao_observada.csv"), manual,csv);
+
+        }
+
         private string Caminho { get; set; }
         public string Nome { get; set; }
         public InicializacaoSubBacia Inicializacao { get; set; }
@@ -576,9 +657,19 @@ namespace ChuvaVazaoTools.SMAP
             vazRealizadas.SalvarVazoes();
         }
 
+        public void SalvarVazoesCSV()
+        {
+            vazRealizadas.SalvarVazoesCSV();
+        }
+
         public void CarregarVazoes(Boolean manual = false)
         {
             vazRealizadas.CarregarVazoes(manual);
+        }
+
+        public void CarregarVazoesCSV(Boolean manual = false)
+        {
+            vazRealizadas.CarregarVazoesCSV(manual);
         }
 
         internal void ReiniciarParametros()
@@ -605,6 +696,10 @@ namespace ChuvaVazaoTools.SMAP
         public InicializacaoSubBacia(string path)
         {
             this.Read(path);
+        }
+        public InicializacaoSubBacia(string path,DateTime dataIni,int diasPrev,string subBacia, Boolean csv = false)
+        {
+            this.ReadCSV(path,dataIni,diasPrev,subBacia);
         }
 
         public DateTime Data { get; set; }
@@ -651,6 +746,47 @@ namespace ChuvaVazaoTools.SMAP
                 Tuin = float.Parse(temp, System.Globalization.NumberFormatInfo.InvariantInfo);
 
             }
+
+        }
+
+        public void ReadCSV(string filePath, DateTime dataIni, int diasPrev,string subBacia)
+        {
+            var iniLines = System.IO.File.ReadAllLines(filePath).Where(x => x.StartsWith(subBacia)).ToList();
+
+            Data = dataIni;
+
+            DiasPassados = int.Parse(iniLines.Where(x => x.Split(';')[1].Equals("numero_dias_assimilacao")).Select(x => x.Split(';')[2]).FirstOrDefault());
+
+            DiasPrevisao = diasPrev;
+
+            Ebin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Ebin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+
+            Supin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Supin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+
+            Tuin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Tuin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+
+            //using (var sr = System.IO.File.OpenText(filePath))
+            //{
+
+            //    var temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    Data = DateTime.ParseExact(temp, "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo);
+
+            //    temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    DiasPassados = int.Parse(temp);//dias assimiliação
+
+            //    temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    DiasPrevisao = int.Parse(temp);
+
+            //    temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    Ebin = float.Parse(temp, System.Globalization.NumberFormatInfo.InvariantInfo);
+
+            //    temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    Supin = float.Parse(temp, System.Globalization.NumberFormatInfo.InvariantInfo);
+
+            //    temp = sr.ReadLine().Trim().Split(' ')[0];
+            //    Tuin = float.Parse(temp, System.Globalization.NumberFormatInfo.InvariantInfo);
+
+            //}
 
         }
 

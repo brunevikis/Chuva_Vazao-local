@@ -104,6 +104,61 @@ namespace ChuvaVazaoTools
 
         }
 
+        internal void CarregarCSV(string p,string postoPLU, Boolean manual = false)
+        {
+
+            var data_verifica = DateTime.Today;
+            var runRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data_verifica);
+            var acomph_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_verifica.ToString("yyyy"), data_verifica.ToString("MM_yyyy"), "ACOMPH_" + data_verifica.ToString("dd-MM-yyyy") + ".xls"));
+            var modelos_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\MPV\Arq_Saida", data_verifica.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt"));
+
+
+            var ls = System.IO.File.ReadLines(p);
+
+
+            if (acomph_atual == false || modelos_atual == true || manual == true)
+            {
+                l1 = ls.First();
+                var header = ls.First().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                int indexPosto = header.IndexOf(postoPLU);
+
+                //skip cabeçalho
+                ls.Skip(1).Select(x => x.Split(';'))
+                    .Where(x => x.Length >= 2)
+                    .Select(x =>
+                        new
+                        {
+                            Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                            Prec = x[indexPosto].Contains('-') ? (float?)null : x[indexPosto].Contains("NA") ? 0.0f :
+                                float.Parse(x[indexPosto], System.Globalization.NumberFormatInfo.InvariantInfo),
+                        }).ToList().ForEach(x =>
+                            Preciptacao[x.Data] = x.Prec
+                            );
+            }
+            else
+            {
+                l1 = ls.First();
+                var header = ls.First().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                int indexPosto = header.IndexOf(postoPLU);
+
+                //skip cabeçalho e primeiro dia
+                ls.Skip(2)
+                    .Select(x => x.Split(';'))
+                    .Where(x => x.Length >= 2)
+                    .Select(x =>
+                        new
+                        {
+                            Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                            Prec = x[indexPosto].Contains('-') ? (float?)null : x[indexPosto].Contains("NA") ? 0.0f :
+                                float.Parse(x[indexPosto], System.Globalization.NumberFormatInfo.InvariantInfo),
+                        }).ToList().ForEach(x =>
+                            Preciptacao[x.Data] = x.Prec
+                            );
+
+            }
+
+        }
+
 
 
         internal void Salvar(string c)
@@ -130,7 +185,9 @@ namespace ChuvaVazaoTools
 
         Dictionary<DateTime, float> Vazoes { get; set; }
         void SalvarVazoes();
+        void SalvarVazoesCSV();
         void CarregarVazoes(Boolean teste = false);
+        void CarregarVazoesCSV(Boolean teste = false);
 
 
 
@@ -154,13 +211,31 @@ namespace ChuvaVazaoTools
             set;
         }
 
-        public VazoesRealizadas(string arquivo, Boolean manual = false)
+        public VazoesRealizadas(string arquivo, Boolean manual = false,Boolean csv = false)
         {
             CaminhoArquivo = arquivo;
-            CarregarVazoes(manual);
+            if (csv == true)
+            {
+                CarregarVazoesCSV(manual);
+            }
+            else
+            {
+                CarregarVazoes(manual);
+            }
         }
 
         public void SalvarVazoes()
+        {
+            System.IO.File.WriteAllLines(CaminhoArquivo,
+                Vazoes
+                .OrderByDescending(x => x.Key).Take(120)
+                .OrderBy(x => x.Key).Select(x =>
+                  string.Join("|", key, x.Key.ToString("yyyy-MM-dd hh:mm:ss"), x.Value.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo))
+                ).ToArray()
+            );
+        }
+
+        public void SalvarVazoesCSV()
         {
             System.IO.File.WriteAllLines(CaminhoArquivo,
                 Vazoes
@@ -220,6 +295,64 @@ namespace ChuvaVazaoTools
 
         }
 
+        public void CarregarVazoesCSV(Boolean manual = false)
+        {
+
+            var data_verifica = DateTime.Today;
+            var runRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(data_verifica);
+            var acomph_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_verifica.ToString("yyyy"), data_verifica.ToString("MM_yyyy"), "ACOMPH_" + data_verifica.ToString("dd-MM-yyyy") + ".xls"));
+            var modelos_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\MPV\Arq_Saida", data_verifica.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt"));
+            
+            string subBacia = Nome;
+
+            Vazoes = new Dictionary<DateTime, float>();
+
+            if (System.IO.File.Exists(CaminhoArquivo))
+            {
+
+                if (acomph_atual == false || modelos_atual == true || manual == true)
+                {
+                    var header = System.IO.File.ReadLines(CaminhoArquivo).First().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    int indexSubBacia = header.IndexOf(subBacia);
+
+                    var ls = System.IO.File.ReadLines(CaminhoArquivo).Select(x => x.Split(';')).Where(x => x.Length >= 2);
+
+                    //skip(1) para pular cabeçalho
+                    ls.Skip(1).Select(x => new
+                    {
+                        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                        Q = float.Parse(x[indexSubBacia].Replace("-", "0"), System.Globalization.NumberFormatInfo.InvariantInfo),
+                    }).ToList().ForEach(x => Vazoes[x.Data] = x.Q);
+
+
+                    //key = ls.First()[0] + "|" + ls.First()[1] + "|" + ls.First()[2] + "|" + ls.First()[3];
+                    key = indexSubBacia.ToString();
+                }
+                else
+                {
+                    var header = System.IO.File.ReadLines(CaminhoArquivo).First().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    int indexSubBacia = header.IndexOf(subBacia);
+
+                    var ls = System.IO.File.ReadLines(CaminhoArquivo).Select(x => x.Split(';')).Where(x => x.Length >= 2);
+
+                    //skip(2) para pular cabeçalho e primeira linha de dados 
+
+                    ls.Skip(2).Select(x => new
+                    {
+                        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                        Q = float.Parse(x[indexSubBacia].Replace("-", "0"), System.Globalization.NumberFormatInfo.InvariantInfo),
+                    }).ToList().ForEach(x => Vazoes[x.Data] = x.Q);
+
+
+                    //key = ls.First()[0] + "|" + ls.First()[1] + "|" + ls.First()[2] + "|" + ls.First()[3];
+                    key = indexSubBacia.ToString();
+
+                }
+            }
+
+
+
+        }
 
         public float this[DateTime data]
         {

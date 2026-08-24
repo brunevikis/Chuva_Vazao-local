@@ -10,7 +10,7 @@ namespace ChuvaVazaoTools
 {
     class Gerar_Mapas_R
     {
-        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false, bool merge = false, bool cfs = false)
+        public static void Gerar_R(string path_Conj, System.IO.TextWriter logF, bool shadow = false, bool merge = false, bool cfs = false, bool csv = false)
         {
 
             DateTime data_Atual = DateTime.Today;
@@ -324,23 +324,30 @@ namespace ChuvaVazaoTools
                     }
                     else
                     {
-                        var ECMWFensemTempo = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF");
+                        var ECMWFensem_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-ENS00", "txt");
+                        var ECMWFensem_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-ENS00");
 
-                        if (Directory.Exists(ECMWFensemTempo))
+                        if (Directory.Exists(ECMWFensem_DataStoreK))
                         {
-                            var ecmwfEnsemTempArqs = Directory.GetFiles(ECMWFensemTempo, "ECMWF_*").Where(x => x.EndsWith(".dat"));
-                            if (ecmwfEnsemTempArqs != null && ecmwfEnsemTempArqs.Count() >= 14)
+                            ECMWFensem_DataStoreFolder = ECMWFensem_DataStoreK;
+                            logF.WriteLine("ECWMF Ensemble DATA STORE Encontrado via HEADNODE!");
+
+                        }
+                        if (Directory.Exists(ECMWFensem_DataStoreFolder))
+                        {
+                            var ecmwf_DataStoreArqs = Directory.GetFiles(ECMWFensem_DataStoreFolder, "ECMWF-ENS_*").Where(x => x.EndsWith(".dat"));
+                            if (ecmwf_DataStoreArqs != null && ecmwf_DataStoreArqs.Count() >= 14)
                             {
-                                logF.WriteLine("Tranferindo arquivos ECWMF Ensemble TempoOK para Entrada");
+                                logF.WriteLine("Tranferindo arquivos ECWMF Ensemble DATA STORE para Entrada");
 
                                 if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
-                                foreach (var EcmwfTempo in ecmwfEnsemTempArqs)
+                                foreach (var EcmwfData in ecmwf_DataStoreArqs)
                                 {
                                     System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
-                                    var data_mapa = r.Match(EcmwfTempo);
+                                    var data_mapa = r.Match(EcmwfData);
                                     if (data_mapa.Success)
                                     {
-                                        File.Copy(EcmwfTempo, Path.Combine(path_ArqPrev, "ECMWF", EcmwfTempo.Split('\\').Last()), true);
+                                        File.Copy(EcmwfData, Path.Combine(path_ArqPrev, "ECMWF", EcmwfData.Split('\\').Last().Replace("ECMWF-ENS", "ECMWF")), true);
                                     }
 
                                 }
@@ -348,30 +355,23 @@ namespace ChuvaVazaoTools
                         }
                         else
                         {
-                            var ECMWFensem_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-ENS00", "txt");
-                            var ECMWFensem_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-ENS00");
+                            var ECMWFensemTempo = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF");
 
-                            if (Directory.Exists(ECMWFensem_DataStoreK))
+                            if (Directory.Exists(ECMWFensemTempo))
                             {
-                                ECMWFensem_DataStoreFolder = ECMWFensem_DataStoreK;
-                                logF.WriteLine("ECWMF Ensemble DATA STORE Encontrado via HEADNODE!");
-
-                            }
-                            if (Directory.Exists(ECMWFensem_DataStoreFolder))
-                            {
-                                var ecmwf_DataStoreArqs = Directory.GetFiles(ECMWFensem_DataStoreFolder, "ECMWF-ENS_*").Where(x => x.EndsWith(".dat"));
-                                if (ecmwf_DataStoreArqs != null && ecmwf_DataStoreArqs.Count() >= 14)
+                                var ecmwfEnsemTempArqs = Directory.GetFiles(ECMWFensemTempo, "ECMWF_*").Where(x => x.EndsWith(".dat"));
+                                if (ecmwfEnsemTempArqs != null && ecmwfEnsemTempArqs.Count() >= 14)
                                 {
-                                    logF.WriteLine("Tranferindo arquivos ECWMF Ensemble DATA STORE para Entrada");
+                                    logF.WriteLine("Tranferindo arquivos ECWMF Ensemble TempoOK para Entrada");
 
                                     if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
-                                    foreach (var EcmwfData in ecmwf_DataStoreArqs)
+                                    foreach (var EcmwfTempo in ecmwfEnsemTempArqs)
                                     {
                                         System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
-                                        var data_mapa = r.Match(EcmwfData);
+                                        var data_mapa = r.Match(EcmwfTempo);
                                         if (data_mapa.Success)
                                         {
-                                            File.Copy(EcmwfData, Path.Combine(path_ArqPrev, "ECMWF", EcmwfData.Split('\\').Last().Replace("ECMWF-ENS", "ECMWF")), true);
+                                            File.Copy(EcmwfTempo, Path.Combine(path_ArqPrev, "ECMWF", EcmwfTempo.Split('\\').Last()), true);
                                         }
 
                                     }
@@ -380,7 +380,7 @@ namespace ChuvaVazaoTools
 
                         }
 
-                    }
+                    }//
                     if (!Directory.Exists(Path.Combine(path_ArqPrev, "ECMWF"))) Directory.CreateDirectory(Path.Combine(path_ArqPrev, "ECMWF"));
 
                     int ECMWFGridArqs = Directory.GetFiles(Path.Combine(path_ArqPrev, "ECMWF")).Count();
@@ -407,7 +407,7 @@ namespace ChuvaVazaoTools
                     var EcmwfTempoOK = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWFop", "txt");
                     var EcmwfOP_DataStoreFolder = Path.Combine(oneDrive_preco, data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "ECMWF-HRES00", "txt");///mudar
 
-                    var EcmwfOP_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-HRES00");
+                    var EcmwfOP_DataStoreK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), "ECMWF-ENSctl00");
                     string complementoOP = "ECWMF op DATA STORE Encontrado!";
 
                     if (Directory.Exists(EcmwfOP_DataStoreK))
@@ -437,7 +437,7 @@ namespace ChuvaVazaoTools
                     }
                     else if (Directory.Exists(EcmwfOP_DataStoreFolder))
                     {
-                        var ecmwfOP_DataStoreArqs = Directory.GetFiles(EcmwfOP_DataStoreFolder, "ECMWF-HRES_*").Where(x => x.EndsWith(".dat"));
+                        var ecmwfOP_DataStoreArqs = Directory.GetFiles(EcmwfOP_DataStoreFolder, "ECMWF-ENSctl_*").Where(x => x.EndsWith(".dat"));
 
                         if (ecmwfOP_DataStoreArqs != null && ecmwfOP_DataStoreArqs.Count() >= 9)
                         {
@@ -452,7 +452,7 @@ namespace ChuvaVazaoTools
                                 var data_mapa = r.Match(EcmwfOpData);
                                 if (data_mapa.Success)
                                 {
-                                    File.Copy(EcmwfOpData, Path.Combine(path_ArqPrev, "ECMWFop", EcmwfOpData.Split('\\').Last().Replace("ECMWF-HRES", "ECMWFop")), true);
+                                    File.Copy(EcmwfOpData, Path.Combine(path_ArqPrev, "ECMWFop", EcmwfOpData.Split('\\').Last().Replace("ECMWF-ENSctl", "ECMWFop")), true);
                                 }
 
                             }
@@ -660,30 +660,65 @@ namespace ChuvaVazaoTools
 
                     logF.WriteLine("Executando Script");
 
-                    if (shadow == true)
+                    if (csv == true)//if (shadow == true)
                     {
-                        executar_R(path_Conj, "formato_novo_shadow.r");
+                        //executar_R(path_Conj, "formato_novo_shadow.r");
+                        executar_R(path_Conj, "new_csv_formato_novo.R");
                     }
                     else
                     {
                         executar_R(path_Conj, "formato_novo.r");
                     }
 
-                    executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
+                    if (csv == true)
+                    {
+                        executar_R(path_Conj, "new_csv_ons.R Roda_Conjunto_V4.0.R");
+                    }
+                    else
+                    {
+                        executar_R(path_Conj, "ons.R Roda_Conjunto_V3.2.R");
+                    }
+
                     // executar_R(path_Conj, "vies_ve_woutGEFS.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy"));
                     logF.WriteLine("Vies VE" + cv1.ToString("dd/MM/yy") + "   " + cv2.ToString("dd/MM/yy"));
                     if (runRev.rev == 0)
                     {
-                        executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy") + " " + cvx.ToString("dd/MM/yy"));
+                        if (csv == true)
+                        {
+                            executar_R(path_Conj, "new_csv_vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy") + " " + cvx.ToString("dd/MM/yy"));
+                        }
+                        else
+                        {
+                            executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy") + " " + cvx.ToString("dd/MM/yy"));
+                        }
                     }
                     else
                     {
-                        executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
+                        if (csv == true)
+                        {
+                            executar_R(path_Conj, "new_csv_vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
+                        }
+                        else
+                        {
+                            executar_R(path_Conj, "vies_ve.R " + cv1.ToString("dd/MM/yy") + " " + cv2.ToString("dd/MM/yy") + " " + cv3.ToString("dd/MM/yy") + " " + cv4.ToString("dd/MM/yy"));
+                        }
                     }
-                    executar_R(path_Conj, "madeira.r");
+                    if (csv == false)
+                    {
+                        executar_R(path_Conj, "madeira.r");
+                    }
 
                     logF.WriteLine("Copiando arquivos ENS_Est_rv Clusters e probabilidades");
-                    bool temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m",true);
+                    bool temECEN45 = false;
+
+                    if (csv == true)
+                    {
+                        temECEN45 = transferECMWFmembrosCSV(path_Conj, "ECENS45m", "CVSMAP_ECENS45m", true);
+                    }
+                    else
+                    {
+                        temECEN45 = transferECMWFmembros(path_Conj, "ECENS45m", "CVSMAP_ECENS45m", true);
+                    }
 
                     if (temECEN45 == false)
                     {
@@ -694,220 +729,388 @@ namespace ChuvaVazaoTools
                     //Organização das Rodada para rvx+1
 
 
-                    logF.WriteLine("Criando Pastas RVX+1");
-
-                    //  var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
-                    var path_ArqSaida = Path.Combine(path_Conj, "madeira");
-
-
-                    var vies_cv1 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv1.ToString("dd-MM")));
-
-
-                    Directory.CreateDirectory(Path.Combine(path_ArqSaida, "vies_" + cv2.ToString("dd-MM")));
-                    var vies_cv2 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv2.ToString("dd-MM")));
-
-                    var vies_cv3 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv3.ToString("dd-MM")));
-                    var vies_cv4 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv4.ToString("dd-MM")));
-
-
-
-                    rvx1(path_Conj, "GEFS", "CV_VIES_VE", vies_cv1, vies_cv2);
-
-                    logF.WriteLine("CV_VIES_VE Criada!");
-
-                    rvx1(path_Conj, "GFS", "CV_GFS", vies_cv1, vies_cv2);
-
-                    logF.WriteLine("CV_GFS Criada!");
-
-                    rvx1(path_Conj, "ECMWF", "CV_EURO", vies_cv1, vies_cv2);
-
-                    logF.WriteLine("CV_EURO Criada!");
-
-                    rvx1(path_Conj, "ECMWFop", "CV_EUROop", vies_cv1, vies_cv2);
-
-                    logF.WriteLine("CV_EURO_op Criada!");
-
-                    if (runRev.rev == 0)
+                    if (csv == true)
                     {
-                        var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
+                        logF.WriteLine("Criando Pastas RVs");
 
-                        rvx1(path_Conj, "GEFS", "CV0_VIES_VE", vies_cvx, vies_cv2);
+                        var pathArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+                        DateTime remoHoje = DateTime.Today;
+                        var vies_csv_Hoje = GetCsvData(Path.Combine(pathArqSaida, "vies_" + remoHoje.ToString("yyyy-MM-dd") + ".csv"));
 
-                        logF.WriteLine("CV0_VIES_VE Criada!");
+                        var vies_csv_cv1 = GetCsvData(Path.Combine(pathArqSaida, "vies_" + cv1.ToString("yyyy-MM-dd") + ".csv"));
+                        var vies_csv_cv2 = GetCsvData(Path.Combine(pathArqSaida, "vies_" + cv2.ToString("yyyy-MM-dd") + ".csv"));
+                        var vies_csv_cv3 = GetCsvData(Path.Combine(pathArqSaida, "vies_" + cv3.ToString("yyyy-MM-dd") + ".csv"));
+                        var vies_csv_cv4 = GetCsvData(Path.Combine(pathArqSaida, "vies_" + cv4.ToString("yyyy-MM-dd") + ".csv"));
 
-                        rvx1(path_Conj, "ECMWF", "CV0_EURO", vies_cvx, vies_cv2);
+                        rvxRemoHojeCSV(path_Conj, "FUNC", "CV1_FUNC", vies_csv_Hoje);
+                        logF.WriteLine("CV1_FUNC Criada!");
 
-                        logF.WriteLine("CV0_EURO Criada!");
-                    }
+                        rvx1CSV(path_Conj, "GEFS", "CV1_GEFS", vies_csv_cv1, vies_csv_cv2);
+                        logF.WriteLine("CV1_GEFS_CSV Criada!");
 
-                    //testes mapasa sem remoção EURO E GEFS
-                    rvxPura(path_Conj, "GEFS", "CVPURO_PUROGEFS");
-                    rvxPura(path_Conj, "ECMWF", "CVPURO_PUROECMWF");
+                        rvx1CSV(path_Conj, "GFS", "CV1_GFS", vies_csv_cv1, vies_csv_cv2);
+                        logF.WriteLine("CV1_GFS_CSV Criada!");
 
-                    //fim teste
+                        rvx1CSV(path_Conj, "ECMWF", "CV1_EURO", vies_csv_cv1, vies_csv_cv2);
+                        logF.WriteLine("CV1_EURO_CSV Criada!");
 
-
-
-
-
-                    //Organização das Rodada para rvx+2
-
-                    logF.WriteLine("Criando Pastas RVX+2");
-
-                    rvx2(path_Conj, "ECMWF", "CV2_EURO", vies_cv2);
-                    //  MCP(cv2, Path.Combine(path_Conj, "CV2_EURO"), path_ModeloR);
-                    logF.WriteLine("CV2_EURO Criada!");
-
-                    rvx2(path_Conj, "ECMWFop", "CV2_EUROop", vies_cv2);
-                    //  MCP(cv2, Path.Combine(path_Conj, "CV2_EUROop"), path_ModeloR);
-                    logF.WriteLine("CV2_EURO_op Criada!");
-
-
-                    rvx2(path_Conj, "GEFS", "CV2_GEFS", vies_cv2);
-                    //   MCP(cv2, Path.Combine(path_Conj, "CV2_GEFS"), path_ModeloR);
-                    logF.WriteLine("CV2_GEFS Criada!");
-
-                    rvx2(path_Conj, "GFS", "CV2_GFS", vies_cv2);
-                    //   MCP(cv2, Path.Combine(path_Conj, "CV2_GFS"), path_ModeloR);
-                    logF.WriteLine("CV2_GFS Criada!");
-
-
-                    rvxX(path_Conj, "GEFS", "CV3_GEFS", vies_cv3);
-                    logF.WriteLine("CV3_GEFS Criada!");
-
-                    rvxX(path_Conj, "ECMWF", "CV3_EURO", vies_cv3);
-                    logF.WriteLine("CV3_ECMWF Criada!");
-
-                    rvxX(path_Conj, "GEFS", "CV4_GEFS", vies_cv4);
-                    logF.WriteLine("CV4_GEFS Criada!");
-
-                    rvxX(path_Conj, "ECMWF", "CV4_EURO", vies_cv4);
-                    logF.WriteLine("CV4_ECMWF Criada!");
-
-                    //CV_FUNC 
-                    //Remoção de vies a partir do dia atual, completando com MCP se necessário
-                    logF.WriteLine("Criando Pasta CV_FUNC");
-
-                    var arqs_PMEDIA = Directory.GetFiles(path_ArqSaida, "PM*.dat");
-                    var cv_func = Path.Combine(path_Conj, "CV_FUNC");
-
-                    Directory.CreateDirectory(cv_func);
-
-                    foreach (var arq in arqs_PMEDIA)
-                    {
-                        System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
-
-                        var data_mapa = r.Match(arq);
-
-                        string mapa = data_mapa.ToString() + ".dat";
-
-
-                        File.Copy(arq, Path.Combine(cv_func, mapa), true);
-                    }
-                    MCP_FUNC(cv1.AddDays(-(dias_ve + 1)), Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
-                    logF.WriteLine("CV_FUNC Criada!");
-
-
-                    // tetes euro45m smapext
-                    if (temECEN45 == true)
-                    {
-
-                        logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada");
-
-                        //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC", "CV_FUNC", "ECENS45m", cv1);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GEFS", "CV_VIES_VE", "ECENS45m", cv1);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GFS", "CV_GFS", "ECENS45m", cv1);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EURO", "CV_EURO", "ECENS45m", cv1);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EUROop", "CV_EUROop", "ECENS45m", cv1);
+                        rvx1CSV(path_Conj, "ECMWFop", "CV1_EUROop", vies_csv_cv1, vies_csv_cv2);
+                        logF.WriteLine("CV1_EUROop_CSV Criada!");
 
                         if (runRev.rev == 0)
                         {
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_GEFS", "CV0_VIES_VE", "ECENS45m", cvx);
-                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m", cvx);
+                            var vies_csv_cvx = GetCsvData(Path.Combine(pathArqSaida, "vies_" + cvx.ToString("yyyy-MM-dd") + ".csv"));
+
+                            rvx1CSV(path_Conj, "GEFS", "CV0_GEFS", vies_csv_cvx, vies_csv_cv2);
+
+                            logF.WriteLine("CV0_GEFS_CSV Criada!");
+
+                            rvx1CSV(path_Conj, "ECMWF", "CV0_EURO", vies_csv_cvx, vies_csv_cv2);
+
+                            logF.WriteLine("CV0_EURO_CSV Criada!");
+                        }
+                        //rvxPuraCSV(path_Conj, "GEFS", "CVPURO_PUROGEFS");
+                        rvxPuraCSV(path_Conj, "GEFS", "CVPURO");
+                        logF.WriteLine("CVPURO_GEFS_CSV Criada!");
+
+                        //rvxPuraCSV(path_Conj, "ECMWF", "CVPURO_PUROECMWF");
+                        rvxPuraCSV(path_Conj, "ECMWF", "CVPURO");
+                        logF.WriteLine("CVPURO_ECMWF_CSV Criada!");
+
+                        rvx2CSV(path_Conj, "ECMWF", "CV2_EURO", vies_csv_cv2);
+                        logF.WriteLine("CV2_EURO_CSV Criada!");
+
+                        rvx2CSV(path_Conj, "ECMWFop", "CV2_EUROop", vies_csv_cv2);
+                        logF.WriteLine("CV2_EUROop_CSV Criada!");
+
+
+                        rvx2CSV(path_Conj, "GEFS", "CV2_GEFS", vies_csv_cv2);
+                        logF.WriteLine("CV2_GEFS_CSV Criada!");
+
+                        rvx2CSV(path_Conj, "GFS", "CV2_GFS", vies_csv_cv2);
+                        logF.WriteLine("CV2_GFS_CSV Criada!");
+
+
+                        rvxXCSV(path_Conj, "GEFS", "CV3_GEFS", vies_csv_cv3);
+                        logF.WriteLine("CV3_GEFS_CSV Criada!");
+
+                        rvxXCSV(path_Conj, "ECMWF", "CV3_EURO", vies_csv_cv3);
+                        logF.WriteLine("CV3_ECMWF_CSV Criada!");
+
+                        rvxXCSV(path_Conj, "GEFS", "CV4_GEFS", vies_csv_cv4);
+                        logF.WriteLine("CV4_GEFS_CSV Criada!");
+
+                        rvxXCSV(path_Conj, "ECMWF", "CV4_EURO", vies_csv_cv4);
+                        logF.WriteLine("CV4_ECMWF_CSV Criada!");
+
+                        if (temECEN45 == true)
+                        {
+
+                            logF.WriteLine("Tranferindo dados ECENS45_Membros para Entrada");
+
+                            //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1_FUNC", "CV1_FUNC", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1_GEFS", "CV1_GEFS", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1_GFS", "CV1_GFS", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1_EURO", "CV1_EURO", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1_EUROop", "CV1_EUROop", "ECENS45m");
+
+                            rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1", "CV1_FUNC", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1", "CV1_GEFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1", "CV1_GFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1", "CV1_EURO", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1", "CV1_EUROop", "ECENS45m");
+
+                            if (runRev.rev == 0)
+                            {
+                                //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP0_GEFS", "CV0_GEFS", "ECENS45m");
+                                //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m");
+
+                                rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP0", "CV0_GEFS", "ECENS45m");
+                                rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP0", "CV0_EURO", "ECENS45m");
+                            }
+
+
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP2_GEFS", "CV2_GEFS", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP2_GFS", "CV2_GFS", "ECENS45m");
+
+                            //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m");
+
+                            //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m");
+                            //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m");
+
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP2", "CV2_EURO", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP2", "CV2_EUROop", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP2", "CV2_GEFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP2", "CV2_GFS", "ECENS45m");
+
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP3", "CV3_GEFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP3", "CV3_EURO", "ECENS45m");
+
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP4", "CV4_GEFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP4", "CV4_EURO", "ECENS45m");
+                        }
+
+                        //Completa com Funceme ou psatpreliminar se não tiver acomph referente a data
+
+                        if (data_Atual != dt_acomph)
+                        {
+                            logF.WriteLine("Acomph desatualizado, renoamendo arquivos");
+                            var dirs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV")).ToList();
+                            //var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
+                            var arq_funcemePsatcsv = Path.Combine(pathArqSaida, funcemePsatPre + ".csv");
+                            var datasFuncemPast = GetCsvData(arq_funcemePsatcsv);
+
+                            atualizaDtFuncemePsatCSV(datasFuncemPast, dirs, dt_acomph);
                         }
 
 
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m", cv2);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m", cv2);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GEFS", "CV2_GEFS", "ECENS45m", cv2);
-                        rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GFS", "CV2_GFS", "ECENS45m", cv2);
 
-                       // if (runRev4.rev == 0)
-                       // {
+                        var dirs_cvs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV")).ToList();
+
+                        MergeCSVs(dirs_cvs, true);// usar true para apagar os cvs fonte apos o merge de dados 
+
+                        var dirs_cvsToCOPY = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV") && x.Split('\\').Last().Contains("_")).ToList();
+
+
+                        foreach (var dir in dirs_cvsToCOPY)
+                        {
+                            var name_cv = dir.Split('\\').Last().Split('_').First();
+
+                            if (!Directory.Exists(Path.Combine(path_Conj, name_cv)))
+                            {
+                                Directory.CreateDirectory(Path.Combine(path_Conj, name_cv));
+                            }
+
+                            DirectoryCopy(dir, Path.Combine(path_Conj, name_cv, dir.Split('\\').Last()), true);
+                            Directory.Delete(dir, true);
+
+
+                        }
+
+                    }
+                    else
+                    {
+                        logF.WriteLine("Criando Pastas RVX+1");
+
+                        //  var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+                        var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+
+
+                        var vies_cv1 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv1.ToString("dd-MM")));
+
+
+                        Directory.CreateDirectory(Path.Combine(path_ArqSaida, "vies_" + cv2.ToString("dd-MM")));
+                        var vies_cv2 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv2.ToString("dd-MM")));
+
+                        var vies_cv3 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv3.ToString("dd-MM")));
+                        var vies_cv4 = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cv4.ToString("dd-MM")));
+
+
+
+                        rvx1(path_Conj, "GEFS", "CV_VIES_VE", vies_cv1, vies_cv2);
+
+                        logF.WriteLine("CV_VIES_VE Criada!");
+
+                        rvx1(path_Conj, "GFS", "CV_GFS", vies_cv1, vies_cv2);
+
+                        logF.WriteLine("CV_GFS Criada!");
+
+                        rvx1(path_Conj, "ECMWF", "CV_EURO", vies_cv1, vies_cv2);
+
+                        logF.WriteLine("CV_EURO Criada!");
+
+                        rvx1(path_Conj, "ECMWFop", "CV_EUROop", vies_cv1, vies_cv2);
+
+                        logF.WriteLine("CV_EURO_op Criada!");
+
+                        if (runRev.rev == 0)
+                        {
+                            var vies_cvx = Directory.GetFiles(Path.Combine(path_ArqSaida, "vies_" + cvx.ToString("dd-MM")));
+
+                            rvx1(path_Conj, "GEFS", "CV0_VIES_VE", vies_cvx, vies_cv2);
+
+                            logF.WriteLine("CV0_VIES_VE Criada!");
+
+                            rvx1(path_Conj, "ECMWF", "CV0_EURO", vies_cvx, vies_cv2);
+
+                            logF.WriteLine("CV0_EURO Criada!");
+                        }
+
+                        //testes mapasa sem remoção EURO E GEFS
+                        rvxPura(path_Conj, "GEFS", "CVPURO_PUROGEFS");
+                        rvxPura(path_Conj, "ECMWF", "CVPURO_PUROECMWF");
+
+                        //fim teste
+
+
+
+
+
+                        //Organização das Rodada para rvx+2
+
+                        logF.WriteLine("Criando Pastas RVX+2");
+
+                        rvx2(path_Conj, "ECMWF", "CV2_EURO", vies_cv2);
+                        //  MCP(cv2, Path.Combine(path_Conj, "CV2_EURO"), path_ModeloR);
+                        logF.WriteLine("CV2_EURO Criada!");
+
+                        rvx2(path_Conj, "ECMWFop", "CV2_EUROop", vies_cv2);
+                        //  MCP(cv2, Path.Combine(path_Conj, "CV2_EUROop"), path_ModeloR);
+                        logF.WriteLine("CV2_EURO_op Criada!");
+
+
+                        rvx2(path_Conj, "GEFS", "CV2_GEFS", vies_cv2);
+                        //   MCP(cv2, Path.Combine(path_Conj, "CV2_GEFS"), path_ModeloR);
+                        logF.WriteLine("CV2_GEFS Criada!");
+
+                        rvx2(path_Conj, "GFS", "CV2_GFS", vies_cv2);
+                        //   MCP(cv2, Path.Combine(path_Conj, "CV2_GFS"), path_ModeloR);
+                        logF.WriteLine("CV2_GFS Criada!");
+
+
+                        rvxX(path_Conj, "GEFS", "CV3_GEFS", vies_cv3);
+                        logF.WriteLine("CV3_GEFS Criada!");
+
+                        rvxX(path_Conj, "ECMWF", "CV3_EURO", vies_cv3);
+                        logF.WriteLine("CV3_ECMWF Criada!");
+
+                        rvxX(path_Conj, "GEFS", "CV4_GEFS", vies_cv4);
+                        logF.WriteLine("CV4_GEFS Criada!");
+
+                        rvxX(path_Conj, "ECMWF", "CV4_EURO", vies_cv4);
+                        logF.WriteLine("CV4_ECMWF Criada!");
+
+                        //CV_FUNC 
+                        //Remoção de vies a partir do dia atual, completando com MCP se necessário
+                        logF.WriteLine("Criando Pasta CV_FUNC");
+
+                        var arqs_PMEDIA = Directory.GetFiles(path_ArqSaida, "PM*.dat");
+                        var cv_func = Path.Combine(path_Conj, "CV_FUNC");
+
+                        Directory.CreateDirectory(cv_func);
+
+                        foreach (var arq in arqs_PMEDIA)
+                        {
+                            System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex(@"p(\d{2})(\d{2})(\d{2})a(\d{2})(\d{2})(\d{2})");
+
+                            var data_mapa = r.Match(arq);
+
+                            string mapa = data_mapa.ToString() + ".dat";
+
+
+                            File.Copy(arq, Path.Combine(cv_func, mapa), true);
+                        }
+                        MCP_FUNC(cv1.AddDays(-(dias_ve + 1)), Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
+                        logF.WriteLine("CV_FUNC Criada!");
+
+
+                        // tetes euro45m smapext
+                        if (temECEN45 == true)
+                        {
+
+                            logF.WriteLine("Tranferindo arquivos ECENS45_Membros para Entrada");
+
+                            //rvxSmapEXT(path_Conj, "ECENS45m", "CVSMAP_ECENS45m");
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_FUNC", "CV_FUNC", "ECENS45m", cv1);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GEFS", "CV_VIES_VE", "ECENS45m", cv1);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_GFS", "CV_GFS", "ECENS45m", cv1);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EURO", "CV_EURO", "ECENS45m", cv1);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP1_EUROop", "CV_EUROop", "ECENS45m", cv1);
+
+                            if (runRev.rev == 0)
+                            {
+                                rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_GEFS", "CV0_VIES_VE", "ECENS45m", cvx);
+                                rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m", cvx);
+                            }
+
+
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EURO", "CV2_EURO", "ECENS45m", cv2);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_EUROop", "CV2_EUROop", "ECENS45m", cv2);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GEFS", "CV2_GEFS", "ECENS45m", cv2);
+                            rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP2_GFS", "CV2_GFS", "ECENS45m", cv2);
+
+                            // if (runRev4.rev == 0)
+                            // {
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3, true);
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3, true);
-                       // }
-                        //else
-                        //{
-                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3);
-                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3);
-                        //}
+                            // }
+                            //else
+                            //{
+                            //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_GEFS", "CV3_GEFS", "ECENS45m", cv3);
+                            //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP3_EURO", "CV3_EURO", "ECENS45m", cv3);
+                            //}
 
-                       // if (runRev5.rev == 0 || runRev5.rev == 1)
-                       // {
+                            // if (runRev5.rev == 0 || runRev5.rev == 1)
+                            // {
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4, true);
                             rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4, true);
-                       // }
-                        //else
-                        //{
-                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4);
-                        //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4);
-                        //}
-                        
-
-                    }
-
-                    // fim teste
+                            // }
+                            //else
+                            //{
+                            //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m", cv4);
+                            //    rvxSmapExtByModel(path_Conj, "ECENS45m", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m", cv4);
+                            //}
 
 
-                    //Completa com Funceme ou psatpreliminar se não tiver acomph referente a data
+                        }
 
-                    if (data_Atual != dt_acomph)
-                    {
-                        logF.WriteLine("Acomph desatualizado, renoamendo arquivos");
-                        var dirs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
-                        //var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
-                        var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, funcemePsatPre));
+                        // fim teste
 
-                        foreach (var arq in arq_funceme)//ajusta as datas dos dats para as rodadas pré acomph
+
+                        //Completa com Funceme ou psatpreliminar se não tiver acomph referente a data
+
+                        if (data_Atual != dt_acomph)
                         {
-                            foreach (var dir in dirs)
+                            logF.WriteLine("Acomph desatualizado, renoamendo arquivos");
+                            var dirs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
+                            //var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, "funceme"));
+                            var arq_funceme = Directory.GetFiles(Path.Combine(path_ArqSaida, funcemePsatPre));
+
+                            foreach (var arq in arq_funceme)//ajusta as datas dos dats para as rodadas pré acomph
                             {
+                                foreach (var dir in dirs)
+                                {
 
-                                File.Copy(arq, Path.Combine(dir, arq.Split('\\').Last()), true);
-                                Atualiza_DT(dir, dt_acomph);
+                                    File.Copy(arq, Path.Combine(dir, arq.Split('\\').Last()), true);
+                                    Atualiza_DT(dir, dt_acomph);
+                                }
                             }
+
                         }
 
-                    }
-
-                    if (data_Atual.DayOfWeek == DayOfWeek.Friday)
-                    {
-                        var count_mapas = Directory.GetFiles(Path.Combine(path_Conj, "CV_EURO")).Count();
-                        if (count_mapas < 15) MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_VIES_VE"), path_ModeloR, true);
-                        if (count_mapas < 15) MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_GFS"), path_ModeloR, true);
-                        MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_EURO"), path_ModeloR);
-                        MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_EUROop"), path_ModeloR);
-                        MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
-                    }
-
-                    var dirs_cvs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
-
-                    foreach (var dir in dirs_cvs)
-                    {
-                        var name_cv = dir.Split('\\').Last().Split('_').First();
-
-                        if (!Directory.Exists(Path.Combine(path_Conj, name_cv)))
+                        if (data_Atual.DayOfWeek == DayOfWeek.Friday)
                         {
-                            Directory.CreateDirectory(Path.Combine(path_Conj, name_cv));
+                            var count_mapas = Directory.GetFiles(Path.Combine(path_Conj, "CV_EURO")).Count();
+                            if (count_mapas < 15) MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_VIES_VE"), path_ModeloR, true);
+                            if (count_mapas < 15) MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_GFS"), path_ModeloR, true);
+                            MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_EURO"), path_ModeloR);
+                            MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_EUROop"), path_ModeloR);
+                            MCP_rv1(dt_acomph, Path.Combine(path_Conj, "CV_FUNC"), path_ModeloR);
                         }
 
-                        DirectoryCopy(dir, Path.Combine(path_Conj, name_cv, dir.Split('\\').Last()), true);
-                        Directory.Delete(dir, true);
+                        var dirs_cvs = Directory.GetDirectories(path_Conj).Where(x => x.Split('\\').Last().StartsWith("CV"));
+
+                        foreach (var dir in dirs_cvs)
+                        {
+                            var name_cv = dir.Split('\\').Last().Split('_').First();
+
+                            if (!Directory.Exists(Path.Combine(path_Conj, name_cv)))
+                            {
+                                Directory.CreateDirectory(Path.Combine(path_Conj, name_cv));
+                            }
+
+                            DirectoryCopy(dir, Path.Combine(path_Conj, name_cv, dir.Split('\\').Last()), true);
+                            Directory.Delete(dir, true);
 
 
+                        }
                     }
+
+
                     var email = Tools.Tools.SendMail("", $"Mapas Gerados com Sucesso!{DateTime.Now: dd/MM/yyyy HH:mm:ss}", "SUCESSO AO GERAR MAPAS", "desenv");
                     email.Wait(30000);
                     logF.WriteLine("Mapas Gerados com Sucesso!");
@@ -1011,6 +1214,221 @@ namespace ChuvaVazaoTools
 
 
         }
+        internal static List<Tuple<string, double, double>> getPostosMp()
+        {
+            string postoMPfile = $@"H:\TI - Sistemas\UAT\ChuvaVazao\POSTOSMP-SAT_PLU.txt";
+            var dados = File.ReadAllLines(postoMPfile).ToList();
+
+            List<Tuple<string, double, double>> coodenadas = new List<Tuple<string, double, double>>();
+
+            foreach (var d in dados)
+            {
+                var partes = d.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                coodenadas.Add(new Tuple<string, double, double>(partes[0], Convert.ToDouble(partes[1].Replace('.', ',')), Convert.ToDouble(partes[2].Replace('.', ','))));//posto lat lon
+            }
+            return coodenadas;
+        }
+
+        internal static List<Tuple<double, double, string>> getDadosprecip(string arquivo)
+        {
+            var dados = File.ReadAllLines(arquivo).ToList();
+
+            List<Tuple<double, double, string>> coodenadas = new List<Tuple<double, double, string>>();
+
+            foreach (var d in dados)
+            {
+                var partes = d.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                coodenadas.Add(new Tuple<double, double, string>(Convert.ToDouble(partes[1].Replace('.', ',')), Convert.ToDouble(partes[0].Replace('.', ',')), partes[2]));//lat lon precip
+            }
+            return coodenadas;
+        }
+
+        internal static bool transferECMWFmembrosCSV(string path_Conj, string modelo, string nome_path, bool usarCFS = false)
+        {
+            DateTime data = DateTime.Today;
+            var path_ArqSaida = Path.Combine(path_Conj, "clusters");
+
+            string sitemasFolder = $@"C:\Sistemas\ChuvaVazao";
+            string ecenCSV = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv_csv\clusters.csv";
+            string ecenProbDat = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv_csv\Arq_Saida\ECMWF\Clust\prob.dat";
+            int contagem = 0;
+
+            DateTime dataCFS = DateTime.Today;
+            string cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+            int contCfs = 0;
+            List<string> out_CFS = new List<string>();
+
+            while (!Directory.Exists(cfsFolderK) && contCfs < 4)//procura diretorio até 4 dias atras
+            {
+                dataCFS = dataCFS.AddDays(-1);
+                cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
+
+                contCfs++;
+            }
+
+            if (Directory.Exists(cfsFolderK))
+            {
+                out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".dat")).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+            }
+
+            try
+            {
+                while (!File.Exists(ecenCSV) && !File.Exists(ecenProbDat) && contagem < 16)//procura diretorio até 16 dias atras
+                {
+                    data = data.AddDays(-1);
+                    ecenCSV = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv_csv\clusters.csv";
+                    ecenProbDat = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\{data:yyyyMM}\{data:dd}\ENS_Est_rv_csv\Arq_Saida\ECMWF\Clust\prob.dat";
+
+                    contagem++;
+                }
+
+                if (contagem >= 16)
+                {
+                    return false;
+                }
+                //var path_ArqSaida = @"C:\Files";//
+
+                //var out_ModeloFolder = Path.Combine(path_ArqSaida, modelo);
+
+                if (File.Exists(ecenCSV) && File.Exists(ecenProbDat))
+                {
+                    File.WriteAllText(Path.Combine(path_Conj, "data.txt"), "ECMWF_CLUSTER:" + data.ToString("dd/MM/yyyy"));
+                    for (int i = 1; i <= 10; i++)
+                    {
+                        //nome_path = nome_path + 1.ToString("00");
+                        string search = modelo + i.ToString("00");
+                        var path_cv = Path.Combine(path_Conj, "clusters", search);
+                        var clustLines = File.ReadAllLines(ecenCSV).Skip(1).ToList();
+                        string cenario = "cluster" + i.ToString();
+
+                        var postosMP = clustLines.Select(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries)[3]).Distinct().ToList();
+
+                        List<string> newCsv = new List<string>();
+                        newCsv.Add(File.ReadAllLines(ecenCSV).First());
+
+                        Directory.CreateDirectory(path_cv);
+                        DateTime data_hoje = DateTime.Today;
+                        DateTime ultimaData = DateTime.Today;
+
+                        var coordenadas = getPostosMp();//posto lat lon
+
+                        int cont = 0;
+
+
+                        foreach (var lin in clustLines)
+                        {
+                            var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                            DateTime dataFin = DateTime.ParseExact(partes[1], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                            if (dataFin > data_hoje && partes[2].Equals(cenario))
+                            {
+                                ultimaData = DateTime.ParseExact(partes[1], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                                partes[0] = data_hoje.ToString("dd/MM/yyyy");
+                                newCsv.Add(string.Join(";", partes));
+                                cont++;
+                            }
+                        }
+                        cont = cont / postosMP.Count();
+
+                        if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45 && usarCFS == true)
+                        {
+
+                            foreach (var cfs in out_CFS)
+                            {
+                                var dtCfs = DateTime.ParseExact(cfs.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                                if (dtCfs > ultimaData)
+                                {
+                                    var precips = getDadosprecip(cfs);//lat lon precip
+                                    foreach (var p in postosMP)
+                                    {
+                                        var coordenada = coordenadas.Where(x => x.Item1 == p).First();//posto lat lon
+                                        var dadoPrecip = precips.Where(x => x.Item1 == coordenada.Item2 && x.Item2 == coordenada.Item3).Select(x => x.Item3).FirstOrDefault();
+                                        if (dadoPrecip == "" || string.IsNullOrEmpty(dadoPrecip))
+                                        {
+                                            dadoPrecip = "0.0";
+                                        }
+                                        int index = newCsv.IndexOf(newCsv.Where(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList()[3] == p).LastOrDefault());
+                                        newCsv.Insert(index + 1, $@"{data_hoje:dd/MM/yyyy};{dtCfs:dd/MM/yyyy};{cenario};{p};{dadoPrecip}");
+                                    }
+
+                                    cont++;
+
+                                    if (cont == 55)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            while (cont < 55)
+                            {
+                                string MediaMERGE = @"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\Modelo_R\merge\avg";
+
+                                var data_arq = ultimaData;
+
+                                string MergeFile = Path.Combine(MediaMERGE, "merge_mean_" + data_arq.Month.ToString("00") + ".dat");
+
+                                var precips = getDadosprecip(MergeFile);//lat lon precip
+                                foreach (var p in postosMP)
+                                {
+                                    var coordenada = coordenadas.Where(x => x.Item1 == p).First();//posto lat lon
+                                    var dadoPrecip = precips.Where(x => x.Item1 == coordenada.Item2 && x.Item2 == coordenada.Item3).Select(x => x.Item3).FirstOrDefault();
+                                    if (dadoPrecip == "" || dadoPrecip == string.Empty)
+                                    {
+                                        dadoPrecip = "0.0";
+                                    }
+                                    int index = newCsv.IndexOf(newCsv.Where(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList()[3] == p).FirstOrDefault());
+                                    newCsv.Insert(index + 1, $@"{data_hoje:dd/MM/yyyy};{data_arq:dd/MM/yyyy};{cenario};{p};{dadoPrecip}");
+                                }
+                                ultimaData = ultimaData.AddDays(1);
+                                cont++;
+                            }
+                        }
+                        File.WriteAllLines(Path.Combine(path_cv, search + ".csv"), newCsv);
+                    }
+
+                    File.Copy(ecenProbDat, Path.Combine(path_Conj, "prob.dat"), true);
+                    File.Copy(ecenProbDat, Path.Combine(sitemasFolder, "prob.dat"), true);
+
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
+        }
+
+        internal static List<Tuple<DateTime, DateTime, string, string, double>> GetCsvData(string CSVfile)
+        {
+            List<Tuple<DateTime, DateTime, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, double>>();
+            var linhas = File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime dataRodada = DateTime.ParseExact(partes[0], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataPrevisao = DateTime.ParseExact(partes[1], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                string cenario = partes[2];
+                string nomeposto = partes[3];
+                double precip = Convert.ToDouble(partes[4].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, double>(dataRodada, dataPrevisao, cenario, nomeposto, precip));
+            }
+
+
+            return dados;
+
+        }
 
         internal static bool transferECMWFmembros(string path_Conj, string modelo, string nome_path, bool usarCFS = false)
         {
@@ -1037,7 +1455,7 @@ namespace ChuvaVazaoTools
 
             if (Directory.Exists(cfsFolderK))
             {
-                out_CFS = Directory.GetFiles(cfsFolderK).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+                out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".dat")).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
             }
 
             try
@@ -1457,7 +1875,7 @@ namespace ChuvaVazaoTools
 
                         if (Directory.Exists(cfsFolderK))
                         {
-                            out_CFS = Directory.GetFiles(cfsFolderK).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+                            out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".dat")).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
                         }
 
                         if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45)
@@ -1484,6 +1902,410 @@ namespace ChuvaVazaoTools
                     }
                 }
             }
+        }
+
+        internal static void rvxPuraCSV(string path_Conj, string modelo, string nome_path)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+
+            List<string> newCsv = new List<string>();
+            List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+            Directory.CreateDirectory(path_cv);
+            var out_Modelo = GetCsvData(Path.Combine(path_ArqSaida, modelo + ".csv"));
+
+            //var datasViesve = vies_cv1.Select(x => x.Item2).Distinct().ToList();
+            //var out_modeloSemvies = out_Modelo.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+            //todo: colocar os dados sempre sobrescrevendo os dados referentes as vies ve 
+            // var Modelo1 = out_Modelo.Where(File => !vies_cv1.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));//do outmodelo menos os dias da vies1
+            //var Modelo2 = Modelo1.Where(File => !vies_cv2.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));//do modelo1 menos os dias da vies2 
+
+            //DateTime data_final = DateTime.Today.AddDays(-1);
+            //foreach (var arq_CV in vies_cv1)
+            //{
+            //    dadosFinais.Add(arq_CV);
+            //    DateTime data_arq = arq_CV.Item2;//dataprevisão
+
+            //    if (data_arq >= data_final)
+            //    {
+            //        data_final = data_arq;
+            //    }
+            //}
+
+            //foreach (var arq in out_modeloSemvies)
+            //{
+            //    var data_arq = arq.Item2;
+            //    if (data_arq <= data_final)
+            //    {
+            //        dadosFinais.Add(arq);
+            //    }
+            //}
+            newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+            var dadosFinaisOrdered = out_Modelo.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+            foreach (var dado in dadosFinaisOrdered)
+            {
+                string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                newCsv.Add(linha);
+            }
+            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+
+
+        }
+
+        internal static void rvx1CSV(string path_Conj, string modelo, string nome_path, List<Tuple<DateTime, DateTime, string, string, double>> vies_cv1, List<Tuple<DateTime, DateTime, string, string, double>> vies_cv2)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+            // var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            List<string> newCsv = new List<string>();
+            List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+            Directory.CreateDirectory(path_cv);
+            var out_Modelo = GetCsvData(Path.Combine(path_ArqSaida, modelo + ".csv"));
+
+            var datasViesve = vies_cv1.Select(x => x.Item2).Distinct().ToList();
+            var out_modeloSemvies = out_Modelo.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+            //todo: colocar os dados sempre sobrescrevendo os dados referentes as vies ve 
+            // var Modelo1 = out_Modelo.Where(File => !vies_cv1.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));//do outmodelo menos os dias da vies1
+            //var Modelo2 = Modelo1.Where(File => !vies_cv2.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));//do modelo1 menos os dias da vies2 
+
+            DateTime data_final = DateTime.Today.AddDays(-1);
+            foreach (var arq_CV in vies_cv1)
+            {
+                dadosFinais.Add(arq_CV);
+                DateTime data_arq = arq_CV.Item2;//dataprevisão
+
+                if (data_arq >= data_final)
+                {
+                    data_final = data_arq;
+                }
+            }
+
+            foreach (var arq in out_modeloSemvies)
+            {
+                var data_arq = arq.Item2;
+                if (data_arq <= data_final)
+                {
+                    dadosFinais.Add(arq);
+                }
+            }
+            newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+            var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+            foreach (var dado in dadosFinaisOrdered)
+            {
+                string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                newCsv.Add(linha);
+            }
+            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+
+        }
+
+        internal static void rvxRemoHojeCSV(string path_Conj, string modelo, string nome_path, List<Tuple<DateTime, DateTime, string, string, double>> vies_cv)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+            // var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            List<string> newCsv = new List<string>();
+            List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+            Directory.CreateDirectory(path_cv);
+            //var out_Modelo = GetCsvData(Path.Combine(path_ArqSaida, modelo + ".csv"));
+
+            //var datasViesve = vies_cv.Select(x => x.Item2).Distinct().ToList();
+            //var out_modeloSemvies = out_Modelo.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+
+            DateTime data_final = DateTime.Today.AddDays(-1);
+
+            foreach (var arq_CV in vies_cv)
+            {
+                dadosFinais.Add(arq_CV);
+                DateTime data_arq = arq_CV.Item2;//dataprevisão
+
+                if (data_arq >= data_final)
+                {
+                    data_final = data_arq;
+                }
+            }
+
+
+            //foreach (var arq in out_modeloSemvies)
+            //{
+            //    var data_arq = arq.Item2;
+            //    if (data_arq <= data_final)
+            //    {
+            //        dadosFinais.Add(arq);
+            //    }
+            //}
+            newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+            var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+            foreach (var dado in dadosFinaisOrdered)
+            {
+                string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                newCsv.Add(linha);
+            }
+            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+
+        }
+
+        internal static void MergeCSVs(List<string> diretorios,bool deleteBaseCSV = false)
+        {
+            foreach (var dir in diretorios)
+            {
+                var csvList = Directory.GetFiles(dir).ToList();
+                if (csvList.Count() > 1)
+                {
+                    List<string> newCsv = new List<string>();
+                    newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+                    List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+                    foreach (var csv in csvList)
+                    {
+                        var dados = GetCsvData(csv);
+                        dados.ForEach(x => dadosFinais.Add(x));
+
+                        if (deleteBaseCSV == true)//para apagar o cvs fonte
+                        {
+                            File.Delete(csv);
+                        }
+                    }
+
+                    foreach (var dado in dadosFinais)
+                    {
+                        string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + dado.Item3 + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                        newCsv.Add(linha);
+                    }
+                    File.WriteAllLines(Path.Combine(dir, dir.Split('\\').Last() + ".csv"), newCsv);//csv fica com o nome do diretorio para identificar qual deles é o quem tem todos os dados 
+
+                }
+            }
+
+        }
+
+
+        internal static void atualizaDtFuncemePsatCSV(List<Tuple<DateTime, DateTime, string, string, double>> funcemePastcsv, List<string> diretorios, DateTime dt_acomph)
+        {
+            foreach (var dir in diretorios)
+            {
+                var csvList = Directory.GetFiles(dir).ToList();
+                foreach (var csv in csvList)
+                {
+                    List<string> newCsv = new List<string>();
+
+                    var dados = GetCsvData(csv);
+
+                    string cenario = dados.First().Item3;
+
+                    foreach (var fPcsv in funcemePastcsv)
+                    {
+                        dados.Add(fPcsv);
+                    }
+
+                    var dadosFinaisOrdered = dados.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+                    newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+                    foreach (var dado in dadosFinaisOrdered)
+                    {
+                        string linha = dt_acomph.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                        newCsv.Add(linha);
+                    }
+                    File.WriteAllLines(csv, newCsv);
+                }
+            }
+        }
+
+        internal static void rvxSmapExtByModelCSV(string path_Conj, string csvModelName, string nome_path, string modeloBase, string clusterName)
+        {                                           //raiz       // FUNC      //CVSMAP1_FUNC        //CV1_FUNC    //ECENS45m       
+
+            string path_saida = Path.Combine(path_Conj, nome_path);
+            if (!Directory.Exists(path_saida))
+            {
+                Directory.CreateDirectory(path_saida);
+            }
+
+            var path_cvBase = Path.Combine(path_Conj, modeloBase);
+            var csvModeloBase = Path.Combine(path_cvBase, csvModelName + ".csv");
+            var csvModeldata = GetCsvData(csvModeloBase);
+
+
+            var datasModeloBase = csvModeldata.Select(x => x.Item2).Distinct().ToList();
+
+            var path_Clusters = Path.Combine(path_Conj, "clusters");
+
+            for (int i = 1; i <= 10; i++)
+            {
+                string search = clusterName + i.ToString("00");
+
+                var out_ClusterFolder = Path.Combine(path_Clusters, search);
+
+                if (Directory.Exists(out_ClusterFolder))
+                {
+                    string cenario = csvModelName + search;
+
+                    string clusterCSV = Path.Combine(out_ClusterFolder, search + ".csv");
+
+                    var csvClusterData = GetCsvData(clusterCSV);
+
+                    var csvClusterFiltered = csvClusterData.Where(x => datasModeloBase.All(y => y != x.Item2)).ToList();
+
+                    List<string> newCsv = new List<string>();
+                    List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+                    foreach (var dataCSV in csvModeldata)
+                    {
+                        dadosFinais.Add(dataCSV);
+                    }
+                    foreach (var CSVfiltered in csvClusterFiltered)
+                    {
+                        dadosFinais.Add(CSVfiltered);
+                    }
+
+                    newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+                    var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+                    foreach (var dado in dadosFinaisOrdered)
+                    {
+                        string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                        newCsv.Add(linha);
+                    }
+
+                    File.WriteAllLines(Path.Combine(path_saida, cenario + ".csv"), newCsv);
+
+                }
+            }
+        }
+
+        internal static void rvxXCSV(string path_Conj, string modelo, string nome_path, List<Tuple<DateTime, DateTime, string, string, double>> vies_cv)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+            // var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            List<string> newCsv = new List<string>();
+            List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+            Directory.CreateDirectory(path_cv);
+            var out_Modelo = GetCsvData(Path.Combine(path_ArqSaida, modelo + ".csv"));
+
+            var datasViesve = vies_cv.Select(x => x.Item2).Distinct().ToList();
+            var out_modeloSemvies = out_Modelo.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+
+            DateTime data_final = DateTime.Today.AddDays(-1);
+
+            foreach (var arq_CV in vies_cv)
+            {
+                dadosFinais.Add(arq_CV);
+                DateTime data_arq = arq_CV.Item2;//dataprevisão
+
+                if (data_arq >= data_final)
+                {
+                    data_final = data_arq;
+                }
+            }
+
+
+            foreach (var arq in out_modeloSemvies)
+            {
+                var data_arq = arq.Item2;
+                if (data_arq <= data_final)
+                {
+                    dadosFinais.Add(arq);
+                }
+            }
+            newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+            var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+            foreach (var dado in dadosFinaisOrdered)
+            {
+                string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                newCsv.Add(linha);
+            }
+            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+
+        }
+
+        internal static void rvx2CSV(string path_Conj, string modelo, string nome_path, List<Tuple<DateTime, DateTime, string, string, double>> vies_cv2)
+        {
+
+            var path_cv = Path.Combine(path_Conj, nome_path);
+            var path_ArqSaida = Path.Combine(path_Conj, "Arq_Saida");
+            // var path_ArqSaida = Path.Combine(path_Conj, "madeira");
+            List<string> newCsv = new List<string>();
+            List<Tuple<DateTime, DateTime, string, string, double>> dadosFinais = new List<Tuple<DateTime, DateTime, string, string, double>>();
+
+            Directory.CreateDirectory(path_cv);
+            var out_Modelo = GetCsvData(Path.Combine(path_ArqSaida, modelo + ".csv"));
+
+            var datasViesve = vies_cv2.Select(x => x.Item2).Distinct().ToList();
+            var out_modeloSemvies = out_Modelo.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+
+            DateTime data_final = DateTime.Today.AddDays(-1);
+
+            foreach (var arq_CV in vies_cv2)
+            {
+                dadosFinais.Add(arq_CV);
+                DateTime data_arq = arq_CV.Item2;//dataprevisão
+
+                if (data_arq >= data_final)
+                {
+                    data_final = data_arq;
+                }
+            }
+
+
+            foreach (var arq in out_modeloSemvies)
+            {
+                var data_arq = arq.Item2;
+                if (data_arq <= data_final)
+                {
+                    dadosFinais.Add(arq);
+                }
+            }
+            newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+
+            if (modelo == "ECMWFop")
+            {
+                var arqs_ONS = GetCsvData(Path.Combine(path_ArqSaida, "ECMWF.csv"));
+
+                var Modelo3 = arqs_ONS.Where(x => datasViesve.All(y => y != x.Item2)).ToList();
+
+                var dias_out_modeloSemvies = out_modeloSemvies.Select(x => x.Item2).Distinct().ToList();
+
+                var arqs_GEFS_EURO = Modelo3.Where(x => dias_out_modeloSemvies.All(y => y != x.Item2)).ToList();
+                //var arqs_GEFS_EURO = Modelo3.Where(File => !Modelo2.Any(x => File.EndsWith(x.Split('\\').Last(), StringComparison.OrdinalIgnoreCase)));
+
+                foreach (var arq_Euro in arqs_GEFS_EURO)
+                {
+                    var data_arq = arq_Euro.Item2;
+                    if (data_arq <= data_final)
+                    {
+                        dadosFinais.Add(arq_Euro);
+                    }
+                }
+            }
+
+            var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+
+            foreach (var dado in dadosFinaisOrdered)
+            {
+                string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                newCsv.Add(linha);
+            }
+            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+
+
         }
 
         internal static void rvx1(string path_Conj, string modelo, string nome_path, string[] vies_cv1, string[] vies_cv2)
@@ -1707,7 +2529,7 @@ namespace ChuvaVazaoTools
                     }
                 }
             }
-            
+
         }
         internal static void MCP(DateTime cv, string path, string Modelo_R)
         {
@@ -1773,27 +2595,28 @@ namespace ChuvaVazaoTools
             var dt = DateTime.Today;
             var data_final = DateTime.Today;
             //var oneDrivePath_ori = Environment.GetEnvironmentVariable("OneDriveCommercial");
-            var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
-            //B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
-            var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
-            if (!Directory.Exists(oneDrive))
-            {
-                oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
-            }
-            var oneDrive_ecmwf = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ECMWF45");
-            while (!Directory.Exists(oneDrive_ecmwf))
+            //var oneDrivePath_ori = @"C:\Enercore\Energy Core Trading";
+            ////B:\Compass\MinhaTI\Alex Freires Marques - Compass\Trading
+            //var oneDrive = Path.Combine(oneDrivePath_ori, @"Energy Core Pricing - Documents\Acompanhamento_de_Precipitacao\Previsao\");
+            //if (!Directory.Exists(oneDrive))
+            //{
+            //    oneDrive = oneDrive.Replace("Energy Core Pricing - Documents", "Energy Core Pricing - Documentos");
+            //}
+            var ECMWFext_K = Path.Combine("K:\\cv_temp", dt.ToString("yyyyMMdd"), "ECMWF45");
+
+            while (!Directory.Exists(ECMWFext_K))
             {
                 dt = dt.AddDays(-1);
-                oneDrive_ecmwf = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ECMWF45");
+                ECMWFext_K = Path.Combine("K:\\cv_temp", dt.ToString("yyyyMMdd"), "ECMWF45");
             }
-            if (Directory.Exists(oneDrive_ecmwf))
+            if (Directory.Exists(ECMWFext_K))
             {
-                var files_ecmwf = Directory.GetFiles(oneDrive_ecmwf);
+                var files_ecmwf = Directory.GetFiles(ECMWFext_K);
                 while (files_ecmwf.Count() < 30)
                 {
                     dt = dt.AddDays(-1);
-                    oneDrive_ecmwf = Path.Combine(oneDrive, dt.ToString("yyyy"), dt.ToString("MM"), dt.ToString("dd"), "ECMWF45");
-                    files_ecmwf = Directory.GetFiles(oneDrive_ecmwf);
+                    ECMWFext_K = Path.Combine("K:\\cv_temp", dt.ToString("yyyyMMdd"), "ECMWF45");
+                    files_ecmwf = Directory.GetFiles(ECMWFext_K);
                 }
 
                 var arqs = Directory.GetFiles(path);
