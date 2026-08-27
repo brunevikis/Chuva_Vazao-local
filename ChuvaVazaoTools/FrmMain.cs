@@ -125,7 +125,7 @@ namespace ChuvaVazaoTools
             }
         }
 
-        public void LerTotalCSV(string raiz, Boolean manual = false)
+        public void LerTotalCSV(string raiz, Boolean manual = false, string cenario = "")
         {
             try
             {
@@ -154,7 +154,7 @@ namespace ChuvaVazaoTools
                         foreach (var bacia in bacias)
                         {
 
-                            modelosChVz.Add(new ChuvaVazaoTools.SMAP.ModeloSmap(bacia, manual,true));
+                            modelosChVz.Add(new ChuvaVazaoTools.SMAP.ModeloSmap(bacia, manual, true));
 
                         }
                     }
@@ -162,20 +162,13 @@ namespace ChuvaVazaoTools
                     AddLog("\t" + modelo);
                 }
 
+                for (int i = 1; i <= 10; i++)
+                {
+                    string modAlt = mod + i.ToString("00");
+                    modelosChVz.ForEach(x => x.ColetarSaidaTotalCSV(modAlt));
+                }
+                modelosChVz.ForEach(x => x.ColetarSaidaMediaSmapCSV(mod));
 
-                if (mod.Contains("ECENS45m"))
-                {
-                    for (int i = 0; i <= 9; i++)
-                    {
-                        string modAlt = mod + i.ToString("00");
-                        modelosChVz.ForEach(x => x.ColetarSaidaTotal(modAlt));
-                    }
-                    modelosChVz.ForEach(x => x.ColetarSaidaMediaSmap(mod));
-                }
-                else
-                {
-                    modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
-                }
 
                 // modelosChVz.ForEach(x => x.ColetarSaida());
                 //modelosChVz.ForEach(x => x.ColetarSaidaTotal(mod));
@@ -1110,10 +1103,22 @@ namespace ChuvaVazaoTools
 
             //Nome para rodada
             name = name + horaPrev;
+            DateTime dataModelo;
+            if (shadow == true)
+            {
+                PreencherVazObservadaCSV(out DateTime dataModeloALT, out string fonteVaz, shadow);
+                name = name + "_" + fonteVaz.ToUpper();
+                dataModelo = dataModeloALT;
+            }
+            else
+            {
+                PreencherVazObservada(out DateTime dataModeloALT, out string fonteVaz, shadow);
+                name = name + "_" + fonteVaz.ToUpper();
+                dataModelo = dataModeloALT;
+            }
 
-            PreencherVazObservada(out DateTime dataModelo, out string fonteVaz, shadow);
 
-            name = name + "_" + fonteVaz.ToUpper();
+            //name = name + "_" + fonteVaz.ToUpper();
 
             var runRevMapas = ChuvaVazaoTools.Tools.Tools.GetNextRev(dtAtual.Value);
 
@@ -1162,11 +1167,19 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_PUROECMWF";
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROECMWF");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVPURO");
+                }
             }
             else if (offset == EnumRemo.RemocaoPuraGEFS)
             {
                 name = name + "_PUROGEFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROGEFS");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVPURO");
+                }
             }
             else if (offset == EnumRemo.RemocaoUmaSemanaEuro)
             {
@@ -1261,30 +1274,50 @@ namespace ChuvaVazaoTools
 
             //novas remoçoes smap
             //smapcv1
-            else if (offset == EnumRemo.RemoSmap)
+            else if (offset == EnumRemo.RemoSmap)//todo : arrumar prapegar só ate a pasta CVSMAP1
             {
                 name = name + "_ECENS45";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_FUNCECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapUmaSemanaEuro)
             {
                 name = name + "_ECENS45EURO";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_EUROECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapUmaSemanaEuro_op)
             {
                 name = name + "_ECENS45EUROop";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_EUROopECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapUmaSemanaGEFS)
             {
                 name = name + "_ECENS45GEFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_GEFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapUmaSemanaGFS)
             {
                 name = name + "_ECENS45GFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_GFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
+                }
             }
             //smapcv0(ve quarta-feira)
             else if (offset == EnumRemo.RemocaoCV0SmapUmaSemanaEuro)
@@ -1293,6 +1326,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV0_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_EUROECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0");
+                }
             }
             else if (offset == EnumRemo.RemocaoCV0SmapUmaSemanaGEFS)
             {
@@ -1300,6 +1337,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV0_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_GEFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0");
+                }
             }
             //smapcv2
             else if (offset == EnumRemo.RemocaoSmapDuasSemanasEuro)
@@ -1308,6 +1349,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_EUROECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapDuasSemanasEuro_op)
             {
@@ -1315,6 +1360,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_EUROopECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapDuasSemanasGEFS)
             {
@@ -1322,6 +1371,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_GEFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
+                }
             }
             else if (offset == EnumRemo.RemocaoSmapDuasSemanasGFS)
             {
@@ -1329,6 +1382,10 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_GFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
+                }
             }
             //smapcv3
             else if (offset == EnumRemo.RemocaoSmapTresSemanasEuro)
@@ -1337,6 +1394,10 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV3_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3", "CVSMAP3_EUROECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3");
+                }
                 if (currRev.revDate.Month != runRev.revDate.Month)
                 {
                     cbx_Encadear_Previvaz.Checked = true;
@@ -1348,6 +1409,10 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV3_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3", "CVSMAP3_GEFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3");
+                }
                 if (currRev.revDate.Month != runRev.revDate.Month)
                 {
                     cbx_Encadear_Previvaz.Checked = true;
@@ -1360,6 +1425,10 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV4_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4", "CVSMAP4_EUROECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4");
+                }
                 if (currRev.revDate.Month != runRev.revDate.Month)
                 {
                     cbx_Encadear_Previvaz.Checked = true;
@@ -1371,6 +1440,10 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV4_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4", "CVSMAP4_GEFSECENS45m");
+                if (shadow == true)
+                {
+                    pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4");
+                }
                 if (currRev.revDate.Month != runRev.revDate.Month)
                 {
                     cbx_Encadear_Previvaz.Checked = true;
@@ -1392,7 +1465,7 @@ namespace ChuvaVazaoTools
             if (merge)
             {
                 name = name + "_merge";
-                
+
             }
             if (cfs)
             {
@@ -1563,7 +1636,14 @@ namespace ChuvaVazaoTools
                     smapExecutado = CopySmapExecuted(runRev, pastaSaida);
                     if (!smapExecutado)
                     {
-                        CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF, smapR);
+                        if (shadow == true)
+                        {
+                            CriarCaso(statusF);
+                        }
+                        else
+                        {
+                            CriarCasoSmapTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), statusF, smapR);
+                        }
                     }
                     else
                     {
@@ -1593,7 +1673,14 @@ namespace ChuvaVazaoTools
                 if (!smapExecutado)
                 {
                     //Ler();
-                    LerTotal(pastaRaiz);
+                    if (shadow == true)
+                    {
+                        LerTotalCSV(pastaRaiz);
+                    }
+                    else
+                    {
+                        LerTotal(pastaRaiz);
+                    }
                     CarregarPrecObserv(false);
                     PreencherPrecObserv();
 
@@ -2002,7 +2089,7 @@ namespace ChuvaVazaoTools
                                                 }
                                                 if (logF != null) logF.WriteLine(name + ": Copiando Prevs para diretório de execução automática !!!");
                                             }
-                                           
+
                                         }
 
                                     }
@@ -8204,6 +8291,327 @@ namespace ChuvaVazaoTools
 
         #endregion
 
+        private void PreencherVazObservadaCSV(out DateTime ultimaDataDisponivel, out string fonte, bool shadow = false)
+        {
+            var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+            var iniVazao = $@"H:\TI - Sistemas\UAT\ChuvaVazao\POSTOS_VAZOES_shadow.txt";
+
+
+            var vazInicialConfigs = System.IO.File.ReadLines(iniVazao)
+                .Select(x => x.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                .Where(x => x.Length >= 5)
+                .Select(x =>
+                {
+                    var configFlu = new
+                    {
+                        Arquivo = x[0].Trim(),
+                        TipoAtualizacao = x[1].Trim(),
+                        Origem = new List<(float Fator, int Posto, string Tipo)>(),
+                    };
+
+
+                    for (int i = 0; i < (x.Length - 2) / 3; i++)
+                    {
+                        configFlu.Origem.Add((
+                            float.Parse(x[2 + i * 3], System.Globalization.NumberFormatInfo.InvariantInfo),
+                            int.Parse(x[3 + i * 3], Culture.NumberFormat),
+                            x[4 + i * 3].Trim()
+                            ));
+                    }
+
+                    return configFlu;
+                }
+                ).ToList();
+
+
+
+            //var vazInicialConfigsVazias = System.IO.File.ReadLines(iniVazao)
+            //    .Select(x => x.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries))
+            //    .Where(x => x.Length == 1)
+            //    .Select(x => new
+            //    {
+            //        Arquivo = x[0].Trim()
+            //    }).ToList();
+
+
+            //ajuste de parametros de modelos PARCIAIS
+            //foreach (var vazConfig in vazInicialConfigs.ToList().Where(x => x.TipoAtualizacao == "COMPOSTA").GroupBy(x => x.Origem[0].Posto))
+            //{
+
+            //    var arquivosEntrada = modelosChVz.SelectMany(x => x.Vazoes).Where(x => vazConfig.Select(y => y.Arquivo.ToUpperInvariant()).Contains(System.IO.Path.GetFileName(x.CaminhoArquivo).ToUpperInvariant()));
+            //    var totalDic = arquivosEntrada.SelectMany(x => x.Vazoes).GroupBy(x => x.Key).ToDictionary(x => x.Key, x => x.Sum(y => y.Value));
+
+
+
+            //    foreach (var arquEntrada in arquivosEntrada)
+            //    {
+
+            //        var f = arquEntrada.Vazoes.Sum(x => x.Value) / totalDic.Sum(x => x.Value);
+
+            //        var oldConfig = vazInicialConfigs.Where(x => x.Arquivo == System.IO.Path.GetFileName(arquEntrada.CaminhoArquivo).ToUpperInvariant()).First();
+            //        oldConfig.Origem.Add((f, oldConfig.Origem[0].Posto, oldConfig.Origem[0].Tipo));
+            //        oldConfig.Origem.RemoveAt(0);
+            //    }
+            //}
+
+
+            var dataI = dtAtual.Value.Date.AddDays(-34);
+            ultimaDataDisponivel = dataI;
+
+            List<CONSULTA_VAZAO> dados = null;
+            List<Vazoes_Observadas> dados_observados = null;
+
+            if (Config.FonteVazao.Trim().Equals("db", StringComparison.OrdinalIgnoreCase))
+            {
+                using (var ctx = new IPDOEntities1())
+                {
+                    dados = ctx.CONSULTA_VAZAO.Where(x => x.data >= dataI).ToList();
+                    dados_observados = ctx.Vazoes_Observadas.Where(x => x.Data >= dataI).ToList();
+                }
+            }
+            else
+            {
+                dados = ReadVazoesPassadas(Config.HistoricoVazao);
+            }
+            ///
+            //Vazoes relatorio Hidro
+
+            var tipo_vazoes = Tipo_VazaoesCSV();
+
+
+            foreach (var arqEntrada in modelosChVz.SelectMany(x => x.Vazoes).Join(vazInicialConfigs,
+                x => System.IO.Path.GetFileName(x.CaminhoArquivo).ToUpperInvariant(),
+                y => y.Arquivo.ToUpperInvariant(), (x, y) => new { posto = x, config = y }))
+            {
+                if (arqEntrada.config.Arquivo == "JURUENA.TXT")
+                {
+
+                }
+
+                for (DateTime dt = dataI.AddDays(3); dt < dtAtual.Value; dt = dt.AddDays(1))
+                {
+                    if (arqEntrada.config.Origem.All(y => dados_observados.Any(x => x.Data == dt && y.Posto == x.Cod_Posto)) || arqEntrada.config.Arquivo.ToUpper() == "AMARU_MAYU.TXT")
+                    {
+                        if (arqEntrada.config.TipoAtualizacao == "TOTAL" || (dtAtual.Value.Date - dt).TotalDays <= 7)
+                        {
+                            try
+                            {
+                                //
+
+                                var vazHidr =
+                               arqEntrada.config.Origem.Select(ori =>
+                               {
+
+                                   var cod_posto = tipo_vazoes.Where(x => x.Item2 == ori.Posto.ToString()).First();
+                                   decimal? value = 0;
+                                   try
+                                   {
+                                       value = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == cod_posto.Item2 && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   catch (Exception ex)
+                                   {
+                                   }
+                                   if (cod_posto.Item2 == "34")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "243" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "74")
+                                   {
+                                       var UV_Atual = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "65310001" && x.Tipo_Vazao == "VMD").Vazao;
+                                       var UV_D1 = dados_observados.First(x => x.Data == dt.AddDays(-1) && x.Cod_Posto.ToString() == "65310001" && x.Tipo_Vazao == "VMD").Vazao;
+                                       value = Convert.ToDecimal(Convert.ToDouble(value, Culture.NumberFormat) - (Convert.ToDouble(UV_Atual, Culture.NumberFormat) * (24 - 17.4f) + Convert.ToDouble(UV_D1, Culture.NumberFormat) * (17.4f)) / 24, Culture.NumberFormat);
+                                   }
+                                   else if (cod_posto.Item2 == "73")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "76" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "72" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "222")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "78" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "77" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "230")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "229" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "228")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "227" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "52")
+                                   {
+
+
+                                       var vnm3 = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "249" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm2 = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "50" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm1 = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "51" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+
+                                       var vnm3d1 = dados_observados.First(x => x.Data == dt.AddDays(-1) && x.Cod_Posto.ToString() == "249" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm1d1 = dados_observados.First(x => x.Data == dt.AddDays(-1) && x.Cod_Posto.ToString() == "51" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm2d1 = dados_observados.First(x => x.Data == dt.AddDays(-1) && x.Cod_Posto.ToString() == "50" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+
+                                       var vnm3d2 = dados_observados.First(x => x.Data == dt.AddDays(-2) && x.Cod_Posto.ToString() == "249" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm1d2 = dados_observados.First(x => x.Data == dt.AddDays(-2) && x.Cod_Posto.ToString() == "51" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                       var vnm2d2 = dados_observados.First(x => x.Data == dt.AddDays(-2) && x.Cod_Posto.ToString() == "50" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+
+                                       var vnm3d3 = dados_observados.First(x => x.Data == dt.AddDays(-3) && x.Cod_Posto.ToString() == "249" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+
+                                       var valor1 = ((vnm3 * (24 - 3) + vnm3d1 * 3) / 24);
+                                       var valor1d1 = ((vnm3d1 * (24 - 3) + vnm3d2 * 3) / 24);
+                                       var valor1d2 = ((vnm3d2 * (24 - 3) + vnm3d3 * 3) / 24);
+
+                                       var valor2 = ((Convert.ToDouble(vnm2 + valor1, Culture.NumberFormat) * (24 - 2.8) + Convert.ToDouble(vnm2d1 + valor1d1, Culture.NumberFormat) * 2.8) / 24);
+                                       var valor2d1 = ((Convert.ToDouble(vnm2d1 + valor1d1, Culture.NumberFormat) * (24 - 2.8) + Convert.ToDouble(vnm2d2 + valor1d2, Culture.NumberFormat) * 2.8) / 24);
+
+                                       var valor3 = (((Convert.ToDouble(vnm1, Culture.NumberFormat) + valor2) * (24 - 2.8) + (Convert.ToDouble(vnm1d1, Culture.NumberFormat) + valor2d1) * 2.8) / 24);
+
+
+                                       value = Convert.ToDecimal(Convert.ToDouble(value, Culture.NumberFormat) + valor3, Culture.NumberFormat);
+
+                                   }
+                                   else if (cod_posto.Item2 == "49")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "48" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "63")
+                                   {
+                                       value = value + dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "62" && x.Tipo_Vazao == cod_posto.Item4).Vazao;
+                                   }
+                                   else if (cod_posto.Item2 == "122")
+                                   {
+                                       var paraibuna = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "121" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var stabrancaVNM = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "122" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = paraibuna + stabrancaVNM;
+                                   }
+                                   else if (cod_posto.Item2 == "130")
+                                   {
+                                       var anta = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "129" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var ilhapVNM = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "130" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = anta + ilhapVNM;
+                                   }
+                                   else if (cod_posto.Item2 == "203")
+                                   {
+                                       var tocos = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "201" && x.Tipo_Vazao == "VNM").Vazao;
+                                       var lajes = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "202" && x.Tipo_Vazao == "VNM").Vazao;
+                                       value = tocos + lajes;
+                                   }
+                                   else if (cod_posto.Item2 == "81")
+                                   {
+                                       if (value == 0)
+                                       {
+                                           var saltoCaxias = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "222" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var saltoOsorio = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "78" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var saltoSantiago = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "77" && x.Tipo_Vazao == "VNM").Vazao;
+                                           var baixoIg = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "81" && x.Tipo_Vazao == "VNM").Vazao;
+                                           value = saltoCaxias + saltoOsorio + saltoSantiago + baixoIg;
+                                       }
+
+                                   }
+                                   else if (cod_posto.Item2 == "285")
+                                   {
+                                       var jirau = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "285" && x.Tipo_Vazao == "VNS").Vazao;
+                                       //var amaru = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "15299999" && x.Tipo_Vazao == "VMD").Vazao;
+
+                                       //value = jirau * (decimal)0.35;
+                                       //value = jirau + amaru;
+                                       value = jirau;
+                                   }
+                                   else if (cod_posto.Item2 == "15299999")//teste para amaru_mayu
+                                   {
+                                       if (value == 0)
+                                       {
+                                           var jirau = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "285" && x.Tipo_Vazao == "VNS").Vazao;
+                                           //var guajMirim = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == "15250001" && x.Tipo_Vazao == "VMS").Vazao;
+                                           //value = jirau - guajMirim;
+                                           value = jirau * (decimal)0.65;
+                                       }
+                                   }
+                                   return value;
+                               }).Sum();
+                                arqEntrada.posto.Vazoes[dt] = float.Parse(vazHidr.ToString().Replace('.', ','), Culture.NumberFormat);
+                            }
+                            catch (Exception e)
+                            {
+                                e.Message.ToString();
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            //checar disponibilidade de dados:
+            for (DateTime dt = dataI; dt < dtAtual.Value; dt = dt.AddDays(1))
+                if (!dados.Any(x => x.data == dt))
+                {
+                    var txt = "  Vazoes Passadas Não encontradas para o dia " + dt.ToString("dd/MM/yyyy");
+                    AddLog(txt);
+                    if (!runAuto) MessageBox.Show(txt);
+                }
+                else
+                {
+                    ultimaDataDisponivel = dt;
+                }
+
+            fonte = dados.Where(x => x.posto == 1).OrderByDescending(x => x.data).First().fonte;
+
+            /*   foreach (var arqEntrada in modelosChVz.SelectMany(x => x.Vazoes).Join(vazInicialConfigs,
+                   x => System.IO.Path.GetFileName(x.CaminhoArquivo).ToUpperInvariant(),
+                   y => y.Arquivo.ToUpperInvariant(), (x, y) => new { posto = x, config = y }))
+               {
+                   if (arqEntrada.config.Arquivo.ToString() == "UVITORIA.TXT")
+                   {
+                       var testee = 0;
+                   }
+                   for (DateTime dt = dataI; dt < dtAtual.Value; dt = dt.AddDays(1))
+                   {
+                       if (arqEntrada.config.Origem.All(y => dados.Any(x => x.data == dt && y.Posto == x.posto)))
+                       {
+                           if (arqEntrada.config.TipoAtualizacao == "TOTAL" || (dtAtual.Value.Date - dt).TotalDays <= 7)
+                           {
+
+                               var vazAcomph =
+                               arqEntrada.config.Origem.Select(ori =>
+                               {
+                                   var value = ori.Tipo == "NAT" ?
+                                       dados.First(x => x.data == dt && x.posto == ori.Posto).qnat
+                                       : dados.First(x => x.data == dt && x.posto == ori.Posto).qinc;
+                                   value = value < 0 ? 0 : value;
+                                   value = (int)(value * ori.Fator);
+
+                                   return value;
+                               }).Sum();
+                               arqEntrada.posto.Vazoes[dt] = vazAcomph;
+                           }
+                       }
+                   }
+
+                   //arqEntrada.posto.SalvarVazoes();
+               }*/
+
+            //foreach (var arqEntrada in modelosChVz.SelectMany(x => x.Vazoes).Join(vazInicialConfigsVazias,
+            //    x => System.IO.Path.GetFileName(x.CaminhoArquivo).ToUpperInvariant(),
+            //    y => y.Arquivo.ToUpperInvariant(), (x, y) => new { posto = x, config = y }))
+            //{
+            //    for (DateTime dt = dataI; dt < dtAtual.Value; dt = dt.AddDays(1))
+            //    {
+
+            //        if (!arqEntrada.posto.Vazoes.ContainsKey(dt) && arqEntrada.posto.Vazoes.ContainsKey(dt.AddDays(-1)))
+            //        {
+            //            arqEntrada.posto.Vazoes[dt] = arqEntrada.posto.Vazoes[dt.AddDays(-1)];
+            //        }
+            //        else if (!arqEntrada.posto.Vazoes.ContainsKey(dt))
+            //        {
+            //            arqEntrada.posto.Vazoes[dt] = arqEntrada.posto.Vazoes.Average(x => x.Value);
+            //        }
+            //    }
+            //}
+
+
+            AddLog("- Vazoes Passadas Carregadas de ACOMPH/RDH");
+        }
+
         private void PreencherVazObservada(out DateTime ultimaDataDisponivel, out string fonte, bool shadow = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
@@ -8649,6 +9057,44 @@ namespace ChuvaVazaoTools
                 return null;
             }
         }
+
+        private List<Tuple<string, string, string, string>> Tipo_VazaoesCSV()
+        {
+            var tipoVazao = @"H:\TI - Sistemas\UAT\ChuvaVazao\tipo_vazao_shadow.txt";
+            var vazaoLinhas = File.ReadAllLines(tipoVazao);
+            List<Tuple<string, string, string, string>> dadosTipo_Vazao = new List<Tuple<string, string, string, string>>();
+
+            try
+            {
+                foreach (var linha in vazaoLinhas)
+                {
+                    var temp = linha.Split('\t').ToList();
+
+
+
+                    var postos = temp[1].Split('/').ToList();
+                    if (postos.Count > 1)
+                    {
+                    }
+                    foreach (var posto in postos)
+                    {
+
+                        Tuple<string, string, string, string> dad = new Tuple<string, string, string, string>(temp[0], posto.ToString(), temp[2], temp[3]);
+                        dadosTipo_Vazao.Add(dad);
+                    }
+
+
+
+
+                }
+                return dadosTipo_Vazao;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         private List<CONSULTA_VAZAO> ReadVazoesPassadas(string historicoVazao)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");

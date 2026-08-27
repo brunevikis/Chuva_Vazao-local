@@ -1256,7 +1256,8 @@ namespace ChuvaVazaoTools
             DateTime dataCFS = DateTime.Today;
             string cfsFolderK = Path.Combine("K:\\cv_temp", dataCFS.ToString("yyyyMMdd"), "cfs");
             int contCfs = 0;
-            List<string> out_CFS = new List<string>();
+            //List<string> out_CFS = new List<string>();
+            string out_CFS = "";
 
             while (!Directory.Exists(cfsFolderK) && contCfs < 4)//procura diretorio até 4 dias atras
             {
@@ -1268,7 +1269,8 @@ namespace ChuvaVazaoTools
 
             if (Directory.Exists(cfsFolderK))
             {
-                out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".dat")).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+                //out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".dat")).OrderBy(x => DateTime.ParseExact(x.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture)).ToList();
+                out_CFS = Directory.GetFiles(cfsFolderK).Where(x => x.ToLower().EndsWith(".csv")).First();
             }
 
             try
@@ -1304,7 +1306,8 @@ namespace ChuvaVazaoTools
                         var postosMP = clustLines.Select(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries)[3]).Distinct().ToList();
 
                         List<string> newCsv = new List<string>();
-                        newCsv.Add(File.ReadAllLines(ecenCSV).First());
+                        string header = File.ReadAllLines(ecenCSV).First();
+                        newCsv.Add(header);
 
                         Directory.CreateDirectory(path_cv);
                         DateTime data_hoje = DateTime.Today;
@@ -1331,34 +1334,42 @@ namespace ChuvaVazaoTools
                         }
                         cont = cont / postosMP.Count();
 
-                        if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45 && usarCFS == true)
+                        //if (Directory.Exists(cfsFolderK) && out_CFS.Count() > 45 && usarCFS == true)
+                        if (Directory.Exists(cfsFolderK) && File.Exists(out_CFS) && usarCFS == true)
                         {
+                            var outCFS_CVS = GetCsvDataFromCFS(out_CFS);
 
-                            foreach (var cfs in out_CFS)
+                            //foreach (var cfs in out_CFS)
+                            foreach (var cfs in outCFS_CVS)
                             {
-                                var dtCfs = DateTime.ParseExact(cfs.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                                //var dtCfs = DateTime.ParseExact(cfs.Split('\\').Last().Split('.').First().Split('a').Last(), "ddMMyy", System.Globalization.CultureInfo.InvariantCulture);
+                                var dtCfs = cfs.Item2;
 
                                 if (dtCfs > ultimaData)
                                 {
-                                    var precips = getDadosprecip(cfs);//lat lon precip
-                                    foreach (var p in postosMP)
-                                    {
-                                        var coordenada = coordenadas.Where(x => x.Item1 == p).First();//posto lat lon
-                                        var dadoPrecip = precips.Where(x => x.Item1 == coordenada.Item2 && x.Item2 == coordenada.Item3).Select(x => x.Item3).FirstOrDefault();
-                                        if (dadoPrecip == "" || string.IsNullOrEmpty(dadoPrecip))
-                                        {
-                                            dadoPrecip = "0.0";
-                                        }
-                                        int index = newCsv.IndexOf(newCsv.Where(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList()[3] == p).LastOrDefault());
-                                        newCsv.Insert(index + 1, $@"{data_hoje:dd/MM/yyyy};{dtCfs:dd/MM/yyyy};{cenario};{p};{dadoPrecip}");
-                                    }
+                                    string linha = data_hoje.ToString("dd/MM/yyyy") + ";" + cfs.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + cfs.Item4 + ";" + cfs.Item5.ToString().Replace(',', '.');
 
-                                    cont++;
+                                    newCsv.Add(linha);
 
-                                    if (cont == 55)
-                                    {
-                                        break;
-                                    }
+                                    //var precips = getDadosprecip(cfs);//lat lon precip
+                                    //foreach (var p in postosMP)
+                                    //{
+                                    //    var coordenada = coordenadas.Where(x => x.Item1 == p).First();//posto lat lon
+                                    //    var dadoPrecip = precips.Where(x => x.Item1 == coordenada.Item2 && x.Item2 == coordenada.Item3).Select(x => x.Item3).FirstOrDefault();
+                                    //    if (dadoPrecip == "" || string.IsNullOrEmpty(dadoPrecip))
+                                    //    {
+                                    //        dadoPrecip = "0.0";
+                                    //    }
+                                    //    int index = newCsv.IndexOf(newCsv.Where(x => x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList()[3] == p).LastOrDefault());
+                                    //    newCsv.Insert(index + 1, $@"{data_hoje:dd/MM/yyyy};{dtCfs:dd/MM/yyyy};{cenario};{p};{dadoPrecip}");
+                                    //}
+
+                                    //cont++;
+
+                                    //if (cont == 55)
+                                    //{
+                                    //    break;
+                                    //}
                                 }
 
                             }
@@ -1391,6 +1402,20 @@ namespace ChuvaVazaoTools
                             }
                         }
                         File.WriteAllLines(Path.Combine(path_cv, search + ".csv"), newCsv);
+                        //ordenar csv
+                        var dadosFinais = GetCsvData(Path.Combine(path_cv, search + ".csv"));
+
+                        var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+                        newCsv.Clear();
+                        newCsv.Add(header);
+
+                        foreach (var dado in dadosFinaisOrdered)
+                        {
+                            string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + dado.Item3 + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                            newCsv.Add(linha);
+                        }
+                        File.WriteAllLines(Path.Combine(path_cv, search + ".csv"), newCsv);
+
                     }
 
                     File.Copy(ecenProbDat, Path.Combine(path_Conj, "prob.dat"), true);
@@ -1405,6 +1430,29 @@ namespace ChuvaVazaoTools
 
                 return false;
             }
+        }
+
+        internal static List<Tuple<DateTime, DateTime, string, string, double>> GetCsvDataFromCFS(string CSVfile)
+        {
+            List<Tuple<DateTime, DateTime, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, double>>();
+            var linhas = File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime dataRodada = DateTime.ParseExact(partes[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataPrevisao = DateTime.ParseExact(partes[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                string cenario = partes[2];
+                string nomeposto = partes[3];
+                double precip = Convert.ToDouble(partes[4].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, double>(dataRodada, dataPrevisao, cenario, nomeposto, precip));
+            }
+
+
+            return dados;
+
         }
 
         internal static List<Tuple<DateTime, DateTime, string, string, double>> GetCsvData(string CSVfile)
@@ -2057,7 +2105,7 @@ namespace ChuvaVazaoTools
 
         }
 
-        internal static void MergeCSVs(List<string> diretorios,bool deleteBaseCSV = false)
+        internal static void MergeCSVs(List<string> diretorios, bool deleteBaseCSV = false)
         {
             foreach (var dir in diretorios)
             {

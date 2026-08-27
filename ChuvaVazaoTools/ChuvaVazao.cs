@@ -36,7 +36,9 @@ namespace ChuvaVazaoTools
         public abstract void ColetarSaida();
 
         public abstract void ColetarSaidaMediaSmap(string mod);
+        public abstract void ColetarSaidaMediaSmapCSV(string mod);
         public abstract void ColetarSaidaTotal(string mod);
+        public abstract void ColetarSaidaTotalCSV(string mod);
 
         public abstract void SalvarVazaoObservada();
     }
@@ -187,7 +189,7 @@ namespace ChuvaVazaoTools
         void SalvarVazoes();
         void SalvarVazoesCSV();
         void CarregarVazoes(Boolean teste = false);
-        void CarregarVazoesCSV(Boolean teste = false);
+        void CarregarVazoesCSV(Boolean teste = false,string name = "");
 
 
 
@@ -211,12 +213,12 @@ namespace ChuvaVazaoTools
             set;
         }
 
-        public VazoesRealizadas(string arquivo, Boolean manual = false,Boolean csv = false)
+        public VazoesRealizadas(string arquivo, Boolean manual = false,Boolean csv = false,string nomeDaBacia  = "")
         {
             CaminhoArquivo = arquivo;
             if (csv == true)
             {
-                CarregarVazoesCSV(manual);
+                CarregarVazoesCSV(manual,nomeDaBacia);
             }
             else
             {
@@ -295,7 +297,7 @@ namespace ChuvaVazaoTools
 
         }
 
-        public void CarregarVazoesCSV(Boolean manual = false)
+        public void CarregarVazoesCSV(Boolean manual = false, string nomeSubBacia = "")
         {
 
             var data_verifica = DateTime.Today;
@@ -303,7 +305,7 @@ namespace ChuvaVazaoTools
             var acomph_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões\ACOMPH\1_historico", data_verifica.ToString("yyyy"), data_verifica.ToString("MM_yyyy"), "ACOMPH_" + data_verifica.ToString("dd-MM-yyyy") + ".xls"));
             var modelos_atual = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de vazões", runRev.revDate.ToString("MM_yyyy"), @"Dados_de_Entrada_e_Saida_" + runRev.revDate.ToString("yyyyMM") + "_RV" + runRev.rev, @"Modelos_Chuva_Vazao\MPV\Arq_Saida", data_verifica.ToString("dd-MM-yyyy") + "_PlanilhaUSB_MPV.txt"));
             
-            string subBacia = Nome;
+            string subBacia = nomeSubBacia;
 
             Vazoes = new Dictionary<DateTime, float>();
 

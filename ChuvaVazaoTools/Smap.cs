@@ -88,7 +88,7 @@ namespace ChuvaVazaoTools.SMAP
                 .Select(x =>
                 {
                     var subbaciaNome = x;
-                    var subbacia = new SubBacia(path, subbaciaNome, manual,csv);
+                    var subbacia = new SubBacia(path, subbaciaNome, manual, csv);
                     return subbacia;
                 }).ToList();
 
@@ -98,11 +98,11 @@ namespace ChuvaVazaoTools.SMAP
 
             foreach (var posto in PostosPlu)
             {
-                var existingFiles = System.IO.Directory.GetFiles(Caminho,"precipitacao_observada.csv", System.IO.SearchOption.AllDirectories);
+                var existingFiles = System.IO.Directory.GetFiles(Caminho, "precipitacao_observada.csv", System.IO.SearchOption.AllDirectories);
 
                 if (existingFiles.Length > 0)
                 {
-                    posto.CarregarCSV(existingFiles[0],posto.Codigo, manual);
+                    posto.CarregarCSV(existingFiles[0], posto.Codigo, manual);
                     posto.l1 = "";
                 }
             }
@@ -299,6 +299,15 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public override void ColetarSaidaMediaSmapCSV(string mod)
+        {
+
+            foreach (var sb in SubBacias)
+            {
+                sb.CarregaSaidaCSV(ModelosPrecipitacao[0], true);
+            }
+        }
+
         public override void ColetarSaidaMediaSmap(string mod)
         {
             List<string> baciaEx = new List<string>
@@ -323,7 +332,7 @@ namespace ChuvaVazaoTools.SMAP
             {
                 if (baciaEx.Any(x => x.ToUpper() == sb.Nome.ToUpper()))
                 {
-                    string mode = ModelosPrecipitacao.Where(y => y.Contains(mod+"10")).First();
+                    string mode = ModelosPrecipitacao.Where(y => y.Contains(mod + "10")).First();
                     sb.CarregaSaida(mode, false);
 
                 }
@@ -341,6 +350,16 @@ namespace ChuvaVazaoTools.SMAP
                 sb.CarregaSaida(ModelosPrecipitacao.Where(x => x == mod).First());
             }
         }
+
+        public override void ColetarSaidaTotalCSV(string mod)
+        {
+            foreach (var sb in SubBacias)
+            {
+
+                sb.CarregaSaidaCSV(sb.Nome + '|' + mod);
+            }
+        }
+
         public override void ColetarSaida()
         {
             foreach (var sb in SubBacias)
@@ -490,15 +509,15 @@ namespace ChuvaVazaoTools.SMAP
             var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, "inicializacao.csv");
             var data_rodadasFile = System.IO.Path.Combine(ArquivosDeEntrada, "datas_rodadas.csv");
 
-            var data_dias = System.IO.File.ReadLines(data_rodadasFile).Skip(1).ToList()[1].Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var data_dias = System.IO.File.ReadLines(data_rodadasFile).Skip(1).ToList()[0].Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
             DateTime dataIni = DateTime.ParseExact(data_dias[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo);
             int diasPrev = int.Parse(data_dias[1]);
 
-            Inicializacao = new InicializacaoSubBacia(iniFile, dataIni, diasPrev,subbacia, csv);
+            Inicializacao = new InicializacaoSubBacia(iniFile, dataIni, diasPrev, subbacia, csv);
 
             var postosFile = System.IO.Path.Combine(ArquivosDeEntrada, "postos_plu.csv");
 
-            Postos = System.IO.File.ReadLines(postosFile).Where(x => x.StartsWith(subbacia))
+            Postos = System.IO.File.ReadLines(postosFile).Where(x => x.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)[0].Equals(subbacia))
                             .Select(x => x.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                             .Where(x => x.Length >= 3)
                             .Select(x =>
@@ -508,7 +527,7 @@ namespace ChuvaVazaoTools.SMAP
                                     Peso = x[2]
                                 }).ToList();
 
-            vazRealizadas = new VazoesRealizadas(System.IO.Path.Combine("vazao_observada.csv"), manual,csv);
+            vazRealizadas = new VazoesRealizadas(System.IO.Path.Combine(ArquivosDeEntrada, "vazao_observada.csv"), manual, csv, subbacia);
 
         }
 
@@ -548,6 +567,183 @@ namespace ChuvaVazaoTools.SMAP
                         });
 
             return probs;
+        }
+
+        public List<Tuple<DateTime, DateTime, string, string, double>> GetCsvDataAjuste(string CSVfile)
+        {
+            //data_caso;data_assimilacao;subbacia;variavel;valor
+            List<Tuple<DateTime, DateTime, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, double>>();
+            var linhas = System.IO.File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime data_caso = DateTime.ParseExact(partes[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime data_assimilacao = DateTime.ParseExact(partes[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                string subbacia = partes[2];
+                string variavel = partes[3];
+                double valor = Convert.ToDouble(partes[4].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, double>(data_caso, data_assimilacao, subbacia, variavel, valor));
+            }
+
+
+            return dados;
+
+        }
+
+        public List<Tuple<DateTime, DateTime, string, string, string, double>> GetCsvDataPrevisao(string CSVfile)
+        {
+            //data_caso;data_previsao;cenario;subbacia;variavel;valor
+            List<Tuple<DateTime, DateTime, string, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, string, double>>();
+            var linhas = System.IO.File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime data_caso = DateTime.ParseExact(partes[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime data_previsao = DateTime.ParseExact(partes[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                string cenario = partes[2];
+                string subbacia = partes[3];
+                string variavel = partes[4];
+                double valor = Convert.ToDouble(partes[5].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, string, double>(data_caso, data_previsao, cenario, subbacia, variavel, valor));
+            }
+
+
+            return dados;
+
+        }
+
+        public void CarregaSaidaCSV(string modeloPrecipitacao, bool media = false)
+        {
+            var cenario = modeloPrecipitacao.Split('|').Last();
+            var subBacia = modeloPrecipitacao.Split('|').First();
+
+            var ajustesFile = System.IO.Path.Combine(ArquivosDeSaida, "ajuste.csv");
+            var previsaoFile = System.IO.Path.Combine(ArquivosDeSaida, "previsao.csv");
+
+            if (media)
+            {
+                if (VazoesCalSomaMedia != null)
+                {
+                    foreach (var dt in VazoesCalSomaMedia.Keys.ToList())
+                    {
+                        // var vazAvg = VazoesCalSomaMedia[dt] / 10;
+                        var vazAvg = VazoesCalSomaMedia[dt];
+                        Vazoes[dt] = vazAvg;
+                        VazoesCal[dt] = vazAvg;
+                    }
+                }
+            }
+            else
+            {
+                Ajustes = new Dictionary<DateTime, Ajuste>();
+                if (System.IO.File.Exists(ajustesFile))
+                {
+                    var ajustescsv = GetCsvDataAjuste(ajustesFile);//data_caso;data_assimilacao;subbacia;variavel;valor
+                    var listDatas = ajustescsv.Select(x => x.Item2).Distinct().ToList();
+                    var listVariaveis = ajustescsv.Select(x => x.Item4).Distinct().ToList();
+
+                    foreach (var dt in listDatas)
+                    {
+                        float tu = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "tu" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+                        float eb = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "eb" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+                        float sup = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "rsup" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+                        float qaj = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qcalc" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+
+                        Ajustes[dt] = new Ajuste() { EB = eb, Q = qaj, SUP = sup, TU = tu };
+                    }
+
+                    //System.IO.File.ReadLines(ajustesFile)
+                    //    .Skip(1)
+                    //    .Select(x => x.Split(' '))
+                    //    .Where(x => x.Length >= 5)
+                    //    .Select(x => new
+                    //    {
+                    //        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                    //        Tu = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo),
+                    //        Eb = float.Parse(x[2], System.Globalization.NumberFormatInfo.InvariantInfo),
+                    //        Sup = float.Parse(x[3], System.Globalization.NumberFormatInfo.InvariantInfo),
+                    //        Qaj = float.Parse(x[4], System.Globalization.NumberFormatInfo.InvariantInfo)
+                    //    }).ToList().ForEach(x => Ajustes[x.Data] = new Ajuste() { EB = x.Eb, Q = x.Qaj, SUP = x.Sup, TU = x.Tu });
+                }
+
+                VazoesCal = new Dictionary<DateTime, float>();
+                VazoesCalSomaMedia = VazoesCalSomaMedia == null ? new Dictionary<DateTime, float>() : VazoesCalSomaMedia;
+                ProbClusters = ProbClusters == null ? GetProbclusters() : ProbClusters;
+
+                if (System.IO.File.Exists(previsaoFile))
+                {
+                    //data_caso;data_previsao;cenario;subbacia;variavel;valor
+                    var previsaoCsv = GetCsvDataPrevisao(previsaoFile).Where(x => x.Item4 == subBacia && x.Item3 == cenario && x.Item5.ToUpper() == "QCALC").ToList();
+
+                    previsaoCsv.ForEach(x =>
+                    {
+                        float vazQCAL = float.Parse(x.Item6.ToString());
+                        VazoesCal[x.Item2] = vazQCAL;
+                        Vazoes[x.Item2] = vazQCAL;
+
+                        if (cenario.Contains("ECENS45m"))
+                        {
+
+                            //todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
+                            //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                            int numCluster = Convert.ToInt32(cenario.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries).Last());
+                            if (!VazoesCalSomaMedia.ContainsKey(x.Item2))
+                            {
+                                VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster-1];
+                            }
+                            else
+                            {
+                                VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster-1];
+                            }
+
+
+                        }
+                    });
+
+
+                    //System.IO.File.ReadLines(previsaoFile)
+                    //    .Skip(1)
+                    //    .Select(x => x.Split(' '))
+                    //    .Where(x => x.Length >= 2)
+                    //    .Select(x => new
+                    //    {
+                    //        Data = DateTime.ParseExact(x[0], "dd/MM/yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo),
+                    //        Qcal = float.Parse(x[1], System.Globalization.NumberFormatInfo.InvariantInfo)
+                    //    }).ToList().ForEach(x =>
+                    //    {
+                    //        VazoesCal[x.Data] = x.Qcal;
+                    //        Vazoes[x.Data] = x.Qcal;
+                    //        if (System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m"))
+                    //        {
+                    //            if (!System.IO.Path.GetFileName(previsaoFile).Contains("ECENS45m10"))
+                    //            {//todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
+                    //                //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                    //                int numCluster = Convert.ToInt32(modeloPrecipitacao.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                    //                if (!VazoesCalSomaMedia.ContainsKey(x.Data))
+                    //                {
+                    //                    VazoesCalSomaMedia[x.Data] = x.Qcal * ProbClusters[numCluster];
+                    //                }
+                    //                else
+                    //                {
+                    //                    VazoesCalSomaMedia[x.Data] += x.Qcal * ProbClusters[numCluster];
+                    //                }
+                    //            }
+
+                    //        }
+                    //    }
+                        //);
+                }
+            }
+
+
+
+
         }
 
         public void CarregaSaida(string modeloPrecipitacao, bool media = false)
@@ -667,9 +863,9 @@ namespace ChuvaVazaoTools.SMAP
             vazRealizadas.CarregarVazoes(manual);
         }
 
-        public void CarregarVazoesCSV(Boolean manual = false)
+        public void CarregarVazoesCSV(Boolean manual = false, string nomeSubBacia = "")
         {
-            vazRealizadas.CarregarVazoesCSV(manual);
+            vazRealizadas.CarregarVazoesCSV(manual, nomeSubBacia);
         }
 
         internal void ReiniciarParametros()
@@ -697,9 +893,9 @@ namespace ChuvaVazaoTools.SMAP
         {
             this.Read(path);
         }
-        public InicializacaoSubBacia(string path,DateTime dataIni,int diasPrev,string subBacia, Boolean csv = false)
+        public InicializacaoSubBacia(string path, DateTime dataIni, int diasPrev, string subBacia, Boolean csv = false)
         {
-            this.ReadCSV(path,dataIni,diasPrev,subBacia);
+            this.ReadCSV(path, dataIni, diasPrev, subBacia);
         }
 
         public DateTime Data { get; set; }
@@ -749,7 +945,7 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
-        public void ReadCSV(string filePath, DateTime dataIni, int diasPrev,string subBacia)
+        public void ReadCSV(string filePath, DateTime dataIni, int diasPrev, string subBacia)
         {
             var iniLines = System.IO.File.ReadAllLines(filePath).Where(x => x.StartsWith(subBacia)).ToList();
 
@@ -759,11 +955,11 @@ namespace ChuvaVazaoTools.SMAP
 
             DiasPrevisao = diasPrev;
 
-            Ebin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Ebin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+            Ebin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Ebin")).Select(x => x.Split(';')[2]).FirstOrDefault().Replace('.', ','));
 
-            Supin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Supin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+            Supin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Supin")).Select(x => x.Split(';')[2]).FirstOrDefault().Replace('.', ','));
 
-            Tuin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Tuin")).Select(x => x.Split(';')[2]).FirstOrDefault());
+            Tuin = float.Parse(iniLines.Where(x => x.Split(';')[1].Equals("Tuin")).Select(x => x.Split(';')[2]).FirstOrDefault().Replace('.', ','));
 
             //using (var sr = System.IO.File.OpenText(filePath))
             //{
