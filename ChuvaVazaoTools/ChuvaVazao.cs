@@ -25,9 +25,11 @@ namespace ChuvaVazaoTools
         public abstract void SalvarPrecPrevista_R(Dictionary<DateTime, Precipitacao> previsaoChuva);
 
         public abstract void SalvarParametros();
+        public abstract void SalvarParametrosCSV();
 
         public abstract void Executar();
         public abstract void Executar_SMAP_R();
+        public abstract void Executar_SMAP_R_CSV();
         public virtual async Task ExecutarAsync()
         {
             await Task.Factory.StartNew(() => Executar());

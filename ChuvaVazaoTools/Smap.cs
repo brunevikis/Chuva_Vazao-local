@@ -211,6 +211,96 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        public override void Executar_SMAP_R_CSV()
+        {
+            //batsmap-desktop.exe
+            //bin
+            //logs
+            //Arq_Saida
+
+
+            //var f = System.IO.Path.Combine(Config.SmapApp, "batsmap-desktop.exe");
+            //var d1 = System.IO.Path.Combine(Config.SmapApp, "bin");
+
+            //var fb = System.IO.Path.Combine(Caminho, "batsmap-desktop.exe");
+            //var d1b = System.IO.Path.Combine(Caminho, "bin");
+
+
+            var d2b = System.IO.Path.Combine(Caminho, "logs");
+            var d3b = System.IO.Path.Combine(Caminho, "Arq_Saida");
+
+            var logFile = System.IO.Path.Combine(d2b, "SMAP.log");
+
+
+            //if (!System.IO.File.Exists(fb)) System.IO.File.Copy(f, fb, true);
+
+            //if (!System.IO.Directory.Exists(d1b)) System.IO.Directory.CreateDirectory(d1b);
+            //System.IO.Directory.EnumerateFiles(d1).ToList().ForEach(x =>
+            //{
+            //    System.IO.File.Copy(x,
+            //        System.IO.Path.Combine(d1b, System.IO.Path.GetFileName(x))
+            //        , true);
+            //});
+
+            //if (!System.IO.Directory.Exists(d2b)) System.IO.Directory.CreateDirectory(d2b);
+
+            //if (!System.IO.Directory.Exists(d3b)) System.IO.Directory.CreateDirectory(d3b);
+
+            //if (System.IO.File.Exists(logFile)) System.IO.File.Delete(logFile);
+
+            //executar
+
+            string argumentos = " \"" + Caminho + "\"";
+            var coms = "smap_CSV_R.r";
+
+
+
+
+            var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\";
+            //var path_Scripts = @"H:\TI - Sistemas\UAT\ChuvaVazao\remocao_R\scripts\testeBruno\";
+            //string executar = @"/C " + letra_Dir + " & cd " + path + @" & Rscript.exe " + path_Scripts + Comando;
+            string executar = @"/C " + @"Rscript.exe " + "\"" + path_Scripts + coms + "\"" + argumentos;
+
+            System.Diagnostics.Process pr = new System.Diagnostics.Process();
+
+            var prInfo = new System.Diagnostics.ProcessStartInfo();
+            prInfo.FileName = @"C:\Windows\System32\cmd.exe";
+            prInfo.UseShellExecute = false;
+            prInfo.WorkingDirectory = Caminho;
+            prInfo.CreateNoWindow = true;
+            prInfo.Arguments = executar;
+            prInfo.RedirectStandardOutput = true;
+            prInfo.RedirectStandardInput = true;
+            pr.StartInfo = prInfo;
+            pr.Start();
+
+            while (true && !pr.HasExited)
+            {
+
+                if (!pr.StandardOutput.EndOfStream)
+                {
+
+                    var l = pr.StandardOutput.ReadLine();
+
+                    Execucao += l + Environment.NewLine;
+
+                    if (l.Contains("nao sera executada") || l.Contains("Finalizando programa"))
+                    {
+                        pr.StandardInput.Write(ConsoleKey.Enter.ToString());
+
+                        if (l.Contains("nao sera executada")) this.ErroNaExecucao = true;
+                        else this.ErroNaExecucao = false;
+
+                        break;
+                    }
+                }
+            }
+
+            pr.WaitForExit();
+
+
+        }
+
         public override void Executar()
         {
             //batsmap-desktop.exe
@@ -304,7 +394,7 @@ namespace ChuvaVazaoTools.SMAP
 
             foreach (var sb in SubBacias)
             {
-                sb.CarregaSaidaCSV(ModelosPrecipitacao[0], true);
+                sb.CarregaSaidaCSV(mod, true);
             }
         }
 
@@ -459,6 +549,16 @@ namespace ChuvaVazaoTools.SMAP
                 item.SalvarInicializacao();
             }
         }
+
+        public override void SalvarParametrosCSV()
+        {
+            foreach (var item in SubBacias)
+            {
+
+                item.SalvarInicializacaoCSV();
+            }
+        }
+
         public override void SalvarVazaoObservada()
         {
             foreach (var sb in this.SubBacias)
@@ -650,9 +750,14 @@ namespace ChuvaVazaoTools.SMAP
 
                     foreach (var dt in listDatas)
                     {
-                        float tu = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "tu" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
-                        float eb = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "eb" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
-                        float sup = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "rsup" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+                        float tu = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "tu" && x.Item2 == dt).Select(x => x.Item5 * 100).FirstOrDefault().ToString());
+
+                        float eb = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qbase" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+
+                        float sup = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qsup1" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString())
+                                     + float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qsup2" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString())
+                                     + float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qplan" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
+
                         float qaj = float.Parse(ajustescsv.Where(x => x.Item3 == subBacia && x.Item4.ToLower() == "qcalc" && x.Item2 == dt).Select(x => x.Item5).FirstOrDefault().ToString());
 
                         Ajustes[dt] = new Ajuste() { EB = eb, Q = qaj, SUP = sup, TU = tu };
@@ -836,6 +941,15 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
+        internal void SalvarInicializacaoCSV()
+        {
+            //var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, Nome + "_INICIALIZACAO.txt");
+            var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, "inicializacao.csv");
+            var datasFile = System.IO.Path.Combine(ArquivosDeEntrada, "datas_rodadas.csv");
+            Inicializacao.WriteCSV(iniFile,datasFile, Nome);
+
+        }
+
         public string CaminhoArquivo
         {
             get
@@ -915,6 +1029,122 @@ namespace ChuvaVazaoTools.SMAP
                 Tuin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'tuin\r\n";
 
             System.IO.File.WriteAllText(filePath, txt);
+        }
+
+        public static List<Tuple<string, string, string, string>> GetCsvInicializacao(string CSVfile)
+        {
+            //nome;variavel;valor;mes
+            List<Tuple<string, string, string, string>> dados = new List<Tuple<string, string, string, string>>();
+            var linhas = System.IO.File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                string nome = partes[0];
+
+
+                string variavel = partes[1];
+                string valor = partes[2];
+                string mes = partes[3];
+
+                dados.Add(new Tuple<string, string, string, string>(nome, variavel, valor, mes));
+            }
+
+
+            return dados;
+
+        }
+
+        public static List<Tuple<DateTime, int>> GetCsvDataRodada(string CSVfile)
+        {
+            //data;numero_dias_previsao
+            List<Tuple<DateTime, int>> dados = new List<Tuple<DateTime, int>>();
+            var linhas = System.IO.File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime data_caso = DateTime.ParseExact(partes[0], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                int diasPrev = Convert.ToInt32(partes[1]);
+
+                dados.Add(new Tuple<DateTime, int>(data_caso, diasPrev));
+            }
+
+
+            return dados;
+
+        }
+
+
+        public void WriteCSV(string filePathINI,string filePathData, string subbacia)
+        {
+            var inicializacaoCSV = GetCsvInicializacao(filePathINI);
+            var datasRodadasCSV = GetCsvDataRodada(filePathData);
+
+            string data = Data.ToString("dd/MM/yyyy");
+            string diasPrev = DiasPrevisao.ToString();
+
+            string diasAssimi = DiasPassados.ToString();
+            string ebin = Ebin.ToString();
+            string supin = Supin.ToString();
+            string tuin = Tuin.ToString();
+
+            List<string> newCSV = new List<string>();
+            newCSV.Add("nome;variavel;valor;mes");
+
+            foreach (var lin in inicializacaoCSV)
+            {
+                string valor = "";
+                if (lin.Item1 == subbacia)
+                {
+                    switch (lin.Item2)
+                    {
+                        case "numero_dias_assimilacao":
+                            valor = diasAssimi;
+                            break;
+
+                        case "Ebin":
+                            valor = ebin;
+                            break;
+
+                        case "Supin":
+                            valor = supin;
+                            break;
+
+                        case "Tuin":
+                            valor = tuin;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    newCSV.Add(lin.Item1 + ";" + lin.Item2 + ";" + valor + ";" + lin.Item4);
+
+                }
+                else
+                {
+                    newCSV.Add(lin.Item1 + ";" + lin.Item2 + ";" + lin.Item3 + ";" + lin.Item4);
+                }
+            }
+
+            System.IO.File.WriteAllLines(filePathINI, newCSV);
+
+            newCSV.Clear();
+
+            newCSV.Add("data;numero_dias_previsao");
+            newCSV.Add(data + ";" + diasPrev);
+            System.IO.File.WriteAllLines(filePathData, newCSV);
+
+            //var txt = Data.ToString("dd/MM/yyyy").PadRight(15) + "'data da rodada\r\n" +//datasrodadas
+            //    DiasPassados.ToString().PadRight(15) + "'dia de inicialização do aquecimento do modelo\r\n" +
+            //    DiasPrevisao.ToString().PadRight(15) + "'número de dias de previsão\r\n" +//datasrodadas
+            //    Ebin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'ebin\r\n" +
+            //    Supin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'supin\r\n" +
+            //    Tuin.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo).PadRight(15) + "'tuin\r\n";
+
+            //System.IO.File.WriteAllText(filePathData, txt);
         }
 
         public void Read(string filePath)
