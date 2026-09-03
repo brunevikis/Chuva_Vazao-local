@@ -1702,7 +1702,7 @@ namespace ChuvaVazaoTools
                     //Ler();
                     if (shadow == true)
                     {
-                        LerTotalCSV(pastaRaiz, modeloCenario: cenario);
+                        LerTotalCSV(pastaRaiz, modeloCenario: "");
                     }
                     else
                     {
@@ -1752,19 +1752,25 @@ namespace ChuvaVazaoTools
                         //PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
                         if (shadow == true)
                         {
-                            PrecipitacaoPrevista_RTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), pastaSaida);
+                            //PrecipitacaoPrevista_RTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), pastaSaida);
+                            PrecipitacaoPrevista_RTotalCSV(pastaRaiz, Path.Combine(pastaRaiz, pastaRaiz.Split('\\').Last() + ".csv"), pastaSaida);
 
                             AddLog(" --- ");
                             AddLog(" --- Executar Parte B quando pronto --- ");
 
                             if (logF != null) logF.WriteLine(name + ": Salvando dados de precipitação e vazão!!!");
 
-                            PreencherPrecObserv();
-                            SalvarPrecObserv_R();
+                            PreencherPrecObservCSV();
+
+                            //SalvarPrecObserv_R();
+                            SalvarPrecObserv_RCSV();
+
+
                             SalvarVazObserv();
 
 
-                            SalvarPrecPrev_R();
+                            SalvarPrecPrev_RCSV();
+                            // SalvarPrecPrev_R();
                         }
                         else
                         {
@@ -1872,7 +1878,7 @@ namespace ChuvaVazaoTools
                 {
                     if (shadow == true)
                     {
-                        LerTotalCSV(pastaRaiz, modeloCenario: cenario);
+                        LerTotalCSV(pastaRaiz, modeloCenario: "");
                     }
                     else
                     {
@@ -1887,7 +1893,7 @@ namespace ChuvaVazaoTools
                     //ExecutarTudo(statusF);
                     if (shadow == true)
                     {
-                        ExecutarTudoTotalCSV(pastaRaiz, statusF, smapR);
+                        ExecutarTudoTotalCSV(pastaRaiz, statusF, smapR, modeloCenario: cenario);
                     }
                     else
                     {
@@ -6508,6 +6514,30 @@ namespace ChuvaVazaoTools
 
         }
 
+        public static List<Tuple<DateTime, DateTime, string, string, double>> GetCsvDataPrecipPrevista(string CSVfile)
+        {
+            //data_rodada;data_previsao;cenario;nome;valor
+            List<Tuple<DateTime, DateTime, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, double>>();
+            var linhas = File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime dataRodada = DateTime.ParseExact(partes[0], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataPrevisao = DateTime.ParseExact(partes[1], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                string cenario = partes[2];
+                string nomeposto = partes[3];
+                double precip = Convert.ToDouble(partes[4].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, double>(dataRodada, dataPrevisao, cenario, nomeposto, precip));
+            }
+
+
+            return dados;
+
+        }
+
         public static List<Tuple<DateTime, DateTime, string, string, double>> GetCsvData(string CSVfile)
         {
             //data_caso;data_assimilacao;subbacia;variavel;valor
@@ -6884,6 +6914,117 @@ namespace ChuvaVazaoTools
             }
 
         }
+
+        public void PrecipitacaoPrevista_RTotalCSV(string pastaRaiz, string csv, string pastaSaida)
+        {
+            var data = dtAtual.Value.Date;
+            var modes = System.IO.Directory.GetDirectories(pastaRaiz).ToList();
+            var csvPreci = GetCsvDataPrecipPrevista(csv);
+
+            var dirMod = System.IO.Path.Combine(pastaSaida, "SMAP");
+            string[] dir_Bacias = Directory.GetDirectories(dirMod);
+
+            var datasPrecip = csvPreci.Select(x => x.Item2).Distinct().ToList();
+            foreach (var datas in datasPrecip)
+            {
+                var precs = new Precipitacao();
+                precs.Data = datas;
+                precs.Descricao = "";
+
+                if (chuvas.All(x => x.Key.Date != datas))
+                {
+                    chuvas[datas] = precs;
+                }
+                
+            }
+            
+
+
+            var modelo = "*";
+
+            var existente = false;
+
+
+            existente = true;
+
+            if (existente)
+            {
+
+                foreach (string bacias in dir_Bacias)
+                {
+                    List<string> newCsv = new List<string>();
+                    if (Directory.Exists(dirMod))
+                    {
+
+                        string bacia = bacias.Split('\\').Last();
+                        var arq_Dest = Path.Combine(dirMod, bacia, "Arq_entrada", "precipitacao_prevista.csv");
+
+                        newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
+                        foreach (var csvLine in csvPreci)
+                        {
+                            string line = csvLine.Item1.ToString("yyyy-MM-dd") + ";" + csvLine.Item2.ToString("yyyy-MM-dd") + ";" + csvLine.Item3 + ";" + csvLine.Item4 + ";" + csvLine.Item5.ToString().Replace(',', '.');
+                            newCsv.Add(line);
+                        }
+                        File.WriteAllLines(arq_Dest, newCsv);
+                    }
+                }
+
+                //foreach (var mod in modes)
+                //{
+                //    for (int i = 1; i <= 365; i++)
+                //    {
+
+                //        var dataPrev = data.AddDays(i);
+                //        var raiznome = "p" + data.ToString("ddMMyy") + "a" + dataPrev.ToString("ddMMyy");
+                //        var prevFiles = System.IO.Directory.GetFiles(mod, "*" + raiznome + ".dat", SearchOption.TopDirectoryOnly);
+                //        var prevFiles_R = System.IO.Directory.GetFiles(mod, "*.dat", SearchOption.TopDirectoryOnly);
+                //        string prevFile = null;
+                //        if (prevFiles.Length != 0)
+                //        {
+                //            //Mapas_R(prevFiles, i, pastaSaida);
+                //            Mapas_RTotal(prevFiles, i, pastaSaida, mod);
+
+                //            if (prevFiles.Length == 0 && modelo == "*")
+                //            {
+                //                //MessageBox.Show("Nenhuma previsão encontrada");
+
+                //                break;
+                //            }
+                //            else if (prevFiles.Length == 0 && modelo != "*")
+                //            {
+
+                //                AddLog("   Precipitação Prevista não encontrada: " + modelo + raiznome + ".dat");
+                //                break;
+
+                //            }
+
+                //            else
+                //            {
+
+                //                prevFile = prevFiles[0];
+
+                //            }
+
+                //            if (modelo == "*")
+                //            {
+                //                modelo = "ETA40";
+
+                //            }
+
+                //            chuvas[dataPrev] = PrecipitacaoFactory.BuildFromEtaFile(prevFile);
+                //            chuvas[dataPrev].Descricao = "PREV NUM - " + "ETA40_" + raiznome;
+
+
+                //        }
+
+                //    }
+                //    RefreshPrecipList();
+                //}
+
+            }
+
+        }
+
         public void PrecipitacaoPrevista_RTotal(string pastaRaiz, string pastaSaida)
         {
             var data = dtAtual.Value.Date;
@@ -12396,6 +12537,19 @@ namespace ChuvaVazaoTools
                 }
             }
         }
+
+        public void SalvarPrecObserv_RCSV()
+        {
+            foreach (var modelo in modelosChVz)
+            {
+                modelo.SalvarPrecObservadaCSV();
+            }
+           
+
+
+            AddLog("Arquivos de Preciptação Observada Salvos");
+        }
+
         public void SalvarPrecObserv_R()
         {
             foreach (var modelo in modelosChVz)
@@ -12513,6 +12667,20 @@ namespace ChuvaVazaoTools
                 File.WriteAllText(System.IO.Path.Combine(this.ArquivosDeSaida, "chuvamedia.log"), dadoslog.ToString());
                 */
             }
+
+            AddLog("- Precipitação Prevista Salva");
+        }
+
+        public void SalvarPrecPrev_RCSV()
+        {
+
+            foreach (var modelo in modelosChVz)
+            {
+                modelo.DataPrevisao = dtAtual.Value.Date;
+                modelo.SalvarPrecPrevista_RCSV(chuvas);
+                modelo.SalvarParametrosCSV();
+            }
+
 
             AddLog("- Precipitação Prevista Salva");
         }

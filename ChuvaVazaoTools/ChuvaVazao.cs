@@ -20,9 +20,11 @@ namespace ChuvaVazaoTools
         public IEnumerable<IArqVazao> Vazoes { get; set; }
 
         public abstract void SalvarPrecObservada();
+        public abstract void SalvarPrecObservadaCSV();
 
         public abstract void SalvarPrecPrevista(Dictionary<DateTime, Precipitacao> previsaoChuva);
         public abstract void SalvarPrecPrevista_R(Dictionary<DateTime, Precipitacao> previsaoChuva);
+        public abstract void SalvarPrecPrevista_RCSV(Dictionary<DateTime, Precipitacao> previsaoChuva);
 
         public abstract void SalvarParametros();
         public abstract void SalvarParametrosCSV();
@@ -163,6 +165,21 @@ namespace ChuvaVazaoTools
 
         }
 
+        internal void SalvarCSV(string c)
+        {
+
+            var cont = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(l1)) cont.AppendLine(l1);
+
+            Preciptacao
+                .OrderByDescending(x => x.Key).Take(120)
+                .OrderBy(x => x.Key).ToList().ForEach(x => cont.AppendLine(
+                               string.Join(" ", this.Codigo, x.Key.ToString("dd/MM/yyyy"), "1000", x.Value.HasValue ? x.Value.Value.ToString("0.00", System.Globalization.NumberFormatInfo.InvariantInfo) : "-")
+                ));
+
+            System.IO.File.WriteAllText(c, cont.ToString());
+
+        }
 
 
         internal void Salvar(string c)

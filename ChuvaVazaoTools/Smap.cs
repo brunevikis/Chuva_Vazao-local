@@ -458,6 +458,40 @@ namespace ChuvaVazaoTools.SMAP
                 sb.CarregaSaida(ModelosPrecipitacao[0]);
             }
         }
+
+        public override void SalvarPrecObservadaCSV()
+        {
+            var concatPostos = this.PostosPlu.Select(x => x.Codigo).Distinct().ToList();
+            var datas = this.PostosPlu.SelectMany(x => x.Preciptacao.Keys).Distinct().ToList();
+
+            string header = "data;" + string.Join(";", concatPostos);
+            List<string> newCsv = new List<string>();
+            newCsv.Add(header);
+
+
+            foreach (var dt in datas)
+            {
+                string newline = dt.ToString("dd/MM/yyyy");
+                foreach (var posto in concatPostos)
+                {
+                    var precip = this.PostosPlu.Where(x => x.Codigo == posto).First().Preciptacao[dt].ToString().Replace(',','.');//.Select(x =>x.Preciptacao)
+                    newline = newline + ";" + precip;
+                }
+
+                newCsv.Add(newline);
+
+            }
+
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "precipitacao_observada.csv"), newCsv);
+            //foreach (var postoPlu in this.PostosPlu)
+            //{
+
+            //    var c = System.IO.Path.Combine(ArquivosDeEntrada, postoPlu.Codigo + "_c.txt");
+            //    postoPlu.SalvarCSV(c);
+
+            //}
+        }
+
         public override void SalvarPrecObservada()
         {
 
@@ -527,6 +561,35 @@ namespace ChuvaVazaoTools.SMAP
             SubBacias.ForEach(x => x.Inicializacao.DiasPrevisao = diasDePrevisao);
 
         }
+
+        public override void SalvarPrecPrevista_RCSV(Dictionary<DateTime, Precipitacao> previsaoChuva)
+        {
+
+            //ModelosPrecipitacao.Clear();
+            //ModelosPrecipitacao.Add(ModelosPrecipitacao.First());
+
+            //System.IO.File.WriteAllText(System.IO.Path.Combine(ArquivosDeEntrada, "MODELOS_PRECIPITACAO.TXT"),
+            //    ModelosPrecipitacao.Count.ToString() + "\r\n" +
+            //    String.Join("\r\n", ModelosPrecipitacao));
+
+
+            //travado para apenas um modelo - melhorar depois
+            //var modelo = ModelosPrecipitacao[0];
+
+            //foreach (var prec in previsaoChuva.Where(x => x.Key > DataPrevisao))
+            //{
+
+            //    var raiznome = modelo + "_p" + DataPrevisao.ToString("ddMMyy") + "a" + prec.Key.ToString("ddMMyy") + ".dat";
+
+
+            //}
+
+            // var diasDePrevisao = previsaoChuva.Where(x => x.Key > DataPrevisao).Count() + 2;
+            var diasDePrevisao = previsaoChuva.Where(x => x.Key > DataPrevisao).Count();
+            SubBacias.ForEach(x => x.Inicializacao.DiasPrevisao = diasDePrevisao);
+
+        }
+
         public override DateTime DataPrevisao
         {
             get
@@ -723,6 +786,10 @@ namespace ChuvaVazaoTools.SMAP
             var cenario = modeloPrecipitacao.Split('|').Last();
             var subBacia = modeloPrecipitacao.Split('|').First();
 
+            if (cenario.Contains("ECENS45m"))
+            {
+
+            }
             var ajustesFile = System.IO.Path.Combine(ArquivosDeSaida, "ajuste.csv");
             var previsaoFile = System.IO.Path.Combine(ArquivosDeSaida, "previsao.csv");
 
@@ -1086,9 +1153,9 @@ namespace ChuvaVazaoTools.SMAP
             string diasPrev = DiasPrevisao.ToString();
 
             string diasAssimi = DiasPassados.ToString();
-            string ebin = Ebin.ToString();
-            string supin = Supin.ToString();
-            string tuin = Tuin.ToString();
+            string ebin = Ebin.ToString().Replace(',','.');
+            string supin = Supin.ToString().Replace(',', '.');
+            string tuin = Tuin.ToString().Replace(',', '.');
 
             List<string> newCSV = new List<string>();
             newCSV.Add("nome;variavel;valor;mes");
@@ -1117,6 +1184,7 @@ namespace ChuvaVazaoTools.SMAP
                             break;
 
                         default:
+                            valor = lin.Item3;
                             break;
                     }
 
