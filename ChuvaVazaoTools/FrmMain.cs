@@ -1766,11 +1766,13 @@ namespace ChuvaVazaoTools
                             SalvarPrecObserv_RCSV();
 
 
-                            SalvarVazObserv();
+                            //SalvarVazObserv();
+                            SalvarVazObservCSV();///aqui
 
 
                             SalvarPrecPrev_RCSV();
                             // SalvarPrecPrev_R();
+                            SalvarETP_Prev_Observ_CSV();
                         }
                         else
                         {
@@ -5923,6 +5925,13 @@ namespace ChuvaVazaoTools
                 }
                 else modelo = "NULO";
             }
+        }
+
+        public void SalvarVazObservCSV()
+        {
+            modelosChVz.ForEach(x => x.SalvarVazaoObservadaCSV());
+
+            AddLog("- Arquivos de Vazao Observada Salva");
         }
 
         public void SalvarVazObserv()
@@ -12548,6 +12557,18 @@ namespace ChuvaVazaoTools
 
 
             AddLog("Arquivos de Preciptação Observada Salvos");
+        }
+
+        public void SalvarETP_Prev_Observ_CSV()
+        {
+            foreach (var modelo in modelosChVz)
+            {
+                modelo.SalvarETP_Prev_ObservadaCSV();
+            }
+
+
+
+            AddLog("Arquivos de ETP Prev Observada Salvos");
         }
 
         public void SalvarPrecObserv_R()

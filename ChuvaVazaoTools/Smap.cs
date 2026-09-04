@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 
 
@@ -459,6 +460,220 @@ namespace ChuvaVazaoTools.SMAP
             }
         }
 
+        public List<Tuple<string, string>> GetSubBaciasPostoPluETP()
+        {
+            string config = $@"H:\TI - Sistemas\UAT\ChuvaVazao\SUBBACIA_POSTOPLU_ETP.txt";
+
+            var dados = System.IO.File.ReadAllLines(config).ToList();
+            List<Tuple<string, string>> subPlu = new List<Tuple<string, string>>();//subbacia,posto
+
+            dados.ForEach(x =>
+            {
+                var partes = x.Split('\t').ToList();
+                subPlu.Add(new Tuple<string, string>(partes[0], partes[1]));
+            }
+            );
+
+            return subPlu;
+        }
+
+        public List<Tuple<DateTime, string, string>> GetETP_prevista(DateTime dataIni)
+        {
+            DateTime dataArq = dataIni;
+
+            string etpFolder = "";
+            string arqEtp = "";
+            do
+            {
+                etpFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\ETP\{dataArq:yyyyMM}\{dataArq:dd}";
+                if (Directory.Exists(etpFolder))
+                {
+                    arqEtp = Directory.GetFiles(etpFolder).Where(x => Path.GetFileName(x).StartsWith($@"ECMWF_p{dataArq:ddMMyy}")).FirstOrDefault();
+                }
+                if (!File.Exists(arqEtp))
+                {
+                    dataArq = dataArq.AddDays(-1);
+                }
+
+            } while (!File.Exists(arqEtp));
+
+
+            var dados = System.IO.File.ReadAllLines(arqEtp).ToList();
+            List<Tuple<DateTime, string, string>> ETP_PREV = new List<Tuple<DateTime, string, string>>();
+
+            foreach (var dad in dados)
+            {
+                var partes = dad.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                for (int i = 3; i < partes.Count(); i++)
+                {
+                    DateTime dataETP = dataArq.AddDays(i - 3);
+                    ETP_PREV.Add(new Tuple<DateTime, string, string>(dataETP, partes[0], partes[i]));//data,posto,valor
+                }
+            }
+
+            return ETP_PREV;
+        }
+
+        public List<Tuple<string, string>> GetETP_observada(DateTime dataIni)
+        {
+            DateTime dataArq = dataIni;
+
+            string etpFolder = "";
+            string arqEtp = "";
+            List<Tuple<string, string>> ETP_OBS = new List<Tuple<string, string>>();//postoplu,dado
+
+
+
+            etpFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\ETP\{dataArq:yyyyMM}\{dataArq:dd}";
+            if (Directory.Exists(etpFolder))
+            {
+                arqEtp = Directory.GetFiles(etpFolder).Where(x => Path.GetFileName(x).StartsWith($@"etp_{dataArq:ddMMyy}")).FirstOrDefault();
+
+                if (File.Exists(arqEtp))
+                {
+                    var dados = System.IO.File.ReadAllLines(arqEtp).ToList();
+
+                    foreach (var dad in dados)
+                    {
+                        var partes = dad.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                        ETP_OBS.Add(new Tuple<string, string>(partes[0], partes[3]));//posto,valor
+                        
+                    }
+                }
+               
+            }
+            return ETP_OBS;
+        }
+
+        public List<Tuple<DateTime, DateTime, string, string, double>> GetCsvDataPrecipPrevista(string CSVfile)
+        {
+            //data_rodada;data_previsao;cenario;nome;valor
+            List<Tuple<DateTime, DateTime, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, double>>();
+            var linhas = File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+            foreach (var lin in linhas)
+            {
+                var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                DateTime dataRodada = DateTime.ParseExact(partes[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime dataPrevisao = DateTime.ParseExact(partes[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                string cenario = partes[2];
+                string nomeposto = partes[3];
+                double precip = Convert.ToDouble(partes[4].Replace('.', ','));
+
+                dados.Add(new Tuple<DateTime, DateTime, string, string, double>(dataRodada, dataPrevisao, cenario, nomeposto, precip));
+            }
+
+
+            return dados;
+
+        }
+
+        public override void SalvarETP_Prev_ObservadaCSV()
+        {
+            DateTime dataRodada = this.SubBacias.First().Inicializacao.Data;
+            DateTime dataFim = dataRodada.AddDays(this.SubBacias.First().Inicializacao.DiasPrevisao);
+
+            var subPlu = GetSubBaciasPostoPluETP();//subbacia,posto
+            var etp_prev = GetETP_prevista(dataRodada);//data,posto,valor
+
+            var preciptacaoPrevista = GetCsvDataPrecipPrevista(Path.Combine(ArquivosDeEntrada, "precipitacao_prevista.csv"));//data_rodada;data_previsao;cenario;nome;valor
+            var datasPrecipPrev = preciptacaoPrevista.Select(x => x.Item2).Distinct().ToList();
+            DateTime datafinal = datasPrecipPrev.Max();
+
+            var cenarios = preciptacaoPrevista.Select(x => x.Item3).Distinct().ToList();
+
+            var concatSubBacias = this.SubBacias.Select(x => x.Nome).Distinct().ToList();
+
+            string header = "data_rodada;data_previsao;cenario;nome;valor";
+
+            List<string> newCsv = new List<string>();
+            newCsv.Add(header);
+
+
+            foreach (var subBacia in concatSubBacias)
+            {
+                string postoPlu = subPlu.Where(x => x.Item1 == subBacia).Select(x => x.Item2).First();
+                var ETPfiltered = etp_prev.Where(x => x.Item2 == postoPlu).ToList();
+                foreach (var cen in cenarios)
+                {
+                    string etp = "";
+                    string etpAnt = ETPfiltered.First().Item3;
+                    string newline = "";
+                    for (DateTime dtPrev = dataRodada; dtPrev <= datafinal; dtPrev = dtPrev.AddDays(1))
+                    {
+                        var dadoETP = ETPfiltered.Where(x => x.Item1 == dtPrev).FirstOrDefault();
+                        if (dadoETP != null)
+                        {
+                            etp = dadoETP.Item3;
+                            etpAnt = etp;
+                        }
+                        else
+                        {
+                            etp = etpAnt;
+                        }
+                        newline = dataRodada.ToString("yyyy-MM-dd") + ";" + dtPrev.ToString("yyyy-MM-dd") + ";" + cen + ";" + subBacia + ";" + etp;
+                        newCsv.Add(newline);
+
+                    }
+                }
+            }
+
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "evapotranspiracao_prevista.csv"), newCsv);
+
+            string ETP_observFile = System.IO.Path.Combine(ArquivosDeEntrada, "evapotranspiracao_observada.csv");
+            var etpObservLines = File.ReadAllLines(ETP_observFile).Skip(1).ToList();
+            var subBaciasOberv = File.ReadAllLines(ETP_observFile).First().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
+            string headerobserv = File.ReadAllLines(ETP_observFile).First();
+
+            List<DateTime> dtEtp = new List<DateTime>();
+
+            etpObservLines.ForEach(x =>
+            {
+                var partes = x.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                DateTime dataetp = DateTime.ParseExact(partes[0], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                dtEtp.Add(dataetp);
+            });
+
+            for (DateTime dtoberv = dtEtp.Min(); dtoberv <= dataRodada.AddDays(-1); dtoberv = dtoberv.AddDays(1))
+            {
+                if (dtEtp.All(x => x.Date != dtoberv.Date))
+                {
+                    var ETP_OBS = GetETP_observada(dtoberv);//postoplu,dado
+                    if (ETP_OBS != null && ETP_OBS.Count() > 0)
+                    {
+                        string newline = dtoberv.ToString("dd/MM/yyyy");
+                        foreach (var subbacia in subBaciasOberv)
+                        {
+                            string postoPlu = subPlu.Where(x => x.Item1 == subbacia).Select(x => x.Item2).First();
+                            string etpOb = ETP_OBS.Where(x => x.Item1 == postoPlu).Select(x => x.Item2).FirstOrDefault();
+
+                            newline = newline + ";" + etpOb;
+                        }
+                        etpObservLines.Add(newline);
+                    }
+                    else
+                    {
+                        var replidados = etpObservLines.Last().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
+                        string newline = dtoberv.ToString("dd/MM/yyyy");
+                        newline = newline + string.Join(";", replidados);
+                        etpObservLines.Add(newline);
+                    }
+                }
+            }
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "evapotranspiracao_observada.csv"), etpObservLines);
+
+
+            //foreach (var postoPlu in this.PostosPlu)
+            //{
+
+            //    var c = System.IO.Path.Combine(ArquivosDeEntrada, postoPlu.Codigo + "_c.txt");
+            //    postoPlu.SalvarCSV(c);
+
+            //}
+        }
+
         public override void SalvarPrecObservadaCSV()
         {
             var concatPostos = this.PostosPlu.Select(x => x.Codigo).Distinct().ToList();
@@ -474,7 +689,7 @@ namespace ChuvaVazaoTools.SMAP
                 string newline = dt.ToString("dd/MM/yyyy");
                 foreach (var posto in concatPostos)
                 {
-                    var precip = this.PostosPlu.Where(x => x.Codigo == posto).First().Preciptacao[dt].ToString().Replace(',','.');//.Select(x =>x.Preciptacao)
+                    var precip = this.PostosPlu.Where(x => x.Codigo == posto).First().Preciptacao[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
                     newline = newline + ";" + precip;
                 }
 
@@ -629,6 +844,38 @@ namespace ChuvaVazaoTools.SMAP
                 sb.SalvarVazoes();
             }
         }
+
+        public override void SalvarVazaoObservadaCSV()
+        {
+            var concatSubBacias = this.SubBacias.Select(x => x.Nome).Distinct().ToList();
+            var datas = this.SubBacias.SelectMany(x => x.Vazoes.Keys).Distinct().ToList();
+
+            string header = "data;" + string.Join(";", concatSubBacias);
+            List<string> newCsv = new List<string>();
+            newCsv.Add(header);
+
+
+            foreach (var dt in datas)
+            {
+                string newline = dt.ToString("dd/MM/yyyy");
+                foreach (var sub in concatSubBacias)
+                {
+                    var vazao = this.SubBacias.Where(x => x.Nome == sub).First().Vazoes[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
+                    newline = newline + ";" + vazao;
+                }
+
+                newCsv.Add(newline);
+
+            }
+
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "vazao_observada.csv"), newCsv);
+
+            //foreach (var sb in this.SubBacias)
+            //{
+            //    sb.SalvarVazoesCSV();
+            //}
+        }
+
     }
 
     public class SubBacia : IArqVazao
@@ -867,11 +1114,11 @@ namespace ChuvaVazaoTools.SMAP
                             int numCluster = Convert.ToInt32(cenario.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries).Last());
                             if (!VazoesCalSomaMedia.ContainsKey(x.Item2))
                             {
-                                VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster-1];
+                                VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster - 1];
                             }
                             else
                             {
-                                VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster-1];
+                                VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster - 1];
                             }
 
 
@@ -909,7 +1156,7 @@ namespace ChuvaVazaoTools.SMAP
 
                     //        }
                     //    }
-                        //);
+                    //);
                 }
             }
 
@@ -917,6 +1164,9 @@ namespace ChuvaVazaoTools.SMAP
 
 
         }
+
+
+
 
         public void CarregaSaida(string modeloPrecipitacao, bool media = false)
         {
@@ -1013,7 +1263,7 @@ namespace ChuvaVazaoTools.SMAP
             //var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, Nome + "_INICIALIZACAO.txt");
             var iniFile = System.IO.Path.Combine(ArquivosDeEntrada, "inicializacao.csv");
             var datasFile = System.IO.Path.Combine(ArquivosDeEntrada, "datas_rodadas.csv");
-            Inicializacao.WriteCSV(iniFile,datasFile, Nome);
+            Inicializacao.WriteCSV(iniFile, datasFile, Nome);
 
         }
 
@@ -1144,7 +1394,7 @@ namespace ChuvaVazaoTools.SMAP
         }
 
 
-        public void WriteCSV(string filePathINI,string filePathData, string subbacia)
+        public void WriteCSV(string filePathINI, string filePathData, string subbacia)
         {
             var inicializacaoCSV = GetCsvInicializacao(filePathINI);
             var datasRodadasCSV = GetCsvDataRodada(filePathData);
@@ -1153,7 +1403,7 @@ namespace ChuvaVazaoTools.SMAP
             string diasPrev = DiasPrevisao.ToString();
 
             string diasAssimi = DiasPassados.ToString();
-            string ebin = Ebin.ToString().Replace(',','.');
+            string ebin = Ebin.ToString().Replace(',', '.');
             string supin = Supin.ToString().Replace(',', '.');
             string tuin = Tuin.ToString().Replace(',', '.');
 

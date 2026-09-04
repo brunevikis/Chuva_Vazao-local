@@ -21,6 +21,7 @@ namespace ChuvaVazaoTools
 
         public abstract void SalvarPrecObservada();
         public abstract void SalvarPrecObservadaCSV();
+        public abstract void SalvarETP_Prev_ObservadaCSV();
 
         public abstract void SalvarPrecPrevista(Dictionary<DateTime, Precipitacao> previsaoChuva);
         public abstract void SalvarPrecPrevista_R(Dictionary<DateTime, Precipitacao> previsaoChuva);
@@ -45,6 +46,7 @@ namespace ChuvaVazaoTools
         public abstract void ColetarSaidaTotalCSV(string mod);
 
         public abstract void SalvarVazaoObservada();
+        public abstract void SalvarVazaoObservadaCSV();
     }
 
     public class PostoPlu
