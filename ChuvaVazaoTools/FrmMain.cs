@@ -6944,9 +6944,9 @@ namespace ChuvaVazaoTools
                 {
                     chuvas[datas] = precs;
                 }
-                
+
             }
-            
+
 
 
             var modelo = "*";
@@ -8833,14 +8833,20 @@ namespace ChuvaVazaoTools
                 x => x.Nome.ToLowerInvariant(),
                 y => y.Arquivo.ToLowerInvariant(), (x, y) => new { posto = x, config = y }))
             {
-                if (arqEntrada.config.Arquivo == "JURUENA.TXT")
+                bool continuateste = false;
+                if (!arqEntrada.config.Origem.All(y => dados_observados.Any(x => y.Posto == x.Cod_Posto)))
+                {
+                    continuateste = true;
+                }
+
+                if (arqEntrada.config.Arquivo == "furnas_rio_sapucai")
                 {
 
                 }
 
                 for (DateTime dt = dataI.AddDays(3); dt < dtAtual.Value; dt = dt.AddDays(1))
                 {
-                    if (arqEntrada.config.Origem.All(y => dados_observados.Any(x => x.Data == dt && y.Posto == x.Cod_Posto)) /*|| arqEntrada.config.Arquivo.ToUpper() == "AMARU_MAYU.TXT"*/)
+                    if (arqEntrada.config.Origem.All(y => dados_observados.Any(x => x.Data == dt && y.Posto == x.Cod_Posto)) || continuateste == true/*|| arqEntrada.config.Arquivo.ToUpper() == "AMARU_MAYU.TXT"*/)
                     {
                         if (arqEntrada.config.TipoAtualizacao == "TOTAL" || (dtAtual.Value.Date - dt).TotalDays <= 7)
                         {
@@ -8853,7 +8859,7 @@ namespace ChuvaVazaoTools
                                {
 
                                    var cod_posto = tipo_vazoes.Where(x => x.Item2 == ori.Posto.ToString()).First();
-                                   decimal? value = 0;
+                                   decimal? value = 1;
                                    try
                                    {
                                        value = dados_observados.First(x => x.Data == dt && x.Cod_Posto.ToString() == cod_posto.Item2 && x.Tipo_Vazao == cod_posto.Item4).Vazao;
@@ -12553,7 +12559,7 @@ namespace ChuvaVazaoTools
             {
                 modelo.SalvarPrecObservadaCSV();
             }
-           
+
 
 
             AddLog("Arquivos de Preciptação Observada Salvos");

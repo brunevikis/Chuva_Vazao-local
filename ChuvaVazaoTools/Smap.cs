@@ -636,6 +636,8 @@ namespace ChuvaVazaoTools.SMAP
                 dtEtp.Add(dataetp);
             });
 
+            etpObservLines.Insert(0, headerobserv);
+
             for (DateTime dtoberv = dtEtp.Min(); dtoberv <= dataRodada.AddDays(-1); dtoberv = dtoberv.AddDays(1))
             {
                 if (dtEtp.All(x => x.Date != dtoberv.Date))
@@ -643,7 +645,7 @@ namespace ChuvaVazaoTools.SMAP
                     var ETP_OBS = GetETP_observada(dtoberv);//postoplu,dado
                     if (ETP_OBS != null && ETP_OBS.Count() > 0)
                     {
-                        string newline = dtoberv.ToString("dd/MM/yyyy");
+                        string newline = dtoberv.ToString("dd/MM/yyyy")+";";
                         foreach (var subbacia in subBaciasOberv)
                         {
                             string postoPlu = subPlu.Where(x => x.Item1 == subbacia).Select(x => x.Item2).First();
@@ -656,7 +658,7 @@ namespace ChuvaVazaoTools.SMAP
                     else
                     {
                         var replidados = etpObservLines.Last().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList();
-                        string newline = dtoberv.ToString("dd/MM/yyyy");
+                        string newline = dtoberv.ToString("dd/MM/yyyy")+";";
                         newline = newline + string.Join(";", replidados);
                         etpObservLines.Add(newline);
                     }
@@ -847,28 +849,37 @@ namespace ChuvaVazaoTools.SMAP
 
         public override void SalvarVazaoObservadaCSV()
         {
-            var concatSubBacias = this.SubBacias.Select(x => x.Nome).Distinct().ToList();
-            var datas = this.SubBacias.SelectMany(x => x.Vazoes.Keys).Distinct().ToList();
-
-            string header = "data;" + string.Join(";", concatSubBacias);
-            List<string> newCsv = new List<string>();
-            newCsv.Add(header);
-
-
-            foreach (var dt in datas)
+            try
             {
-                string newline = dt.ToString("dd/MM/yyyy");
-                foreach (var sub in concatSubBacias)
+                var concatSubBacias = this.SubBacias.Select(x => x.Nome).Distinct().ToList();
+                var datas = this.SubBacias.SelectMany(x => x.Vazoes.Keys).Distinct().ToList();
+
+                string header = "data;" + string.Join(";", concatSubBacias);
+                List<string> newCsv = new List<string>();
+                newCsv.Add(header);
+
+
+                foreach (var dt in datas)
                 {
-                    var vazao = this.SubBacias.Where(x => x.Nome == sub).First().Vazoes[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
-                    newline = newline + ";" + vazao;
+                    string newline = dt.ToString("dd/MM/yyyy");
+                    foreach (var sub in concatSubBacias)
+                    {
+                        var vazao = this.SubBacias.Where(x => x.Nome == sub).First().Vazoes[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
+                        newline = newline + ";" + vazao;
+                    }
+
+                    newCsv.Add(newline);
+
                 }
 
-                newCsv.Add(newline);
-
+                System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "vazao_observada.csv"), newCsv);
             }
-
-            System.IO.File.WriteAllLines(System.IO.Path.Combine(ArquivosDeEntrada, "vazao_observada.csv"), newCsv);
+            catch (Exception e)
+            {
+                e.ToString();
+                throw;
+            }
+           
 
             //foreach (var sb in this.SubBacias)
             //{
