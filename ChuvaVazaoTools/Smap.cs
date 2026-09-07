@@ -289,7 +289,7 @@ namespace ChuvaVazaoTools.SMAP
                     {
                         pr.StandardInput.Write(ConsoleKey.Enter.ToString());
 
-                        if (l.Contains("nao sera executada")) this.ErroNaExecucao = true;
+                        if (l.Contains("nao sera executada") ||l.Contains( "campos esperados")) this.ErroNaExecucao = true;
                         else this.ErroNaExecucao = false;
 
                         break;
@@ -527,7 +527,7 @@ namespace ChuvaVazaoTools.SMAP
             etpFolder = $@"H:\Middle - Preço\Acompanhamento de Precipitação\Previsao_Numerica\ETP\{dataArq:yyyyMM}\{dataArq:dd}";
             if (Directory.Exists(etpFolder))
             {
-                arqEtp = Directory.GetFiles(etpFolder).Where(x => Path.GetFileName(x).StartsWith($@"etp_{dataArq:ddMMyy}")).FirstOrDefault();
+                arqEtp = Directory.GetFiles(etpFolder).Where(x => Path.GetFileName(x).StartsWith($@"etp_{dataArq:ddMMyyyy}")).FirstOrDefault();//etp_20082026.txt
 
                 if (File.Exists(arqEtp))
                 {
@@ -645,7 +645,7 @@ namespace ChuvaVazaoTools.SMAP
                     var ETP_OBS = GetETP_observada(dtoberv);//postoplu,dado
                     if (ETP_OBS != null && ETP_OBS.Count() > 0)
                     {
-                        string newline = dtoberv.ToString("dd/MM/yyyy")+";";
+                        string newline = dtoberv.ToString("dd/MM/yyyy");
                         foreach (var subbacia in subBaciasOberv)
                         {
                             string postoPlu = subPlu.Where(x => x.Item1 == subbacia).Select(x => x.Item2).First();
@@ -1106,35 +1106,67 @@ namespace ChuvaVazaoTools.SMAP
                 VazoesCalSomaMedia = VazoesCalSomaMedia == null ? new Dictionary<DateTime, float>() : VazoesCalSomaMedia;
                 ProbClusters = ProbClusters == null ? GetProbclusters() : ProbClusters;
 
-                if (System.IO.File.Exists(previsaoFile))
+                if (System.IO.File.Exists(previsaoFile) && cenario.Contains("ECENS45m"))
                 {
                     //data_caso;data_previsao;cenario;subbacia;variavel;valor
-                    var previsaoCsv = GetCsvDataPrevisao(previsaoFile).Where(x => x.Item4 == subBacia && x.Item3 == cenario && x.Item5.ToUpper() == "QCALC").ToList();
-
-                    previsaoCsv.ForEach(x =>
+                    var previsaoCsvALL = GetCsvDataPrevisao(previsaoFile);
+                    for (int model = 1; model <= 10; model++)
                     {
-                        float vazQCAL = float.Parse(x.Item6.ToString());
-                        VazoesCal[x.Item2] = vazQCAL;
-                        Vazoes[x.Item2] = vazQCAL;
+                        string modAlt = cenario + model.ToString("00");
 
-                        if (cenario.Contains("ECENS45m"))
+                        var previsaoCsv = previsaoCsvALL.Where(x => x.Item4 == subBacia && x.Item3 == modAlt && x.Item5.ToUpper() == "QCALC").ToList();
+
+                        previsaoCsv.ForEach(x =>
                         {
+                            float vazQCAL = float.Parse(x.Item6.ToString());
+                            VazoesCal[x.Item2] = vazQCAL;
+                            Vazoes[x.Item2] = vazQCAL;
 
-                            //todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
-                            //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
-                            int numCluster = Convert.ToInt32(cenario.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries).Last());
-                            if (!VazoesCalSomaMedia.ContainsKey(x.Item2))
+                            if (cenario.Contains("ECENS45m"))
                             {
-                                VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster - 1];
-                            }
-                            else
-                            {
-                                VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster - 1];
-                            }
+
+                                //todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
+                                //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                                int numCluster = Convert.ToInt32(modAlt.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries).Last());
+                                if (!VazoesCalSomaMedia.ContainsKey(x.Item2))
+                                {
+                                    VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster - 1];
+                                }
+                                else
+                                {
+                                    VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster - 1];
+                                }
 
 
-                        }
-                    });
+                            }
+                        });
+                    }
+                    //var previsaoCsv = GetCsvDataPrevisao(previsaoFile).Where(x => x.Item4 == subBacia && x.Item3 == cenario && x.Item5.ToUpper() == "QCALC").ToList();
+
+                    //previsaoCsv.ForEach(x =>
+                    //{
+                    //    float vazQCAL = float.Parse(x.Item6.ToString());
+                    //    VazoesCal[x.Item2] = vazQCAL;
+                    //    Vazoes[x.Item2] = vazQCAL;
+
+                    //    if (cenario.Contains("ECENS45m"))
+                    //    {
+
+                    //        //todo inserir multiplicaçao pelo peso do arquivo prob.dat x.Qcal*prob[numcluster] 
+                    //        //int numCluster = Convert.ToInt32(previsaoFile.ToUpper().Split(new string[] { "ECENS45M" }, StringSplitOptions.RemoveEmptyEntries)[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries)[0]);
+                    //        int numCluster = Convert.ToInt32(cenario.ToLower().Split(new string[] { "m" }, StringSplitOptions.RemoveEmptyEntries).Last());
+                    //        if (!VazoesCalSomaMedia.ContainsKey(x.Item2))
+                    //        {
+                    //            VazoesCalSomaMedia[x.Item2] = vazQCAL * ProbClusters[numCluster - 1];
+                    //        }
+                    //        else
+                    //        {
+                    //            VazoesCalSomaMedia[x.Item2] += vazQCAL * ProbClusters[numCluster - 1];
+                    //        }
+
+
+                    //    }
+                    //});
 
 
                     //System.IO.File.ReadLines(previsaoFile)

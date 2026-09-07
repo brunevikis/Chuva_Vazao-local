@@ -164,12 +164,13 @@ namespace ChuvaVazaoTools
 
                 if (modeloCenario.Contains("ECENS45m"))
                 {
-                    for (int i = 1; i <= 10; i++)
-                    {
-                        //string modAlt = mod + i.ToString("00");
-                        string modAlt = modeloCenario + i.ToString("00");
-                        modelosChVz.ForEach(x => x.ColetarSaidaTotalCSV(modAlt));
-                    }
+                    //for (int i = 1; i <= 10; i++)
+                    //{
+                    //    //string modAlt = mod + i.ToString("00");
+                    //    string modAlt = modeloCenario + i.ToString("00");
+                    //    //modelosChVz.ForEach(x => x.ColetarSaidaTotalCSV(modAlt));
+                    modelosChVz.ForEach(x => x.ColetarSaidaTotalCSV(modeloCenario));
+                    //}
                     //modelosChVz.ForEach(x => x.ColetarSaidaMediaSmapCSV(mod));
                     modelosChVz.ForEach(x => x.ColetarSaidaMediaSmapCSV(modeloCenario));
                 }
@@ -1895,7 +1896,7 @@ namespace ChuvaVazaoTools
                     //ExecutarTudo(statusF);
                     if (shadow == true)
                     {
-                        ExecutarTudoTotalCSV(pastaRaiz, statusF, smapR, modeloCenario: cenario);
+                        ExecutarTudoTotalCSV(pastaRaiz, statusF, smapR, modeloCenario: "");
                     }
                     else
                     {

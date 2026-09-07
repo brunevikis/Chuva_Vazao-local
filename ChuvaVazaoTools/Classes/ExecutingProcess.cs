@@ -25,6 +25,11 @@ namespace ChuvaVazaoTools.Classes
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
+            bool csv = false;
+            if (shadow == true)
+            {
+                csv = true;
+            }
             // = modelos;
             if (modelos == null)
             {
@@ -35,1180 +40,2180 @@ namespace ChuvaVazaoTools.Classes
             try
             {
 
-                //Madeira
-
-
-                #region GRANDE (grande e parnaiba)
-
-                #region Camargos
-                var camargos = new Propagacao() { IdPosto = 1, NomePostoFluv = "CAMARGOS" };
-                camargos.Modelo.Add(new ModeloSmap() { NomeVazao = "Camargos", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(camargos);
-                #endregion
-
-                #region Itutinga
-                var Itutinga = new Propagacao() { IdPosto = 2, NomePostoFluv = "Itutinga" };
-                Itutinga.Modelo.Add(new ModeloSmap() { NomeVazao = "Camargos", TempoViagem = 0, FatorDistribuicao = 0 });
-                Itutinga.PostoMontantes.Add(new PostoMontante { Propaga = camargos, TempoViagem = 0 });
-                propagacoes.Add(Itutinga);
-                #endregion
-
-                #region Funil
-                var Funil = new Propagacao() { IdPosto = 211, NomePostoFluv = "Funil" };
-                Funil.Modelo.Add(new ModeloSmap() { NomeVazao = "FUNIL MG", TempoViagem = 0 });
-                Funil.PostoMontantes.Add(new PostoMontante { Propaga = Itutinga, TempoViagem = 13 });
-                propagacoes.Add(Funil);
-                #endregion
-
-                #region Furnas
-                var Furnas = new Propagacao() { IdPosto = 6, NomePostoFluv = "Furnas" };
-                Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "PARAGUACU", TempoViagem = 10 });
-                Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "PBUENOS", TempoViagem = 12 });
-                Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "FURNAS", TempoViagem = 0, FatorDistribuicao = 1 });
-                Furnas.PostoMontantes.Add(new PostoMontante { Propaga = Funil, TempoViagem = 36 });
-                propagacoes.Add(Furnas);
-                #endregion
-
-                #region MMoraes
-                var Mmoraes = new Propagacao() { IdPosto = 7, NomePostoFluv = "M Moraes" };
-                Mmoraes.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.377f });
-                Mmoraes.PostoMontantes.Add(new PostoMontante { Propaga = Furnas, TempoViagem = 23 });
-                propagacoes.Add(Mmoraes);
-                #endregion
-
-                #region LCBarreto
-                var LCBarreto = new Propagacao() { IdPosto = 8, NomePostoFluv = "LCBarreto" };
-                LCBarreto.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.087f });
-                LCBarreto.PostoMontantes.Add(new PostoMontante { Propaga = Mmoraes, TempoViagem = 7 });
-                propagacoes.Add(LCBarreto);
-                #endregion
-
-                #region Jaguara
-                var Jaguara = new Propagacao() { IdPosto = 9, NomePostoFluv = "Jaguara" };
-                Jaguara.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.036f });
-                Jaguara.PostoMontantes.Add(new PostoMontante { Propaga = LCBarreto, TempoViagem = 5 });
-                propagacoes.Add(Jaguara);
-                #endregion
-
-                #region Igarapava
-                var Igarapava = new Propagacao() { IdPosto = 10, NomePostoFluv = "Igarapava" };
-                Igarapava.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.103f });
-                Igarapava.PostoMontantes.Add(new PostoMontante { Propaga = Jaguara, TempoViagem = 10 });
-                propagacoes.Add(Igarapava);
-                #endregion
-
-                #region Volta Grande
-                var VoltaGrande = new Propagacao() { IdPosto = 11, NomePostoFluv = "Volta Grande" };
-                VoltaGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.230f });
-                VoltaGrande.PostoMontantes.Add(new PostoMontante { Propaga = Igarapava, TempoViagem = 12 });
-                propagacoes.Add(VoltaGrande);
-                #endregion
-
-                #region Porto Colombia
-                var PortoColombia = new Propagacao() { IdPosto = 12, NomePostoFluv = "Porto Colombia" };
-                PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.167f });
-                PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "CAPESCURO", TempoViagem = 8, FatorDistribuicao = 1 });
-                PortoColombia.PostoMontantes.Add(new PostoMontante { Propaga = VoltaGrande, TempoViagem = 11 });
-                propagacoes.Add(PortoColombia);
-                #endregion
-
-                #region Caconde
-                var Caconde = new Propagacao() { IdPosto = 14, NomePostoFluv = "Caconde" };
-                Caconde.Modelo.Add(new ModeloSmap() { NomeVazao = "EDACUNHA", TempoViagem = 0, FatorDistribuicao = 0.610f });
-                propagacoes.Add(Caconde);
-                #endregion
-
-                #region Euc da Cunha
-                var EucCunha = new Propagacao() { IdPosto = 15, NomePostoFluv = "Euc da Cunha" };
-                EucCunha.Modelo.Add(new ModeloSmap() { NomeVazao = "EDACUNHA", TempoViagem = 0, FatorDistribuicao = 0.390f });
-                EucCunha.PostoMontantes.Add(new PostoMontante { Propaga = Caconde, TempoViagem = 12 });
-                propagacoes.Add(EucCunha);
-                #endregion
-
-                #region Limoeiro
-                //A S OLIVEIRA
-                var Limoeiro = new Propagacao() { IdPosto = 16, NomePostoFluv = "Limoeiro" };
-                Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "MARIMBONDO", TempoViagem = 0, FatorDistribuicao = 0.004f });
-                Limoeiro.PostoMontantes.Add(new PostoMontante { Propaga = EucCunha, TempoViagem = 3 });
-                propagacoes.Add(Limoeiro);
-                #endregion
-
-                #region Marimbondo
-                var Marimbondo = new Propagacao() { IdPosto = 17, NomePostoFluv = "Marimbondo" };
-                Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSAGEM", TempoViagem = 16, FatorDistribuicao = 1f });
-                Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "MARIMBONDO", TempoViagem = 0, FatorDistribuicao = 0.996f });
-                Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = Limoeiro, TempoViagem = 72 });
-                Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = PortoColombia, TempoViagem = 20 });
-                propagacoes.Add(Marimbondo);
-                #endregion
-
-                #region AguaVermelha
-                var AguaVermelha = new Propagacao() { IdPosto = 18, NomePostoFluv = "AguaVermelha" };
-                AguaVermelha.Modelo.Add(new ModeloSmap() { NomeVazao = "AVERMELHA", TempoViagem = 0, FatorDistribuicao = 1 });
-                AguaVermelha.PostoMontantes.Add(new PostoMontante { Propaga = Marimbondo, TempoViagem = 28 });
-                propagacoes.Add(AguaVermelha);
-                #endregion
-                #endregion
-
-                #region Tiête (paranazao)
-
-                #region Guarapiranga
-                var Guarapiranga = new Propagacao() { IdPosto = 117, NomePostoFluv = "Guarapiranga" };
-                Guarapiranga.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.120f });
-                propagacoes.Add(Guarapiranga);
-                #endregion
-
-                #region Billings Pedras
-                var BillingsPedras = new Propagacao() { IdPosto = 119, NomePostoFluv = "Billings Pedras" };
-                BillingsPedras.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.183f });
-                propagacoes.Add(BillingsPedras);
-                #endregion
-
-                #region Billings
-                var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };//vai usar um fator de 0.146 na geração do dadvaz (foi fator calculado pq faz uma conta com usina que ainda não foi incluida nas propoçoes)
-                Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.183f });
-                propagacoes.Add(Billings);
-                #endregion
-
-                #region Ponte Nova
-                //Alto tiete
-                var PonteNova = new Propagacao() { IdPosto = 160, NomePostoFluv = "Ponte Nova" };
-                PonteNova.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.073f });
-                propagacoes.Add(PonteNova);
-                #endregion
-
-                #region E. souza
-                var Esouza = new Propagacao() { IdPosto = 161, NomePostoFluv = "E. souza" };
-                Esouza.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.624f });
-                Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Guarapiranga, TempoViagem = 6 });
-                Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Billings, TempoViagem = 0 });
-                Esouza.PostoMontantes.Add(new PostoMontante { Propaga = PonteNova, TempoViagem = 15 });
-                propagacoes.Add(Esouza);
-                #endregion
-
-                #region Barra Bonita
-                var BBonita = new Propagacao() { IdPosto = 237, NomePostoFluv = "Barra Bonita" };
-                BBonita.Modelo.Add(new ModeloSmap() { NomeVazao = "BBonita", TempoViagem = 0, FatorDistribuicao = 1 });
-                BBonita.PostoMontantes.Add(new PostoMontante { Propaga = Esouza, TempoViagem = 48 });
-                propagacoes.Add(BBonita);
-                #endregion
-
-                #region Bariri
-                var Bariri = new Propagacao() { IdPosto = 238, NomePostoFluv = "Bariri" };
-                Bariri.Modelo.Add(new ModeloSmap() { NomeVazao = "Ibitinga", TempoViagem = 0, FatorDistribuicao = 0.342f });
-                Bariri.PostoMontantes.Add(new PostoMontante { Propaga = BBonita, TempoViagem = 12 });
-                propagacoes.Add(Bariri);
-                #endregion
-
-                #region Ibitinga
-                var Ibitinga = new Propagacao() { IdPosto = 239, NomePostoFluv = "Ibitinga" };
-                Ibitinga.Modelo.Add(new ModeloSmap() { NomeVazao = "Ibitinga", TempoViagem = 0, FatorDistribuicao = 0.658f });
-                Ibitinga.PostoMontantes.Add(new PostoMontante { Propaga = Bariri, TempoViagem = 12 });
-                propagacoes.Add(Ibitinga);
-                #endregion
-
-                #region Promissao
-                var Promissao = new Propagacao() { IdPosto = 240, NomePostoFluv = "Promissao" };
-                Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.717f });
-                Promissao.PostoMontantes.Add(new PostoMontante { Propaga = Ibitinga, TempoViagem = 29 });
-                propagacoes.Add(Promissao);
-                #endregion
-
-                #region N. Avanhandava
-                var NAvanhandava = new Propagacao() { IdPosto = 242, NomePostoFluv = "NAvanhandava" };
-                NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.283f });
-                NAvanhandava.PostoMontantes.Add(new PostoMontante { Propaga = Promissao, TempoViagem = 13 });
-                propagacoes.Add(NAvanhandava);
-                #endregion
-                #endregion
-
-                #region Paranaiba (grande parnaiba)
-
-                #region CorumbaIV
-                var CorumbaIV = new Propagacao() { IdPosto = 205, NomePostoFluv = "Corumba IV" };
-                CorumbaIV.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBAIV", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(CorumbaIV);
-                #endregion
-
-                #region CorumbaIII
-                var CorumbaIII = new Propagacao() { IdPosto = 23, NomePostoFluv = "Corumba III" };
-                CorumbaIII.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBA1", TempoViagem = 0, FatorDistribuicao = 0.1f });
-                CorumbaIII.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIV, TempoViagem = 12 });
-                propagacoes.Add(CorumbaIII);
-                #endregion
-
-                #region CorumbaI
-                var CorumbaI = new Propagacao() { IdPosto = 209, NomePostoFluv = "Corumba I" };
-                CorumbaI.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBA1", TempoViagem = 0, FatorDistribuicao = 0.9f });
-                CorumbaI.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIII, TempoViagem = 24 });
-                propagacoes.Add(CorumbaI);
-                #endregion
-
-                #region Batalha
-                var Batalha = new Propagacao() { IdPosto = 22, NomePostoFluv = "Batalha" };
-                Batalha.Modelo.Add(new ModeloSmap() { NomeVazao = "SDOFACAO", TempoViagem = 0, FatorDistribuicao = 0.615f });
-                propagacoes.Add(Batalha);
-                #endregion
-
-                #region SerraDoFacao
-                var SerraDoFacao = new Propagacao() { IdPosto = 251, NomePostoFluv = "Serra Do Facao" };
-                SerraDoFacao.Modelo.Add(new ModeloSmap() { NomeVazao = "SDOFACAO", TempoViagem = 0, FatorDistribuicao = 0.385f });
-                SerraDoFacao.PostoMontantes.Add(new PostoMontante { Propaga = Batalha, TempoViagem = 12 });
-                propagacoes.Add(SerraDoFacao);
-                #endregion
-
-                #region Emborcacao
-                var Emborcacao = new Propagacao() { IdPosto = 24, NomePostoFluv = "Emborcacao" };
-                Emborcacao.Modelo.Add(new ModeloSmap() { NomeVazao = "EMBORCACAO", TempoViagem = 0, FatorDistribuicao = 1 });
-                Emborcacao.PostoMontantes.Add(new PostoMontante { Propaga = SerraDoFacao, TempoViagem = 17 });
-                propagacoes.Add(Emborcacao);
-                #endregion
-
-                #region NovaPonte
-                var NovaPonte = new Propagacao() { IdPosto = 25, NomePostoFluv = "NovaPonte" };
-                NovaPonte.Modelo.Add(new ModeloSmap() { NomeVazao = "NOVAPONTE", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(NovaPonte);
-                #endregion
-
-                #region Miranda
-                var Miranda = new Propagacao() { IdPosto = 206, NomePostoFluv = "Miranda" };
-                Miranda.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.040f });
-                Miranda.PostoMontantes.Add(new PostoMontante { Propaga = NovaPonte, TempoViagem = 11 });
-                propagacoes.Add(Miranda);
-                #endregion
-
-                #region Capim Branco 1
-                var CapimBrancoI = new Propagacao() { IdPosto = 207, NomePostoFluv = "Capim Branco I" };
-                CapimBrancoI.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.005f });
-                CapimBrancoI.PostoMontantes.Add(new PostoMontante { Propaga = Miranda, TempoViagem = 5 });
-                propagacoes.Add(CapimBrancoI);
-                #endregion
-
-                #region Capim Branco 2
-                var CapimBrancoII = new Propagacao() { IdPosto = 28, NomePostoFluv = "Capim Branco II" };
-                CapimBrancoII.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.012f });
-                CapimBrancoII.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoI, TempoViagem = 12 });
-                propagacoes.Add(CapimBrancoII);
-                #endregion
-
-                #region Itumbiara
-                var Itumbiara = new Propagacao() { IdPosto = 31, NomePostoFluv = "Itumbiara" };
-                Itumbiara.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.943f });
-                Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoII, TempoViagem = 17 });
-                Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = Emborcacao, TempoViagem = 17 });
-                Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaI, TempoViagem = 17 });
-                propagacoes.Add(Itumbiara);
-                #endregion
-
-                #region Cachoeira Dourada
-                var CachoeiraDourada = new Propagacao() { IdPosto = 32, NomePostoFluv = "Cachoeira Dourada" };
-                CachoeiraDourada.Modelo.Add(new ModeloSmap() { NomeVazao = "SSIMAO2", TempoViagem = 0, FatorDistribuicao = 0.109f });
-                CachoeiraDourada.PostoMontantes.Add(new PostoMontante { Propaga = Itumbiara, TempoViagem = 8 });//talvez zero
-                propagacoes.Add(CachoeiraDourada);
-                #endregion
-
-                #region Sao Simao
-                var SaoSimao = new Propagacao() { IdPosto = 33, NomePostoFluv = "Sao Simao" };
-                SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "SSIMAO2", TempoViagem = 0, FatorDistribuicao = 0.891f });
-                SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "RVerde", TempoViagem = 8, FatorDistribuicao = 1 });
-                SaoSimao.PostoMontantes.Add(new PostoMontante { Propaga = CachoeiraDourada, TempoViagem = 15 });
-                propagacoes.Add(SaoSimao);
-                #endregion
-
-                #region Espora 
-                // incluido
-                var Espora = new Propagacao() { IdPosto = 99, NomePostoFluv = "Espora" };
-                Espora.Modelo.Add(new ModeloSmap() { NomeVazao = "Espora", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(Espora);
-                #endregion
-
-                #region Salto
-                //incluido
-                var Salto = new Propagacao() { IdPosto = 294, NomePostoFluv = "Salto" };
-                Salto.Modelo.Add(new ModeloSmap() { NomeVazao = "SaltoVerdi", TempoViagem = 0, FatorDistribuicao = 0.923f });
-                propagacoes.Add(Salto);
-                #endregion
-
-                #region S R Verdinho
-                //incluido
-                var SrVerdinho = new Propagacao() { IdPosto = 241, NomePostoFluv = "S R Verdinho" };
-                SrVerdinho.Modelo.Add(new ModeloSmap() { NomeVazao = "SaltoVerdi", TempoViagem = 0, FatorDistribuicao = 0.077f });
-                SrVerdinho.PostoMontantes.Add(new PostoMontante { Propaga = Salto, TempoViagem = 0 });
-                propagacoes.Add(SrVerdinho);
-                #endregion
-
-                #region Caçu
-                //incluido
-                var Cacu = new Propagacao() { IdPosto = 247, NomePostoFluv = "Caçu" };
-                Cacu.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.894f });
-                propagacoes.Add(Cacu);
-                #endregion
-
-                #region B Coqueiros
-                //incluido
-                var BCoqueiros = new Propagacao() { IdPosto = 248, NomePostoFluv = "Barra dos coqueiros" };
-                BCoqueiros.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.037f });
-                BCoqueiros.PostoMontantes.Add(new PostoMontante { Propaga = Cacu, TempoViagem = 0 });
-                propagacoes.Add(BCoqueiros);
-                #endregion
-
-                #region FozDo Rio Claro
-                //incluido
-
-                var FozRioClaro = new Propagacao() { IdPosto = 261, NomePostoFluv = "Foz do Rio Claro" };
-                FozRioClaro.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.069f });
-                FozRioClaro.PostoMontantes.Add(new PostoMontante { Propaga = BCoqueiros, TempoViagem = 0 });
-                propagacoes.Add(FozRioClaro);
-                #endregion
-                #endregion
-
-                #region PARANAPANEMA(paranazao)
-
-                #region Jurumirim
-                var Jurumirim = new Propagacao() { IdPosto = 47, NomePostoFluv = "Jurumirim" };
-                Jurumirim.Modelo.Add(new ModeloSmap() { NomeVazao = "Jurumirim", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Jurumirim);
-                #endregion
-
-                #region Piraju
-                var Piraju = new Propagacao() { IdPosto = 48, NomePostoFluv = "Piraju" };
-                Piraju.Modelo.Add(new ModeloSmap() { NomeVazao = "Chavantes", TempoViagem = 0, FatorDistribuicao = 0.046f });
-                Piraju.PostoMontantes.Add(new PostoMontante { Propaga = Jurumirim, TempoViagem = 5.1f });
-                propagacoes.Add(Piraju);
-                #endregion
-
-                #region Chavantes
-                var Chavantes = new Propagacao() { IdPosto = 49, NomePostoFluv = "Chavantes" };
-                Chavantes.Modelo.Add(new ModeloSmap() { NomeVazao = "Chavantes", TempoViagem = 0, FatorDistribuicao = 0.954f });
-                Chavantes.PostoMontantes.Add(new PostoMontante { Propaga = Piraju, TempoViagem = 10.52f });
-                propagacoes.Add(Chavantes);
-                #endregion
-
-                #region Ourinhos
-                var Ourinhos = new Propagacao() { IdPosto = 249, NomePostoFluv = "Ourinhos" };
-                Ourinhos.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.031f });
-                Ourinhos.PostoMontantes.Add(new PostoMontante { Propaga = Chavantes, TempoViagem = 3 });
-                propagacoes.Add(Ourinhos);
-                #endregion
-
-                #region Salto Grande
-                // também chamada de L.N.Garcez(esta com esse nome na planilha do chuva)
-                var SaltoGrande = new Propagacao() { IdPosto = 50, NomePostoFluv = "Salto Grande" };
-                SaltoGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.778f });
-                SaltoGrande.PostoMontantes.Add(new PostoMontante { Propaga = Ourinhos, TempoViagem = 3 });
-                propagacoes.Add(SaltoGrande);
-                #endregion
-
-                #region Canoas II
-                var CanoasII = new Propagacao() { IdPosto = 51, NomePostoFluv = "Canoas II" };
-                CanoasII.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.061f });
-                CanoasII.PostoMontantes.Add(new PostoMontante { Propaga = SaltoGrande, TempoViagem = 2.8f });
-                propagacoes.Add(CanoasII);
-                #endregion
-
-                #region Canoas I
-                var CanoasI = new Propagacao() { IdPosto = 52, NomePostoFluv = "CanoasI" };
-                CanoasI.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.130f });
-                CanoasI.PostoMontantes.Add(new PostoMontante { Propaga = CanoasII, TempoViagem = 2.8f });
-                propagacoes.Add(CanoasI);
-                #endregion
-
-                #region Maua
-                var Maua = new Propagacao() { IdPosto = 57, NomePostoFluv = "Maua" };
-                Maua.Modelo.Add(new ModeloSmap() { NomeVazao = "Maua", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(Maua);
-                #endregion
-
-                #region Capivara
-                var Capivara = new Propagacao() { IdPosto = 61, NomePostoFluv = "Capivara" };
-                Capivara.Modelo.Add(new ModeloSmap() { NomeVazao = "Capivara", TempoViagem = 0, FatorDistribuicao = 1 });
-                Capivara.PostoMontantes.Add(new PostoMontante { Propaga = CanoasI, TempoViagem = 17.2f });
-                Capivara.PostoMontantes.Add(new PostoMontante { Propaga = Maua, TempoViagem = 31 });
-                propagacoes.Add(Capivara);
-                #endregion
-
-                #region Taquarucu
-                var Taquarucu = new Propagacao() { IdPosto = 62, NomePostoFluv = "Taquarucu" };
-                Taquarucu.Modelo.Add(new ModeloSmap() { NomeVazao = "Rosana", TempoViagem = 0, FatorDistribuicao = 0.299f });
-                Taquarucu.PostoMontantes.Add(new PostoMontante { Propaga = Capivara, TempoViagem = 9.3f });
-                propagacoes.Add(Taquarucu);
-                #endregion
-
-                #region Rosana
-                var Rosana = new Propagacao() { IdPosto = 63, NomePostoFluv = "Rosana" };
-                Rosana.Modelo.Add(new ModeloSmap() { NomeVazao = "Rosana", TempoViagem = 0, FatorDistribuicao = 0.701f });
-                Rosana.PostoMontantes.Add(new PostoMontante { Propaga = Taquarucu, TempoViagem = 13.9f });
-                propagacoes.Add(Rosana);
-                #endregion
-
-                #endregion
-
-                #region IGUACU(sul)verficar talvez mudar tv saltocaxias
-
-                #region Santa Clara
-                var SantaClara = new Propagacao() { IdPosto = 71, NomePostoFluv = "Santa Clara" };
-                SantaClara.Modelo.Add(new ModeloSmap() { NomeVazao = "STACLARA", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(SantaClara);
-                #endregion
-
-                #region Fundao
-                var Fundao = new Propagacao() { IdPosto = 72, NomePostoFluv = "Fundao" };
-                Fundao.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.039f });
-                Fundao.PostoMontantes.Add(new PostoMontante { Propaga = SantaClara, TempoViagem = 2 });
-                propagacoes.Add(Fundao);
-                #endregion
-
-                #region Jordao
-                var Jordao = new Propagacao() { IdPosto = 73, NomePostoFluv = "Jordão" };
-                Jordao.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.157f });
-                Jordao.PostoMontantes.Add(new PostoMontante { Propaga = Fundao, TempoViagem = 1.8f });
-                propagacoes.Add(Jordao);
-                #endregion
-
-                #region Foz de Areia
-                // GB MUNHOZ
-                var FozAreia = new Propagacao() { IdPosto = 74, NomePostoFluv = "Foz de Areia" };
-                FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "FOA", TempoViagem = 0, FatorDistribuicao = 1 });
-                FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "UVITORIA", TempoViagem = 17.4f, FatorDistribuicao = 1 });
-                propagacoes.Add(FozAreia);
-                #endregion
-
-                #region Segredo
-                var Segredo = new Propagacao() { IdPosto = 76, NomePostoFluv = "Segredo" };
-                Segredo.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.804f });
-                Segredo.PostoMontantes.Add(new PostoMontante { Propaga = FozAreia, TempoViagem = 12.7f });
-                propagacoes.Add(Segredo);
-                #endregion
-
-                #region Salto Santiago
-                var SaltoSantiago = new Propagacao() { IdPosto = 77, NomePostoFluv = "Salto Santiago" };
-                SaltoSantiago.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.205f });
-                SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Jordao, TempoViagem = 9.6f });
-                SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Segredo, TempoViagem = 11.7f });
-                propagacoes.Add(SaltoSantiago);
-                #endregion
-
-                #region Salto Osorio
-                var SaltoOsorio = new Propagacao() { IdPosto = 78, NomePostoFluv = "Salto Osorio" };
-                SaltoOsorio.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.081f });
-                SaltoOsorio.PostoMontantes.Add(new PostoMontante { Propaga = SaltoSantiago, TempoViagem = 10 });
-                propagacoes.Add(SaltoOsorio);
-                #endregion
-
-                #region Salto Caxias 
-                var SaltoCaxias = new Propagacao() { IdPosto = 222, NomePostoFluv = "Salto Caxias" };
-                SaltoCaxias.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.510f });
-                SaltoCaxias.PostoMontantes.Add(new PostoMontante { Propaga = SaltoOsorio, TempoViagem = 9.4f });///talvez zero no tv
-                propagacoes.Add(SaltoCaxias);
-                #endregion
-
-                #region baixo iguacu //verficar
-                var baixoig = new Propagacao() { IdPosto = 81, NomePostoFluv = "baixo iguacu" };
-                baixoig.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.204f });
-                baixoig.PostoMontantes.Add(new PostoMontante { Propaga = SaltoCaxias, TempoViagem = 5 });//verficar
-                propagacoes.Add(baixoig);
-                #endregion
-
-                #endregion
-
-                #region URUGUAI(sul)
-
-                #region B. Grande
-                var BGrande = new Propagacao() { IdPosto = 215, NomePostoFluv = "B. Grande" };
-                BGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "BG", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(BGrande);
-                #endregion
-
-                #region Sao Roque
-                var sRoque = new Propagacao() { IdPosto = 88, NomePostoFluv = "Sao Roque" };
-                sRoque.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.745f });
-                propagacoes.Add(sRoque);
-                #endregion
-
-                #region Garibaldi
-                var Garibaldi = new Propagacao() { IdPosto = 89, NomePostoFluv = "Garibaldi" };
-                Garibaldi.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.165f });//0.910f
-                propagacoes.Add(Garibaldi);
-                #endregion
-
-                #region C. Novos
-                var CNovos = new Propagacao() { IdPosto = 216, NomePostoFluv = "C. Novos" };
-                CNovos.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.090f });
-                CNovos.PostoMontantes.Add(new PostoMontante { Propaga = Garibaldi, TempoViagem = 0 });
-                propagacoes.Add(CNovos);
-                #endregion
-
-                #region Machadinho
-                var Machadinho = new Propagacao() { IdPosto = 217, NomePostoFluv = "Machadinho" };
-                Machadinho.Modelo.Add(new ModeloSmap() { NomeVazao = "Machadinho", TempoViagem = 0, FatorDistribuicao = 1 });
-                Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = BGrande, TempoViagem = 1 });
-                Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = CNovos, TempoViagem = 1 });// ver esses tempos
-                propagacoes.Add(Machadinho);
-                #endregion
-
-                #region Ita
-                var Ita = new Propagacao() { IdPosto = 92, NomePostoFluv = "Ita" };
-                Ita.Modelo.Add(new ModeloSmap() { NomeVazao = "Ita", TempoViagem = 0, FatorDistribuicao = 1 });
-                Ita.PostoMontantes.Add(new PostoMontante { Propaga = Machadinho, TempoViagem = 2 });//ver esse tempo
-                propagacoes.Add(Ita);
-                #endregion
-
-                #region PassoFundo
-                var PassoFundo = new Propagacao() { IdPosto = 93, NomePostoFluv = "Passo Fundo" };
-                PassoFundo.Modelo.Add(new ModeloSmap() { NomeVazao = "Monjolinho", TempoViagem = 0, FatorDistribuicao = 0.586f });
-                propagacoes.Add(PassoFundo);
-                #endregion
-
-                #region Monjolinho
-                var Monjolinho = new Propagacao() { IdPosto = 220, NomePostoFluv = "Monjolinho" };
-                Monjolinho.Modelo.Add(new ModeloSmap() { NomeVazao = "Monjolinho", TempoViagem = 0, FatorDistribuicao = 0.414f });
-                Monjolinho.PostoMontantes.Add(new PostoMontante { Propaga = PassoFundo, TempoViagem = 0 });
-                propagacoes.Add(Monjolinho);
-                #endregion
-
-                #region Foz do Chapecó
-                var FozChapeco = new Propagacao() { IdPosto = 94, NomePostoFluv = "Foz do Chapecó" };
-                FozChapeco.Modelo.Add(new ModeloSmap() { NomeVazao = "FozChapeco", TempoViagem = 0, FatorDistribuicao = 1 });
-                FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Ita, TempoViagem = 0 });
-                FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Monjolinho, TempoViagem = 0 });
-                propagacoes.Add(FozChapeco);
-                #endregion
-
-                #region Q. Queixo
-                var QQueixo = new Propagacao() { IdPosto = 286, NomePostoFluv = "Q. Queixo" };
-                QQueixo.Modelo.Add(new ModeloSmap() { NomeVazao = "QQueixo", TempoViagem = 0, FatorDistribuicao = 1f });
-                propagacoes.Add(QQueixo);
-                #endregion
-
-                #region São José
-                var SJose = new Propagacao() { IdPosto = 102, NomePostoFluv = "São José" };
-                SJose.Modelo.Add(new ModeloSmap() { NomeVazao = "SJoao", TempoViagem = 0, FatorDistribuicao = 0.963f });
-                propagacoes.Add(SJose);
-                #endregion
-
-                #region Passo São João
-                var PassoSJoao = new Propagacao() { IdPosto = 103, NomePostoFluv = "Passo São João" };
-                PassoSJoao.Modelo.Add(new ModeloSmap() { NomeVazao = "SJoao", TempoViagem = 0, FatorDistribuicao = 0.037f });
-                PassoSJoao.PostoMontantes.Add(new PostoMontante { Propaga = SJose, TempoViagem = 0 });
-                propagacoes.Add(PassoSJoao);
-                #endregion
-
-                #endregion
-
-                #region MADEIRA(norte)
-
-                #region jirau
-                //var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
-                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "JIRAU2", TempoViagem = 0, FatorDistribuicao = 1 });
-                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
-                //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
-                //propagacoes.Add(Jirau);
-                //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
-                string nomeVazao = "JIRAU2";
-
-                var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
-                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = nomeVazao, TempoViagem = 0, FatorDistribuicao = 1 });
-                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
-                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
-                Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
-
-                //if (shadow == true)
-                //{
-                //    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
-                //}
-
-                propagacoes.Add(Jirau);
-                #endregion
-
-                #region STO ANTONIO
-                var StoAnt = new Propagacao() { IdPosto = 287, NomePostoFluv = "Sto Antonio" };
-                StoAnt.Modelo.Add(new ModeloSmap() { NomeVazao = "S.ANTONIO", TempoViagem = 0, FatorDistribuicao = 1 });
-                StoAnt.PostoMontantes.Add(new PostoMontante { Propaga = Jirau, TempoViagem = 23 });
-                propagacoes.Add(StoAnt);
-                #endregion
-
-                #region Dardanelos
-                var Darda = new Propagacao() { IdPosto = 291, NomePostoFluv = "Dardanelos" };
-                Darda.Modelo.Add(new ModeloSmap() { NomeVazao = "DARDANELOS", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Darda);
-                #endregion
-
-                #region Guaporé
-                var Guapo = new Propagacao() { IdPosto = 296, NomePostoFluv = "Guapore" };
-                Guapo.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAPORE", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Guapo);
-                #endregion
-
-                #region RondonII
-                var Rondon = new Propagacao() { IdPosto = 145, NomePostoFluv = "Rondon II" };
-                Rondon.Modelo.Add(new ModeloSmap() { NomeVazao = "RONDONII", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Rondon);
-                #endregion
-
-                #region Samuel
-                var Samuel = new Propagacao() { IdPosto = 279, NomePostoFluv = "Samuel" };
-                Samuel.Modelo.Add(new ModeloSmap() { NomeVazao = "SAMUEL", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Samuel);
-                #endregion
-
-                #endregion
-
-                #region Xingu(norte)
-
-                #region Pimental
-                var Piment = new Propagacao() { IdPosto = 288, NomePostoFluv = "Pimental" };
-                Piment.Modelo.Add(new ModeloSmap() { NomeVazao = "PIMENTALT", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Piment);
-                #endregion
-
-                #region Sinop
-                var Sinop = new Propagacao() { IdPosto = 227, NomePostoFluv = "Sinop" };
-                Sinop.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.915f });
-                propagacoes.Add(Sinop);
-                #endregion
-
-                #region Colider
-                var coli = new Propagacao() { IdPosto = 228, NomePostoFluv = "Colider" };
-                coli.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.085f });
-                coli.PostoMontantes.Add(new PostoMontante { Propaga = Sinop, TempoViagem = 17 });
-                propagacoes.Add(coli);
-                #endregion
-
-                #region Teles Pires
-                var Telepi = new Propagacao() { IdPosto = 229, NomePostoFluv = "Teles Pires" };
-                Telepi.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.991f });
-                Telepi.PostoMontantes.Add(new PostoMontante { Propaga = coli, TempoViagem = 132 });
-                propagacoes.Add(Telepi);
-                #endregion
-
-                #region Sao Manoel
-                var Smano = new Propagacao() { IdPosto = 230, NomePostoFluv = "Sao Manoel" };
-                Smano.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.009f });
-                Smano.PostoMontantes.Add(new PostoMontante { Propaga = Telepi, TempoViagem = 7 });
-                propagacoes.Add(Smano);
-                #endregion
-
-                #endregion
-
-                #region Norte(norte)
-
-                #region Balbina
-                var Balb = new Propagacao() { IdPosto = 269, NomePostoFluv = "Balbina" };
-                Balb.Modelo.Add(new ModeloSmap() { NomeVazao = "BALBINA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Balb);
-                #endregion
-
-                #region Curua-una
-                var Curuauna = new Propagacao() { IdPosto = 277, NomePostoFluv = "Curuauna" };
-                Curuauna.Modelo.Add(new ModeloSmap() { NomeVazao = "CURUAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Curuauna);
-                #endregion
-
-                #region Santo Antonio do Jari
-                var StaJari = new Propagacao() { IdPosto = 290, NomePostoFluv = "Antonio do Jari" };
-                StaJari.Modelo.Add(new ModeloSmap() { NomeVazao = "STOANTJARI", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(StaJari);
-                #endregion
-
-                #region Cachoeira Caldeirao
-                var CachoCa = new Propagacao() { IdPosto = 204, NomePostoFluv = "Cachoeira Caldeirao" };
-                CachoCa.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.989f });
-                propagacoes.Add(CachoCa);
-                #endregion
-
-                #region Coaracy Nunes
-                var Coaracy = new Propagacao() { IdPosto = 280, NomePostoFluv = "Coaracy Nunes" };
-                Coaracy.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.003f });
-                Coaracy.PostoMontantes.Add(new PostoMontante { Propaga = CachoCa, TempoViagem = 2 });
-                propagacoes.Add(Coaracy);
-                #endregion
-
-                #region Ferreira Gomes
-                var Ferreira = new Propagacao() { IdPosto = 297, NomePostoFluv = "Ferreira Gomes" };
-                Ferreira.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.008f });
-                Ferreira.PostoMontantes.Add(new PostoMontante { Propaga = Coaracy, TempoViagem = 2 });
-                propagacoes.Add(Ferreira);
-                #endregion
-
-                #endregion
-
-                #region Paraguai(outras se)
-
-                #region Itiquira
-                var Itiquira = new Propagacao() { IdPosto = 259, NomePostoFluv = "Itiquira" };
-                Itiquira.Modelo.Add(new ModeloSmap() { NomeVazao = "ITIQUIRAI", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Itiquira);
-                #endregion
-
-                #region Jauru
-                var Jauru = new Propagacao() { IdPosto = 295, NomePostoFluv = "Jauru" };
-                Jauru.Modelo.Add(new ModeloSmap() { NomeVazao = "JAURU", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Jauru);
-                #endregion
-
-                #region MANSO
-                var MANSO = new Propagacao() { IdPosto = 278, NomePostoFluv = "MANSO" };
-                MANSO.Modelo.Add(new ModeloSmap() { NomeVazao = "MANSO", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(MANSO);
-                #endregion
-
-                #region PDEPEDRA
-                var PDEPEDRA = new Propagacao() { IdPosto = 281, NomePostoFluv = "PDEPEDRA" };
-                PDEPEDRA.Modelo.Add(new ModeloSmap() { NomeVazao = "PDEPEDRA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(PDEPEDRA);
-                #endregion
-
-                #endregion
-
-                #region DOCE(outras se)
-
-                #region CAndonga
-                var CAndonga = new Propagacao() { IdPosto = 149, NomePostoFluv = "CAndonga" };
-                CAndonga.Modelo.Add(new ModeloSmap() { NomeVazao = "CANDONGA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(CAndonga);
-                #endregion
-
-                #region Guiman amorim
-                var guimam = new Propagacao() { IdPosto = 262, NomePostoFluv = "Guiman amorim" };
-                guimam.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.978f });
-                propagacoes.Add(guimam);
-                #endregion
-
-                #region SA CARVALHO
-                var SACAR = new Propagacao() { IdPosto = 183, NomePostoFluv = "SA CARVALHO" };
-                SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.022f });
-                SACAR.PostoMontantes.Add(new PostoMontante { Propaga = guimam, TempoViagem = 4 });
-                propagacoes.Add(SACAR);
-                #endregion
-
-                #region SALTO GRANDE CM
-                var SALTOCM = new Propagacao() { IdPosto = 134, NomePostoFluv = "SALTO GRANDE CM" };
-                SALTOCM.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(SALTOCM);
-                #endregion
-
-                #region PTO ESTRELA
-                var PTOESTRE = new Propagacao() { IdPosto = 263, NomePostoFluv = "PTO ESTRELA" };
-                PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 0 });
-                PTOESTRE.PostoMontantes.Add(new PostoMontante { Propaga = SALTOCM, TempoViagem = 2 });
-                propagacoes.Add(PTOESTRE);
-                #endregion
-
-                #region BAGUARI
-                var BAGUARI = new Propagacao() { IdPosto = 141, NomePostoFluv = "BAGUARI" };
-                BAGUARI.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.456f });
-                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = PTOESTRE, TempoViagem = 16.3f });
-                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = SACAR, TempoViagem = 15.8f });
-                BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = CAndonga, TempoViagem = 19.6f });
-                propagacoes.Add(BAGUARI);
-                #endregion
-
-                #region AIMORES
-                var AIMORES = new Propagacao() { IdPosto = 148, NomePostoFluv = "AIMORES" };
-                AIMORES.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.195f });
-                AIMORES.PostoMontantes.Add(new PostoMontante { Propaga = BAGUARI, TempoViagem = 12 });
-                propagacoes.Add(AIMORES);
-                #endregion
-
-                #region MASCARENHAS
-                var MASCARENHAS = new Propagacao() { IdPosto = 144, NomePostoFluv = "MASCARENHAS" };
-                MASCARENHAS.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.349f });
-                MASCARENHAS.PostoMontantes.Add(new PostoMontante { Propaga = AIMORES, TempoViagem = 1 });
-                propagacoes.Add(MASCARENHAS);
-                #endregion
-
-                #endregion
-
-                #region OUTRAS(outras se)
-
-                #region ROSAL
-                var ROSAL = new Propagacao() { IdPosto = 196, NomePostoFluv = "ROSAL" };
-                ROSAL.Modelo.Add(new ModeloSmap() { NomeVazao = "ROSAL", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(ROSAL);
-                #endregion
-
-                #region STA CLAR-MG
-                var STACLAMG = new Propagacao() { IdPosto = 283, NomePostoFluv = "STA CLAR-MG" };
-                STACLAMG.Modelo.Add(new ModeloSmap() { NomeVazao = "SCLARA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(STACLAMG);
-                #endregion
-
-                #endregion
-
-                #region TOCANTINS(norte)
-
-                #region Serra da Mesa
-                var SerraMesa = new Propagacao() { IdPosto = 270, NomePostoFluv = "Serra da Mesa" };
-                SerraMesa.Modelo.Add(new ModeloSmap() { NomeVazao = "SMesa", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(SerraMesa);
-                #endregion
-
-                #region Cana Brava
-                var CanaBrava = new Propagacao() { IdPosto = 191, NomePostoFluv = "Cana Brava" };
-                CanaBrava.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.0558166862514689f });
-                CanaBrava.PostoMontantes.Add(new PostoMontante { Propaga = SerraMesa, TempoViagem = 10 });
-                propagacoes.Add(CanaBrava);
-                #endregion
-
-                #region Sao Salvador
-                var SaoSalvador = new Propagacao() { IdPosto = 253, NomePostoFluv = "São Salvador" };
-                SaoSalvador.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.055f });
-                SaoSalvador.PostoMontantes.Add(new PostoMontante { Propaga = CanaBrava, TempoViagem = 16 });
-                propagacoes.Add(SaoSalvador);
-                #endregion
-
-                #region Peixe Angical
-                var PeAngi = new Propagacao() { IdPosto = 257, NomePostoFluv = "Peixe Angical" };
-                PeAngi.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.434f });
-                PeAngi.PostoMontantes.Add(new PostoMontante { Propaga = SaoSalvador, TempoViagem = 16 });
-                propagacoes.Add(PeAngi);
-                #endregion
-
-                #region Lajeado
-                var Lajeado = new Propagacao() { IdPosto = 273, NomePostoFluv = "Lajeado" };
-                Lajeado.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.455640423031727f });
-                Lajeado.PostoMontantes.Add(new PostoMontante { Propaga = PeAngi, TempoViagem = 64 });
-                propagacoes.Add(Lajeado);
-                #endregion
-
-                #region Estreito
-                var Estreito = new Propagacao() { IdPosto = 271, NomePostoFluv = "Estreito" };
-                Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "ESTREITO", TempoViagem = 0, FatorDistribuicao = 1 });
-                Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "PORTO REAL", TempoViagem = 46 });
-                Estreito.PostoMontantes.Add(new PostoMontante { Propaga = Lajeado, TempoViagem = 83 });
-                propagacoes.Add(Estreito);
-                #endregion
-
-                #region Tucurui
-                var Tucurui = new Propagacao() { IdPosto = 275, NomePostoFluv = "Tucurui" };
-                Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "TUCURUI", TempoViagem = 0, FatorDistribuicao = 1 });
-                Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "BANDEIRANT", TempoViagem = 144 });
-                Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "C.ARAGUAIA", TempoViagem = 72 });
-                Tucurui.PostoMontantes.Add(new PostoMontante { Propaga = Estreito, TempoViagem = 0 });
-                propagacoes.Add(Tucurui);
-                #endregion
-
-                #endregion
-
-                #region PARNAIBA(NE)
-
-                #region Irape
-                var Irape = new Propagacao() { IdPosto = 255, NomePostoFluv = "Irape" };
-                Irape.Modelo.Add(new ModeloSmap() { NomeVazao = "IRAPE", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Irape);
-                #endregion
-
-                #region Itapebi
-                var Itapebi = new Propagacao() { IdPosto = 188, NomePostoFluv = "Itapebi" };
-                Itapebi.Modelo.Add(new ModeloSmap() { NomeVazao = "ITAPEBI", TempoViagem = 0, FatorDistribuicao = 1 });
-                Itapebi.PostoMontantes.Add(new PostoMontante { Propaga = Irape, TempoViagem = 0 });
-                propagacoes.Add(Itapebi);
-                #endregion
-
-                #region boa  esperança
-                var Besp = new Propagacao() { IdPosto = 190, NomePostoFluv = "Boa Esperanca" };
-                Besp.Modelo.Add(new ModeloSmap() { NomeVazao = "UBESP", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Besp);
-                #endregion
-
-                #region Pedra do cavalo
-                var Pcav = new Propagacao() { IdPosto = 254, NomePostoFluv = "Pedra do cavalo" };
-                Pcav.Modelo.Add(new ModeloSmap() { NomeVazao = "PCAVALO", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Pcav);
-
-                #endregion
-                #endregion
-
-                #region SAO FRANCISCO(NE)
-
-                #region Retiro Baixo
-                var RetiroBaixo = new Propagacao() { IdPosto = 155, NomePostoFluv = "Retiro Baixo" };
-                RetiroBaixo.Modelo.Add(new ModeloSmap() { NomeVazao = "RB-SMAP", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(RetiroBaixo);
-                #endregion
-
-                #region Queimado
-                var Queimado = new Propagacao() { IdPosto = 158, NomePostoFluv = "Queimado" };
-                Queimado.Modelo.Add(new ModeloSmap() { NomeVazao = "QM", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Queimado);
-                #endregion
-
-                #region Tres Marias
-                var TresMarias = new Propagacao() { IdPosto = 156, NomePostoFluv = "Tres Marias" };
-                TresMarias.Modelo.Add(new ModeloSmap() { NomeVazao = "TM-SMAP", TempoViagem = 0, FatorDistribuicao = 1 });
-                TresMarias.PostoMontantes.Add(new PostoMontante { Propaga = RetiroBaixo, TempoViagem = 0 });
-                propagacoes.Add(TresMarias);
-                #endregion
-                // implementar logica para sao romao e sao francisco NAO É NECESSARIO UMA VEZ QUE OS DADOS NÃO SÃO USADOS EM CÁLCULO ALGUM
-
-                #endregion
-
-                #region PARANA(paranazao)
-
-                #region Três Irmãos
-                var TresIrmaos = new Propagacao() { IdPosto = 243, NomePostoFluv = "Três Irmãos" };
-                TresIrmaos.Modelo.Add(new ModeloSmap() { NomeVazao = "IlhaEquiv", TempoViagem = 0, FatorDistribuicao = 0.060f });
-                TresIrmaos.PostoMontantes.Add(new PostoMontante { Propaga = NAvanhandava, TempoViagem = 42 });
-
-                //TresIrmaos.PostoAcomph.Add(243);
-                propagacoes.Add(TresIrmaos);
-                #endregion
-
-
-
-                #region Ilha Solteira
-                var IlhaSolteira = new Propagacao() { IdPosto = 34, NomePostoFluv = "Ilha Solteira" };
-                IlhaSolteira.Modelo.Add(new ModeloSmap() { NomeVazao = "IlhaEquiv", TempoViagem = 0, FatorDistribuicao = 0.940f });
-
-                //IlhaSolteira.PostoAcomph.Add(34);
-                IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = AguaVermelha, TempoViagem = 18 });
-                IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SaoSimao, TempoViagem = 30 });
-                IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = Espora, TempoViagem = 35 });//99
-                IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SrVerdinho, TempoViagem = 24 });//241
-                IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = FozRioClaro, TempoViagem = 24 });//261
-                propagacoes.Add(IlhaSolteira);
-                #endregion
-
-                #region Jupia
-                var Jupia = new Propagacao() { IdPosto = 245, NomePostoFluv = "Jupia" };
-                Jupia.Modelo.Add(new ModeloSmap() { NomeVazao = "Jupia", TempoViagem = 0, FatorDistribuicao = 1 });
-
-                //Jupia.PostoAcomph.Add(245);
-                Jupia.PostoMontantes.Add(new PostoMontante { Propaga = TresIrmaos, TempoViagem = 7 });
-                Jupia.PostoMontantes.Add(new PostoMontante { Propaga = IlhaSolteira, TempoViagem = 5 });
-                propagacoes.Add(Jupia);
-                #endregion
-
-                #region Sao Domingos
-                var SaoDomingos = new Propagacao() { IdPosto = 154, NomePostoFluv = "Sao domingos" };
-                SaoDomingos.Modelo.Add(new ModeloSmap() { NomeVazao = "SDO", TempoViagem = 0, FatorDistribuicao = 1 });
-
-                propagacoes.Add(SaoDomingos);
-                #endregion
-
-                #region Porto Primavera
-                var PortoPrimavera = new Propagacao() { IdPosto = 246, NomePostoFluv = "Porto Primavera" };
-                PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "PPRI", TempoViagem = 0, FatorDistribuicao = 1 });
-                PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "FZB", TempoViagem = 26 });
-                //PortoPrimavera.PostoAcomph.Add(245);
-                PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = Jupia, TempoViagem = 48 });
-                PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = SaoDomingos, TempoViagem = 0 });//Esta correto sao domingos esta sendo adicionado aqui para respeitar a ordem  de execução das propagaçoes
-
-                propagacoes.Add(PortoPrimavera);
-                #endregion
-
-
-
-                #region Itaipu 
-                var Itaipu = new Propagacao() { IdPosto = 266, NomePostoFluv = "Itaipu" };
-                Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "FLOR+ESTRA", TempoViagem = 33, FatorDistribuicao = 1 });
-                Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Ivinhema", TempoViagem = 45, FatorDistribuicao = 1 });
-                Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Balsa", TempoViagem = 32, FatorDistribuicao = 1 });
-                Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "PTaquara", TempoViagem = 36, FatorDistribuicao = 1 });
-                Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Itaipu", TempoViagem = 0, FatorDistribuicao = 1 });
-                Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = PortoPrimavera, TempoViagem = 56 });
-                Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = Rosana, TempoViagem = 56 });
-                propagacoes.Add(Itaipu);
-                #endregion
-                #endregion
-
-                #region OSUL(sul)
-
-                #region Enerstina
-                var enerstina = new Propagacao() { IdPosto = 110, NomePostoFluv = "Enerstina" };
-                enerstina.Modelo.Add(new ModeloSmap() { NomeVazao = "ERNESTINA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(enerstina);
-                #endregion
-
-                #region Passo Real
-                var passoReal = new Propagacao() { IdPosto = 111, NomePostoFluv = "Passo Real" };
-                passoReal.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSOREAL", TempoViagem = 0, FatorDistribuicao = 1 });
-                passoReal.PostoMontantes.Add(new PostoMontante { Propaga = enerstina, TempoViagem = 19.8f });//1
-                propagacoes.Add(passoReal);
-                #endregion
-
-                #region Jacui
-                var jacui = new Propagacao() { IdPosto = 112, NomePostoFluv = "Jacui" };
-                jacui.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.020f });
-                jacui.PostoMontantes.Add(new PostoMontante { Propaga = passoReal, TempoViagem = 1.3f });//1
-                propagacoes.Add(jacui);
-                #endregion
-
-                #region Itauba
-                var itauba = new Propagacao() { IdPosto = 113, NomePostoFluv = "Itauba" };
-                itauba.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.464f });
-                itauba.PostoMontantes.Add(new PostoMontante { Propaga = jacui, TempoViagem = 6.2f });//1
-                propagacoes.Add(itauba);
-                #endregion
-
-                #region Dona Francisca
-                var Dfran = new Propagacao() { IdPosto = 114, NomePostoFluv = "Dona Francisca" };
-                Dfran.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.516f });
-                Dfran.PostoMontantes.Add(new PostoMontante { Propaga = itauba, TempoViagem = 1 });
-                propagacoes.Add(Dfran);
-                #endregion
-
-                #region Castro Alves
-                var CastroAl = new Propagacao() { IdPosto = 98, NomePostoFluv = "Castro Alves" };
-                CastroAl.Modelo.Add(new ModeloSmap() { NomeVazao = "CALVES", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(CastroAl);
-                #endregion
-
-                #region Monte Claro
-                var Montecl = new Propagacao() { IdPosto = 97, NomePostoFluv = "Monte Claro" };
-                Montecl.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.887f });
-                Montecl.PostoMontantes.Add(new PostoMontante { Propaga = CastroAl, TempoViagem = 6 });
-                propagacoes.Add(Montecl);
-                #endregion
-
-                #region 14 de Julho
-                var XIVjulho = new Propagacao() { IdPosto = 284, NomePostoFluv = "14 de julho" };
-                XIVjulho.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.113f });
-                XIVjulho.PostoMontantes.Add(new PostoMontante { Propaga = Montecl, TempoViagem = 4.5f });
-                propagacoes.Add(XIVjulho);
-                #endregion
-
-                #region Capivari Cachoeira 
-                //tambem chamado G.P.Souza
-                var capiCacho = new Propagacao() { IdPosto = 115, NomePostoFluv = "Capivari Cachoeira" };
-                capiCacho.Modelo.Add(new ModeloSmap() { NomeVazao = "GPSOUZA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(capiCacho);
-                #endregion
-
-                #region Salto Pilão
-                var saltPilao = new Propagacao() { IdPosto = 101, NomePostoFluv = "Salto Pilão" };
-                saltPilao.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTOPILAO", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(saltPilao);
-                #endregion
-
-                //
-
-
-                #region Salto RS
-                var saltRS = new Propagacao() { IdPosto = 221, NomePostoFluv = "Salto RS" };
-                saltRS.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTORS", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(saltRS);
-                #endregion
-
-                #endregion
-
-                #region Paraiba do sul(outras se)//verificar talvez ver tocos lajes
-
-                #region Paraibuna
-                var paraibuna = new Propagacao() { IdPosto = 121, NomePostoFluv = "paraibuna" };
-                paraibuna.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.873f });
-                propagacoes.Add(paraibuna);
-                #endregion
-
-                #region STA BRANCA
-                var staBranca = new Propagacao() { IdPosto = 122, NomePostoFluv = "santa branca" };
-                staBranca.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.127f });
-                staBranca.PostoMontantes.Add(new PostoMontante { Propaga = paraibuna, TempoViagem = 6 });///verificar
-                propagacoes.Add(staBranca);
-                #endregion
-
-                #region jaguari
-                var jaguari = new Propagacao() { IdPosto = 120, NomePostoFluv = "jaguari" };
-                jaguari.Modelo.Add(new ModeloSmap() { NomeVazao = "JAGUARI", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(jaguari);
-                #endregion
-
-                #region Funil paraiba
-                var Fun = new Propagacao() { IdPosto = 123, NomePostoFluv = "Funil paraiba" };
-                Fun.Modelo.Add(new ModeloSmap() { NomeVazao = "FUNIL", TempoViagem = 0, FatorDistribuicao = 1 });
-                Fun.PostoMontantes.Add(new PostoMontante { Propaga = staBranca, TempoViagem = 84 });///verificar
-                Fun.PostoMontantes.Add(new PostoMontante { Propaga = jaguari, TempoViagem = 72 });///verificar
-                propagacoes.Add(Fun);
-                #endregion
-
-                #region Sta Cecilia
-                var staceci = new Propagacao() { IdPosto = 125, NomePostoFluv = "sta cecilia" };
-                staceci.Modelo.Add(new ModeloSmap() { NomeVazao = "STACECILIA", TempoViagem = 0, FatorDistribuicao = 1 });
-                staceci.PostoMontantes.Add(new PostoMontante { Propaga = Fun, TempoViagem = 24 });///verificar
-                propagacoes.Add(staceci);
-                #endregion
-
-                #region Picada
-                var Picada = new Propagacao() { IdPosto = 197, NomePostoFluv = "Picada" };
-                Picada.Modelo.Add(new ModeloSmap() { NomeVazao = "PICADA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Picada);
-                #endregion
-
-                #region Sobragi
-                var Sobragi = new Propagacao() { IdPosto = 198, NomePostoFluv = "Sobragi" };
-                Sobragi.Modelo.Add(new ModeloSmap() { NomeVazao = "SOBRAGI", TempoViagem = 0, FatorDistribuicao = 1 });
-                Sobragi.PostoMontantes.Add(new PostoMontante { Propaga = Picada, TempoViagem = 5 });///verificar
-                propagacoes.Add(Sobragi);
-                #endregion
-
-                #region ANTA
-                var ANTA = new Propagacao() { IdPosto = 129, NomePostoFluv = "ANTA" };
-                ANTA.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.711f });
-                ANTA.PostoMontantes.Add(new PostoMontante { Propaga = Sobragi, TempoViagem = 6 });///verificar
-                ANTA.PostoMontantes.Add(new PostoMontante { Propaga = staceci, TempoViagem = 40 });///verificar
-                propagacoes.Add(ANTA);
-                #endregion
-
-                #region ilha pombos
-                var ilhaP = new Propagacao() { IdPosto = 130, NomePostoFluv = "ilha Pombos" };
-                ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.289f });
-                ilhaP.PostoMontantes.Add(new PostoMontante { Propaga = ANTA, TempoViagem = 10 });///verificar
-                propagacoes.Add(ilhaP);
-                #endregion
-
-                #region tocos
-                var tocos = new Propagacao() { IdPosto = 201, NomePostoFluv = "tocos" };
-                tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.68f });
-                propagacoes.Add(tocos);
-                #endregion
-
-                #region lajes
-                var lajes = new Propagacao() { IdPosto = 202, NomePostoFluv = "lajes" };
-                lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.32f });
-                propagacoes.Add(lajes);
-                #endregion
-
-                #region santana
-                var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };// vai usar fator de 0.317 para o dadvaz (calculado de fator de santana - fator de tocos)
-                santana.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.997f });
-                propagacoes.Add(santana);
-                #endregion
-
-                #region Barra do Brauna
-
-                var bBrau = new Propagacao() { IdPosto = 135, NomePostoFluv = "Barra Brauna" };
-                bBrau.Modelo.Add(new ModeloSmap() { NomeVazao = "BBRAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(bBrau);
-
-                #endregion
-
-                #region Suiça
-
-                var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
-                suica.Modelo.Add(new ModeloSmap() { NomeVazao = "Suica", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(suica);
-
-                #endregion
-                #endregion
-
-                #region juruena salto apiacas
-
-
-                #region Juruena
-                var Juruena = new Propagacao() { IdPosto = 226, NomePostoFluv = "JURUENA" };
-                Juruena.Modelo.Add(new ModeloSmap() { NomeVazao = "JURUENA", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(Juruena);
-                #endregion
-
-                #region SAPIACAS
-                var SAPIACAS = new Propagacao() { IdPosto = 225, NomePostoFluv = "SAPIACAS" };
-                SAPIACAS.Modelo.Add(new ModeloSmap() { NomeVazao = "SAPIACAS", TempoViagem = 0, FatorDistribuicao = 1 });
-                propagacoes.Add(SAPIACAS);
-                #endregion
-
-
-
-                #endregion
+                if (csv == true)
+                {
+                    #region GRANDE e PARNAIBA
+
+                    #region Sub-bacia modelada: Camargos
+                    #region Camargos
+                    var camargos = new Propagacao() { IdPosto = 1, NomePostoFluv = "CAMARGOS" };
+                    camargos.Modelo.Add(new ModeloSmap() { NomeVazao = "camargos", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(camargos);
+                    #endregion
+
+                    #region Itutinga
+                    var Itutinga = new Propagacao() { IdPosto = 2, NomePostoFluv = "Itutinga" };
+                    Itutinga.Modelo.Add(new ModeloSmap() { NomeVazao = "camargos", TempoViagem = 0, FatorDistribuicao = 0 });
+                    Itutinga.PostoMontantes.Add(new PostoMontante { Propaga = camargos, TempoViagem = 0 });
+                    propagacoes.Add(Itutinga);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Funil MG
+
+                    #region Funil
+                    var Funil = new Propagacao() { IdPosto = 211, NomePostoFluv = "Funil" };
+                    Funil.Modelo.Add(new ModeloSmap() { NomeVazao = "funil_grande", TempoViagem = 0 });
+                    Funil.PostoMontantes.Add(new PostoMontante { Propaga = Itutinga, TempoViagem = 13 });
+                    propagacoes.Add(Funil);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Furnas
+
+                    #region Furnas
+                    var Furnas = new Propagacao() { IdPosto = 6, NomePostoFluv = "Furnas" };
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "furnas_rio_sapucai", TempoViagem = 10 });//fluviometrico
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "furnas_rio_verde", TempoViagem = 12 });//fluviometrico
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_furnas", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Furnas.PostoMontantes.Add(new PostoMontante { Propaga = Funil, TempoViagem = 36 });
+                    propagacoes.Add(Furnas);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Porto Colômbia
+
+                    #region MMoraes
+                    var Mmoraes = new Propagacao() { IdPosto = 7, NomePostoFluv = "M Moraes" };
+                    Mmoraes.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.377f });
+                    Mmoraes.PostoMontantes.Add(new PostoMontante { Propaga = Furnas, TempoViagem = 23 });
+                    propagacoes.Add(Mmoraes);
+                    #endregion
+
+                    #region LCBarreto
+                    var LCBarreto = new Propagacao() { IdPosto = 8, NomePostoFluv = "LCBarreto" };
+                    LCBarreto.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.087f });
+                    LCBarreto.PostoMontantes.Add(new PostoMontante { Propaga = Mmoraes, TempoViagem = 7 });
+                    propagacoes.Add(LCBarreto);
+                    #endregion
+
+                    #region Jaguara
+                    var Jaguara = new Propagacao() { IdPosto = 9, NomePostoFluv = "Jaguara" };
+                    Jaguara.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.036f });
+                    Jaguara.PostoMontantes.Add(new PostoMontante { Propaga = LCBarreto, TempoViagem = 5 });
+                    propagacoes.Add(Jaguara);
+                    #endregion
+
+                    #region Igarapava
+                    var Igarapava = new Propagacao() { IdPosto = 10, NomePostoFluv = "Igarapava" };
+                    Igarapava.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.103f });
+                    Igarapava.PostoMontantes.Add(new PostoMontante { Propaga = Jaguara, TempoViagem = 10 });
+                    propagacoes.Add(Igarapava);
+                    #endregion
+
+                    #region Volta Grande
+                    var VoltaGrande = new Propagacao() { IdPosto = 11, NomePostoFluv = "Volta Grande" };
+                    VoltaGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.230f });
+                    VoltaGrande.PostoMontantes.Add(new PostoMontante { Propaga = Igarapava, TempoViagem = 12 });
+                    propagacoes.Add(VoltaGrande);
+                    #endregion
+
+                    #region Porto Colombia
+                    var PortoColombia = new Propagacao() { IdPosto = 12, NomePostoFluv = "Porto Colombia" };
+                    PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_colombia", TempoViagem = 0, FatorDistribuicao = 0.167f });
+                    PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "pcolombia_rio_sapucai_sp", TempoViagem = 8, FatorDistribuicao = 1 });//fluviometrico
+                    PortoColombia.PostoMontantes.Add(new PostoMontante { Propaga = VoltaGrande, TempoViagem = 11 });
+                    propagacoes.Add(PortoColombia);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Euclides da Cunha
+
+                    #region Caconde
+                    var Caconde = new Propagacao() { IdPosto = 14, NomePostoFluv = "Caconde" };
+                    Caconde.Modelo.Add(new ModeloSmap() { NomeVazao = "euclides_da_cunha", TempoViagem = 0, FatorDistribuicao = 0.610f });
+                    propagacoes.Add(Caconde);
+                    #endregion
+
+                    #region Euc da Cunha
+                    var EucCunha = new Propagacao() { IdPosto = 15, NomePostoFluv = "Euc da Cunha" };
+                    EucCunha.Modelo.Add(new ModeloSmap() { NomeVazao = "euclides_da_cunha", TempoViagem = 0, FatorDistribuicao = 0.390f });
+                    EucCunha.PostoMontantes.Add(new PostoMontante { Propaga = Caconde, TempoViagem = 12 });
+                    propagacoes.Add(EucCunha);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Marimbondo
+
+                    #region Limoeiro
+                    //A S OLIVEIRA
+                    var Limoeiro = new Propagacao() { IdPosto = 16, NomePostoFluv = "Limoeiro" };///na configuração na existe mais , mas no prevs ele exeiste 
+                    Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.004f });
+                    Limoeiro.PostoMontantes.Add(new PostoMontante { Propaga = EucCunha, TempoViagem = 3 });
+                    propagacoes.Add(Limoeiro);
+                    #endregion
+
+                    #region Marimbondo
+                    var Marimbondo = new Propagacao() { IdPosto = 17, NomePostoFluv = "Marimbondo" };
+                    //Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSAGEM", TempoViagem = 16, FatorDistribuicao = 1f });
+                    Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.996f });
+                    Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = Limoeiro, TempoViagem = 72 });//tlavez trocar para eucCunha e tempo de viagem 75(72limoeiro +3 de eucCunha até limoeiro)
+                    Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = PortoColombia, TempoViagem = 20 });
+                    propagacoes.Add(Marimbondo);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Água Vermelha
+
+                    #region AguaVermelha
+                    var AguaVermelha = new Propagacao() { IdPosto = 18, NomePostoFluv = "AguaVermelha" };
+                    AguaVermelha.Modelo.Add(new ModeloSmap() { NomeVazao = "agua_vermelha", TempoViagem = 0, FatorDistribuicao = 1 });
+                    AguaVermelha.PostoMontantes.Add(new PostoMontante { Propaga = Marimbondo, TempoViagem = 28 });
+                    propagacoes.Add(AguaVermelha);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Corumbá III
+
+                    #region CorumbaIV
+                    var CorumbaIV = new Propagacao() { IdPosto = 205, NomePostoFluv = "Corumba IV" };
+                    CorumbaIV.Modelo.Add(new ModeloSmap() { NomeVazao = "corumba_iii", TempoViagem = 0, FatorDistribuicao = 0.756f });
+                    propagacoes.Add(CorumbaIV);
+                    #endregion
+
+                    #region CorumbaIII
+                    var CorumbaIII = new Propagacao() { IdPosto = 23, NomePostoFluv = "Corumba III" };
+                    CorumbaIII.Modelo.Add(new ModeloSmap() { NomeVazao = "corumba_iii", TempoViagem = 0, FatorDistribuicao = 0.244f });
+                    CorumbaIII.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIV, TempoViagem = 12 });
+                    propagacoes.Add(CorumbaIII);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Corumbá I
+
+                    #region CorumbaI
+                    var CorumbaI = new Propagacao() { IdPosto = 209, NomePostoFluv = "Corumba I" };
+                    CorumbaI.Modelo.Add(new ModeloSmap() { NomeVazao = "corumba_i", TempoViagem = 0, FatorDistribuicao = 1f });
+                    CorumbaI.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIII, TempoViagem = 24 });
+                    propagacoes.Add(CorumbaI);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Batalha
+
+                    #region Batalha
+                    var Batalha = new Propagacao() { IdPosto = 22, NomePostoFluv = "Batalha" };
+                    Batalha.Modelo.Add(new ModeloSmap() { NomeVazao = "batalha", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(Batalha);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Serra do Facão
+
+                    #region SerraDoFacao
+                    var SerraDoFacao = new Propagacao() { IdPosto = 251, NomePostoFluv = "Serra Do Facao" };
+                    SerraDoFacao.Modelo.Add(new ModeloSmap() { NomeVazao = "serra_do_facao", TempoViagem = 0, FatorDistribuicao = 1f });
+                    SerraDoFacao.PostoMontantes.Add(new PostoMontante { Propaga = Batalha, TempoViagem = 12 });
+                    propagacoes.Add(SerraDoFacao);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Emborcação
+
+                    #region Emborcacao
+                    var Emborcacao = new Propagacao() { IdPosto = 24, NomePostoFluv = "Emborcacao" };
+                    Emborcacao.Modelo.Add(new ModeloSmap() { NomeVazao = "emborcacao", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Emborcacao.PostoMontantes.Add(new PostoMontante { Propaga = SerraDoFacao, TempoViagem = 17 });
+                    propagacoes.Add(Emborcacao);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Capim Branco 2
+
+                    #region NovaPonte
+                    var NovaPonte = new Propagacao() { IdPosto = 25, NomePostoFluv = "NovaPonte" };
+                    NovaPonte.Modelo.Add(new ModeloSmap() { NomeVazao = "capim_branco_ii", TempoViagem = 0, FatorDistribuicao = 0.808f });
+                    propagacoes.Add(NovaPonte);
+                    #endregion
+
+                    #region Miranda
+                    var Miranda = new Propagacao() { IdPosto = 206, NomePostoFluv = "Miranda" };
+                    Miranda.Modelo.Add(new ModeloSmap() { NomeVazao = "capim_branco_ii", TempoViagem = 0, FatorDistribuicao = 0.135f });
+                    Miranda.PostoMontantes.Add(new PostoMontante { Propaga = NovaPonte, TempoViagem = 11 });
+                    propagacoes.Add(Miranda);
+                    #endregion
+
+                    #region Capim Branco 1
+                    var CapimBrancoI = new Propagacao() { IdPosto = 207, NomePostoFluv = "Capim Branco I" };
+                    CapimBrancoI.Modelo.Add(new ModeloSmap() { NomeVazao = "capim_branco_ii", TempoViagem = 0, FatorDistribuicao = 0.018f });
+                    CapimBrancoI.PostoMontantes.Add(new PostoMontante { Propaga = Miranda, TempoViagem = 5 });
+                    propagacoes.Add(CapimBrancoI);
+                    #endregion
+
+                    #region Capim Branco 2
+                    var CapimBrancoII = new Propagacao() { IdPosto = 28, NomePostoFluv = "Capim Branco II" };
+                    CapimBrancoII.Modelo.Add(new ModeloSmap() { NomeVazao = "capim_branco_ii", TempoViagem = 0, FatorDistribuicao = 0.039f });
+                    CapimBrancoII.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoI, TempoViagem = 12 });
+                    propagacoes.Add(CapimBrancoII);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Itumbiara
+
+                    #region Itumbiara
+                    var Itumbiara = new Propagacao() { IdPosto = 31, NomePostoFluv = "Itumbiara" };
+                    Itumbiara.Modelo.Add(new ModeloSmap() { NomeVazao = "itumbiara", TempoViagem = 0, FatorDistribuicao = 1f });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoII, TempoViagem = 17 });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = Emborcacao, TempoViagem = 17 });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaI, TempoViagem = 17 });
+                    propagacoes.Add(Itumbiara);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: São Simão
+
+                    #region Cachoeira Dourada
+                    var CachoeiraDourada = new Propagacao() { IdPosto = 32, NomePostoFluv = "Cachoeira Dourada" };
+                    CachoeiraDourada.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_simao", TempoViagem = 0, FatorDistribuicao = 0.079f });
+                    CachoeiraDourada.PostoMontantes.Add(new PostoMontante { Propaga = Itumbiara, TempoViagem = 8 });//talvez zero
+                    propagacoes.Add(CachoeiraDourada);
+                    #endregion
+
+                    #region Sao Simao
+                    var SaoSimao = new Propagacao() { IdPosto = 33, NomePostoFluv = "Sao Simao" };
+                    SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_simao", TempoViagem = 0, FatorDistribuicao = 0.921f });
+                    SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_simao_rio_verde", TempoViagem = 8, FatorDistribuicao = 1 });
+                    SaoSimao.PostoMontantes.Add(new PostoMontante { Propaga = CachoeiraDourada, TempoViagem = 15 });
+                    propagacoes.Add(SaoSimao);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Espora
+
+                    #region Espora 
+                    // incluido
+                    var Espora = new Propagacao() { IdPosto = 99, NomePostoFluv = "Espora" };
+                    Espora.Modelo.Add(new ModeloSmap() { NomeVazao = "espora", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(Espora);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Foz do Rio Claro
+
+                    #region Caçu
+                    //incluido
+                    var Cacu = new Propagacao() { IdPosto = 247, NomePostoFluv = "Caçu" };
+                    Cacu.Modelo.Add(new ModeloSmap() { NomeVazao = "foz_do_rio_claro", TempoViagem = 0, FatorDistribuicao = 0.894f });
+                    propagacoes.Add(Cacu);
+                    #endregion
+
+                    #region B Coqueiros
+                    //incluido
+                    var BCoqueiros = new Propagacao() { IdPosto = 248, NomePostoFluv = "Barra dos coqueiros" };
+                    BCoqueiros.Modelo.Add(new ModeloSmap() { NomeVazao = "foz_do_rio_claro", TempoViagem = 0, FatorDistribuicao = 0.037f });
+                    BCoqueiros.PostoMontantes.Add(new PostoMontante { Propaga = Cacu, TempoViagem = 6 });
+                    propagacoes.Add(BCoqueiros);
+                    #endregion
+
+                    #region FozDo Rio Claro
+                    //incluido
+
+                    var FozRioClaro = new Propagacao() { IdPosto = 261, NomePostoFluv = "Foz do Rio Claro" };
+                    FozRioClaro.Modelo.Add(new ModeloSmap() { NomeVazao = "foz_do_rio_claro", TempoViagem = 0, FatorDistribuicao = 0.069f });
+                    FozRioClaro.PostoMontantes.Add(new PostoMontante { Propaga = BCoqueiros, TempoViagem = 15 });
+                    propagacoes.Add(FozRioClaro);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto Rio Verdinho
+
+                    #region Salto
+                    //incluido
+                    var Salto = new Propagacao() { IdPosto = 294, NomePostoFluv = "Salto" };
+                    Salto.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_do_rio_verdinho", TempoViagem = 0, FatorDistribuicao = 0.915f });
+                    propagacoes.Add(Salto);
+                    #endregion
+
+                    #region S R Verdinho
+                    //incluido
+                    var SrVerdinho = new Propagacao() { IdPosto = 241, NomePostoFluv = "S R Verdinho" };
+                    SrVerdinho.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_do_rio_verdinho", TempoViagem = 0, FatorDistribuicao = 0.085f });
+                    SrVerdinho.PostoMontantes.Add(new PostoMontante { Propaga = Salto, TempoViagem = 12 });
+                    propagacoes.Add(SrVerdinho);
+                    #endregion
+
+                    #endregion
+
+                    #endregion
+
+                    #region PARANAZAO
+
+                    #region Sub-bacia modelada: Mauá
+
+                    #region Maua
+                    var Maua = new Propagacao() { IdPosto = 57, NomePostoFluv = "Maua" };
+                    Maua.Modelo.Add(new ModeloSmap() { NomeVazao = "maua", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(Maua);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Piraju
+
+                    #region Jurumirim
+                    var Jurumirim = new Propagacao() { IdPosto = 47, NomePostoFluv = "Jurumirim" };
+                    Jurumirim.Modelo.Add(new ModeloSmap() { NomeVazao = "piraju", TempoViagem = 0, FatorDistribuicao = 0.980f });
+                    propagacoes.Add(Jurumirim);
+                    #endregion
+
+                    #region Piraju
+                    var Piraju = new Propagacao() { IdPosto = 48, NomePostoFluv = "Piraju" };
+                    Piraju.Modelo.Add(new ModeloSmap() { NomeVazao = "piraju", TempoViagem = 0, FatorDistribuicao = 0.020f });
+                    Piraju.PostoMontantes.Add(new PostoMontante { Propaga = Jurumirim, TempoViagem = 5.1f });
+                    propagacoes.Add(Piraju);
+                    //posto 53 paranapanema sera incluido mais a frente (seu fator de distribuição é zero e no prevs eles tem os valores iguais ao posto 48 piraju)
+
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Chavantes
+
+                    #region Chavantes
+                    var Chavantes = new Propagacao() { IdPosto = 49, NomePostoFluv = "Chavantes" };
+                    Chavantes.Modelo.Add(new ModeloSmap() { NomeVazao = "chavantes", TempoViagem = 0, FatorDistribuicao = 1f });
+                    Chavantes.PostoMontantes.Add(new PostoMontante { Propaga = Piraju, TempoViagem = 10.52f });
+                    propagacoes.Add(Chavantes);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Canoas I
+
+                    #region Ourinhos
+                    var Ourinhos = new Propagacao() { IdPosto = 249, NomePostoFluv = "Ourinhos" };
+                    Ourinhos.Modelo.Add(new ModeloSmap() { NomeVazao = "canoas_i", TempoViagem = 0, FatorDistribuicao = 0.031f });
+                    Ourinhos.PostoMontantes.Add(new PostoMontante { Propaga = Chavantes, TempoViagem = 2 });
+                    propagacoes.Add(Ourinhos);
+                    #endregion
+
+                    #region Salto Grande
+                    // também chamada de L.N.Garcez(esta com esse nome na planilha do chuva)
+                    var SaltoGrande = new Propagacao() { IdPosto = 50, NomePostoFluv = "Salto Grande" };
+                    SaltoGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "canoas_i", TempoViagem = 0, FatorDistribuicao = 0.778f });
+                    SaltoGrande.PostoMontantes.Add(new PostoMontante { Propaga = Ourinhos, TempoViagem = 3 });
+                    propagacoes.Add(SaltoGrande);
+                    #endregion
+
+                    #region Canoas II
+                    var CanoasII = new Propagacao() { IdPosto = 51, NomePostoFluv = "Canoas II" };
+                    CanoasII.Modelo.Add(new ModeloSmap() { NomeVazao = "canoas_i", TempoViagem = 0, FatorDistribuicao = 0.061f });
+                    CanoasII.PostoMontantes.Add(new PostoMontante { Propaga = SaltoGrande, TempoViagem = 2.8f });
+                    propagacoes.Add(CanoasII);
+                    #endregion
+
+                    #region Canoas I
+                    var CanoasI = new Propagacao() { IdPosto = 52, NomePostoFluv = "CanoasI" };
+                    CanoasI.Modelo.Add(new ModeloSmap() { NomeVazao = "canoas_i", TempoViagem = 0, FatorDistribuicao = 0.130f });
+                    CanoasI.PostoMontantes.Add(new PostoMontante { Propaga = CanoasII, TempoViagem = 2.8f });
+                    propagacoes.Add(CanoasI);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Capivara
+
+                    #region Capivara
+                    var Capivara = new Propagacao() { IdPosto = 61, NomePostoFluv = "Capivara" };
+                    Capivara.Modelo.Add(new ModeloSmap() { NomeVazao = "capivara", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Capivara.PostoMontantes.Add(new PostoMontante { Propaga = CanoasI, TempoViagem = 17.2f });
+                    Capivara.PostoMontantes.Add(new PostoMontante { Propaga = Maua, TempoViagem = 29 });
+                    propagacoes.Add(Capivara);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Rosana
+
+                    #region Taquarucu
+                    var Taquarucu = new Propagacao() { IdPosto = 62, NomePostoFluv = "Taquarucu" };
+                    Taquarucu.Modelo.Add(new ModeloSmap() { NomeVazao = "rosana", TempoViagem = 0, FatorDistribuicao = 0.299f });
+                    Taquarucu.PostoMontantes.Add(new PostoMontante { Propaga = Capivara, TempoViagem = 9.3f });
+                    propagacoes.Add(Taquarucu);
+                    #endregion
+
+                    #region Rosana
+                    var Rosana = new Propagacao() { IdPosto = 63, NomePostoFluv = "Rosana" };
+                    Rosana.Modelo.Add(new ModeloSmap() { NomeVazao = "rosana", TempoViagem = 0, FatorDistribuicao = 0.701f });
+                    Rosana.PostoMontantes.Add(new PostoMontante { Propaga = Taquarucu, TempoViagem = 13.9f });
+                    propagacoes.Add(Rosana);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Edgard de Souza
+
+                    #region Guarapiranga
+                    var Guarapiranga = new Propagacao() { IdPosto = 117, NomePostoFluv = "Guarapiranga" };
+                    Guarapiranga.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.120f });
+                    propagacoes.Add(Guarapiranga);
+                    #endregion
+
+                    #region Billings Pedras
+                    var BillingsPedras = new Propagacao() { IdPosto = 119, NomePostoFluv = "Billings Pedras" };
+                    BillingsPedras.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.183f });
+                    propagacoes.Add(BillingsPedras);
+                    #endregion
+
+                    #region Billings
+                    var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };//vai usar um fator de 0.146 na geração do dadvaz (foi fator calculado pq faz uma conta com usina que ainda não foi incluida nas propoçoes)
+                    Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.183f });
+                    propagacoes.Add(Billings);
+                    #endregion
+
+                    //#region Ponte Nova
+                    ////Alto tiete
+                    //var PonteNova = new Propagacao() { IdPosto = 160, NomePostoFluv = "Ponte Nova" };
+                    //PonteNova.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.073f });
+                    //propagacoes.Add(PonteNova);
+                    //#endregion
+
+                    #region E. souza
+                    var Esouza = new Propagacao() { IdPosto = 161, NomePostoFluv = "E. souza" };
+                    Esouza.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.697f });
+                    Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Guarapiranga, TempoViagem = 6 });
+                    Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Billings, TempoViagem = 6 });
+                    //Esouza.PostoMontantes.Add(new PostoMontante { Propaga = PonteNova, TempoViagem = 15 });
+                    propagacoes.Add(Esouza);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Barra Bonita
+
+                    #region Barra Bonita
+                    var BBonita = new Propagacao() { IdPosto = 237, NomePostoFluv = "Barra Bonita" };
+                    BBonita.Modelo.Add(new ModeloSmap() { NomeVazao = "barra_bonita", TempoViagem = 0, FatorDistribuicao = 1 });
+                    BBonita.PostoMontantes.Add(new PostoMontante { Propaga = Esouza, TempoViagem = 42 });
+                    propagacoes.Add(BBonita);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Ibitinga
+
+                    #region Bariri
+                    var Bariri = new Propagacao() { IdPosto = 238, NomePostoFluv = "Bariri" };
+                    Bariri.Modelo.Add(new ModeloSmap() { NomeVazao = "ibitinga", TempoViagem = 0, FatorDistribuicao = 0.380f });
+                    Bariri.PostoMontantes.Add(new PostoMontante { Propaga = BBonita, TempoViagem = 12 });
+                    propagacoes.Add(Bariri);
+                    #endregion
+
+                    #region Ibitinga
+                    var Ibitinga = new Propagacao() { IdPosto = 239, NomePostoFluv = "Ibitinga" };
+                    Ibitinga.Modelo.Add(new ModeloSmap() { NomeVazao = "ibitinga", TempoViagem = 0, FatorDistribuicao = 0.620f });
+                    Ibitinga.PostoMontantes.Add(new PostoMontante { Propaga = Bariri, TempoViagem = 12 });
+                    propagacoes.Add(Ibitinga);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Nova Avanhandava
+
+                    #region Promissao
+                    var Promissao = new Propagacao() { IdPosto = 240, NomePostoFluv = "Promissao" };
+                    Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.717f });
+                    Promissao.PostoMontantes.Add(new PostoMontante { Propaga = Ibitinga, TempoViagem = 22 });
+                    propagacoes.Add(Promissao);
+                    #endregion
+
+                    #region N. Avanhandava
+                    var NAvanhandava = new Propagacao() { IdPosto = 242, NomePostoFluv = "NAvanhandava" };
+                    NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.283f });
+                    NAvanhandava.PostoMontantes.Add(new PostoMontante { Propaga = Promissao, TempoViagem = 8 });
+                    propagacoes.Add(NAvanhandava);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Ilha Solteira Equivalente
+
+                    #region Três Irmãos
+                    var TresIrmaos = new Propagacao() { IdPosto = 243, NomePostoFluv = "Três Irmãos" };
+                    TresIrmaos.Modelo.Add(new ModeloSmap() { NomeVazao = "ilha_solteira_equiv", TempoViagem = 0, FatorDistribuicao = 0.176f });
+                    TresIrmaos.PostoMontantes.Add(new PostoMontante { Propaga = NAvanhandava, TempoViagem = 20 });
+
+                    //TresIrmaos.PostoAcomph.Add(243);
+                    propagacoes.Add(TresIrmaos);
+                    #endregion
+
+
+
+                    #region Ilha Solteira
+                    var IlhaSolteira = new Propagacao() { IdPosto = 34, NomePostoFluv = "Ilha Solteira" };
+                    IlhaSolteira.Modelo.Add(new ModeloSmap() { NomeVazao = "ilha_solteira_equiv", TempoViagem = 0, FatorDistribuicao = 0.824f });
+
+                    //IlhaSolteira.PostoAcomph.Add(34);
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = AguaVermelha, TempoViagem = 18 });
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SaoSimao, TempoViagem = 30 });
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = Espora, TempoViagem = 46 });//99
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SrVerdinho, TempoViagem = 28 });//241
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = FozRioClaro, TempoViagem = 28 });//261
+                    propagacoes.Add(IlhaSolteira);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jupiá
+
+                    #region Jupia
+                    var Jupia = new Propagacao() { IdPosto = 245, NomePostoFluv = "Jupia" };
+                    Jupia.Modelo.Add(new ModeloSmap() { NomeVazao = "jupia", TempoViagem = 0, FatorDistribuicao = 1 });
+
+                    //Jupia.PostoAcomph.Add(245);
+                    Jupia.PostoMontantes.Add(new PostoMontante { Propaga = TresIrmaos, TempoViagem = 7 });
+                    Jupia.PostoMontantes.Add(new PostoMontante { Propaga = IlhaSolteira, TempoViagem = 5 });
+                    propagacoes.Add(Jupia);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: São Domingos
+
+                    #region Sao Domingos
+                    var SaoDomingos = new Propagacao() { IdPosto = 154, NomePostoFluv = "Sao domingos" };
+                    SaoDomingos.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_domingos", TempoViagem = 0, FatorDistribuicao = 1 });
+
+                    propagacoes.Add(SaoDomingos);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Porto Primavera
+
+                    #region Porto Primavera
+                    var PortoPrimavera = new Propagacao() { IdPosto = 246, NomePostoFluv = "Porto Primavera" };
+                    PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_porto_primavera", TempoViagem = 0, FatorDistribuicao = 1 });
+                    PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "fazenda_buriti", TempoViagem = 37 });
+                    //PortoPrimavera.PostoAcomph.Add(245);
+                    PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = Jupia, TempoViagem = 48 });
+                    PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = SaoDomingos, TempoViagem = 60 });//Esta correto sao domingos esta sendo adicionado aqui para respeitar a ordem  de execução das propagaçoes
+
+                    propagacoes.Add(PortoPrimavera);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Itaipu
+
+                    #region Itaipu 
+                    var Itaipu = new Propagacao() { IdPosto = 266, NomePostoFluv = "Itaipu" };
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "florida_paulista", TempoViagem = 15, FatorDistribuicao = 1 });//
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "ivinhema", TempoViagem = 8, FatorDistribuicao = 1 });//
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "balsa_santa_maria", TempoViagem = 14, FatorDistribuicao = 1 });//
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "porto_taquara", TempoViagem = 12, FatorDistribuicao = 1 });//
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "estrada_iguatemi", TempoViagem = 12, FatorDistribuicao = 1 });//
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_itaipu", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = PortoPrimavera, TempoViagem = 56 });
+                    Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = Rosana, TempoViagem = 56 });
+                    propagacoes.Add(Itaipu);
+                    #endregion
+
+                    #endregion
+
+                    #endregion
+
+                    #region SUL
+
+                    #region Sub-bacia modelada: Gov Bento Munhoz
+
+                    #region Foz de Areia GB MUNHOZ
+                    // GB MUNHOZ
+                    var FozAreia = new Propagacao() { IdPosto = 74, NomePostoFluv = "Foz de Areia" };
+                    FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "gov_bento_munhoz", TempoViagem = 0, FatorDistribuicao = 1 });
+                    FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "uniao_da_vitoria", TempoViagem = 17.4f, FatorDistribuicao = 1 });
+                    propagacoes.Add(FozAreia);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Santa Clara
+
+                    #region Santa Clara
+                    var SantaClara = new Propagacao() { IdPosto = 71, NomePostoFluv = "Santa Clara" };
+                    SantaClara.Modelo.Add(new ModeloSmap() { NomeVazao = "santa_clara_pr", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(SantaClara);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jordão - Segredo
+
+                    #region Fundao
+                    var Fundao = new Propagacao() { IdPosto = 72, NomePostoFluv = "Fundao" };
+                    Fundao.Modelo.Add(new ModeloSmap() { NomeVazao = "segredo_jordao", TempoViagem = 0, FatorDistribuicao = 0.040f });
+                    Fundao.PostoMontantes.Add(new PostoMontante { Propaga = SantaClara, TempoViagem = 2 });
+                    propagacoes.Add(Fundao);
+                    #endregion
+
+                    #region Jordao
+                    var Jordao = new Propagacao() { IdPosto = 73, NomePostoFluv = "Jordão" };
+                    Jordao.Modelo.Add(new ModeloSmap() { NomeVazao = "segredo_jordao", TempoViagem = 0, FatorDistribuicao = 0.110f });
+                    Jordao.PostoMontantes.Add(new PostoMontante { Propaga = Fundao, TempoViagem = 1.8f });
+                    propagacoes.Add(Jordao);
+                    #endregion
+
+                    #region Segredo
+                    var Segredo = new Propagacao() { IdPosto = 76, NomePostoFluv = "Segredo" };
+                    Segredo.Modelo.Add(new ModeloSmap() { NomeVazao = "segredo_jordao", TempoViagem = 0, FatorDistribuicao = 0.850f });
+                    Segredo.PostoMontantes.Add(new PostoMontante { Propaga = FozAreia, TempoViagem = 12.7f });
+                    propagacoes.Add(Segredo);
+                    #endregion
+
+
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto Osorio
+
+                    #region Salto Santiago
+                    var SaltoSantiago = new Propagacao() { IdPosto = 77, NomePostoFluv = "Salto Santiago" };
+                    SaltoSantiago.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_osorio", TempoViagem = 0, FatorDistribuicao = 0.330f });
+                    SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Jordao, TempoViagem = 9.6f });
+                    SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Segredo, TempoViagem = 11.7f });
+                    propagacoes.Add(SaltoSantiago);
+                    #endregion
+
+                    #region Salto Osorio
+                    var SaltoOsorio = new Propagacao() { IdPosto = 78, NomePostoFluv = "Salto Osorio" };
+                    SaltoOsorio.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_osorio", TempoViagem = 0, FatorDistribuicao = 0.670f });
+                    SaltoOsorio.PostoMontantes.Add(new PostoMontante { Propaga = SaltoSantiago, TempoViagem = 10 });
+                    propagacoes.Add(SaltoOsorio);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto Caxias
+
+                    #region Salto Caxias 
+                    var SaltoCaxias = new Propagacao() { IdPosto = 222, NomePostoFluv = "Salto Caxias" };
+                    SaltoCaxias.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_caxias", TempoViagem = 0, FatorDistribuicao = 1f });
+                    SaltoCaxias.PostoMontantes.Add(new PostoMontante { Propaga = SaltoOsorio, TempoViagem = 9.4f });///talvez zero no tv
+                    propagacoes.Add(SaltoCaxias);
+                    #endregion
+
+                    //#region baixo iguacu //verficar
+                    //var baixoig = new Propagacao() { IdPosto = 81, NomePostoFluv = "baixo iguacu" };
+                    //baixoig.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.204f });
+                    //baixoig.PostoMontantes.Add(new PostoMontante { Propaga = SaltoCaxias, TempoViagem = 5 });//verficar
+                    //propagacoes.Add(baixoig);
+                    //#endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Barra Grande
+
+                    #region B. Grande
+                    var BGrande = new Propagacao() { IdPosto = 215, NomePostoFluv = "B. Grande" };
+                    BGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "barra_grande", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(BGrande);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Campos Novos
+
+                    #region Sao Roque
+                    var sRoque = new Propagacao() { IdPosto = 88, NomePostoFluv = "Sao Roque" };
+                    sRoque.Modelo.Add(new ModeloSmap() { NomeVazao = "campos_novos", TempoViagem = 0, FatorDistribuicao = 0.745f });
+                    propagacoes.Add(sRoque);
+                    #endregion
+
+                    #region Garibaldi
+                    var Garibaldi = new Propagacao() { IdPosto = 89, NomePostoFluv = "Garibaldi" };
+                    Garibaldi.Modelo.Add(new ModeloSmap() { NomeVazao = "campos_novos", TempoViagem = 0, FatorDistribuicao = 0.159f });//0.910f
+                    Garibaldi.PostoMontantes.Add(new PostoMontante { Propaga = sRoque, TempoViagem = 4 });
+
+                    propagacoes.Add(Garibaldi);
+                    #endregion
+
+                    #region C. Novos
+                    var CNovos = new Propagacao() { IdPosto = 216, NomePostoFluv = "C. Novos" };
+                    CNovos.Modelo.Add(new ModeloSmap() { NomeVazao = "campos_novos", TempoViagem = 0, FatorDistribuicao = 0.096f });
+                    CNovos.PostoMontantes.Add(new PostoMontante { Propaga = Garibaldi, TempoViagem = 7.4f });
+                    propagacoes.Add(CNovos);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Machadinho
+
+                    #region Machadinho
+                    var Machadinho = new Propagacao() { IdPosto = 217, NomePostoFluv = "Machadinho" };
+                    Machadinho.Modelo.Add(new ModeloSmap() { NomeVazao = "machadinho", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = BGrande, TempoViagem = 16.2f });
+                    Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = CNovos, TempoViagem = 12 });// ver esses tempos
+                    propagacoes.Add(Machadinho);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Itá
+
+                    #region Ita
+                    var Ita = new Propagacao() { IdPosto = 92, NomePostoFluv = "Ita" };
+                    Ita.Modelo.Add(new ModeloSmap() { NomeVazao = "ita", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Ita.PostoMontantes.Add(new PostoMontante { Propaga = Machadinho, TempoViagem = 15.3f });//ver esse tempo
+                    propagacoes.Add(Ita);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Monjolinho
+
+                    #region PassoFundo
+                    var PassoFundo = new Propagacao() { IdPosto = 93, NomePostoFluv = "Passo Fundo" };
+                    PassoFundo.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.361f });
+                    propagacoes.Add(PassoFundo);
+                    #endregion
+
+                    #region Monjolinho
+                    var Monjolinho = new Propagacao() { IdPosto = 220, NomePostoFluv = "Monjolinho" };
+                    Monjolinho.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.639f });
+                    Monjolinho.PostoMontantes.Add(new PostoMontante { Propaga = PassoFundo, TempoViagem = 7.7f });
+                    propagacoes.Add(Monjolinho);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Foz do Chapeco
+
+                    #region Foz do Chapecó
+                    var FozChapeco = new Propagacao() { IdPosto = 94, NomePostoFluv = "Foz do Chapecó" };
+                    FozChapeco.Modelo.Add(new ModeloSmap() { NomeVazao = "foz_do_chapeco", TempoViagem = 0, FatorDistribuicao = 1 });
+                    FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Ita, TempoViagem = 20.93f });
+                    FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Monjolinho, TempoViagem = 14.93f });
+                    propagacoes.Add(FozChapeco);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Quebra Queixo
+
+                    #region Q. Queixo
+                    var QQueixo = new Propagacao() { IdPosto = 286, NomePostoFluv = "Q. Queixo" };
+                    QQueixo.Modelo.Add(new ModeloSmap() { NomeVazao = "quebra_queixo", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(QQueixo);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Passo São João
+
+                    #region São José
+                    var SJose = new Propagacao() { IdPosto = 102, NomePostoFluv = "São José" };
+                    SJose.Modelo.Add(new ModeloSmap() { NomeVazao = "passo_sao_joao", TempoViagem = 0, FatorDistribuicao = 0.964f });
+                    propagacoes.Add(SJose);
+                    #endregion
+
+                    #region Passo São João
+                    var PassoSJoao = new Propagacao() { IdPosto = 103, NomePostoFluv = "Passo São João" };
+                    PassoSJoao.Modelo.Add(new ModeloSmap() { NomeVazao = "passo_sao_joao", TempoViagem = 0, FatorDistribuicao = 0.036f });
+                    PassoSJoao.PostoMontantes.Add(new PostoMontante { Propaga = SJose, TempoViagem = 8.47f });
+                    propagacoes.Add(PassoSJoao);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Ernestina
+
+                    #region Enerstina
+                    var enerstina = new Propagacao() { IdPosto = 110, NomePostoFluv = "Enerstina" };
+                    enerstina.Modelo.Add(new ModeloSmap() { NomeVazao = "ernestina", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(enerstina);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jacui
+
+                    #region Passo Real
+                    var passoReal = new Propagacao() { IdPosto = 111, NomePostoFluv = "Passo Real" };
+                    passoReal.Modelo.Add(new ModeloSmap() { NomeVazao = "jacui", TempoViagem = 0, FatorDistribuicao = 0.992f });
+                    passoReal.PostoMontantes.Add(new PostoMontante { Propaga = enerstina, TempoViagem = 19.8f });//1
+                    propagacoes.Add(passoReal);
+                    #endregion
+
+                    #region Jacui
+                    var jacui = new Propagacao() { IdPosto = 112, NomePostoFluv = "Jacui" };
+                    jacui.Modelo.Add(new ModeloSmap() { NomeVazao = "jacui", TempoViagem = 0, FatorDistribuicao = 0.008f });
+                    jacui.PostoMontantes.Add(new PostoMontante { Propaga = passoReal, TempoViagem = 1.3f });//1
+                    propagacoes.Add(jacui);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Dona Francisca
+
+                    #region Itauba
+                    var itauba = new Propagacao() { IdPosto = 113, NomePostoFluv = "Itauba" };
+                    itauba.Modelo.Add(new ModeloSmap() { NomeVazao = "dona_francisca", TempoViagem = 0, FatorDistribuicao = 0.488f });
+                    itauba.PostoMontantes.Add(new PostoMontante { Propaga = jacui, TempoViagem = 6.2f });//1
+                    propagacoes.Add(itauba);
+                    #endregion
+
+                    #region Dona Francisca
+                    var Dfran = new Propagacao() { IdPosto = 114, NomePostoFluv = "Dona Francisca" };
+                    Dfran.Modelo.Add(new ModeloSmap() { NomeVazao = "dona_francisca", TempoViagem = 0, FatorDistribuicao = 0.512f });
+                    Dfran.PostoMontantes.Add(new PostoMontante { Propaga = itauba, TempoViagem = 4.8f });
+                    propagacoes.Add(Dfran);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Castro Alves
+
+                    #region Castro Alves
+                    var CastroAl = new Propagacao() { IdPosto = 98, NomePostoFluv = "Castro Alves" };
+                    CastroAl.Modelo.Add(new ModeloSmap() { NomeVazao = "castro_alves", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(CastroAl);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: 14 de Julho
+
+                    #region Monte Claro
+                    var Montecl = new Propagacao() { IdPosto = 97, NomePostoFluv = "Monte Claro" };
+                    Montecl.Modelo.Add(new ModeloSmap() { NomeVazao = "14_de_julho", TempoViagem = 0, FatorDistribuicao = 0.887f });
+                    Montecl.PostoMontantes.Add(new PostoMontante { Propaga = CastroAl, TempoViagem = 6 });
+                    propagacoes.Add(Montecl);
+                    #endregion
+
+                    #region 14 de Julho
+                    var XIVjulho = new Propagacao() { IdPosto = 284, NomePostoFluv = "14 de julho" };
+                    XIVjulho.Modelo.Add(new ModeloSmap() { NomeVazao = "14_de_julho", TempoViagem = 0, FatorDistribuicao = 0.113f });
+                    XIVjulho.PostoMontantes.Add(new PostoMontante { Propaga = Montecl, TempoViagem = 4.5f });
+                    propagacoes.Add(XIVjulho);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto RS
+
+                    #region Salto RS
+                    var saltRS = new Propagacao() { IdPosto = 221, NomePostoFluv = "Salto RS" };
+                    saltRS.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_rs", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(saltRS);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Gov Parigot de Souza
+
+                    #region Capivari Cachoeira - GP SOUZA
+                    //tambem chamado G.P.Souza
+                    var capiCacho = new Propagacao() { IdPosto = 115, NomePostoFluv = "Capivari Cachoeira" };
+                    capiCacho.Modelo.Add(new ModeloSmap() { NomeVazao = "gov_parigot_de_souza", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(capiCacho);
+                    #endregion
+
+                    #endregion
+
+
+                    #region Sub-bacia modelada: Salto Pilão
+
+                    #region Salto Pilão
+                    var saltPilao = new Propagacao() { IdPosto = 101, NomePostoFluv = "Salto Pilão" };
+                    saltPilao.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_pilao", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(saltPilao);
+                    #endregion
+
+                    #endregion
+
+
+                    #endregion
+
+                    #region NE
+
+                    #region Sub-bacia modelada: Retiro Baixo
+
+                    #region Retiro Baixo
+                    var RetiroBaixo = new Propagacao() { IdPosto = 155, NomePostoFluv = "Retiro Baixo" };
+                    RetiroBaixo.Modelo.Add(new ModeloSmap() { NomeVazao = "retiro_baixo", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(RetiroBaixo);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Três Marias
+
+                    #region Tres Marias
+                    var TresMarias = new Propagacao() { IdPosto = 156, NomePostoFluv = "Tres Marias" };
+                    TresMarias.Modelo.Add(new ModeloSmap() { NomeVazao = "tres_marias", TempoViagem = 0, FatorDistribuicao = 1 });
+                    TresMarias.PostoMontantes.Add(new PostoMontante { Propaga = RetiroBaixo, TempoViagem = 12 });
+                    propagacoes.Add(TresMarias);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Queimado
+
+                    #region Queimado
+                    var Queimado = new Propagacao() { IdPosto = 158, NomePostoFluv = "Queimado" };
+                    Queimado.Modelo.Add(new ModeloSmap() { NomeVazao = "queimado", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Queimado);
+                    #endregion
+
+                    #endregion
+
+                    // implementar logica para sao romao e sao francisco NAO É NECESSARIO UMA VEZ QUE OS DADOS NÃO SÃO USADOS EM CÁLCULO ALGUM
+
+                    #region Sub-bacia modelada: Irapé
+
+                    #region Irape
+                    var Irape = new Propagacao() { IdPosto = 255, NomePostoFluv = "Irape" };
+                    Irape.Modelo.Add(new ModeloSmap() { NomeVazao = "irape", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Irape);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Itapebi
+
+                    #region Itapebi
+                    var Itapebi = new Propagacao() { IdPosto = 188, NomePostoFluv = "Itapebi" };
+                    Itapebi.Modelo.Add(new ModeloSmap() { NomeVazao = "itapebi", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Itapebi.PostoMontantes.Add(new PostoMontante { Propaga = Irape, TempoViagem = 0 });
+                    propagacoes.Add(Itapebi);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Boa Esperança
+
+                    #region boa  esperança
+                    var Besp = new Propagacao() { IdPosto = 190, NomePostoFluv = "Boa Esperanca" };
+                    Besp.Modelo.Add(new ModeloSmap() { NomeVazao = "boa_esperanca", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Besp);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Pedra do Cavalo
+
+                    #region Pedra do cavalo
+                    var Pcav = new Propagacao() { IdPosto = 254, NomePostoFluv = "Pedra do cavalo" };
+                    Pcav.Modelo.Add(new ModeloSmap() { NomeVazao = "pedra_do_cavalo", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Pcav);
+
+                    #endregion
+
+                    #endregion
+
+                    #endregion
+
+                    #region NORTE
+
+
+
+                    #endregion
+                }
+                else
+                {
+                    //Madeira
+
+
+                    #region GRANDE (grande e parnaiba)
+
+                    #region Camargos
+                    var camargos = new Propagacao() { IdPosto = 1, NomePostoFluv = "CAMARGOS" };
+                    camargos.Modelo.Add(new ModeloSmap() { NomeVazao = "Camargos", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(camargos);
+                    #endregion
+
+                    #region Itutinga
+                    var Itutinga = new Propagacao() { IdPosto = 2, NomePostoFluv = "Itutinga" };
+                    Itutinga.Modelo.Add(new ModeloSmap() { NomeVazao = "Camargos", TempoViagem = 0, FatorDistribuicao = 0 });
+                    Itutinga.PostoMontantes.Add(new PostoMontante { Propaga = camargos, TempoViagem = 0 });
+                    propagacoes.Add(Itutinga);
+                    #endregion
+
+                    #region Funil
+                    var Funil = new Propagacao() { IdPosto = 211, NomePostoFluv = "Funil" };
+                    Funil.Modelo.Add(new ModeloSmap() { NomeVazao = "FUNIL MG", TempoViagem = 0 });
+                    Funil.PostoMontantes.Add(new PostoMontante { Propaga = Itutinga, TempoViagem = 13 });
+                    propagacoes.Add(Funil);
+                    #endregion
+
+                    #region Furnas
+                    var Furnas = new Propagacao() { IdPosto = 6, NomePostoFluv = "Furnas" };
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "PARAGUACU", TempoViagem = 10 });
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "PBUENOS", TempoViagem = 12 });
+                    Furnas.Modelo.Add(new ModeloSmap() { NomeVazao = "FURNAS", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Furnas.PostoMontantes.Add(new PostoMontante { Propaga = Funil, TempoViagem = 36 });
+                    propagacoes.Add(Furnas);
+                    #endregion
+
+                    #region MMoraes
+                    var Mmoraes = new Propagacao() { IdPosto = 7, NomePostoFluv = "M Moraes" };
+                    Mmoraes.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.377f });
+                    Mmoraes.PostoMontantes.Add(new PostoMontante { Propaga = Furnas, TempoViagem = 23 });
+                    propagacoes.Add(Mmoraes);
+                    #endregion
+
+                    #region LCBarreto
+                    var LCBarreto = new Propagacao() { IdPosto = 8, NomePostoFluv = "LCBarreto" };
+                    LCBarreto.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.087f });
+                    LCBarreto.PostoMontantes.Add(new PostoMontante { Propaga = Mmoraes, TempoViagem = 7 });
+                    propagacoes.Add(LCBarreto);
+                    #endregion
+
+                    #region Jaguara
+                    var Jaguara = new Propagacao() { IdPosto = 9, NomePostoFluv = "Jaguara" };
+                    Jaguara.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.036f });
+                    Jaguara.PostoMontantes.Add(new PostoMontante { Propaga = LCBarreto, TempoViagem = 5 });
+                    propagacoes.Add(Jaguara);
+                    #endregion
+
+                    #region Igarapava
+                    var Igarapava = new Propagacao() { IdPosto = 10, NomePostoFluv = "Igarapava" };
+                    Igarapava.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.103f });
+                    Igarapava.PostoMontantes.Add(new PostoMontante { Propaga = Jaguara, TempoViagem = 10 });
+                    propagacoes.Add(Igarapava);
+                    #endregion
+
+                    #region Volta Grande
+                    var VoltaGrande = new Propagacao() { IdPosto = 11, NomePostoFluv = "Volta Grande" };
+                    VoltaGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.230f });
+                    VoltaGrande.PostoMontantes.Add(new PostoMontante { Propaga = Igarapava, TempoViagem = 12 });
+                    propagacoes.Add(VoltaGrande);
+                    #endregion
+
+                    #region Porto Colombia
+                    var PortoColombia = new Propagacao() { IdPosto = 12, NomePostoFluv = "Porto Colombia" };
+                    PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "PCOLOMBIA", TempoViagem = 0, FatorDistribuicao = 0.167f });
+                    PortoColombia.Modelo.Add(new ModeloSmap() { NomeVazao = "CAPESCURO", TempoViagem = 8, FatorDistribuicao = 1 });
+                    PortoColombia.PostoMontantes.Add(new PostoMontante { Propaga = VoltaGrande, TempoViagem = 11 });
+                    propagacoes.Add(PortoColombia);
+                    #endregion
+
+                    #region Caconde
+                    var Caconde = new Propagacao() { IdPosto = 14, NomePostoFluv = "Caconde" };
+                    Caconde.Modelo.Add(new ModeloSmap() { NomeVazao = "EDACUNHA", TempoViagem = 0, FatorDistribuicao = 0.610f });
+                    propagacoes.Add(Caconde);
+                    #endregion
+
+                    #region Euc da Cunha
+                    var EucCunha = new Propagacao() { IdPosto = 15, NomePostoFluv = "Euc da Cunha" };
+                    EucCunha.Modelo.Add(new ModeloSmap() { NomeVazao = "EDACUNHA", TempoViagem = 0, FatorDistribuicao = 0.390f });
+                    EucCunha.PostoMontantes.Add(new PostoMontante { Propaga = Caconde, TempoViagem = 12 });
+                    propagacoes.Add(EucCunha);
+                    #endregion
+
+                    #region Limoeiro
+                    //A S OLIVEIRA
+                    var Limoeiro = new Propagacao() { IdPosto = 16, NomePostoFluv = "Limoeiro" };
+                    Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "MARIMBONDO", TempoViagem = 0, FatorDistribuicao = 0.004f });
+                    Limoeiro.PostoMontantes.Add(new PostoMontante { Propaga = EucCunha, TempoViagem = 3 });
+                    propagacoes.Add(Limoeiro);
+                    #endregion
+
+                    #region Marimbondo
+                    var Marimbondo = new Propagacao() { IdPosto = 17, NomePostoFluv = "Marimbondo" };
+                    Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSAGEM", TempoViagem = 16, FatorDistribuicao = 1f });
+                    Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "MARIMBONDO", TempoViagem = 0, FatorDistribuicao = 0.996f });
+                    Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = Limoeiro, TempoViagem = 72 });
+                    Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = PortoColombia, TempoViagem = 20 });
+                    propagacoes.Add(Marimbondo);
+                    #endregion
+
+                    #region AguaVermelha
+                    var AguaVermelha = new Propagacao() { IdPosto = 18, NomePostoFluv = "AguaVermelha" };
+                    AguaVermelha.Modelo.Add(new ModeloSmap() { NomeVazao = "AVERMELHA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    AguaVermelha.PostoMontantes.Add(new PostoMontante { Propaga = Marimbondo, TempoViagem = 28 });
+                    propagacoes.Add(AguaVermelha);
+                    #endregion
+                    #endregion
+
+                    #region Tiête (paranazao)
+
+                    #region Guarapiranga
+                    var Guarapiranga = new Propagacao() { IdPosto = 117, NomePostoFluv = "Guarapiranga" };
+                    Guarapiranga.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.120f });
+                    propagacoes.Add(Guarapiranga);
+                    #endregion
+
+                    #region Billings Pedras
+                    var BillingsPedras = new Propagacao() { IdPosto = 119, NomePostoFluv = "Billings Pedras" };
+                    BillingsPedras.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.183f });
+                    propagacoes.Add(BillingsPedras);
+                    #endregion
+
+                    #region Billings
+                    var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };//vai usar um fator de 0.146 na geração do dadvaz (foi fator calculado pq faz uma conta com usina que ainda não foi incluida nas propoçoes)
+                    Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.183f });
+                    propagacoes.Add(Billings);
+                    #endregion
+
+                    #region Ponte Nova
+                    //Alto tiete
+                    var PonteNova = new Propagacao() { IdPosto = 160, NomePostoFluv = "Ponte Nova" };
+                    PonteNova.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.073f });
+                    propagacoes.Add(PonteNova);
+                    #endregion
+
+                    #region E. souza
+                    var Esouza = new Propagacao() { IdPosto = 161, NomePostoFluv = "E. souza" };
+                    Esouza.Modelo.Add(new ModeloSmap() { NomeVazao = "ESouza", TempoViagem = 0, FatorDistribuicao = 0.624f });
+                    Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Guarapiranga, TempoViagem = 6 });
+                    Esouza.PostoMontantes.Add(new PostoMontante { Propaga = Billings, TempoViagem = 0 });
+                    Esouza.PostoMontantes.Add(new PostoMontante { Propaga = PonteNova, TempoViagem = 15 });
+                    propagacoes.Add(Esouza);
+                    #endregion
+
+                    #region Barra Bonita
+                    var BBonita = new Propagacao() { IdPosto = 237, NomePostoFluv = "Barra Bonita" };
+                    BBonita.Modelo.Add(new ModeloSmap() { NomeVazao = "BBonita", TempoViagem = 0, FatorDistribuicao = 1 });
+                    BBonita.PostoMontantes.Add(new PostoMontante { Propaga = Esouza, TempoViagem = 48 });
+                    propagacoes.Add(BBonita);
+                    #endregion
+
+                    #region Bariri
+                    var Bariri = new Propagacao() { IdPosto = 238, NomePostoFluv = "Bariri" };
+                    Bariri.Modelo.Add(new ModeloSmap() { NomeVazao = "Ibitinga", TempoViagem = 0, FatorDistribuicao = 0.342f });
+                    Bariri.PostoMontantes.Add(new PostoMontante { Propaga = BBonita, TempoViagem = 12 });
+                    propagacoes.Add(Bariri);
+                    #endregion
+
+                    #region Ibitinga
+                    var Ibitinga = new Propagacao() { IdPosto = 239, NomePostoFluv = "Ibitinga" };
+                    Ibitinga.Modelo.Add(new ModeloSmap() { NomeVazao = "Ibitinga", TempoViagem = 0, FatorDistribuicao = 0.658f });
+                    Ibitinga.PostoMontantes.Add(new PostoMontante { Propaga = Bariri, TempoViagem = 12 });
+                    propagacoes.Add(Ibitinga);
+                    #endregion
+
+                    #region Promissao
+                    var Promissao = new Propagacao() { IdPosto = 240, NomePostoFluv = "Promissao" };
+                    Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.717f });
+                    Promissao.PostoMontantes.Add(new PostoMontante { Propaga = Ibitinga, TempoViagem = 29 });
+                    propagacoes.Add(Promissao);
+                    #endregion
+
+                    #region N. Avanhandava
+                    var NAvanhandava = new Propagacao() { IdPosto = 242, NomePostoFluv = "NAvanhandava" };
+                    NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "NAvanhanda", TempoViagem = 0, FatorDistribuicao = 0.283f });
+                    NAvanhandava.PostoMontantes.Add(new PostoMontante { Propaga = Promissao, TempoViagem = 13 });
+                    propagacoes.Add(NAvanhandava);
+                    #endregion
+                    #endregion
+
+                    #region Paranaiba (grande parnaiba)
+
+                    #region CorumbaIV
+                    var CorumbaIV = new Propagacao() { IdPosto = 205, NomePostoFluv = "Corumba IV" };
+                    CorumbaIV.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBAIV", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(CorumbaIV);
+                    #endregion
+
+                    #region CorumbaIII
+                    var CorumbaIII = new Propagacao() { IdPosto = 23, NomePostoFluv = "Corumba III" };
+                    CorumbaIII.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBA1", TempoViagem = 0, FatorDistribuicao = 0.1f });
+                    CorumbaIII.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIV, TempoViagem = 12 });
+                    propagacoes.Add(CorumbaIII);
+                    #endregion
+
+                    #region CorumbaI
+                    var CorumbaI = new Propagacao() { IdPosto = 209, NomePostoFluv = "Corumba I" };
+                    CorumbaI.Modelo.Add(new ModeloSmap() { NomeVazao = "CORUMBA1", TempoViagem = 0, FatorDistribuicao = 0.9f });
+                    CorumbaI.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaIII, TempoViagem = 24 });
+                    propagacoes.Add(CorumbaI);
+                    #endregion
+
+                    #region Batalha
+                    var Batalha = new Propagacao() { IdPosto = 22, NomePostoFluv = "Batalha" };
+                    Batalha.Modelo.Add(new ModeloSmap() { NomeVazao = "SDOFACAO", TempoViagem = 0, FatorDistribuicao = 0.615f });
+                    propagacoes.Add(Batalha);
+                    #endregion
+
+                    #region SerraDoFacao
+                    var SerraDoFacao = new Propagacao() { IdPosto = 251, NomePostoFluv = "Serra Do Facao" };
+                    SerraDoFacao.Modelo.Add(new ModeloSmap() { NomeVazao = "SDOFACAO", TempoViagem = 0, FatorDistribuicao = 0.385f });
+                    SerraDoFacao.PostoMontantes.Add(new PostoMontante { Propaga = Batalha, TempoViagem = 12 });
+                    propagacoes.Add(SerraDoFacao);
+                    #endregion
+
+                    #region Emborcacao
+                    var Emborcacao = new Propagacao() { IdPosto = 24, NomePostoFluv = "Emborcacao" };
+                    Emborcacao.Modelo.Add(new ModeloSmap() { NomeVazao = "EMBORCACAO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Emborcacao.PostoMontantes.Add(new PostoMontante { Propaga = SerraDoFacao, TempoViagem = 17 });
+                    propagacoes.Add(Emborcacao);
+                    #endregion
+
+                    #region NovaPonte
+                    var NovaPonte = new Propagacao() { IdPosto = 25, NomePostoFluv = "NovaPonte" };
+                    NovaPonte.Modelo.Add(new ModeloSmap() { NomeVazao = "NOVAPONTE", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(NovaPonte);
+                    #endregion
+
+                    #region Miranda
+                    var Miranda = new Propagacao() { IdPosto = 206, NomePostoFluv = "Miranda" };
+                    Miranda.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.040f });
+                    Miranda.PostoMontantes.Add(new PostoMontante { Propaga = NovaPonte, TempoViagem = 11 });
+                    propagacoes.Add(Miranda);
+                    #endregion
+
+                    #region Capim Branco 1
+                    var CapimBrancoI = new Propagacao() { IdPosto = 207, NomePostoFluv = "Capim Branco I" };
+                    CapimBrancoI.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.005f });
+                    CapimBrancoI.PostoMontantes.Add(new PostoMontante { Propaga = Miranda, TempoViagem = 5 });
+                    propagacoes.Add(CapimBrancoI);
+                    #endregion
+
+                    #region Capim Branco 2
+                    var CapimBrancoII = new Propagacao() { IdPosto = 28, NomePostoFluv = "Capim Branco II" };
+                    CapimBrancoII.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.012f });
+                    CapimBrancoII.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoI, TempoViagem = 12 });
+                    propagacoes.Add(CapimBrancoII);
+                    #endregion
+
+                    #region Itumbiara
+                    var Itumbiara = new Propagacao() { IdPosto = 31, NomePostoFluv = "Itumbiara" };
+                    Itumbiara.Modelo.Add(new ModeloSmap() { NomeVazao = "ITUMBIARA", TempoViagem = 0, FatorDistribuicao = 0.943f });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CapimBrancoII, TempoViagem = 17 });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = Emborcacao, TempoViagem = 17 });
+                    Itumbiara.PostoMontantes.Add(new PostoMontante { Propaga = CorumbaI, TempoViagem = 17 });
+                    propagacoes.Add(Itumbiara);
+                    #endregion
+
+                    #region Cachoeira Dourada
+                    var CachoeiraDourada = new Propagacao() { IdPosto = 32, NomePostoFluv = "Cachoeira Dourada" };
+                    CachoeiraDourada.Modelo.Add(new ModeloSmap() { NomeVazao = "SSIMAO2", TempoViagem = 0, FatorDistribuicao = 0.109f });
+                    CachoeiraDourada.PostoMontantes.Add(new PostoMontante { Propaga = Itumbiara, TempoViagem = 8 });//talvez zero
+                    propagacoes.Add(CachoeiraDourada);
+                    #endregion
+
+                    #region Sao Simao
+                    var SaoSimao = new Propagacao() { IdPosto = 33, NomePostoFluv = "Sao Simao" };
+                    SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "SSIMAO2", TempoViagem = 0, FatorDistribuicao = 0.891f });
+                    SaoSimao.Modelo.Add(new ModeloSmap() { NomeVazao = "RVerde", TempoViagem = 8, FatorDistribuicao = 1 });
+                    SaoSimao.PostoMontantes.Add(new PostoMontante { Propaga = CachoeiraDourada, TempoViagem = 15 });
+                    propagacoes.Add(SaoSimao);
+                    #endregion
+
+                    #region Espora 
+                    // incluido
+                    var Espora = new Propagacao() { IdPosto = 99, NomePostoFluv = "Espora" };
+                    Espora.Modelo.Add(new ModeloSmap() { NomeVazao = "Espora", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(Espora);
+                    #endregion
+
+                    #region Salto
+                    //incluido
+                    var Salto = new Propagacao() { IdPosto = 294, NomePostoFluv = "Salto" };
+                    Salto.Modelo.Add(new ModeloSmap() { NomeVazao = "SaltoVerdi", TempoViagem = 0, FatorDistribuicao = 0.923f });
+                    propagacoes.Add(Salto);
+                    #endregion
+
+                    #region S R Verdinho
+                    //incluido
+                    var SrVerdinho = new Propagacao() { IdPosto = 241, NomePostoFluv = "S R Verdinho" };
+                    SrVerdinho.Modelo.Add(new ModeloSmap() { NomeVazao = "SaltoVerdi", TempoViagem = 0, FatorDistribuicao = 0.077f });
+                    SrVerdinho.PostoMontantes.Add(new PostoMontante { Propaga = Salto, TempoViagem = 0 });
+                    propagacoes.Add(SrVerdinho);
+                    #endregion
+
+                    #region Caçu
+                    //incluido
+                    var Cacu = new Propagacao() { IdPosto = 247, NomePostoFluv = "Caçu" };
+                    Cacu.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.894f });
+                    propagacoes.Add(Cacu);
+                    #endregion
+
+                    #region B Coqueiros
+                    //incluido
+                    var BCoqueiros = new Propagacao() { IdPosto = 248, NomePostoFluv = "Barra dos coqueiros" };
+                    BCoqueiros.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.037f });
+                    BCoqueiros.PostoMontantes.Add(new PostoMontante { Propaga = Cacu, TempoViagem = 0 });
+                    propagacoes.Add(BCoqueiros);
+                    #endregion
+
+                    #region FozDo Rio Claro
+                    //incluido
+
+                    var FozRioClaro = new Propagacao() { IdPosto = 261, NomePostoFluv = "Foz do Rio Claro" };
+                    FozRioClaro.Modelo.Add(new ModeloSmap() { NomeVazao = "FozClaro", TempoViagem = 0, FatorDistribuicao = 0.069f });
+                    FozRioClaro.PostoMontantes.Add(new PostoMontante { Propaga = BCoqueiros, TempoViagem = 0 });
+                    propagacoes.Add(FozRioClaro);
+                    #endregion
+                    #endregion
+
+                    #region PARANAPANEMA(paranazao)
+
+                    #region Jurumirim
+                    var Jurumirim = new Propagacao() { IdPosto = 47, NomePostoFluv = "Jurumirim" };
+                    Jurumirim.Modelo.Add(new ModeloSmap() { NomeVazao = "Jurumirim", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Jurumirim);
+                    #endregion
+
+                    #region Piraju
+                    var Piraju = new Propagacao() { IdPosto = 48, NomePostoFluv = "Piraju" };
+                    Piraju.Modelo.Add(new ModeloSmap() { NomeVazao = "Chavantes", TempoViagem = 0, FatorDistribuicao = 0.046f });
+                    Piraju.PostoMontantes.Add(new PostoMontante { Propaga = Jurumirim, TempoViagem = 5.1f });
+                    propagacoes.Add(Piraju);
+                    #endregion
+
+                    #region Chavantes
+                    var Chavantes = new Propagacao() { IdPosto = 49, NomePostoFluv = "Chavantes" };
+                    Chavantes.Modelo.Add(new ModeloSmap() { NomeVazao = "Chavantes", TempoViagem = 0, FatorDistribuicao = 0.954f });
+                    Chavantes.PostoMontantes.Add(new PostoMontante { Propaga = Piraju, TempoViagem = 10.52f });
+                    propagacoes.Add(Chavantes);
+                    #endregion
+
+                    #region Ourinhos
+                    var Ourinhos = new Propagacao() { IdPosto = 249, NomePostoFluv = "Ourinhos" };
+                    Ourinhos.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.031f });
+                    Ourinhos.PostoMontantes.Add(new PostoMontante { Propaga = Chavantes, TempoViagem = 3 });
+                    propagacoes.Add(Ourinhos);
+                    #endregion
+
+                    #region Salto Grande
+                    // também chamada de L.N.Garcez(esta com esse nome na planilha do chuva)
+                    var SaltoGrande = new Propagacao() { IdPosto = 50, NomePostoFluv = "Salto Grande" };
+                    SaltoGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.778f });
+                    SaltoGrande.PostoMontantes.Add(new PostoMontante { Propaga = Ourinhos, TempoViagem = 3 });
+                    propagacoes.Add(SaltoGrande);
+                    #endregion
+
+                    #region Canoas II
+                    var CanoasII = new Propagacao() { IdPosto = 51, NomePostoFluv = "Canoas II" };
+                    CanoasII.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.061f });
+                    CanoasII.PostoMontantes.Add(new PostoMontante { Propaga = SaltoGrande, TempoViagem = 2.8f });
+                    propagacoes.Add(CanoasII);
+                    #endregion
+
+                    #region Canoas I
+                    var CanoasI = new Propagacao() { IdPosto = 52, NomePostoFluv = "CanoasI" };
+                    CanoasI.Modelo.Add(new ModeloSmap() { NomeVazao = "CanoasI", TempoViagem = 0, FatorDistribuicao = 0.130f });
+                    CanoasI.PostoMontantes.Add(new PostoMontante { Propaga = CanoasII, TempoViagem = 2.8f });
+                    propagacoes.Add(CanoasI);
+                    #endregion
+
+                    #region Maua
+                    var Maua = new Propagacao() { IdPosto = 57, NomePostoFluv = "Maua" };
+                    Maua.Modelo.Add(new ModeloSmap() { NomeVazao = "Maua", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(Maua);
+                    #endregion
+
+                    #region Capivara
+                    var Capivara = new Propagacao() { IdPosto = 61, NomePostoFluv = "Capivara" };
+                    Capivara.Modelo.Add(new ModeloSmap() { NomeVazao = "Capivara", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Capivara.PostoMontantes.Add(new PostoMontante { Propaga = CanoasI, TempoViagem = 17.2f });
+                    Capivara.PostoMontantes.Add(new PostoMontante { Propaga = Maua, TempoViagem = 31 });
+                    propagacoes.Add(Capivara);
+                    #endregion
+
+                    #region Taquarucu
+                    var Taquarucu = new Propagacao() { IdPosto = 62, NomePostoFluv = "Taquarucu" };
+                    Taquarucu.Modelo.Add(new ModeloSmap() { NomeVazao = "Rosana", TempoViagem = 0, FatorDistribuicao = 0.299f });
+                    Taquarucu.PostoMontantes.Add(new PostoMontante { Propaga = Capivara, TempoViagem = 9.3f });
+                    propagacoes.Add(Taquarucu);
+                    #endregion
+
+                    #region Rosana
+                    var Rosana = new Propagacao() { IdPosto = 63, NomePostoFluv = "Rosana" };
+                    Rosana.Modelo.Add(new ModeloSmap() { NomeVazao = "Rosana", TempoViagem = 0, FatorDistribuicao = 0.701f });
+                    Rosana.PostoMontantes.Add(new PostoMontante { Propaga = Taquarucu, TempoViagem = 13.9f });
+                    propagacoes.Add(Rosana);
+                    #endregion
+
+                    #endregion
+
+                    #region IGUACU(sul)verficar talvez mudar tv saltocaxias
+
+                    #region Santa Clara
+                    var SantaClara = new Propagacao() { IdPosto = 71, NomePostoFluv = "Santa Clara" };
+                    SantaClara.Modelo.Add(new ModeloSmap() { NomeVazao = "STACLARA", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(SantaClara);
+                    #endregion
+
+                    #region Fundao
+                    var Fundao = new Propagacao() { IdPosto = 72, NomePostoFluv = "Fundao" };
+                    Fundao.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.039f });
+                    Fundao.PostoMontantes.Add(new PostoMontante { Propaga = SantaClara, TempoViagem = 2 });
+                    propagacoes.Add(Fundao);
+                    #endregion
+
+                    #region Jordao
+                    var Jordao = new Propagacao() { IdPosto = 73, NomePostoFluv = "Jordão" };
+                    Jordao.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.157f });
+                    Jordao.PostoMontantes.Add(new PostoMontante { Propaga = Fundao, TempoViagem = 1.8f });
+                    propagacoes.Add(Jordao);
+                    #endregion
+
+                    #region Foz de Areia
+                    // GB MUNHOZ
+                    var FozAreia = new Propagacao() { IdPosto = 74, NomePostoFluv = "Foz de Areia" };
+                    FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "FOA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    FozAreia.Modelo.Add(new ModeloSmap() { NomeVazao = "UVITORIA", TempoViagem = 17.4f, FatorDistribuicao = 1 });
+                    propagacoes.Add(FozAreia);
+                    #endregion
+
+                    #region Segredo
+                    var Segredo = new Propagacao() { IdPosto = 76, NomePostoFluv = "Segredo" };
+                    Segredo.Modelo.Add(new ModeloSmap() { NomeVazao = "JordSeg", TempoViagem = 0, FatorDistribuicao = 0.804f });
+                    Segredo.PostoMontantes.Add(new PostoMontante { Propaga = FozAreia, TempoViagem = 12.7f });
+                    propagacoes.Add(Segredo);
+                    #endregion
+
+                    #region Salto Santiago
+                    var SaltoSantiago = new Propagacao() { IdPosto = 77, NomePostoFluv = "Salto Santiago" };
+                    SaltoSantiago.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.205f });
+                    SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Jordao, TempoViagem = 9.6f });
+                    SaltoSantiago.PostoMontantes.Add(new PostoMontante { Propaga = Segredo, TempoViagem = 11.7f });
+                    propagacoes.Add(SaltoSantiago);
+                    #endregion
+
+                    #region Salto Osorio
+                    var SaltoOsorio = new Propagacao() { IdPosto = 78, NomePostoFluv = "Salto Osorio" };
+                    SaltoOsorio.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.081f });
+                    SaltoOsorio.PostoMontantes.Add(new PostoMontante { Propaga = SaltoSantiago, TempoViagem = 10 });
+                    propagacoes.Add(SaltoOsorio);
+                    #endregion
+
+                    #region Salto Caxias 
+                    var SaltoCaxias = new Propagacao() { IdPosto = 222, NomePostoFluv = "Salto Caxias" };
+                    SaltoCaxias.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.510f });
+                    SaltoCaxias.PostoMontantes.Add(new PostoMontante { Propaga = SaltoOsorio, TempoViagem = 9.4f });///talvez zero no tv
+                    propagacoes.Add(SaltoCaxias);
+                    #endregion
+
+                    #region baixo iguacu //verficar
+                    var baixoig = new Propagacao() { IdPosto = 81, NomePostoFluv = "baixo iguacu" };
+                    baixoig.Modelo.Add(new ModeloSmap() { NomeVazao = "BAIXOIG", TempoViagem = 0, FatorDistribuicao = 0.204f });
+                    baixoig.PostoMontantes.Add(new PostoMontante { Propaga = SaltoCaxias, TempoViagem = 5 });//verficar
+                    propagacoes.Add(baixoig);
+                    #endregion
+
+                    #endregion
+
+                    #region URUGUAI(sul)
+
+                    #region B. Grande
+                    var BGrande = new Propagacao() { IdPosto = 215, NomePostoFluv = "B. Grande" };
+                    BGrande.Modelo.Add(new ModeloSmap() { NomeVazao = "BG", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(BGrande);
+                    #endregion
+
+                    #region Sao Roque
+                    var sRoque = new Propagacao() { IdPosto = 88, NomePostoFluv = "Sao Roque" };
+                    sRoque.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.745f });
+                    propagacoes.Add(sRoque);
+                    #endregion
+
+                    #region Garibaldi
+                    var Garibaldi = new Propagacao() { IdPosto = 89, NomePostoFluv = "Garibaldi" };
+                    Garibaldi.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.165f });//0.910f
+                    propagacoes.Add(Garibaldi);
+                    #endregion
+
+                    #region C. Novos
+                    var CNovos = new Propagacao() { IdPosto = 216, NomePostoFluv = "C. Novos" };
+                    CNovos.Modelo.Add(new ModeloSmap() { NomeVazao = "CN", TempoViagem = 0, FatorDistribuicao = 0.090f });
+                    CNovos.PostoMontantes.Add(new PostoMontante { Propaga = Garibaldi, TempoViagem = 0 });
+                    propagacoes.Add(CNovos);
+                    #endregion
+
+                    #region Machadinho
+                    var Machadinho = new Propagacao() { IdPosto = 217, NomePostoFluv = "Machadinho" };
+                    Machadinho.Modelo.Add(new ModeloSmap() { NomeVazao = "Machadinho", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = BGrande, TempoViagem = 1 });
+                    Machadinho.PostoMontantes.Add(new PostoMontante { Propaga = CNovos, TempoViagem = 1 });// ver esses tempos
+                    propagacoes.Add(Machadinho);
+                    #endregion
+
+                    #region Ita
+                    var Ita = new Propagacao() { IdPosto = 92, NomePostoFluv = "Ita" };
+                    Ita.Modelo.Add(new ModeloSmap() { NomeVazao = "Ita", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Ita.PostoMontantes.Add(new PostoMontante { Propaga = Machadinho, TempoViagem = 2 });//ver esse tempo
+                    propagacoes.Add(Ita);
+                    #endregion
+
+                    #region PassoFundo
+                    var PassoFundo = new Propagacao() { IdPosto = 93, NomePostoFluv = "Passo Fundo" };
+                    PassoFundo.Modelo.Add(new ModeloSmap() { NomeVazao = "Monjolinho", TempoViagem = 0, FatorDistribuicao = 0.586f });
+                    propagacoes.Add(PassoFundo);
+                    #endregion
+
+                    #region Monjolinho
+                    var Monjolinho = new Propagacao() { IdPosto = 220, NomePostoFluv = "Monjolinho" };
+                    Monjolinho.Modelo.Add(new ModeloSmap() { NomeVazao = "Monjolinho", TempoViagem = 0, FatorDistribuicao = 0.414f });
+                    Monjolinho.PostoMontantes.Add(new PostoMontante { Propaga = PassoFundo, TempoViagem = 0 });
+                    propagacoes.Add(Monjolinho);
+                    #endregion
+
+                    #region Foz do Chapecó
+                    var FozChapeco = new Propagacao() { IdPosto = 94, NomePostoFluv = "Foz do Chapecó" };
+                    FozChapeco.Modelo.Add(new ModeloSmap() { NomeVazao = "FozChapeco", TempoViagem = 0, FatorDistribuicao = 1 });
+                    FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Ita, TempoViagem = 0 });
+                    FozChapeco.PostoMontantes.Add(new PostoMontante { Propaga = Monjolinho, TempoViagem = 0 });
+                    propagacoes.Add(FozChapeco);
+                    #endregion
+
+                    #region Q. Queixo
+                    var QQueixo = new Propagacao() { IdPosto = 286, NomePostoFluv = "Q. Queixo" };
+                    QQueixo.Modelo.Add(new ModeloSmap() { NomeVazao = "QQueixo", TempoViagem = 0, FatorDistribuicao = 1f });
+                    propagacoes.Add(QQueixo);
+                    #endregion
+
+                    #region São José
+                    var SJose = new Propagacao() { IdPosto = 102, NomePostoFluv = "São José" };
+                    SJose.Modelo.Add(new ModeloSmap() { NomeVazao = "SJoao", TempoViagem = 0, FatorDistribuicao = 0.963f });
+                    propagacoes.Add(SJose);
+                    #endregion
+
+                    #region Passo São João
+                    var PassoSJoao = new Propagacao() { IdPosto = 103, NomePostoFluv = "Passo São João" };
+                    PassoSJoao.Modelo.Add(new ModeloSmap() { NomeVazao = "SJoao", TempoViagem = 0, FatorDistribuicao = 0.037f });
+                    PassoSJoao.PostoMontantes.Add(new PostoMontante { Propaga = SJose, TempoViagem = 0 });
+                    propagacoes.Add(PassoSJoao);
+                    #endregion
+
+                    #endregion
+
+                    #region MADEIRA(norte)
+
+                    #region jirau
+                    //var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
+                    //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "JIRAU2", TempoViagem = 0, FatorDistribuicao = 1 });
+                    //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
+                    //Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
+                    //propagacoes.Add(Jirau);
+                    //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
+                    string nomeVazao = "JIRAU2";
+
+                    var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = nomeVazao, TempoViagem = 0, FatorDistribuicao = 1 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "P_DA_BEIRA", TempoViagem = 56 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAJ-MIRIM", TempoViagem = 14 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
+
+                    //if (shadow == true)
+                    //{
+                    //    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "AMARU_MAYU", TempoViagem = 135 });
+                    //}
+
+                    propagacoes.Add(Jirau);
+                    #endregion
+
+                    #region STO ANTONIO
+                    var StoAnt = new Propagacao() { IdPosto = 287, NomePostoFluv = "Sto Antonio" };
+                    StoAnt.Modelo.Add(new ModeloSmap() { NomeVazao = "S.ANTONIO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    StoAnt.PostoMontantes.Add(new PostoMontante { Propaga = Jirau, TempoViagem = 23 });
+                    propagacoes.Add(StoAnt);
+                    #endregion
+
+                    #region Dardanelos
+                    var Darda = new Propagacao() { IdPosto = 291, NomePostoFluv = "Dardanelos" };
+                    Darda.Modelo.Add(new ModeloSmap() { NomeVazao = "DARDANELOS", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Darda);
+                    #endregion
+
+                    #region Guaporé
+                    var Guapo = new Propagacao() { IdPosto = 296, NomePostoFluv = "Guapore" };
+                    Guapo.Modelo.Add(new ModeloSmap() { NomeVazao = "GUAPORE", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Guapo);
+                    #endregion
+
+                    #region RondonII
+                    var Rondon = new Propagacao() { IdPosto = 145, NomePostoFluv = "Rondon II" };
+                    Rondon.Modelo.Add(new ModeloSmap() { NomeVazao = "RONDONII", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Rondon);
+                    #endregion
+
+                    #region Samuel
+                    var Samuel = new Propagacao() { IdPosto = 279, NomePostoFluv = "Samuel" };
+                    Samuel.Modelo.Add(new ModeloSmap() { NomeVazao = "SAMUEL", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Samuel);
+                    #endregion
+
+                    #endregion
+
+                    #region Xingu(norte)
+
+                    #region Pimental
+                    var Piment = new Propagacao() { IdPosto = 288, NomePostoFluv = "Pimental" };
+                    Piment.Modelo.Add(new ModeloSmap() { NomeVazao = "PIMENTALT", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Piment);
+                    #endregion
+
+                    #region Sinop
+                    var Sinop = new Propagacao() { IdPosto = 227, NomePostoFluv = "Sinop" };
+                    Sinop.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.915f });
+                    propagacoes.Add(Sinop);
+                    #endregion
+
+                    #region Colider
+                    var coli = new Propagacao() { IdPosto = 228, NomePostoFluv = "Colider" };
+                    coli.Modelo.Add(new ModeloSmap() { NomeVazao = "COLIDER", TempoViagem = 0, FatorDistribuicao = 0.085f });
+                    coli.PostoMontantes.Add(new PostoMontante { Propaga = Sinop, TempoViagem = 17 });
+                    propagacoes.Add(coli);
+                    #endregion
+
+                    #region Teles Pires
+                    var Telepi = new Propagacao() { IdPosto = 229, NomePostoFluv = "Teles Pires" };
+                    Telepi.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.991f });
+                    Telepi.PostoMontantes.Add(new PostoMontante { Propaga = coli, TempoViagem = 132 });
+                    propagacoes.Add(Telepi);
+                    #endregion
+
+                    #region Sao Manoel
+                    var Smano = new Propagacao() { IdPosto = 230, NomePostoFluv = "Sao Manoel" };
+                    Smano.Modelo.Add(new ModeloSmap() { NomeVazao = "SMANOEL", TempoViagem = 0, FatorDistribuicao = 0.009f });
+                    Smano.PostoMontantes.Add(new PostoMontante { Propaga = Telepi, TempoViagem = 7 });
+                    propagacoes.Add(Smano);
+                    #endregion
+
+                    #endregion
+
+                    #region Norte(norte)
+
+                    #region Balbina
+                    var Balb = new Propagacao() { IdPosto = 269, NomePostoFluv = "Balbina" };
+                    Balb.Modelo.Add(new ModeloSmap() { NomeVazao = "BALBINA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Balb);
+                    #endregion
+
+                    #region Curua-una
+                    var Curuauna = new Propagacao() { IdPosto = 277, NomePostoFluv = "Curuauna" };
+                    Curuauna.Modelo.Add(new ModeloSmap() { NomeVazao = "CURUAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Curuauna);
+                    #endregion
+
+                    #region Santo Antonio do Jari
+                    var StaJari = new Propagacao() { IdPosto = 290, NomePostoFluv = "Antonio do Jari" };
+                    StaJari.Modelo.Add(new ModeloSmap() { NomeVazao = "STOANTJARI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(StaJari);
+                    #endregion
+
+                    #region Cachoeira Caldeirao
+                    var CachoCa = new Propagacao() { IdPosto = 204, NomePostoFluv = "Cachoeira Caldeirao" };
+                    CachoCa.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.989f });
+                    propagacoes.Add(CachoCa);
+                    #endregion
+
+                    #region Coaracy Nunes
+                    var Coaracy = new Propagacao() { IdPosto = 280, NomePostoFluv = "Coaracy Nunes" };
+                    Coaracy.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.003f });
+                    Coaracy.PostoMontantes.Add(new PostoMontante { Propaga = CachoCa, TempoViagem = 2 });
+                    propagacoes.Add(Coaracy);
+                    #endregion
+
+                    #region Ferreira Gomes
+                    var Ferreira = new Propagacao() { IdPosto = 297, NomePostoFluv = "Ferreira Gomes" };
+                    Ferreira.Modelo.Add(new ModeloSmap() { NomeVazao = "FGOMES", TempoViagem = 0, FatorDistribuicao = 0.008f });
+                    Ferreira.PostoMontantes.Add(new PostoMontante { Propaga = Coaracy, TempoViagem = 2 });
+                    propagacoes.Add(Ferreira);
+                    #endregion
+
+                    #endregion
+
+                    #region Paraguai(outras se)
+
+                    #region Itiquira
+                    var Itiquira = new Propagacao() { IdPosto = 259, NomePostoFluv = "Itiquira" };
+                    Itiquira.Modelo.Add(new ModeloSmap() { NomeVazao = "ITIQUIRAI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Itiquira);
+                    #endregion
+
+                    #region Jauru
+                    var Jauru = new Propagacao() { IdPosto = 295, NomePostoFluv = "Jauru" };
+                    Jauru.Modelo.Add(new ModeloSmap() { NomeVazao = "JAURU", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Jauru);
+                    #endregion
+
+                    #region MANSO
+                    var MANSO = new Propagacao() { IdPosto = 278, NomePostoFluv = "MANSO" };
+                    MANSO.Modelo.Add(new ModeloSmap() { NomeVazao = "MANSO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(MANSO);
+                    #endregion
+
+                    #region PDEPEDRA
+                    var PDEPEDRA = new Propagacao() { IdPosto = 281, NomePostoFluv = "PDEPEDRA" };
+                    PDEPEDRA.Modelo.Add(new ModeloSmap() { NomeVazao = "PDEPEDRA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(PDEPEDRA);
+                    #endregion
+
+                    #endregion
+
+                    #region DOCE(outras se)
+
+                    #region CAndonga
+                    var CAndonga = new Propagacao() { IdPosto = 149, NomePostoFluv = "CAndonga" };
+                    CAndonga.Modelo.Add(new ModeloSmap() { NomeVazao = "CANDONGA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(CAndonga);
+                    #endregion
+
+                    #region Guiman amorim
+                    var guimam = new Propagacao() { IdPosto = 262, NomePostoFluv = "Guiman amorim" };
+                    guimam.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.978f });
+                    propagacoes.Add(guimam);
+                    #endregion
+
+                    #region SA CARVALHO
+                    var SACAR = new Propagacao() { IdPosto = 183, NomePostoFluv = "SA CARVALHO" };
+                    SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "SACARV", TempoViagem = 0, FatorDistribuicao = 0.022f });
+                    SACAR.PostoMontantes.Add(new PostoMontante { Propaga = guimam, TempoViagem = 4 });
+                    propagacoes.Add(SACAR);
+                    #endregion
+
+                    #region SALTO GRANDE CM
+                    var SALTOCM = new Propagacao() { IdPosto = 134, NomePostoFluv = "SALTO GRANDE CM" };
+                    SALTOCM.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SALTOCM);
+                    #endregion
+
+                    #region PTO ESTRELA
+                    var PTOESTRE = new Propagacao() { IdPosto = 263, NomePostoFluv = "PTO ESTRELA" };
+                    PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "PTOESTRELA", TempoViagem = 0, FatorDistribuicao = 0 });
+                    PTOESTRE.PostoMontantes.Add(new PostoMontante { Propaga = SALTOCM, TempoViagem = 2 });
+                    propagacoes.Add(PTOESTRE);
+                    #endregion
+
+                    #region BAGUARI
+                    var BAGUARI = new Propagacao() { IdPosto = 141, NomePostoFluv = "BAGUARI" };
+                    BAGUARI.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.456f });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = PTOESTRE, TempoViagem = 16.3f });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = SACAR, TempoViagem = 15.8f });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = CAndonga, TempoViagem = 19.6f });
+                    propagacoes.Add(BAGUARI);
+                    #endregion
+
+                    #region AIMORES
+                    var AIMORES = new Propagacao() { IdPosto = 148, NomePostoFluv = "AIMORES" };
+                    AIMORES.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.195f });
+                    AIMORES.PostoMontantes.Add(new PostoMontante { Propaga = BAGUARI, TempoViagem = 12 });
+                    propagacoes.Add(AIMORES);
+                    #endregion
+
+                    #region MASCARENHAS
+                    var MASCARENHAS = new Propagacao() { IdPosto = 144, NomePostoFluv = "MASCARENHAS" };
+                    MASCARENHAS.Modelo.Add(new ModeloSmap() { NomeVazao = "MASCARENHA", TempoViagem = 0, FatorDistribuicao = 0.349f });
+                    MASCARENHAS.PostoMontantes.Add(new PostoMontante { Propaga = AIMORES, TempoViagem = 1 });
+                    propagacoes.Add(MASCARENHAS);
+                    #endregion
+
+                    #endregion
+
+                    #region OUTRAS(outras se)
+
+                    #region ROSAL
+                    var ROSAL = new Propagacao() { IdPosto = 196, NomePostoFluv = "ROSAL" };
+                    ROSAL.Modelo.Add(new ModeloSmap() { NomeVazao = "ROSAL", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(ROSAL);
+                    #endregion
+
+                    #region STA CLAR-MG
+                    var STACLAMG = new Propagacao() { IdPosto = 283, NomePostoFluv = "STA CLAR-MG" };
+                    STACLAMG.Modelo.Add(new ModeloSmap() { NomeVazao = "SCLARA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(STACLAMG);
+                    #endregion
+
+                    #endregion
+
+                    #region TOCANTINS(norte)
+
+                    #region Serra da Mesa
+                    var SerraMesa = new Propagacao() { IdPosto = 270, NomePostoFluv = "Serra da Mesa" };
+                    SerraMesa.Modelo.Add(new ModeloSmap() { NomeVazao = "SMesa", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SerraMesa);
+                    #endregion
+
+                    #region Cana Brava
+                    var CanaBrava = new Propagacao() { IdPosto = 191, NomePostoFluv = "Cana Brava" };
+                    CanaBrava.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.0558166862514689f });
+                    CanaBrava.PostoMontantes.Add(new PostoMontante { Propaga = SerraMesa, TempoViagem = 10 });
+                    propagacoes.Add(CanaBrava);
+                    #endregion
+
+                    #region Sao Salvador
+                    var SaoSalvador = new Propagacao() { IdPosto = 253, NomePostoFluv = "São Salvador" };
+                    SaoSalvador.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.055f });
+                    SaoSalvador.PostoMontantes.Add(new PostoMontante { Propaga = CanaBrava, TempoViagem = 16 });
+                    propagacoes.Add(SaoSalvador);
+                    #endregion
+
+                    #region Peixe Angical
+                    var PeAngi = new Propagacao() { IdPosto = 257, NomePostoFluv = "Peixe Angical" };
+                    PeAngi.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.434f });
+                    PeAngi.PostoMontantes.Add(new PostoMontante { Propaga = SaoSalvador, TempoViagem = 16 });
+                    propagacoes.Add(PeAngi);
+                    #endregion
+
+                    #region Lajeado
+                    var Lajeado = new Propagacao() { IdPosto = 273, NomePostoFluv = "Lajeado" };
+                    Lajeado.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJEADO", TempoViagem = 0, FatorDistribuicao = 0.455640423031727f });
+                    Lajeado.PostoMontantes.Add(new PostoMontante { Propaga = PeAngi, TempoViagem = 64 });
+                    propagacoes.Add(Lajeado);
+                    #endregion
+
+                    #region Estreito
+                    var Estreito = new Propagacao() { IdPosto = 271, NomePostoFluv = "Estreito" };
+                    Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "ESTREITO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "PORTO REAL", TempoViagem = 46 });
+                    Estreito.PostoMontantes.Add(new PostoMontante { Propaga = Lajeado, TempoViagem = 83 });
+                    propagacoes.Add(Estreito);
+                    #endregion
+
+                    #region Tucurui
+                    var Tucurui = new Propagacao() { IdPosto = 275, NomePostoFluv = "Tucurui" };
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "TUCURUI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "BANDEIRANT", TempoViagem = 144 });
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "C.ARAGUAIA", TempoViagem = 72 });
+                    Tucurui.PostoMontantes.Add(new PostoMontante { Propaga = Estreito, TempoViagem = 0 });
+                    propagacoes.Add(Tucurui);
+                    #endregion
+
+                    #endregion
+
+                    #region PARNAIBA(NE)
+
+                    #region Irape
+                    var Irape = new Propagacao() { IdPosto = 255, NomePostoFluv = "Irape" };
+                    Irape.Modelo.Add(new ModeloSmap() { NomeVazao = "IRAPE", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Irape);
+                    #endregion
+
+                    #region Itapebi
+                    var Itapebi = new Propagacao() { IdPosto = 188, NomePostoFluv = "Itapebi" };
+                    Itapebi.Modelo.Add(new ModeloSmap() { NomeVazao = "ITAPEBI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Itapebi.PostoMontantes.Add(new PostoMontante { Propaga = Irape, TempoViagem = 0 });
+                    propagacoes.Add(Itapebi);
+                    #endregion
+
+                    #region boa  esperança
+                    var Besp = new Propagacao() { IdPosto = 190, NomePostoFluv = "Boa Esperanca" };
+                    Besp.Modelo.Add(new ModeloSmap() { NomeVazao = "UBESP", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Besp);
+                    #endregion
+
+                    #region Pedra do cavalo
+                    var Pcav = new Propagacao() { IdPosto = 254, NomePostoFluv = "Pedra do cavalo" };
+                    Pcav.Modelo.Add(new ModeloSmap() { NomeVazao = "PCAVALO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Pcav);
+
+                    #endregion
+                    #endregion
+
+                    #region SAO FRANCISCO(NE)
+
+                    #region Retiro Baixo
+                    var RetiroBaixo = new Propagacao() { IdPosto = 155, NomePostoFluv = "Retiro Baixo" };
+                    RetiroBaixo.Modelo.Add(new ModeloSmap() { NomeVazao = "RB-SMAP", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(RetiroBaixo);
+                    #endregion
+
+                    #region Queimado
+                    var Queimado = new Propagacao() { IdPosto = 158, NomePostoFluv = "Queimado" };
+                    Queimado.Modelo.Add(new ModeloSmap() { NomeVazao = "QM", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Queimado);
+                    #endregion
+
+                    #region Tres Marias
+                    var TresMarias = new Propagacao() { IdPosto = 156, NomePostoFluv = "Tres Marias" };
+                    TresMarias.Modelo.Add(new ModeloSmap() { NomeVazao = "TM-SMAP", TempoViagem = 0, FatorDistribuicao = 1 });
+                    TresMarias.PostoMontantes.Add(new PostoMontante { Propaga = RetiroBaixo, TempoViagem = 0 });
+                    propagacoes.Add(TresMarias);
+                    #endregion
+                    // implementar logica para sao romao e sao francisco NAO É NECESSARIO UMA VEZ QUE OS DADOS NÃO SÃO USADOS EM CÁLCULO ALGUM
+
+                    #endregion
+
+                    #region PARANA(paranazao)
+
+                    #region Três Irmãos
+                    var TresIrmaos = new Propagacao() { IdPosto = 243, NomePostoFluv = "Três Irmãos" };
+                    TresIrmaos.Modelo.Add(new ModeloSmap() { NomeVazao = "IlhaEquiv", TempoViagem = 0, FatorDistribuicao = 0.060f });
+                    TresIrmaos.PostoMontantes.Add(new PostoMontante { Propaga = NAvanhandava, TempoViagem = 42 });
+
+                    //TresIrmaos.PostoAcomph.Add(243);
+                    propagacoes.Add(TresIrmaos);
+                    #endregion
+
+
+
+                    #region Ilha Solteira
+                    var IlhaSolteira = new Propagacao() { IdPosto = 34, NomePostoFluv = "Ilha Solteira" };
+                    IlhaSolteira.Modelo.Add(new ModeloSmap() { NomeVazao = "IlhaEquiv", TempoViagem = 0, FatorDistribuicao = 0.940f });
+
+                    //IlhaSolteira.PostoAcomph.Add(34);
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = AguaVermelha, TempoViagem = 18 });
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SaoSimao, TempoViagem = 30 });
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = Espora, TempoViagem = 35 });//99
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = SrVerdinho, TempoViagem = 24 });//241
+                    IlhaSolteira.PostoMontantes.Add(new PostoMontante { Propaga = FozRioClaro, TempoViagem = 24 });//261
+                    propagacoes.Add(IlhaSolteira);
+                    #endregion
+
+                    #region Jupia
+                    var Jupia = new Propagacao() { IdPosto = 245, NomePostoFluv = "Jupia" };
+                    Jupia.Modelo.Add(new ModeloSmap() { NomeVazao = "Jupia", TempoViagem = 0, FatorDistribuicao = 1 });
+
+                    //Jupia.PostoAcomph.Add(245);
+                    Jupia.PostoMontantes.Add(new PostoMontante { Propaga = TresIrmaos, TempoViagem = 7 });
+                    Jupia.PostoMontantes.Add(new PostoMontante { Propaga = IlhaSolteira, TempoViagem = 5 });
+                    propagacoes.Add(Jupia);
+                    #endregion
+
+                    #region Sao Domingos
+                    var SaoDomingos = new Propagacao() { IdPosto = 154, NomePostoFluv = "Sao domingos" };
+                    SaoDomingos.Modelo.Add(new ModeloSmap() { NomeVazao = "SDO", TempoViagem = 0, FatorDistribuicao = 1 });
+
+                    propagacoes.Add(SaoDomingos);
+                    #endregion
+
+                    #region Porto Primavera
+                    var PortoPrimavera = new Propagacao() { IdPosto = 246, NomePostoFluv = "Porto Primavera" };
+                    PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "PPRI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    PortoPrimavera.Modelo.Add(new ModeloSmap() { NomeVazao = "FZB", TempoViagem = 26 });
+                    //PortoPrimavera.PostoAcomph.Add(245);
+                    PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = Jupia, TempoViagem = 48 });
+                    PortoPrimavera.PostoMontantes.Add(new PostoMontante { Propaga = SaoDomingos, TempoViagem = 0 });//Esta correto sao domingos esta sendo adicionado aqui para respeitar a ordem  de execução das propagaçoes
+
+                    propagacoes.Add(PortoPrimavera);
+                    #endregion
+
+
+
+                    #region Itaipu 
+                    var Itaipu = new Propagacao() { IdPosto = 266, NomePostoFluv = "Itaipu" };
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "FLOR+ESTRA", TempoViagem = 33, FatorDistribuicao = 1 });
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Ivinhema", TempoViagem = 45, FatorDistribuicao = 1 });
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Balsa", TempoViagem = 32, FatorDistribuicao = 1 });
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "PTaquara", TempoViagem = 36, FatorDistribuicao = 1 });
+                    Itaipu.Modelo.Add(new ModeloSmap() { NomeVazao = "Itaipu", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = PortoPrimavera, TempoViagem = 56 });
+                    Itaipu.PostoMontantes.Add(new PostoMontante { Propaga = Rosana, TempoViagem = 56 });
+                    propagacoes.Add(Itaipu);
+                    #endregion
+                    #endregion
+
+                    #region OSUL(sul)
+
+                    #region Enerstina
+                    var enerstina = new Propagacao() { IdPosto = 110, NomePostoFluv = "Enerstina" };
+                    enerstina.Modelo.Add(new ModeloSmap() { NomeVazao = "ERNESTINA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(enerstina);
+                    #endregion
+
+                    #region Passo Real
+                    var passoReal = new Propagacao() { IdPosto = 111, NomePostoFluv = "Passo Real" };
+                    passoReal.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSOREAL", TempoViagem = 0, FatorDistribuicao = 1 });
+                    passoReal.PostoMontantes.Add(new PostoMontante { Propaga = enerstina, TempoViagem = 19.8f });//1
+                    propagacoes.Add(passoReal);
+                    #endregion
+
+                    #region Jacui
+                    var jacui = new Propagacao() { IdPosto = 112, NomePostoFluv = "Jacui" };
+                    jacui.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.020f });
+                    jacui.PostoMontantes.Add(new PostoMontante { Propaga = passoReal, TempoViagem = 1.3f });//1
+                    propagacoes.Add(jacui);
+                    #endregion
+
+                    #region Itauba
+                    var itauba = new Propagacao() { IdPosto = 113, NomePostoFluv = "Itauba" };
+                    itauba.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.464f });
+                    itauba.PostoMontantes.Add(new PostoMontante { Propaga = jacui, TempoViagem = 6.2f });//1
+                    propagacoes.Add(itauba);
+                    #endregion
+
+                    #region Dona Francisca
+                    var Dfran = new Propagacao() { IdPosto = 114, NomePostoFluv = "Dona Francisca" };
+                    Dfran.Modelo.Add(new ModeloSmap() { NomeVazao = "DFRANC", TempoViagem = 0, FatorDistribuicao = 0.516f });
+                    Dfran.PostoMontantes.Add(new PostoMontante { Propaga = itauba, TempoViagem = 1 });
+                    propagacoes.Add(Dfran);
+                    #endregion
+
+                    #region Castro Alves
+                    var CastroAl = new Propagacao() { IdPosto = 98, NomePostoFluv = "Castro Alves" };
+                    CastroAl.Modelo.Add(new ModeloSmap() { NomeVazao = "CALVES", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(CastroAl);
+                    #endregion
+
+                    #region Monte Claro
+                    var Montecl = new Propagacao() { IdPosto = 97, NomePostoFluv = "Monte Claro" };
+                    Montecl.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.887f });
+                    Montecl.PostoMontantes.Add(new PostoMontante { Propaga = CastroAl, TempoViagem = 6 });
+                    propagacoes.Add(Montecl);
+                    #endregion
+
+                    #region 14 de Julho
+                    var XIVjulho = new Propagacao() { IdPosto = 284, NomePostoFluv = "14 de julho" };
+                    XIVjulho.Modelo.Add(new ModeloSmap() { NomeVazao = "14JULHO", TempoViagem = 0, FatorDistribuicao = 0.113f });
+                    XIVjulho.PostoMontantes.Add(new PostoMontante { Propaga = Montecl, TempoViagem = 4.5f });
+                    propagacoes.Add(XIVjulho);
+                    #endregion
+
+                    #region Capivari Cachoeira 
+                    //tambem chamado G.P.Souza
+                    var capiCacho = new Propagacao() { IdPosto = 115, NomePostoFluv = "Capivari Cachoeira" };
+                    capiCacho.Modelo.Add(new ModeloSmap() { NomeVazao = "GPSOUZA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(capiCacho);
+                    #endregion
+
+                    #region Salto Pilão
+                    var saltPilao = new Propagacao() { IdPosto = 101, NomePostoFluv = "Salto Pilão" };
+                    saltPilao.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTOPILAO", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(saltPilao);
+                    #endregion
+
+                    //
+
+
+                    #region Salto RS
+                    var saltRS = new Propagacao() { IdPosto = 221, NomePostoFluv = "Salto RS" };
+                    saltRS.Modelo.Add(new ModeloSmap() { NomeVazao = "SALTORS", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(saltRS);
+                    #endregion
+
+                    #endregion
+
+                    #region Paraiba do sul(outras se)//verificar talvez ver tocos lajes
+
+                    #region Paraibuna
+                    var paraibuna = new Propagacao() { IdPosto = 121, NomePostoFluv = "paraibuna" };
+                    paraibuna.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.873f });
+                    propagacoes.Add(paraibuna);
+                    #endregion
+
+                    #region STA BRANCA
+                    var staBranca = new Propagacao() { IdPosto = 122, NomePostoFluv = "santa branca" };
+                    staBranca.Modelo.Add(new ModeloSmap() { NomeVazao = "STABRANCA", TempoViagem = 0, FatorDistribuicao = 0.127f });
+                    staBranca.PostoMontantes.Add(new PostoMontante { Propaga = paraibuna, TempoViagem = 6 });///verificar
+                    propagacoes.Add(staBranca);
+                    #endregion
+
+                    #region jaguari
+                    var jaguari = new Propagacao() { IdPosto = 120, NomePostoFluv = "jaguari" };
+                    jaguari.Modelo.Add(new ModeloSmap() { NomeVazao = "JAGUARI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(jaguari);
+                    #endregion
+
+                    #region Funil paraiba
+                    var Fun = new Propagacao() { IdPosto = 123, NomePostoFluv = "Funil paraiba" };
+                    Fun.Modelo.Add(new ModeloSmap() { NomeVazao = "FUNIL", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Fun.PostoMontantes.Add(new PostoMontante { Propaga = staBranca, TempoViagem = 84 });///verificar
+                    Fun.PostoMontantes.Add(new PostoMontante { Propaga = jaguari, TempoViagem = 72 });///verificar
+                    propagacoes.Add(Fun);
+                    #endregion
+
+                    #region Sta Cecilia
+                    var staceci = new Propagacao() { IdPosto = 125, NomePostoFluv = "sta cecilia" };
+                    staceci.Modelo.Add(new ModeloSmap() { NomeVazao = "STACECILIA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    staceci.PostoMontantes.Add(new PostoMontante { Propaga = Fun, TempoViagem = 24 });///verificar
+                    propagacoes.Add(staceci);
+                    #endregion
+
+                    #region Picada
+                    var Picada = new Propagacao() { IdPosto = 197, NomePostoFluv = "Picada" };
+                    Picada.Modelo.Add(new ModeloSmap() { NomeVazao = "PICADA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Picada);
+                    #endregion
+
+                    #region Sobragi
+                    var Sobragi = new Propagacao() { IdPosto = 198, NomePostoFluv = "Sobragi" };
+                    Sobragi.Modelo.Add(new ModeloSmap() { NomeVazao = "SOBRAGI", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Sobragi.PostoMontantes.Add(new PostoMontante { Propaga = Picada, TempoViagem = 5 });///verificar
+                    propagacoes.Add(Sobragi);
+                    #endregion
+
+                    #region ANTA
+                    var ANTA = new Propagacao() { IdPosto = 129, NomePostoFluv = "ANTA" };
+                    ANTA.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.711f });
+                    ANTA.PostoMontantes.Add(new PostoMontante { Propaga = Sobragi, TempoViagem = 6 });///verificar
+                    ANTA.PostoMontantes.Add(new PostoMontante { Propaga = staceci, TempoViagem = 40 });///verificar
+                    propagacoes.Add(ANTA);
+                    #endregion
+
+                    #region ilha pombos
+                    var ilhaP = new Propagacao() { IdPosto = 130, NomePostoFluv = "ilha Pombos" };
+                    ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "ILHAP", TempoViagem = 0, FatorDistribuicao = 0.289f });
+                    ilhaP.PostoMontantes.Add(new PostoMontante { Propaga = ANTA, TempoViagem = 10 });///verificar
+                    propagacoes.Add(ilhaP);
+                    #endregion
+
+                    #region tocos
+                    var tocos = new Propagacao() { IdPosto = 201, NomePostoFluv = "tocos" };
+                    tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.68f });
+                    propagacoes.Add(tocos);
+                    #endregion
+
+                    #region lajes
+                    var lajes = new Propagacao() { IdPosto = 202, NomePostoFluv = "lajes" };
+                    lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.32f });
+                    propagacoes.Add(lajes);
+                    #endregion
+
+                    #region santana
+                    var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };// vai usar fator de 0.317 para o dadvaz (calculado de fator de santana - fator de tocos)
+                    santana.Modelo.Add(new ModeloSmap() { NomeVazao = "LAJESTOCOS", TempoViagem = 0, FatorDistribuicao = 0.997f });
+                    propagacoes.Add(santana);
+                    #endregion
+
+                    #region Barra do Brauna
+
+                    var bBrau = new Propagacao() { IdPosto = 135, NomePostoFluv = "Barra Brauna" };
+                    bBrau.Modelo.Add(new ModeloSmap() { NomeVazao = "BBRAUNA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(bBrau);
+
+                    #endregion
+
+                    #region Suiça
+
+                    var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
+                    suica.Modelo.Add(new ModeloSmap() { NomeVazao = "Suica", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(suica);
+
+                    #endregion
+                    #endregion
+
+                    #region juruena salto apiacas
+
+
+                    #region Juruena
+                    var Juruena = new Propagacao() { IdPosto = 226, NomePostoFluv = "JURUENA" };
+                    Juruena.Modelo.Add(new ModeloSmap() { NomeVazao = "JURUENA", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Juruena);
+                    #endregion
+
+                    #region SAPIACAS
+                    var SAPIACAS = new Propagacao() { IdPosto = 225, NomePostoFluv = "SAPIACAS" };
+                    SAPIACAS.Modelo.Add(new ModeloSmap() { NomeVazao = "SAPIACAS", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SAPIACAS);
+                    #endregion
+
+
+
+                    #endregion
+                }
+
 
                 new AddLog("Propagação foi preenchida com sucesso!");
             }
