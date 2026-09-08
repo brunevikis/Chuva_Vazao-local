@@ -1032,7 +1032,532 @@ namespace ChuvaVazaoTools.Classes
 
                     #region NORTE
 
+                    #region Sub-bacia modelada: Serra da Mesa
 
+                    #region Serra da Mesa
+                    var SerraMesa = new Propagacao() { IdPosto = 270, NomePostoFluv = "Serra da Mesa" };
+                    SerraMesa.Modelo.Add(new ModeloSmap() { NomeVazao = "serra_da_mesa", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SerraMesa);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Lajeado
+
+                    #region Cana Brava
+                    var CanaBrava = new Propagacao() { IdPosto = 191, NomePostoFluv = "Cana Brava" };
+                    CanaBrava.Modelo.Add(new ModeloSmap() { NomeVazao = "lajeado", TempoViagem = 0, FatorDistribuicao = 0.056f });
+                    CanaBrava.PostoMontantes.Add(new PostoMontante { Propaga = SerraMesa, TempoViagem = 10 });
+                    propagacoes.Add(CanaBrava);
+                    #endregion
+
+                    #region Sao Salvador
+                    var SaoSalvador = new Propagacao() { IdPosto = 253, NomePostoFluv = "São Salvador" };
+                    SaoSalvador.Modelo.Add(new ModeloSmap() { NomeVazao = "lajeado", TempoViagem = 0, FatorDistribuicao = 0.055f });
+                    SaoSalvador.PostoMontantes.Add(new PostoMontante { Propaga = CanaBrava, TempoViagem = 16 });
+                    propagacoes.Add(SaoSalvador);
+                    #endregion
+
+                    #region Peixe Angical
+                    var PeAngi = new Propagacao() { IdPosto = 257, NomePostoFluv = "Peixe Angical" };
+                    PeAngi.Modelo.Add(new ModeloSmap() { NomeVazao = "lajeado", TempoViagem = 0, FatorDistribuicao = 0.434f });
+                    PeAngi.PostoMontantes.Add(new PostoMontante { Propaga = SaoSalvador, TempoViagem = 16 });
+                    propagacoes.Add(PeAngi);
+                    #endregion
+
+                    #region Lajeado
+                    var Lajeado = new Propagacao() { IdPosto = 273, NomePostoFluv = "Lajeado" };
+                    Lajeado.Modelo.Add(new ModeloSmap() { NomeVazao = "lajeado", TempoViagem = 0, FatorDistribuicao = 0.455f });
+                    Lajeado.PostoMontantes.Add(new PostoMontante { Propaga = PeAngi, TempoViagem = 64 });
+                    propagacoes.Add(Lajeado);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Estreito
+
+                    #region Estreito
+                    var Estreito = new Propagacao() { IdPosto = 271, NomePostoFluv = "Estreito" };
+                    Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_estreito", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Estreito.Modelo.Add(new ModeloSmap() { NomeVazao = "estreito_rio_do_sono", TempoViagem = 46 });
+                    Estreito.PostoMontantes.Add(new PostoMontante { Propaga = Lajeado, TempoViagem = 83 });
+                    propagacoes.Add(Estreito);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Tucuruí
+
+                    #region Tucurui
+                    var Tucurui = new Propagacao() { IdPosto = 275, NomePostoFluv = "Tucurui" };
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_tucurui", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "bandeirantes", TempoViagem = 144 });
+                    Tucurui.Modelo.Add(new ModeloSmap() { NomeVazao = "conceicao_do_araguaia", TempoViagem = 72 });
+                    Tucurui.PostoMontantes.Add(new PostoMontante { Propaga = Estreito, TempoViagem = 0 });
+                    propagacoes.Add(Tucurui);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jirau
+
+                    #region jirau
+                    //string nomeVazao = "incr_jirau";
+
+                    var Jirau = new Propagacao() { IdPosto = 285, NomePostoFluv = "Jirau" };
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "incr_jirau", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "principe_da_beira", TempoViagem = 56 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "guajara_mirim", TempoViagem = 14 });
+                    Jirau.Modelo.Add(new ModeloSmap() { NomeVazao = "amaru_mayu", TempoViagem = 135 });
+
+                    propagacoes.Add(Jirau);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Santo Antônio
+
+                    #region STO ANTONIO
+                    var StoAnt = new Propagacao() { IdPosto = 287, NomePostoFluv = "Sto Antonio" };
+                    StoAnt.Modelo.Add(new ModeloSmap() { NomeVazao = "santo_antonio", TempoViagem = 0, FatorDistribuicao = 1 });
+                    StoAnt.PostoMontantes.Add(new PostoMontante { Propaga = Jirau, TempoViagem = 23 });
+                    propagacoes.Add(StoAnt);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Guaporé
+
+                    #region Guaporé
+                    var Guapo = new Propagacao() { IdPosto = 296, NomePostoFluv = "Guapore" };
+                    Guapo.Modelo.Add(new ModeloSmap() { NomeVazao = "guapore", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Guapo);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Dardanelos
+
+                    #region Dardanelos
+                    var Darda = new Propagacao() { IdPosto = 291, NomePostoFluv = "Dardanelos" };
+                    Darda.Modelo.Add(new ModeloSmap() { NomeVazao = "dardanelos", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Darda);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Samuel
+
+                    #region Samuel
+                    var Samuel = new Propagacao() { IdPosto = 279, NomePostoFluv = "Samuel" };
+                    Samuel.Modelo.Add(new ModeloSmap() { NomeVazao = "samuel", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Samuel);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Rondon II
+
+                    #region RondonII
+                    var Rondon = new Propagacao() { IdPosto = 145, NomePostoFluv = "Rondon II" };
+                    Rondon.Modelo.Add(new ModeloSmap() { NomeVazao = "rondon_ii", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Rondon);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Pimental
+
+                    #region Pimental
+                    var Piment = new Propagacao() { IdPosto = 288, NomePostoFluv = "Pimental" };
+                    Piment.Modelo.Add(new ModeloSmap() { NomeVazao = "pimental", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Piment);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Colíder
+
+                    #region Sinop
+                    var Sinop = new Propagacao() { IdPosto = 227, NomePostoFluv = "Sinop" };
+                    Sinop.Modelo.Add(new ModeloSmap() { NomeVazao = "colider", TempoViagem = 0, FatorDistribuicao = 0.915f });
+                    propagacoes.Add(Sinop);
+                    #endregion
+
+                    #region Colider
+                    var coli = new Propagacao() { IdPosto = 228, NomePostoFluv = "Colider" };
+                    coli.Modelo.Add(new ModeloSmap() { NomeVazao = "colider", TempoViagem = 0, FatorDistribuicao = 0.085f });
+                    coli.PostoMontantes.Add(new PostoMontante { Propaga = Sinop, TempoViagem = 17 });
+                    propagacoes.Add(coli);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: São Manoel
+
+                    #region Teles Pires
+                    var Telepi = new Propagacao() { IdPosto = 229, NomePostoFluv = "Teles Pires" };
+                    Telepi.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_manoel", TempoViagem = 0, FatorDistribuicao = 0.991f });
+                    Telepi.PostoMontantes.Add(new PostoMontante { Propaga = coli, TempoViagem = 132 });
+                    propagacoes.Add(Telepi);
+                    #endregion
+
+                    #region Sao Manoel
+                    var Smano = new Propagacao() { IdPosto = 230, NomePostoFluv = "Sao Manoel" };
+                    Smano.Modelo.Add(new ModeloSmap() { NomeVazao = "sao_manoel", TempoViagem = 0, FatorDistribuicao = 0.009f });
+                    Smano.PostoMontantes.Add(new PostoMontante { Propaga = Telepi, TempoViagem = 7 });
+                    propagacoes.Add(Smano);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Juruena
+
+                    #region Juruena
+                    var Juruena = new Propagacao() { IdPosto = 226, NomePostoFluv = "JURUENA" };
+                    Juruena.Modelo.Add(new ModeloSmap() { NomeVazao = "juruena", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Juruena);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto Apiacas
+
+                    #region SAPIACAS
+                    var SAPIACAS = new Propagacao() { IdPosto = 225, NomePostoFluv = "SAPIACAS" };
+                    SAPIACAS.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_apiacas", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SAPIACAS);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Balbina
+
+                    #region Balbina
+                    var Balb = new Propagacao() { IdPosto = 269, NomePostoFluv = "Balbina" };
+                    Balb.Modelo.Add(new ModeloSmap() { NomeVazao = "balbina", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Balb);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Curuá-Una
+
+                    #region Curua-una
+                    var Curuauna = new Propagacao() { IdPosto = 277, NomePostoFluv = "Curuauna" };
+                    Curuauna.Modelo.Add(new ModeloSmap() { NomeVazao = "curua_una", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Curuauna);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Santo Antonio do Jari
+
+                    #region Santo Antonio do Jari
+                    var StaJari = new Propagacao() { IdPosto = 290, NomePostoFluv = "Antonio do Jari" };
+                    StaJari.Modelo.Add(new ModeloSmap() { NomeVazao = "santo_antonio_do_jari", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(StaJari);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Ferreira Gomes
+
+                    #region Cachoeira Caldeirao
+                    var CachoCa = new Propagacao() { IdPosto = 204, NomePostoFluv = "Cachoeira Caldeirao" };
+                    CachoCa.Modelo.Add(new ModeloSmap() { NomeVazao = "ferreira_gomes", TempoViagem = 0, FatorDistribuicao = 0.989f });
+                    propagacoes.Add(CachoCa);
+                    #endregion
+
+                    #region Coaracy Nunes
+                    var Coaracy = new Propagacao() { IdPosto = 280, NomePostoFluv = "Coaracy Nunes" };
+                    Coaracy.Modelo.Add(new ModeloSmap() { NomeVazao = "ferreira_gomes", TempoViagem = 0, FatorDistribuicao = 0.003f });
+                    Coaracy.PostoMontantes.Add(new PostoMontante { Propaga = CachoCa, TempoViagem = 2 });
+                    propagacoes.Add(Coaracy);
+                    #endregion
+
+                    #region Ferreira Gomes
+                    var Ferreira = new Propagacao() { IdPosto = 297, NomePostoFluv = "Ferreira Gomes" };
+                    Ferreira.Modelo.Add(new ModeloSmap() { NomeVazao = "ferreira_gomes", TempoViagem = 0, FatorDistribuicao = 0.008f });
+                    Ferreira.PostoMontantes.Add(new PostoMontante { Propaga = Coaracy, TempoViagem = 2 });
+                    propagacoes.Add(Ferreira);
+                    #endregion
+
+                    #endregion
+
+                    #endregion
+
+                    #region OSE
+
+                    #region Sub-bacia modelada: Itiquira
+
+                    #region Itiquira
+                    var Itiquira = new Propagacao() { IdPosto = 259, NomePostoFluv = "Itiquira" };
+                    Itiquira.Modelo.Add(new ModeloSmap() { NomeVazao = "itiquira", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Itiquira);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jauru
+
+                    #region Jauru
+                    var Jauru = new Propagacao() { IdPosto = 295, NomePostoFluv = "Jauru" };
+                    Jauru.Modelo.Add(new ModeloSmap() { NomeVazao = "jauru", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Jauru);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Manso
+
+                    #region MANSO
+                    var MANSO = new Propagacao() { IdPosto = 278, NomePostoFluv = "MANSO" };
+                    MANSO.Modelo.Add(new ModeloSmap() { NomeVazao = "manso", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(MANSO);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Ponte de Pedra
+
+                    #region PDEPEDRA
+                    var PDEPEDRA = new Propagacao() { IdPosto = 281, NomePostoFluv = "PDEPEDRA" };
+                    PDEPEDRA.Modelo.Add(new ModeloSmap() { NomeVazao = "ponte_de_pedra", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(PDEPEDRA);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Candonga
+
+                    #region CAndonga
+                    var CAndonga = new Propagacao() { IdPosto = 149, NomePostoFluv = "CAndonga" };
+                    CAndonga.Modelo.Add(new ModeloSmap() { NomeVazao = "candonga", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(CAndonga);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Guilman 
+
+                    #region Guiman amorim
+                    var guimam = new Propagacao() { IdPosto = 262, NomePostoFluv = "Guiman amorim" };
+                    guimam.Modelo.Add(new ModeloSmap() { NomeVazao = "guilman_amorim", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(guimam);
+                    #endregion
+
+                    #region SA CARVALHO
+                    var SACAR = new Propagacao() { IdPosto = 183, NomePostoFluv = "SA CARVALHO" };
+                    SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "guilman_amorim", TempoViagem = 0, FatorDistribuicao = 0 });///ver se tem que ficar aqui ou somente nos postos regredidos
+                    SACAR.PostoMontantes.Add(new PostoMontante { Propaga = guimam, TempoViagem = 4 });
+                    propagacoes.Add(SACAR);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Salto Grande CM
+
+                    #region SALTO GRANDE CM
+                    var SALTOCM = new Propagacao() { IdPosto = 134, NomePostoFluv = "SALTO GRANDE CM" };
+                    SALTOCM.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_grande_cm", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(SALTOCM);
+                    #endregion
+
+                    #region PTO ESTRELA
+                    var PTOESTRE = new Propagacao() { IdPosto = 263, NomePostoFluv = "PTO ESTRELA" };
+                    PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_grande_cm", TempoViagem = 0, FatorDistribuicao = 0 });///ver se tem que ficar aqui ou somente nos postos regredidos
+                    PTOESTRE.PostoMontantes.Add(new PostoMontante { Propaga = SALTOCM, TempoViagem = 2 });
+                    propagacoes.Add(PTOESTRE);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Mascarenhas
+
+                    #region BAGUARI
+                    var BAGUARI = new Propagacao() { IdPosto = 141, NomePostoFluv = "BAGUARI" };
+                    BAGUARI.Modelo.Add(new ModeloSmap() { NomeVazao = "mascarenhas", TempoViagem = 0, FatorDistribuicao = 0.315f });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = PTOESTRE, TempoViagem = 24 });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = SACAR, TempoViagem = 36 });
+                    BAGUARI.PostoMontantes.Add(new PostoMontante { Propaga = CAndonga, TempoViagem = 48 });
+                    propagacoes.Add(BAGUARI);
+                    #endregion
+
+                    #region AIMORES
+                    var AIMORES = new Propagacao() { IdPosto = 148, NomePostoFluv = "AIMORES" };
+                    AIMORES.Modelo.Add(new ModeloSmap() { NomeVazao = "mascarenhas", TempoViagem = 0, FatorDistribuicao = 0.455f });
+                    AIMORES.PostoMontantes.Add(new PostoMontante { Propaga = BAGUARI, TempoViagem = 12 });
+                    propagacoes.Add(AIMORES);
+                    #endregion
+
+                    #region MASCARENHAS
+                    var MASCARENHAS = new Propagacao() { IdPosto = 144, NomePostoFluv = "MASCARENHAS" };
+                    MASCARENHAS.Modelo.Add(new ModeloSmap() { NomeVazao = "mascarenhas", TempoViagem = 0, FatorDistribuicao = 0.230f });
+                    MASCARENHAS.PostoMontantes.Add(new PostoMontante { Propaga = AIMORES, TempoViagem = 1 });
+                    propagacoes.Add(MASCARENHAS);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Rosal
+
+                    #region ROSAL
+                    var ROSAL = new Propagacao() { IdPosto = 196, NomePostoFluv = "ROSAL" };
+                    ROSAL.Modelo.Add(new ModeloSmap() { NomeVazao = "rosal", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(ROSAL);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Santa Clara-MG
+
+
+                    #region STA CLAR-MG
+                    var STACLAMG = new Propagacao() { IdPosto = 283, NomePostoFluv = "STA CLAR-MG" };
+                    STACLAMG.Modelo.Add(new ModeloSmap() { NomeVazao = "santa_clara_mg", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(STACLAMG);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Sta. Branca
+
+                    #region Paraibuna
+                    var paraibuna = new Propagacao() { IdPosto = 121, NomePostoFluv = "paraibuna" };
+                    paraibuna.Modelo.Add(new ModeloSmap() { NomeVazao = "santa_branca", TempoViagem = 0, FatorDistribuicao = 0.873f });
+                    propagacoes.Add(paraibuna);
+                    #endregion
+
+                    #region STA BRANCA
+                    var staBranca = new Propagacao() { IdPosto = 122, NomePostoFluv = "santa branca" };
+                    staBranca.Modelo.Add(new ModeloSmap() { NomeVazao = "santa_branca", TempoViagem = 0, FatorDistribuicao = 0.127f });
+                    staBranca.PostoMontantes.Add(new PostoMontante { Propaga = paraibuna, TempoViagem = 6 });
+                    propagacoes.Add(staBranca);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Jaguari
+
+                    #region jaguari
+                    var jaguari = new Propagacao() { IdPosto = 120, NomePostoFluv = "jaguari" };
+                    jaguari.Modelo.Add(new ModeloSmap() { NomeVazao = "jaguari", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(jaguari);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Funil
+
+                    #region Funil paraiba
+                    var Fun = new Propagacao() { IdPosto = 123, NomePostoFluv = "Funil paraiba" };
+                    Fun.Modelo.Add(new ModeloSmap() { NomeVazao = "funil_paraiba_do_sul", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Fun.PostoMontantes.Add(new PostoMontante { Propaga = staBranca, TempoViagem = 84 });///verificar
+                    Fun.PostoMontantes.Add(new PostoMontante { Propaga = jaguari, TempoViagem = 72 });///verificar
+                    propagacoes.Add(Fun);
+                    #endregion
+
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Sta Cecília
+
+
+                    #region Sta Cecilia
+                    var staceci = new Propagacao() { IdPosto = 125, NomePostoFluv = "sta cecilia" };
+                    staceci.Modelo.Add(new ModeloSmap() { NomeVazao = "santa_cecilia", TempoViagem = 0, FatorDistribuicao = 1 });
+                    staceci.PostoMontantes.Add(new PostoMontante { Propaga = Fun, TempoViagem = 24 });///verificar
+                    propagacoes.Add(staceci);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Picada
+
+                    #region Picada
+                    var Picada = new Propagacao() { IdPosto = 197, NomePostoFluv = "Picada" };
+                    Picada.Modelo.Add(new ModeloSmap() { NomeVazao = "picada", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(Picada);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Sobragi
+
+                    #region Sobragi
+                    var Sobragi = new Propagacao() { IdPosto = 198, NomePostoFluv = "Sobragi" };
+                    Sobragi.Modelo.Add(new ModeloSmap() { NomeVazao = "sobragi", TempoViagem = 0, FatorDistribuicao = 1 });
+                    Sobragi.PostoMontantes.Add(new PostoMontante { Propaga = Picada, TempoViagem = 5 });
+                    propagacoes.Add(Sobragi);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Anta
+
+                    #region ANTA
+                    var ANTA = new Propagacao() { IdPosto = 129, NomePostoFluv = "ANTA" };
+                    ANTA.Modelo.Add(new ModeloSmap() { NomeVazao = "anta", TempoViagem = 0, FatorDistribuicao = 1 });
+                    ANTA.PostoMontantes.Add(new PostoMontante { Propaga = Sobragi, TempoViagem = 6 });///verificar
+                    ANTA.PostoMontantes.Add(new PostoMontante { Propaga = staceci, TempoViagem = 40 });///verificar
+                    propagacoes.Add(ANTA);
+                    #endregion
+
+                    #region ilha pombos
+                    var ilhaP = new Propagacao() { IdPosto = 130, NomePostoFluv = "ilha Pombos" };
+                    ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "anta", TempoViagem = 0, FatorDistribuicao = 0 });//regredido
+                    ilhaP.PostoMontantes.Add(new PostoMontante { Propaga = ANTA, TempoViagem = 10 });///verificar
+                    propagacoes.Add(ilhaP);
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Barra do Brauna
+
+                    #region Barra do Brauna
+
+                    var bBrau = new Propagacao() { IdPosto = 135, NomePostoFluv = "Barra Brauna" };
+                    bBrau.Modelo.Add(new ModeloSmap() { NomeVazao = "barra_do_brauna", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(bBrau);
+
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Suiça
+
+                    #region Suiça
+
+                    var suica = new Propagacao() { IdPosto = 213, NomePostoFluv = "Suica" };
+                    suica.Modelo.Add(new ModeloSmap() { NomeVazao = "suica", TempoViagem = 0, FatorDistribuicao = 1 });
+                    propagacoes.Add(suica);
+
+                    #endregion
+
+                    #endregion
+
+                    #region Sub-bacia modelada: Tocos + Lajes
+
+                    #region tocos
+                    var tocos = new Propagacao() { IdPosto = 201, NomePostoFluv = "tocos" };
+                    tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.68f });
+                    propagacoes.Add(tocos);
+                    #endregion
+
+                    #region lajes
+                    var lajes = new Propagacao() { IdPosto = 202, NomePostoFluv = "lajes" };
+                    lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.32f });
+                    propagacoes.Add(lajes);
+                    #endregion
+
+                    #region santana
+                    var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };// vai usar fator de 0.317 para o dadvaz (calculado de fator de santana - fator de tocos)
+                    santana.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.997f });
+                    propagacoes.Add(santana);
+                    #endregion
+
+                    #endregion
 
                     #endregion
                 }
@@ -3641,7 +4166,7 @@ namespace ChuvaVazaoTools.Classes
                 //AdicionaCPINS(propagacoes, dadosAcompH);
 
                 #endregion
-                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH, shadow);//propagação da bacia tocantins, madeira, jeq_Parnaiba
+                PropagacaoMuskingun(propagacoes, dataForms, modelos, dadosAcompH, shadow, csv);//propagação da bacia tocantins, madeira, jeq_Parnaiba
                 //ExportaDadvaz(pastaSaida, propagacoes, runrevDate, modelos, revnum);
 
                 GetPrevs(propagacoes, dataForms);
@@ -3743,40 +4268,44 @@ namespace ChuvaVazaoTools.Classes
 
                 propagacoes = propagacoes.OrderBy(x => x.IdPosto).ToList();
 
-                if (pastaSaida.Contains("ECENS45"))
+                if (csv == false)
                 {
-                    DateTime dataEx = runrevDate.AddDays(7);
-                    //while (DataR.DayOfWeek != DayOfWeek.Friday) DataR = DataR.AddDays(1);
-
-                    // DataR = DataR.AddDays(14);
-
-                    foreach (var prop in propagacoes.Where(x => comPrevivaz.Any(y => y == x.IdPosto) || regredidoDePrevivaz.Any(z => z == x.IdPosto)))
+                    if (pastaSaida.Contains("ECENS45"))
                     {
-                        if (prop.IdPosto == 228)
+                        DateTime dataEx = runrevDate.AddDays(7);
+                        //while (DataR.DayOfWeek != DayOfWeek.Friday) DataR = DataR.AddDays(1);
+
+                        // DataR = DataR.AddDays(14);
+
+                        foreach (var prop in propagacoes.Where(x => comPrevivaz.Any(y => y == x.IdPosto) || regredidoDePrevivaz.Any(z => z == x.IdPosto)))
                         {
+                            if (prop.IdPosto == 228)
+                            {
+
+                            }
+                            if (prop.IdPosto == 287)
+                            {
+
+                            }
+                            var datas = prop.calMedSemanal.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                            datas.ForEach(x => prop.calMedSemanal.Remove(x));
+
+                            var datasN = prop.VazaoNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                            datasN.ForEach(x => prop.VazaoNatural.Remove(x));
+
+                            var datasI = prop.VazaoIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                            datasI.ForEach(x => prop.VazaoIncremental.Remove(x));
+
+                            var datasMI = prop.medSemanalIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                            datasMI.ForEach(x => prop.medSemanalIncremental.Remove(x));
+
+                            var datasMN = prop.medSemanalNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
+                            datasMN.ForEach(x => prop.medSemanalNatural.Remove(x));
 
                         }
-                        if (prop.IdPosto == 287)
-                        {
-
-                        }
-                        var datas = prop.calMedSemanal.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
-                        datas.ForEach(x => prop.calMedSemanal.Remove(x));
-
-                        var datasN = prop.VazaoNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
-                        datasN.ForEach(x => prop.VazaoNatural.Remove(x));
-
-                        var datasI = prop.VazaoIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
-                        datasI.ForEach(x => prop.VazaoIncremental.Remove(x));
-
-                        var datasMI = prop.medSemanalIncremental.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
-                        datasMI.ForEach(x => prop.medSemanalIncremental.Remove(x));
-
-                        var datasMN = prop.medSemanalNatural.Select(x => x.Key).Where(x => x.Date > dataEx).ToList();
-                        datasMN.ForEach(x => prop.medSemanalNatural.Remove(x));
-
                     }
                 }
+
 
 
 
@@ -4034,10 +4563,16 @@ namespace ChuvaVazaoTools.Classes
             }
 
         }
-        public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH, bool shadow = false)
+        public void PropagacaoMuskingun(List<Propagacao> propagacoes, DateTime data, List<ModeloChuvaVazao> modelos, List<CONSULTA_VAZAO> dadosAcompH, bool shadow = false, bool csv = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var ultimoAcomph = dadosAcompH.Select(x => x.data).Last();
+            bool padraoCSV = csv;
+
+            if (shadow == true)
+            {
+                padraoCSV = true;
+            }
 
             var dataInicio = data.AddDays(-95);//inicio da propagação Muskingun para tocantins e Madeira 
             var dataInicioJeqParna = data.AddDays(-45); // inicio da propagação Muskingun Jeq_Parnaiba
@@ -4049,7 +4584,15 @@ namespace ChuvaVazaoTools.Classes
 
                 #region santana
 
-                var santanaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJESTOCOS".ToUpper()).Select(x => x.Vazoes).First();
+                string LAJESnome = "LAJESTOCOS";
+
+                if (padraoCSV == true)
+                {
+                    LAJESnome = "lajes";
+                }
+
+                //var santanaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJESTOCOS".ToUpper()).Select(x => x.Vazoes).First();
+                var santanaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == LAJESnome.ToUpper()).Select(x => x.Vazoes).First();
                 var vazAcomphtocos = dadosAcompH.Where(x => x.posto == 201).ToList();
                 var santanaLajes = propagacoes.Where(x => x.IdPosto == 203).FirstOrDefault();
                 var tocos = propagacoes.Where(x => x.IdPosto == 201).FirstOrDefault();
@@ -4135,7 +4678,14 @@ namespace ChuvaVazaoTools.Classes
 
                 #region sao roque
 
-                var cnSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "CN".ToUpper()).Select(x => x.Vazoes).First();
+                string CNnome = "CM";
+                if (padraoCSV == true)
+                {
+                    CNnome = "campos_novos";
+                }
+
+                //var cnSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "CN".ToUpper()).Select(x => x.Vazoes).First();
+                var cnSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == CNnome.ToUpper()).Select(x => x.Vazoes).First();
                 var vazAcomphGarib = dadosAcompH.Where(x => x.posto == 89).ToList();
                 var sroque = propagacoes.Where(x => x.IdPosto == 88).FirstOrDefault();
 
@@ -4231,10 +4781,25 @@ namespace ChuvaVazaoTools.Classes
 
                 #region machadinho
 
+                string machaNome = "Machadinho";
+                if (padraoCSV == true)
+                {
+                    machaNome = "machadinho";
+                }
+
+                string BGnome = "BG";
+                if (padraoCSV == true)
+                {
+                    BGnome = "barra_grande";
+                }
+
                 var macha = propagacoes.Where(x => x.IdPosto == 217).FirstOrDefault();
                 var vazAcomphMacha = dadosAcompH.Where(x => x.posto == 217).ToList();
-                var machaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Machadinho".ToUpper()).Select(x => x.Vazoes).First();
-                var bgSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BG".ToUpper()).Select(x => x.Vazoes).First();
+                //var machaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Machadinho".ToUpper()).Select(x => x.Vazoes).First();
+                //var bgSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "BG".ToUpper()).Select(x => x.Vazoes).First();
+
+                var machaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == machaNome.ToUpper()).Select(x => x.Vazoes).First();
+                var bgSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == BGnome.ToUpper()).Select(x => x.Vazoes).First();
 
 
                 macha.VazaoIncremental.Clear();
@@ -4265,9 +4830,16 @@ namespace ChuvaVazaoTools.Classes
 
                 #region ITA
 
+                string itaNome = "Ita";
+                if (padraoCSV == true)
+                {
+                    itaNome = "ita";
+                }
+
                 var ita = propagacoes.Where(x => x.IdPosto == 92).FirstOrDefault();
                 var vazAcomphIta = dadosAcompH.Where(x => x.posto == 92).ToList();
-                var itaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Ita".ToUpper()).Select(x => x.Vazoes).First();
+                //var itaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Ita".ToUpper()).Select(x => x.Vazoes).First();
+                var itaSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == itaNome.ToUpper()).Select(x => x.Vazoes).First();
 
 
                 ita.VazaoIncremental.Clear();
@@ -4298,10 +4870,17 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Foz chapeco
 
+                string fozNome = "FozChapeco";
+                if (padraoCSV == true)
+                {
+                    fozNome = "foz_do_chapeco";
+                }
+
                 var chap = propagacoes.Where(x => x.IdPosto == 94).FirstOrDefault();
                 var monjolinho = propagacoes.Where(x => x.IdPosto == 220).FirstOrDefault();
                 var vazAcomphChap = dadosAcompH.Where(x => x.posto == 94).ToList();
-                var chapSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "FozChapeco".ToUpper()).Select(x => x.Vazoes).First();
+                //var chapSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "FozChapeco".ToUpper()).Select(x => x.Vazoes).First();
+                var chapSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == fozNome.ToUpper()).Select(x => x.Vazoes).First();
 
 
                 chap.VazaoIncremental.Clear();
@@ -4337,7 +4916,15 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Jeq_Paraniba
                 #region Irape
-                var sIrape = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+
+                string irapeNome = "IRAPE";
+                if (padraoCSV == true)
+                {
+                    irapeNome = "irape";
+                }
+
+                //var sIrape = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+                var sIrape = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == irapeNome.ToUpper()).Select(x => x.Vazoes).First();
                 var Irapepro = propagacoes.Where(x => x.IdPosto == 255).FirstOrDefault();
 
                 Irapepro.VazaoIncremental.Clear();
@@ -4357,8 +4944,21 @@ namespace ChuvaVazaoTools.Classes
 
                 #region irape-itapebi
 
-                var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
-                List<double> irItCoef = new List<double> { 0.166666666666667, 0.666666666666667, 0.166666666666667 };
+                //var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+                var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == irapeNome.ToUpper()).Select(x => x.Vazoes).First();
+
+                double c0 = 0.166666666666667;
+                double c1 = 0.666666666666667;
+                double c2 = 0.166666666666667;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.207760711398545;
+                    c1 = 0.762328213419563;
+                    c2 = 0.0299110751818918;
+                }
+
+                List<double> irItCoef = new List<double> { c0, c1, c2 };
                 double vazaoP = 0;
                 for (int i = 0; i < 5; i++)
                 {
@@ -4383,7 +4983,15 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Itapebi
 
-                var sItapebi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ITAPEBI".ToUpper()).Select(x => x.Vazoes).First();
+                string itapNome = "ITAPEBI";
+
+                if (padraoCSV == true)
+                {
+                    itapNome = "itapebi";
+                }
+
+                //var sItapebi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ITAPEBI".ToUpper()).Select(x => x.Vazoes).First();
+                var sItapebi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == itapNome.ToUpper()).Select(x => x.Vazoes).First();
                 var Itapebipro = propagacoes.Where(x => x.IdPosto == 188).FirstOrDefault();
 
                 Itapebipro.VazaoIncremental.Clear();
@@ -4414,7 +5022,15 @@ namespace ChuvaVazaoTools.Classes
 
                 #region BOA ESPERANÇA
 
-                var BOASMAP = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "UBESP".ToUpper()).Select(x => x.Vazoes).First();
+                string UBESPNome = "UBESP";
+
+                if (padraoCSV == true)
+                {
+                    UBESPNome = "boa_esperanca";
+                }
+
+                //var BOASMAP = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "UBESP".ToUpper()).Select(x => x.Vazoes).First();
+                var BOASMAP = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == UBESPNome.ToUpper()).Select(x => x.Vazoes).First();
                 var boapro = propagacoes.Where(x => x.IdPosto == 190).FirstOrDefault();
 
                 boapro.VazaoIncremental.Clear();
@@ -4444,7 +5060,16 @@ namespace ChuvaVazaoTools.Classes
 
                 #endregion
                 #region serra da mesa
-                var sMesa = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "SMesa".ToUpper()).Select(x => x.Vazoes).First();
+
+                string SMesaNome = "SMesa";
+
+                if (padraoCSV == true)
+                {
+                    SMesaNome = "serra_da_mesa";
+                }
+
+                //var sMesa = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "SMesa".ToUpper()).Select(x => x.Vazoes).First();
+                var sMesa = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == SMesaNome.ToUpper()).Select(x => x.Vazoes).First();
                 var SerraMesa = propagacoes.Where(x => x.IdPosto == 270).FirstOrDefault();
 
                 SerraMesa.VazaoIncremental.Clear();
@@ -4472,7 +5097,15 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Cana brava
-                var vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+
+                string LAJEADONome = "LAJEADO";
+
+                if (padraoCSV == true)
+                {
+                    LAJEADONome = "lajeado";
+                }
+                //var vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                var vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == LAJEADONome.ToUpper()).Select(x => x.Vazoes).First();
                 var canaBrava = propagacoes.Where(x => x.IdPosto == 191).FirstOrDefault();
 
                 canaBrava.VazaoIncremental.Clear();
@@ -4508,7 +5141,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region São Salvador
-                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                //vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == LAJEADONome.ToUpper()).Select(x => x.Vazoes).First();
                 var sSalvador = propagacoes.Where(x => x.IdPosto == 253).FirstOrDefault();
 
                 sSalvador.VazaoIncremental.Clear();
@@ -4543,7 +5177,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Peixe Angical
-                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                //vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == LAJEADONome.ToUpper()).Select(x => x.Vazoes).First();
                 var pAngi = propagacoes.Where(x => x.IdPosto == 257).FirstOrDefault();
 
                 pAngi.VazaoIncremental.Clear();
@@ -4577,7 +5212,8 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Lajeado
-                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                //vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "LAJEADO".ToUpper()).Select(x => x.Vazoes).First();
+                vazlajeado = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == LAJEADONome.ToUpper()).Select(x => x.Vazoes).First();
                 var laj = propagacoes.Where(x => x.IdPosto == 273).FirstOrDefault();
 
                 laj.VazaoIncremental.Clear();
@@ -4612,8 +5248,27 @@ namespace ChuvaVazaoTools.Classes
 
                 #region  BANDEIRANTES- CONCEIÇÃO DO ARAGUAIA
 
-                var banCA = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Bandeirant".ToUpper()).Select(x => x.Vazoes).First();
-                List<double> banCACoef = new List<double> { 0.152775192170181, 0.152775192170181, 0.694449615659638 };
+                string banNome = "Bandeirant";
+                if (padraoCSV ==true)
+                {
+                    banNome = "bandeirantes";
+                }
+
+                //var banCA = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "Bandeirant".ToUpper()).Select(x => x.Vazoes).First();
+                var banCA = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == banNome.ToUpper()).Select(x => x.Vazoes).First();
+
+                c0 = 0.152775192170181;
+                c1 = 0.152775192170181;
+                c2 = 0.694449615659638;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.152775192170181;
+                    c1 = 0.152775192170181;
+                    c2 = 0.694449615659639;
+                }
+
+                List<double> banCACoef = new List<double> { c0, c1, c2 };
                 double vazaoPassada = 0;
                 for (int i = 0; i < 9; i++)
                 {
@@ -4636,8 +5291,27 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
                 #region CONCEIÇÃO DO ARAGUAIA - TUCURUÍ
 
-                var CAtuc = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "C.ARAGUAIA".ToUpper()).Select(x => x.Vazoes).First();
-                List<double> CAtucCoef = new List<double> { 0.0322580645161291, 0.612903225806452, 0.354838709677419 };
+                string catucNome = "C.ARAGUAIA";
+                if (padraoCSV ==true)
+                {
+                    catucNome = "conceicao_do_araguaia";
+                }
+
+                //var CAtuc = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "C.ARAGUAIA".ToUpper()).Select(x => x.Vazoes).First();
+                var CAtuc = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == catucNome.ToUpper()).Select(x => x.Vazoes).First();
+
+                c0 = 0.0322580645161291;
+                c1 = 0.612903225806452;
+                c2 = 0.354838709677419;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.230769230769231;
+                    c1 = 0.692307692307692;
+                    c2 = 0.0769230769230769;
+                }
+
+                List<double> CAtucCoef = new List<double> { c0, c1, c2 };
                 vazaoPassada = 0;
                 foreach (var date in CAtuc.Keys.ToList())//soma as vazoes do trecho bandeirant pois é seu montante
                 {
@@ -4668,7 +5342,18 @@ namespace ChuvaVazaoTools.Classes
                 var lajeadoVaz = propagacoes.Where(x => x.IdPosto == 273).Select(x => x.VazaoNatural).FirstOrDefault();
                 var lajEst = lajeadoVaz;
 
-                List<double> lajEstCoef = new List<double> { 0.343207069827643, 0.366616629265668, 0.290176300906689 };
+                c0 = 0.343207069827643;
+                c1 = 0.366616629265668;
+                c2 = 0.290176300906689;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.343213713998611;
+                    c1 = 0.36659530578026;
+                    c2 = 0.290190980221129;
+                }
+
+                List<double> lajEstCoef = new List<double> { c0, c1, c2 };
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -4691,9 +5376,27 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region  Porto Real-Estreito
-                var PrEst = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "PORTO REAL".ToUpper()).Select(x => x.Vazoes).First();
 
-                List<double> PrEstCoef = new List<double> { 0.235961557677904, 0.622494756568882, 0.141543685753214 };
+                string PORTOrealNome = "PORTO REAL";
+                if (padraoCSV==true)
+                {
+                    PORTOrealNome = "estreito_rio_do_sono";
+                }
+                //var PrEst = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "PORTO REAL".ToUpper()).Select(x => x.Vazoes).First();
+                var PrEst = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == PORTOrealNome.ToUpper()).Select(x => x.Vazoes).First();
+
+                c0 = 0.235961557677904;
+                c1 = 0.622494756568882;
+                c2 = 0.141543685753214;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.291683247115002;
+                    c1 = 0.504178272980501;
+                    c2 = 0.204138479904497;
+                }
+
+                List<double> PrEstCoef = new List<double> { c0, c1, c2 };
                 vazaoPassada = 0;
 
                 for (int i = 0; i < 2; i++)
@@ -4717,7 +5420,15 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Estreito
-                var estreitoSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ESTREITO".ToUpper()).Select(x => x.Vazoes).First();
+
+                string estNome = "ESTREITO";
+                if (padraoCSV ==true)
+                {
+                    estNome = "incr_estreito";
+                }
+
+                //var estreitoSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ESTREITO".ToUpper()).Select(x => x.Vazoes).First();
+                var estreitoSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == estNome.ToUpper()).Select(x => x.Vazoes).First();
                 var estreito = propagacoes.Where(x => x.IdPosto == 271).FirstOrDefault();
 
                 estreito.VazaoIncremental.Clear();
@@ -4750,7 +5461,7 @@ namespace ChuvaVazaoTools.Classes
                 var estreitoVaz = propagacoes.Where(x => x.IdPosto == 271).Select(x => x.VazaoNatural).FirstOrDefault();
                 var estTuc = estreitoVaz;
 
-                List<double> estTucCoef = new List<double> { 0.0502793296089386, 0.620111731843575, 0.329608938547486 };
+                List<double> estTucCoef = new List<double> { 0.0502793296089386, 0.620111731843575, 0.329608938547486 };//não precisa mudar coeficientes pra padrãocsv
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -4773,7 +5484,14 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Tucurui
-                var tucuruiSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "TUCURUI".ToUpper()).Select(x => x.Vazoes).First();
+
+                string TucNome = "TUCURUI";
+                if (padraoCSV ==true)
+                {
+                    TucNome = "incr_tucurui";
+                }
+                //var tucuruiSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "TUCURUI".ToUpper()).Select(x => x.Vazoes).First();
+                var tucuruiSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == TucNome.ToUpper()).Select(x => x.Vazoes).First();
                 var tucurui = propagacoes.Where(x => x.IdPosto == 275).FirstOrDefault();
 
                 tucurui.VazaoIncremental.Clear();
@@ -4848,9 +5566,27 @@ namespace ChuvaVazaoTools.Classes
 
                 #region  principe da Beira - Guajará Mirim
 
-                var PbGm = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "P_DA_BEIRA".ToUpper()).Select(x => x.Vazoes).First();
+                string pbeiraNome = "P_DA_BEIRA";
+                if (padraoCSV ==true)
+                {
+                    pbeiraNome = "principe_da_beira";
+                }
+
+                //var PbGm = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "P_DA_BEIRA".ToUpper()).Select(x => x.Vazoes).First();
+                var PbGm = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == pbeiraNome.ToUpper()).Select(x => x.Vazoes).First();
                 //List<double> PbGmCoef = new List<double> { 0.375, 0.625, 0 };
-                List<double> PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
+
+                c0 = 0.23330956912145081605;
+                c1 = 0.50318460079070015389;
+                c2 = 0.26350583008784900230;
+
+                if (padraoCSV == true)
+                {
+                    c0 = 0.233309569121451;
+                    c1 = 0.5031846007907;
+                    c2 = 0.263505830087849;
+                }
+                List<double> PbGmCoef = new List<double> { c0, c1, c2 };
                 //if (shadow == true)
                 //{
                 //    PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
@@ -4878,7 +5614,13 @@ namespace ChuvaVazaoTools.Classes
 
                 #region  Guajará Mirim - Jirau
 
-                var GmJi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "GUAJ-MIRIM".ToUpper()).Select(x => x.Vazoes).First();
+                string GuajNome = "GUAJ-MIRIM";
+                if (padraoCSV ==true)
+                {
+                    GuajNome = "guajara_mirim";
+                }
+                //var GmJi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "GUAJ-MIRIM".ToUpper()).Select(x => x.Vazoes).First();
+                var GmJi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == GuajNome.ToUpper()).Select(x => x.Vazoes).First();
                 Dictionary<DateTime, float> auxiliar = new Dictionary<DateTime, float>();
                 double tempVi = 14;
 
@@ -4908,7 +5650,19 @@ namespace ChuvaVazaoTools.Classes
                 GmJi = auxiliar;
 
                 //List<double> GmJiCoef = new List<double> { 0.375, 0.625, 0 };
-                List<double> GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
+
+                c0 = 0.49899899799799601885;
+                c1 = 0.50100300200600400569;
+                c2 = -0.00000200000400001000;
+
+                if (padraoCSV == true )
+                {
+                    c0 = 0.498998997997996;
+                    c1 = 0.501003002006004;
+                    c2 = -0.000002000003999982;
+                }
+
+                List<double> GmJiCoef = new List<double> { c0, c1, c2 };
                 //if (shadow == true)
                 //{
                 //    GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
