@@ -2033,37 +2033,81 @@ namespace ChuvaVazaoTools
                             statusF.Previvaz = RunStatus.statuscode.initialialized;
 
                             var p = Program.GetPrevivazExPath(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt"));
+                            bool padraoCSV = false;
+                            if (shadow == true)
+                            {
+                                padraoCSV = true;
+                            }
 
                             if (p != null)
                             {
                                 var encad = cbx_Encadear_Previvaz.Checked;
-                                AddLog("EXECUCAO PREVIVAZ");
-                                if (logF != null) logF.WriteLine(name + ": EXECUCAO PREVIVAZ !!!");
-                                if (encad)
+                                if (padraoCSV == true)
                                 {
-                                    var parametro = p.Item2 + "|true";
-                                    if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
+                                    AddLog("EXECUCAO PosProcessamento");
+                                    if (logF != null) logF.WriteLine(name + ": EXECUCAO PosProcessamento !!!");
+                                    if (encad)
                                     {
-                                        parametro = parametro + "|ext";
-                                    }
-                                    var pre = System.Diagnostics.Process.Start(p.Item1, parametro);
-                                    pre.WaitForExit();
-                                }
-                                else
-                                {
-                                    if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
-                                    {
-                                        var parametro = p.Item2 + "|ext";
-                                        var pr = System.Diagnostics.Process.Start(p.Item1, parametro);
-                                        pr.WaitForExit();
+                                        var parametro = p.Item2 + "|true";
+                                        if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
+                                        {
+                                            parametro = parametro + "|ext";
+                                        }
+                                        parametro = parametro + "|csv";
+
+                                        var pre = System.Diagnostics.Process.Start(p.Item1, parametro);
+                                        pre.WaitForExit();
                                     }
                                     else
                                     {
-                                        var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
-                                        pr.WaitForExit();
+                                        if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
+                                        {
+                                            var parametro = p.Item2 + "|ext";
+                                            parametro = parametro + "|csv";
 
+                                            var pr = System.Diagnostics.Process.Start(p.Item1, parametro);
+                                            pr.WaitForExit();
+                                        }
+                                        else
+                                        {
+                                            var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
+                                            pr.WaitForExit();
+
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    AddLog("EXECUCAO PREVIVAZ");
+                                    if (logF != null) logF.WriteLine(name + ": EXECUCAO PREVIVAZ !!!");
+                                    if (encad)
+                                    {
+                                        var parametro = p.Item2 + "|true";
+                                        if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
+                                        {
+                                            parametro = parametro + "|ext";
+                                        }
+                                        var pre = System.Diagnostics.Process.Start(p.Item1, parametro);
+                                        pre.WaitForExit();
+                                    }
+                                    else
+                                    {
+                                        if (ArquivosDeSaida.Contains("_ECENS45") || ArquivosDeSaida.Contains("_PURO"))
+                                        {
+                                            var parametro = p.Item2 + "|ext";
+                                            var pr = System.Diagnostics.Process.Start(p.Item1, parametro);
+                                            pr.WaitForExit();
+                                        }
+                                        else
+                                        {
+                                            var pr = System.Diagnostics.Process.Start(p.Item1, p.Item2);
+                                            pr.WaitForExit();
+
+                                        }
+                                    }
+                                }
+
+
 
 
                                 try
@@ -2087,14 +2131,14 @@ namespace ChuvaVazaoTools
                                 catch (Exception e)
                                 {
                                     e.ToString();
-                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou PosProcessamento!!!");
 
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;
                                 }
                                 if (statusF?.Previvaz != RunStatus.statuscode.completed)
                                 {
-                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou PosProcessamento!!!");
 
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;

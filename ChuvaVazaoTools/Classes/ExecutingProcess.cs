@@ -5689,13 +5689,30 @@ namespace ChuvaVazaoTools.Classes
                 #endregion
 
                 #region Amaru_mayu
+                string amaruNome = "AMARU_MAYU";
+                if (padraoCSV ==true)
+                {
+                    amaruNome = "amaru_mayu";
+                }
 
-                var AmaruSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "AMARU_MAYU".ToUpper()).Select(x => x.Vazoes).FirstOrDefault();
+                //var AmaruSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "AMARU_MAYU".ToUpper()).Select(x => x.Vazoes).FirstOrDefault();
+                var AmaruSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == amaruNome.ToUpper()).Select(x => x.Vazoes).FirstOrDefault();
                 //if (AmaruSmap != null && shadow == true)
                 if (AmaruSmap != null)
                 {
 
-                    List<double> AmaruSmapCoef = new List<double> { 0.35236355811671099536, 0.56608358393819646626, 0.08155285794509256614 };
+                    c0 = 0.35236355811671099536;
+                    c1 = 0.56608358393819646626;
+                    c2 = 0.08155285794509256614;
+
+                    if (padraoCSV == true)
+                    {
+                        c0 = 0.352363558116711;
+                        c1 = 0.566083583938197;
+                        c2 = 0.0815528579450926;
+                    }
+
+                    List<double> AmaruSmapCoef = new List<double> { c0, c1, c2 };
 
                     vazaoPassada = 0;
                     for (int i = 0; i < 7; i++)
@@ -5724,6 +5741,10 @@ namespace ChuvaVazaoTools.Classes
                 //var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "JIRAU2".ToUpper()).Select(x => x.Vazoes).First();
                 //string nomeVazao = shadow == true ? "JIRAU" : "JIRAU2";
                 string nomeVazao = "JIRAU2";
+                if (padraoCSV == true)
+                {
+                    nomeVazao = "incr_jirau";
+                }
 
                 var JirauSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == nomeVazao.ToUpper()).Select(x => x.Vazoes).First();
                 var jirau = propagacoes.Where(x => x.IdPosto == 285).FirstOrDefault();
@@ -5766,8 +5787,272 @@ namespace ChuvaVazaoTools.Classes
                 CalcMediaMuskingun(jirau);
                 #endregion
 
+                if (padraoCSV == true)
+                {
+
+                    #region NOVAS MUSKINGUM
+
+                    #region colider telespires
+                    string coliNome = "colider";
+                    //var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
+                    var coliSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == coliNome.ToUpper()).Select(x => x.Vazoes).First();
+
+                    c0 = -0.244109330819981;
+                    c1 = 0.253534401508011;
+                    c2 = 0.99057492931197;
+
+
+
+                    List<double> colTelCoef = new List<double> { c0, c1, c2 };
+                    vazaoP = 0;
+                    for (int i = 0; i < 1; i++)
+                    {
+                        foreach (var dat in coliSmap.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
+                        {
+                            if (dat == dataInicioJeqParna)
+                            {
+                                vazaoP = coliSmap[dat];
+                                coliSmap[dat] = coliSmap[dat];
+                            }
+                            else
+                            {
+                                double vazao = 0;
+                                vazao = coliSmap[dat] * colTelCoef[0] + vazaoP * colTelCoef[1] + coliSmap[dat.AddDays(-1)] * colTelCoef[2];
+                                vazaoP = coliSmap[dat];
+                                coliSmap[dat] = (float)vazao;
+                            }
+                        }
+                    }
+
+
+
+                    #region teles
+
+                    string telesnome = "sao_manoel";
+
+                    if (padraoCSV == true)
+                    {
+                        telesnome = "sao_manoel";
+                    }
+
+                    //var sItapebi = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ITAPEBI".ToUpper()).Select(x => x.Vazoes).First();
+                    var telesSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == telesnome.ToUpper()).Select(x => x.Vazoes).First();
+                    var telespro = propagacoes.Where(x => x.IdPosto == 229).FirstOrDefault();
+
+                    telespro.VazaoIncremental.Clear();
+                    telespro.VazaoNatural.Clear();
+                    telespro.calMedSemanal.Clear();
+                    telespro.medSemanalIncremental.Clear();
+                    telespro.medSemanalNatural.Clear();
+
+                    var vazAcomphTeles = dadosAcompH.Where(x => x.posto == telespro.IdPosto).ToList();
+
+                    foreach (var dia in telesSmap.Keys.ToList())
+                    {
+                        if (dia <= ultimoAcomph)
+                        {
+                            telespro.VazaoIncremental[dia] = telesSmap[dia];
+                            telespro.VazaoNatural[dia] = Convert.ToDouble(vazAcomphTeles.Where(a => a.data == dia).First().qnat, Culture.NumberFormat);
+                        }
+                        else
+                        {
+                            telespro.VazaoIncremental[dia] = telesSmap[dia] * telespro.Modelo[0].FatorDistribuicao;
+                            telespro.VazaoNatural[dia] = coliSmap[dia] + telespro.VazaoIncremental[dia];
+                        }
+
+                    }
+                    CalcMediaMuskingun(telespro);
+
+                    #endregion
+
+                    #endregion
+
+                    #region jaguari-funil / santaBranca- funil / funil-santaCecilia
+
+
+                    #region  jaguari-funil
+                    var jaguaVaz = propagacoes.Where(x => x.IdPosto == 120).Select(x => x.VazaoNatural).FirstOrDefault();
+                    var jaguaFun = jaguaVaz;
+
+                    c0 = -0.218274111675127;
+                    c1 = 0.269035532994924;
+                    c2 = 0.949238578680203;
+
+
+
+                    List<double> jaguaFunCoef = new List<double> { c0, c1, c2 };
+
+                    for (int i = 0; i < 1; i++)
+                    {
+                        foreach (var dat in jaguaFun.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        {
+                            if (dat == dataInicio)
+                            {
+                                vazaoPassada = jaguaFun[dat];
+                                jaguaFun[dat] = jaguaFun[dat];
+                            }
+                            else
+                            {
+                                double vazao = 0;
+                                vazao = jaguaFun[dat] * jaguaFunCoef[0] + vazaoPassada * jaguaFunCoef[1] + jaguaFun[dat.AddDays(-1)] * jaguaFunCoef[2];
+                                vazaoPassada = jaguaFun[dat];
+                                jaguaFun[dat] = (float)vazao;
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region  santaBranca- funil
+
+                    var santaBVaz = propagacoes.Where(x => x.IdPosto == 122).Select(x => x.VazaoNatural).FirstOrDefault();
+                    var santaFun = santaBVaz;
+
+                    c0 = -0.218274111675127;
+                    c1 = 0.269035532994924;
+                    c2 = 0.949238578680203;
+
+
+
+                    List<double> santaFunCoef = new List<double> { c0, c1, c2 };
+                    vazaoPassada = 0;
+
+                    for (int i = 0; i < 1; i++)
+                    {
+                        foreach (var dat in santaFun.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        {
+                            if (dat == dataInicio)
+                            {
+                                vazaoPassada = santaFun[dat];
+                                santaFun[dat] = santaFun[dat];
+                            }
+                            else
+                            {
+                                double vazao = 0;
+                                vazao = santaFun[dat] * santaFunCoef[0] + vazaoPassada * santaFunCoef[1] + santaFun[dat.AddDays(-1)] * santaFunCoef[2];
+                                vazaoPassada = santaFun[dat];
+                                santaFun[dat] = (float)vazao;
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region Funil
+
+                    string funilNome = "funil_paraiba_do_sul";
+
+
+                    //var estreitoSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "ESTREITO".ToUpper()).Select(x => x.Vazoes).First();
+                    var funilSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == funilNome.ToUpper()).Select(x => x.Vazoes).First();
+                    var funil = propagacoes.Where(x => x.IdPosto == 123).FirstOrDefault();
+
+                    funil.VazaoIncremental.Clear();
+                    funil.VazaoNatural.Clear();
+                    funil.calMedSemanal.Clear();
+                    funil.medSemanalIncremental.Clear();
+                    funil.medSemanalNatural.Clear();
+
+                    var vazAcomphFUN = dadosAcompH.Where(x => x.posto == funil.IdPosto).ToList();
+
+                    foreach (var dat in estreitoSmap.Keys.ToList())
+                    {
+                        if (dat <= ultimoAcomph)
+                        {
+                            funil.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphFUN.Where(a => a.data == dat).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphFUN.Where(a => a.data == dat).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphFUN.Where(a => a.data == dat).First().qnat, Culture.NumberFormat); //estreitoSmap[dat];
+                            funil.VazaoNatural[dat] = Convert.ToDouble(vazAcomphFUN.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
+                        }
+                        else
+                        {
+                            funil.VazaoIncremental[dat] = funilSmap[dat] + santaFun[dat];
+                            funil.VazaoNatural[dat] = jaguaFun[dat] + funil.VazaoIncremental[dat];
+                        }
+
+                    }
+                    CalcMediaMuskingun(funil);
+
+                    #endregion
+
+                    #region  funil-santaCecilia
+                    var funilVaz = propagacoes.Where(x => x.IdPosto == 123).Select(x => x.VazaoNatural).FirstOrDefault();
+                    var funilsanta = funilVaz;
+
+                    c0 = -0.218274111675127;
+                    c1 = 0.269035532994924;
+                    c2 = 0.949238578680203;
+
+                    List<double> funilsantaCoef = new List<double> { c0, c1, c2 };
+
+                    for (int i = 0; i < 1; i++)
+                    {
+                        foreach (var dat in funilsanta.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        {
+                            if (dat == dataInicio)
+                            {
+                                vazaoPassada = funilsanta[dat];
+                                funilsanta[dat] = funilsanta[dat];
+                            }
+                            else
+                            {
+                                double vazao = 0;
+                                vazao = funilsanta[dat] * funilsantaCoef[0] + vazaoPassada * funilsantaCoef[1] + funilsanta[dat.AddDays(-1)] * funilsantaCoef[2];
+                                vazaoPassada = funilsanta[dat];
+                                funilsanta[dat] = (float)vazao;
+                            }
+                        }
+                    }
+                    #endregion
+
+                    #region santa cecilia
+
+                    string santaCeNome = "santa_cecilia";
+                    if (padraoCSV == true)
+                    {
+                        santaCeNome = "santa_cecilia";
+                    }
+                    var santaCeSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == santaCeNome.ToUpper()).Select(x => x.Vazoes).First();
+                    var santaceclia = propagacoes.Where(x => x.IdPosto == 125).FirstOrDefault();
+
+                    santaceclia.VazaoIncremental.Clear();
+                    santaceclia.VazaoNatural.Clear();
+                    santaceclia.calMedSemanal.Clear();
+                    santaceclia.medSemanalIncremental.Clear();
+                    santaceclia.medSemanalNatural.Clear();
+
+                    var vazAcomphsanta = dadosAcompH.Where(x => x.posto == santaceclia.IdPosto).ToList();
+
+
+                    foreach (var dat in santaCeSmap.Keys.ToList())
+                    {
+                        if (dat <= ultimoAcomph)
+                        {
+                            santaceclia.VazaoIncremental[dat] = (Convert.ToDouble(vazAcomphsanta.Where(a => a.data == dat).First().qinc, Culture.NumberFormat)) > 0 ? Convert.ToDouble(vazAcomphsanta.Where(a => a.data == dat).First().qinc, Culture.NumberFormat) : Convert.ToDouble(vazAcomphsanta.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
+                            santaceclia.VazaoNatural[dat] = Convert.ToDouble(vazAcomphsanta.Where(a => a.data == dat).First().qnat, Culture.NumberFormat);
+                        }
+                        else
+                        {
+                            santaceclia.VazaoIncremental[dat] = santaCeSmap[dat] + funilsanta[dat];
+                            santaceclia.VazaoNatural[dat] = santaCeSmap[dat] + funilsanta[dat];
+                        }
+
+                    }
+                    CalcMediaMuskingun(santaceclia);
+
+                    #endregion
+
+
+                    #endregion
+
+
+                    #endregion
+                }
                 #region SANTO ANTONIO
-                var vazStoAnt = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "S.ANTONIO".ToUpper()).Select(x => x.Vazoes).First();
+
+                string santoantNome = "S.ANTONIO";
+                if (padraoCSV == true)
+                {
+                    santoantNome = "santo_antonio";
+                }
+                //var vazStoAnt = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "S.ANTONIO".ToUpper()).Select(x => x.Vazoes).First();
+                var vazStoAnt = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == santoantNome.ToUpper()).Select(x => x.Vazoes).First();
                 var stoAnt = propagacoes.Where(x => x.IdPosto == 287).FirstOrDefault();
 
                 stoAnt.VazaoIncremental.Clear();
