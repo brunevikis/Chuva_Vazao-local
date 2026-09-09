@@ -16,6 +16,7 @@ namespace ChuvaVazaoTools.SMAP
 
         public List<string> ModelosPrecipitacao { get; set; }
 
+        public List<Tuple<DateTime, DateTime, string, string, string, double>> CSVPREVISAO { get; set; }
         public List<SubBacia> SubBacias { get; set; }
 
         private string Execucao { get; set; }
@@ -118,6 +119,39 @@ namespace ChuvaVazaoTools.SMAP
 
 
             Vazoes = SubBacias.Cast<IArqVazao>();
+
+            try
+            {
+                var CSVfile = System.IO.Path.Combine(ArquivosDeSaida, "previsao.csv");
+                if (System.IO.File.Exists(CSVfile))
+                {
+                    List<Tuple<DateTime, DateTime, string, string, string, double>> dados = new List<Tuple<DateTime, DateTime, string, string, string, double>>();
+                    var linhas = System.IO.File.ReadAllLines(CSVfile).Skip(1).ToList();
+
+                    foreach (var lin in linhas)
+                    {
+                        var partes = lin.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                        DateTime data_caso = DateTime.ParseExact(partes[0], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime data_previsao = DateTime.ParseExact(partes[1], "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                        string cenario = partes[2];
+                        string subbacia = partes[3];
+                        string variavel = partes[4];
+                        double valor = Convert.ToDouble(partes[5].Replace('.', ','));
+
+                        dados.Add(new Tuple<DateTime, DateTime, string, string, string, double>(data_caso, data_previsao, cenario, subbacia, variavel, valor));
+                    }
+
+
+                    CSVPREVISAO = dados;
+                }
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
 
         }
@@ -444,10 +478,11 @@ namespace ChuvaVazaoTools.SMAP
 
         public override void ColetarSaidaTotalCSV(string mod)
         {
+            
             foreach (var sb in SubBacias)
             {
 
-                sb.CarregaSaidaCSV(sb.Nome + '|' + mod);
+                sb.CarregaSaidaCSV(sb.Nome + '|' + mod,csvprev: CSVPREVISAO);
             }
         }
 
@@ -877,7 +912,7 @@ namespace ChuvaVazaoTools.SMAP
             catch (Exception e)
             {
                 e.ToString();
-                throw;
+                //throw;
             }
            
 
@@ -1039,11 +1074,11 @@ namespace ChuvaVazaoTools.SMAP
 
         }
 
-        public void CarregaSaidaCSV(string modeloPrecipitacao, bool media = false)
+        public void CarregaSaidaCSV(string modeloPrecipitacao, bool media = false, List<Tuple<DateTime, DateTime, string, string, string, double>> csvprev = null)
         {
             var cenario = modeloPrecipitacao.Split('|').Last();
             var subBacia = modeloPrecipitacao.Split('|').First();
-
+            
             if (cenario.Contains("ECENS45m"))
             {
 
@@ -1109,7 +1144,8 @@ namespace ChuvaVazaoTools.SMAP
                 if (System.IO.File.Exists(previsaoFile) && cenario.Contains("ECENS45m"))
                 {
                     //data_caso;data_previsao;cenario;subbacia;variavel;valor
-                    var previsaoCsvALL = GetCsvDataPrevisao(previsaoFile);
+                    //var previsaoCsvALL = GetCsvDataPrevisao(previsaoFile);
+                    var previsaoCsvALL = csvprev == null ? GetCsvDataPrevisao(previsaoFile) : csvprev;
                     for (int model = 1; model <= 10; model++)
                     {
                         string modAlt = cenario + model.ToString("00");

@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ChuvaVazaoTools.exe" size="957952">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ChuvaVazaoTools.exe" size="962048">
       <assemblyIdentity name="ChuvaVazaoTools" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>N7h0Ebix5fMhaWHl5Z2fNU/Yt8npP+2/3/wLq3stJL4=</dsig:DigestValue>
+        <dsig:DigestValue>MQo+vVp/YN7xJEQF/l7TqzEO6+QknNXP+LZIa68LLIQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

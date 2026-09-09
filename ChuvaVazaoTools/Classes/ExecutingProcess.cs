@@ -4950,17 +4950,20 @@ namespace ChuvaVazaoTools.Classes
                 double c0 = 0.166666666666667;
                 double c1 = 0.666666666666667;
                 double c2 = 0.166666666666667;
-
+                int NF = 5;
                 if (padraoCSV == true)
                 {
                     c0 = 0.207760711398545;
+                    ;
                     c1 = 0.762328213419563;
+
                     c2 = 0.0299110751818918;
+                    NF = 3;
                 }
 
                 List<double> irItCoef = new List<double> { c0, c1, c2 };
                 double vazaoP = 0;
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in irItSmap.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
                     {
@@ -5001,8 +5004,9 @@ namespace ChuvaVazaoTools.Classes
                 Itapebipro.medSemanalNatural.Clear();
 
                 var vazAcomphItapebi = dadosAcompH.Where(x => x.posto == Itapebipro.IdPosto).ToList();
+                DateTime mindate = vazAcomphItapebi.Select(x => x.data).Min();
 
-                foreach (var dia in sItapebi.Keys.ToList())
+                foreach (var dia in sItapebi.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5040,7 +5044,10 @@ namespace ChuvaVazaoTools.Classes
                 boapro.medSemanalNatural.Clear();
 
                 var vazAcomphBOA = dadosAcompH.Where(x => x.posto == boapro.IdPosto).ToList();
-                foreach (var dia in BOASMAP.Keys.ToList())
+                mindate = vazAcomphBOA.Select(x => x.data).Min();
+
+
+                foreach (var dia in BOASMAP.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5079,7 +5086,9 @@ namespace ChuvaVazaoTools.Classes
                 SerraMesa.medSemanalNatural.Clear();
 
                 var vazAcomphSerra = dadosAcompH.Where(x => x.posto == SerraMesa.IdPosto).ToList();
-                foreach (var dia in sMesa.Keys.ToList())
+                mindate = vazAcomphSerra.Select(x => x.data).Min();
+
+                foreach (var dia in sMesa.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5115,9 +5124,10 @@ namespace ChuvaVazaoTools.Classes
                 canaBrava.medSemanalNatural.Clear();
 
                 var vazAcomphCana = dadosAcompH.Where(x => x.posto == canaBrava.IdPosto).ToList();
+                mindate = vazAcomphCana.Select(x => x.data).Min();
 
 
-                foreach (var dia in vazlajeado.Keys.ToList())
+                foreach (var dia in vazlajeado.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5152,9 +5162,10 @@ namespace ChuvaVazaoTools.Classes
                 sSalvador.medSemanalNatural.Clear();
 
                 var vazAcomphSalvador = dadosAcompH.Where(x => x.posto == sSalvador.IdPosto).ToList();
+                mindate = vazAcomphSalvador.Select(x => x.data).Min();
 
 
-                foreach (var dia in vazlajeado.Keys.ToList())
+                foreach (var dia in vazlajeado.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5188,8 +5199,9 @@ namespace ChuvaVazaoTools.Classes
                 pAngi.medSemanalNatural.Clear();
 
                 var vazAcomphPangi = dadosAcompH.Where(x => x.posto == pAngi.IdPosto).ToList();
+                mindate = vazAcomphPangi.Select(x => x.data).Min();
 
-                foreach (var dia in vazlajeado.Keys.ToList())
+                foreach (var dia in vazlajeado.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5223,8 +5235,9 @@ namespace ChuvaVazaoTools.Classes
                 laj.medSemanalNatural.Clear();
 
                 var vazAcomphLaj = dadosAcompH.Where(x => x.posto == laj.IdPosto).ToList();
+                mindate = vazAcomphLaj.Select(x => x.data).Min();
 
-                foreach (var dia in vazlajeado.Keys.ToList())
+                foreach (var dia in vazlajeado.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5249,7 +5262,7 @@ namespace ChuvaVazaoTools.Classes
                 #region  BANDEIRANTES- CONCEIÇÃO DO ARAGUAIA
 
                 string banNome = "Bandeirant";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     banNome = "bandeirantes";
                 }
@@ -5260,6 +5273,7 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.152775192170181;
                 c1 = 0.152775192170181;
                 c2 = 0.694449615659638;
+                NF = 9;
 
                 if (padraoCSV == true)
                 {
@@ -5270,7 +5284,7 @@ namespace ChuvaVazaoTools.Classes
 
                 List<double> banCACoef = new List<double> { c0, c1, c2 };
                 double vazaoPassada = 0;
-                for (int i = 0; i < 9; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in banCA.Keys.Where(x => x.Date >= dataInicio).ToList())
                     {
@@ -5292,7 +5306,7 @@ namespace ChuvaVazaoTools.Classes
                 #region CONCEIÇÃO DO ARAGUAIA - TUCURUÍ
 
                 string catucNome = "C.ARAGUAIA";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     catucNome = "conceicao_do_araguaia";
                 }
@@ -5303,6 +5317,7 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.0322580645161291;
                 c1 = 0.612903225806452;
                 c2 = 0.354838709677419;
+                NF = 3;
 
                 if (padraoCSV == true)
                 {
@@ -5318,7 +5333,7 @@ namespace ChuvaVazaoTools.Classes
                     CAtuc[date] = CAtuc[date] + banCA[date];
                 }
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in CAtuc.Keys.Where(x => x.Date >= dataInicio).ToList())
                     {
@@ -5345,6 +5360,7 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.343207069827643;
                 c1 = 0.366616629265668;
                 c2 = 0.290176300906689;
+                NF = 3;
 
                 if (padraoCSV == true)
                 {
@@ -5355,7 +5371,7 @@ namespace ChuvaVazaoTools.Classes
 
                 List<double> lajEstCoef = new List<double> { c0, c1, c2 };
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in lajEst.Keys.Where(x => x.Date >= dataInicio).ToList())
                     {
@@ -5378,7 +5394,7 @@ namespace ChuvaVazaoTools.Classes
                 #region  Porto Real-Estreito
 
                 string PORTOrealNome = "PORTO REAL";
-                if (padraoCSV==true)
+                if (padraoCSV == true)
                 {
                     PORTOrealNome = "estreito_rio_do_sono";
                 }
@@ -5388,18 +5404,19 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.235961557677904;
                 c1 = 0.622494756568882;
                 c2 = 0.141543685753214;
+                NF = 2;
 
                 if (padraoCSV == true)
                 {
                     c0 = 0.291683247115002;
                     c1 = 0.504178272980501;
-                    c2 = 0.204138479904497;
+                    c2 = 0.204138479904496;
                 }
 
                 List<double> PrEstCoef = new List<double> { c0, c1, c2 };
                 vazaoPassada = 0;
 
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in PrEst.Keys.Where(x => x.Date >= dataInicio).ToList())
                     {
@@ -5422,7 +5439,7 @@ namespace ChuvaVazaoTools.Classes
                 #region Estreito
 
                 string estNome = "ESTREITO";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     estNome = "incr_estreito";
                 }
@@ -5438,8 +5455,9 @@ namespace ChuvaVazaoTools.Classes
                 estreito.medSemanalNatural.Clear();
 
                 var vazAcomphEST = dadosAcompH.Where(x => x.posto == estreito.IdPosto).ToList();
+                mindate = vazAcomphEST.Select(x => x.data).Min();
 
-                foreach (var dat in estreitoSmap.Keys.ToList())
+                foreach (var dat in estreitoSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dat <= ultimoAcomph)
                     {
@@ -5462,8 +5480,9 @@ namespace ChuvaVazaoTools.Classes
                 var estTuc = estreitoVaz;
 
                 List<double> estTucCoef = new List<double> { 0.0502793296089386, 0.620111731843575, 0.329608938547486 };//não precisa mudar coeficientes pra padrãocsv
+                NF = 3;
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in estTuc.Keys.Where(x => x.Date >= dataInicio).ToList())
                     {
@@ -5486,7 +5505,7 @@ namespace ChuvaVazaoTools.Classes
                 #region Tucurui
 
                 string TucNome = "TUCURUI";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     TucNome = "incr_tucurui";
                 }
@@ -5501,9 +5520,10 @@ namespace ChuvaVazaoTools.Classes
                 tucurui.medSemanalNatural.Clear();
 
                 var vazAcomphTuc = dadosAcompH.Where(x => x.posto == tucurui.IdPosto).ToList();
+                mindate = vazAcomphTuc.Select(x => x.data).Min();
 
 
-                foreach (var dat in tucuruiSmap.Keys.ToList())
+                foreach (var dat in tucuruiSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dat <= ultimoAcomph)
                     {
@@ -5567,7 +5587,7 @@ namespace ChuvaVazaoTools.Classes
                 #region  principe da Beira - Guajará Mirim
 
                 string pbeiraNome = "P_DA_BEIRA";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     pbeiraNome = "principe_da_beira";
                 }
@@ -5579,7 +5599,7 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.23330956912145081605;
                 c1 = 0.50318460079070015389;
                 c2 = 0.26350583008784900230;
-
+                NF = 2;
                 if (padraoCSV == true)
                 {
                     c0 = 0.233309569121451;
@@ -5592,7 +5612,7 @@ namespace ChuvaVazaoTools.Classes
                 //    PbGmCoef = new List<double> { 0.23330956912145081605, 0.50318460079070015389, 0.26350583008784900230 };
                 //}
                 vazaoPassada = 0;
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in PbGm.Keys.ToList())
                     {
@@ -5615,7 +5635,7 @@ namespace ChuvaVazaoTools.Classes
                 #region  Guajará Mirim - Jirau
 
                 string GuajNome = "GUAJ-MIRIM";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     GuajNome = "guajara_mirim";
                 }
@@ -5654,12 +5674,12 @@ namespace ChuvaVazaoTools.Classes
                 c0 = 0.49899899799799601885;
                 c1 = 0.50100300200600400569;
                 c2 = -0.00000200000400001000;
-
-                if (padraoCSV == true )
+                NF = 2;
+                if (padraoCSV == true)
                 {
                     c0 = 0.498998997997996;
                     c1 = 0.501003002006004;
-                    c2 = -0.000002000003999982;
+                    c2 = -0.00000200000399998247;
                 }
 
                 List<double> GmJiCoef = new List<double> { c0, c1, c2 };
@@ -5668,7 +5688,7 @@ namespace ChuvaVazaoTools.Classes
                 //    GmJiCoef = new List<double> { 0.49899899799799601885, 0.50100300200600400569, -0.00000200000400001000 };
                 //}
                 vazaoPassada = 0;
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < NF; i++)
                 {
                     foreach (var dat in GmJi.Keys.ToList())
                     {
@@ -5690,7 +5710,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #region Amaru_mayu
                 string amaruNome = "AMARU_MAYU";
-                if (padraoCSV ==true)
+                if (padraoCSV == true)
                 {
                     amaruNome = "amaru_mayu";
                 }
@@ -5704,18 +5724,18 @@ namespace ChuvaVazaoTools.Classes
                     c0 = 0.35236355811671099536;
                     c1 = 0.56608358393819646626;
                     c2 = 0.08155285794509256614;
-
+                    NF = 7;
                     if (padraoCSV == true)
                     {
                         c0 = 0.352363558116711;
-                        c1 = 0.566083583938197;
+                        c1 = 0.566083583938196;
                         c2 = 0.0815528579450926;
                     }
 
                     List<double> AmaruSmapCoef = new List<double> { c0, c1, c2 };
 
                     vazaoPassada = 0;
-                    for (int i = 0; i < 7; i++)
+                    for (int i = 0; i < NF; i++)
                     {
                         foreach (var dat in AmaruSmap.Keys.ToList())
                         {
@@ -5758,7 +5778,9 @@ namespace ChuvaVazaoTools.Classes
                 jirau.medSemanalNatural.Clear();
 
                 var vazAcomphJirau = dadosAcompH.Where(x => x.posto == jirau.IdPosto).ToList();
-                foreach (var dia in JirauSmap.Keys.ToList())
+                mindate = vazAcomphJirau.Select(x => x.data).Min();
+
+                foreach (var dia in JirauSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
@@ -5797,11 +5819,11 @@ namespace ChuvaVazaoTools.Classes
                     //var irItSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == "IRAPE".ToUpper()).Select(x => x.Vazoes).First();
                     var coliSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == coliNome.ToUpper()).Select(x => x.Vazoes).First();
 
-                    c0 = -0.244109330819981;
-                    c1 = 0.253534401508011;
-                    c2 = 0.99057492931197;
+                    c0 = -0.122448979591837;
+                    c1 = 0.326530612244898;
+                    c2 = 0.795918367346939;
 
-
+                    NF = 1;
 
                     List<double> colTelCoef = new List<double> { c0, c1, c2 };
                     vazaoP = 0;
@@ -5846,8 +5868,9 @@ namespace ChuvaVazaoTools.Classes
                     telespro.medSemanalNatural.Clear();
 
                     var vazAcomphTeles = dadosAcompH.Where(x => x.posto == telespro.IdPosto).ToList();
+                    mindate = vazAcomphTeles.Select(x => x.data).Min();
 
-                    foreach (var dia in telesSmap.Keys.ToList())
+                    foreach (var dia in telesSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                     {
                         if (dia <= ultimoAcomph)
                         {
@@ -5874,19 +5897,19 @@ namespace ChuvaVazaoTools.Classes
                     var jaguaVaz = propagacoes.Where(x => x.IdPosto == 120).Select(x => x.VazaoNatural).FirstOrDefault();
                     var jaguaFun = jaguaVaz;
 
-                    c0 = -0.218274111675127;
-                    c1 = 0.269035532994924;
-                    c2 = 0.949238578680203;
-
+                    c0 = -0.0344827586206897;
+                    c1 = 0.379310344827586;
+                    c2 = 0.655172413793104;
+                    NF = 1;
 
 
                     List<double> jaguaFunCoef = new List<double> { c0, c1, c2 };
 
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < NF; i++)
                     {
-                        foreach (var dat in jaguaFun.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        foreach (var dat in jaguaFun.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
                         {
-                            if (dat == dataInicio)
+                            if (dat == dataInicioJeqParna)
                             {
                                 vazaoPassada = jaguaFun[dat];
                                 jaguaFun[dat] = jaguaFun[dat];
@@ -5907,20 +5930,20 @@ namespace ChuvaVazaoTools.Classes
                     var santaBVaz = propagacoes.Where(x => x.IdPosto == 122).Select(x => x.VazaoNatural).FirstOrDefault();
                     var santaFun = santaBVaz;
 
-                    c0 = -0.218274111675127;
-                    c1 = 0.269035532994924;
-                    c2 = 0.949238578680203;
-
+                    c0 = -0.0606060606060606;
+                    c1 = 0.363636363636364;
+                    c2 = 0.696969696969697;
+                    NF = 1;
 
 
                     List<double> santaFunCoef = new List<double> { c0, c1, c2 };
                     vazaoPassada = 0;
 
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < NF; i++)
                     {
-                        foreach (var dat in santaFun.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        foreach (var dat in santaFun.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
                         {
-                            if (dat == dataInicio)
+                            if (dat == dataInicioJeqParna)
                             {
                                 vazaoPassada = santaFun[dat];
                                 santaFun[dat] = santaFun[dat];
@@ -5952,8 +5975,9 @@ namespace ChuvaVazaoTools.Classes
                     funil.medSemanalNatural.Clear();
 
                     var vazAcomphFUN = dadosAcompH.Where(x => x.posto == funil.IdPosto).ToList();
+                    mindate = vazAcomphFUN.Select(x => x.data).Min();
 
-                    foreach (var dat in estreitoSmap.Keys.ToList())
+                    foreach (var dat in estreitoSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                     {
                         if (dat <= ultimoAcomph)
                         {
@@ -5975,17 +5999,18 @@ namespace ChuvaVazaoTools.Classes
                     var funilVaz = propagacoes.Where(x => x.IdPosto == 123).Select(x => x.VazaoNatural).FirstOrDefault();
                     var funilsanta = funilVaz;
 
-                    c0 = -0.218274111675127;
-                    c1 = 0.269035532994924;
-                    c2 = 0.949238578680203;
+                    c0 = 0.230769230769231;
+                    c1 = 0.538461538461538;
+                    c2 = 0.230769230769231;
+                    NF = 1;
 
                     List<double> funilsantaCoef = new List<double> { c0, c1, c2 };
 
-                    for (int i = 0; i < 1; i++)
+                    for (int i = 0; i < NF; i++)
                     {
-                        foreach (var dat in funilsanta.Keys.Where(x => x.Date >= dataInicio).ToList())
+                        foreach (var dat in funilsanta.Keys.Where(x => x.Date >= dataInicioJeqParna).ToList())
                         {
-                            if (dat == dataInicio)
+                            if (dat == dataInicioJeqParna)
                             {
                                 vazaoPassada = funilsanta[dat];
                                 funilsanta[dat] = funilsanta[dat];
@@ -6018,9 +6043,10 @@ namespace ChuvaVazaoTools.Classes
                     santaceclia.medSemanalNatural.Clear();
 
                     var vazAcomphsanta = dadosAcompH.Where(x => x.posto == santaceclia.IdPosto).ToList();
+                    mindate = vazAcomphsanta.Select(x => x.data).Min();
 
 
-                    foreach (var dat in santaCeSmap.Keys.ToList())
+                    foreach (var dat in santaCeSmap.Keys.Where(x => x.Date >= mindate.Date).ToList())
                     {
                         if (dat <= ultimoAcomph)
                         {
@@ -6062,9 +6088,10 @@ namespace ChuvaVazaoTools.Classes
                 stoAnt.medSemanalNatural.Clear();
 
                 var vazAcomphStoAnt = dadosAcompH.Where(x => x.posto == stoAnt.IdPosto).ToList();
+                mindate = vazAcomphStoAnt.Select(x => x.data).Min();
 
 
-                foreach (var dia in vazStoAnt.Keys.ToList())
+                foreach (var dia in vazStoAnt.Keys.Where(x => x.Date >= mindate.Date).ToList())
                 {
                     if (dia <= ultimoAcomph)
                     {
