@@ -7,7 +7,7 @@
     <framework targetVersion="4.7.1" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="ChuvaVazaoTools.exe.manifest" size="18491">
+    <dependentAssembly dependencyType="install" codebase="Application Files\ChuvaVazaoTools_1_2_1_451\ChuvaVazaoTools.exe.manifest" size="18491">
       <assemblyIdentity name="ChuvaVazaoTools.exe" version="1.2.1.451" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>

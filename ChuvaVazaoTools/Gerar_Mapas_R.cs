@@ -769,12 +769,12 @@ namespace ChuvaVazaoTools
 
                             logF.WriteLine("CV0_EURO_CSV Criada!");
                         }
-                        //rvxPuraCSV(path_Conj, "GEFS", "CVPURO_PUROGEFS");
-                        rvxPuraCSV(path_Conj, "GEFS", "CVPURO");
+                        //rvxPuraCSV(path_Conj, "GEFS", "CVPURO");
+                        rvxPuraCSV(path_Conj, "GEFS", "CVPUROGEFS");
                         logF.WriteLine("CVPURO_GEFS_CSV Criada!");
 
-                        //rvxPuraCSV(path_Conj, "ECMWF", "CVPURO_PUROECMWF");
-                        rvxPuraCSV(path_Conj, "ECMWF", "CVPURO");
+                        //rvxPuraCSV(path_Conj, "ECMWF", "CVPURO");
+                        rvxPuraCSV(path_Conj, "ECMWF", "CVPUROECMWF");
                         logF.WriteLine("CVPURO_ECMWF_CSV Criada!");
 
                         rvx2CSV(path_Conj, "ECMWF", "CV2_EURO", vies_csv_cv2);
@@ -815,19 +815,19 @@ namespace ChuvaVazaoTools
                             //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1_EURO", "CV1_EURO", "ECENS45m");
                             //rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1_EUROop", "CV1_EUROop", "ECENS45m");
 
-                            rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1", "CV1_FUNC", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1", "CV1_GEFS", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1", "CV1_GFS", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1", "CV1_EURO", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1", "CV1_EUROop", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1", "CV1_FUNC", "ECENS45m",true);
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1", "CV1_GEFS", "ECENS45m",true);
+                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1", "CV1_GFS", "ECENS45m",true);
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1", "CV1_EURO", "ECENS45m",true);
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1", "CV1_EUROop", "ECENS45m",true);
 
                             if (runRev.rev == 0)
                             {
                                 //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP0_GEFS", "CV0_GEFS", "ECENS45m");
                                 //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP0_EURO", "CV0_EURO", "ECENS45m");
 
-                                rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP0", "CV0_GEFS", "ECENS45m");
-                                rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP0", "CV0_EURO", "ECENS45m");
+                                rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP0", "CV0_GEFS", "ECENS45m", true);
+                                rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP0", "CV0_EURO", "ECENS45m", true);
                             }
 
 
@@ -842,10 +842,10 @@ namespace ChuvaVazaoTools
                             //rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP4_GEFS", "CV4_GEFS", "ECENS45m");
                             //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP4_EURO", "CV4_EURO", "ECENS45m");
 
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP2", "CV2_EURO", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP2", "CV2_EUROop", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP2", "CV2_GEFS", "ECENS45m");
-                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP2", "CV2_GFS", "ECENS45m");
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP2", "CV2_EURO", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP2", "CV2_EUROop", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP2", "CV2_GEFS", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP2", "CV2_GFS", "ECENS45m", true);
 
                             rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP3", "CV3_GEFS", "ECENS45m");
                             rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP3", "CV3_EURO", "ECENS45m");
@@ -2172,9 +2172,9 @@ namespace ChuvaVazaoTools
             }
         }
 
-        internal static void rvxSmapExtByModelCSV(string path_Conj, string csvModelName, string nome_path, string modeloBase, string clusterName)
+        internal static void rvxSmapExtByModelCSV(string path_Conj, string csvModelName, string nome_path, string modeloBase, string clusterName, bool limitar = false)
         {                                           //raiz       // FUNC      //CVSMAP1_FUNC        //CV1_FUNC    //ECENS45m       
-
+            //limitar = false;
             string path_saida = Path.Combine(path_Conj, nome_path);
             if (!Directory.Exists(path_saida))
             {
@@ -2221,11 +2221,18 @@ namespace ChuvaVazaoTools
                     newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
 
                     var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
+                    var teste = dadosFinaisOrdered.Select(x => x.Item2).Distinct().ToList();
+                    var datasLimitadas = limitar == true? dadosFinaisOrdered.Select(x => x.Item2).Distinct().Take(55).ToList(): dadosFinaisOrdered.Select(x => x.Item2).Distinct().ToList();
+                  
 
                     foreach (var dado in dadosFinaisOrdered)
                     {
-                        string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
-                        newCsv.Add(linha);
+                        if (datasLimitadas.Any(x =>x.Date== dado.Item2.Date))
+                        {
+                            string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
+                            newCsv.Add(linha);
+                        }
+                        
                     }
 
                     File.WriteAllLines(Path.Combine(path_saida, cenario + ".csv"), newCsv);

@@ -1180,7 +1180,7 @@ namespace ChuvaVazaoTools
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROECMWF");
                 if (shadow == true)
                 {
-                    pastaRaiz = Path.Combine(pastaMapa, "CVPURO");
+                    pastaRaiz = Path.Combine(pastaMapa, "CVPUROECMWF");
                     cenario = "ECMWF";
                 }
             }
@@ -1190,7 +1190,7 @@ namespace ChuvaVazaoTools
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROGEFS");
                 if (shadow == true)
                 {
-                    pastaRaiz = Path.Combine(pastaMapa, "CVPURO");
+                    pastaRaiz = Path.Combine(pastaMapa, "CVPUROGEFS");
                     cenario = "GEFS";
                 }
             }
