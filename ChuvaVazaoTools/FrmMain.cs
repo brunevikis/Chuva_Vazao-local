@@ -1660,8 +1660,14 @@ namespace ChuvaVazaoTools
                         logF.WriteLine("retomando processo...");
                         esperouPsat = true;
                     }
-
-                    smapExecutado = CopySmapExecuted(runRev, pastaSaida);
+                    if (shadow == true && name.Contains("PURO"))
+                    {
+                        smapExecutado = CopySmapExecuted(runRev, pastaSaida, shadow, cenario);
+                    }
+                    else
+                    {
+                        smapExecutado = CopySmapExecuted(runRev, pastaSaida);
+                    }
                     if (!smapExecutado)
                     {
                         if (shadow == true)
@@ -1845,7 +1851,14 @@ namespace ChuvaVazaoTools
 
                 if (name.Contains("PURO"))
                 {
-                    pastaSmapTotal = pastaSmapTotal + "_PURO";
+                    if (shadow == true)
+                    {
+                        pastaSmapTotal = pastaSmapTotal + "_CVPURO" +cenario;
+                    }
+                    else
+                    {
+                        pastaSmapTotal = pastaSmapTotal + "_PURO";
+                    }
                 }
 
                 if (name.Contains("ECENS45"))
@@ -2307,9 +2320,15 @@ namespace ChuvaVazaoTools
 
                         var dest = pastaSaida.Replace("C:\\Files\\16_Chuva_Vazao", "H:\\Middle - Preço\\16_Chuva_Vazao");
                         var fonte = pastaSaida;
+                        if (!Directory.Exists(dest))
+                        {
+                            Directory.CreateDirectory(dest);
+                        }
                         foreach (string dirPath in Directory.GetDirectories(fonte, "*",
                                                             SearchOption.AllDirectories))
+                        {
                             Directory.CreateDirectory(dirPath.Replace(fonte, dest));
+                        }
 
                         foreach (string newPath in Directory.GetFiles(fonte, ".",
                            SearchOption.AllDirectories))
@@ -6240,7 +6259,7 @@ namespace ChuvaVazaoTools
             if (statusF != null) statusF.Creation = RunStatus.statuscode.completed;
         }
 
-        bool CopySmapExecuted((DateTime revDate, int rev) runRev, string pastaSaida)
+        bool CopySmapExecuted((DateTime revDate, int rev) runRev, string pastaSaida, bool shadow = false, string cenario = "")
         {
             string name = pastaSaida.Split('\\').Last();
 
@@ -6265,7 +6284,15 @@ namespace ChuvaVazaoTools
 
             if (name.Contains("PURO"))
             {
-                pastaSmapTotal = pastaSmapTotal + "_PURO";
+                if (shadow == true && cenario != "")
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_CVPURO" + cenario;
+                }
+                else
+                {
+                    pastaSmapTotal = pastaSmapTotal + "_PURO";
+                }
+                //pastaSmapTotal = pastaSmapTotal + "_PURO";
             }
 
             if (name.Contains("ECENS45"))

@@ -815,11 +815,11 @@ namespace ChuvaVazaoTools
                             //rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1_EURO", "CV1_EURO", "ECENS45m");
                             //rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1_EUROop", "CV1_EUROop", "ECENS45m");
 
-                            rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1", "CV1_FUNC", "ECENS45m",true);
-                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1", "CV1_GEFS", "ECENS45m",true);
-                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1", "CV1_GFS", "ECENS45m",true);
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1", "CV1_EURO", "ECENS45m",true);
-                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1", "CV1_EUROop", "ECENS45m",true);
+                            rvxSmapExtByModelCSV(path_Conj, "FUNC", "CVSMAP1", "CV1_FUNC", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "GEFS", "CVSMAP1", "CV1_GEFS", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "GFS", "CVSMAP1", "CV1_GFS", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWF", "CVSMAP1", "CV1_EURO", "ECENS45m", true);
+                            rvxSmapExtByModelCSV(path_Conj, "ECMWFop", "CVSMAP1", "CV1_EUROop", "ECENS45m", true);
 
                             if (runRev.rev == 0)
                             {
@@ -1999,7 +1999,7 @@ namespace ChuvaVazaoTools
                 string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + modelo + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
                 newCsv.Add(linha);
             }
-            File.WriteAllLines(Path.Combine(path_cv, modelo + ".csv"), newCsv);
+            File.WriteAllLines(Path.Combine(path_cv, "CVPURO" + modelo + ".csv"), newCsv);
 
 
         }
@@ -2222,17 +2222,17 @@ namespace ChuvaVazaoTools
 
                     var dadosFinaisOrdered = dadosFinais.OrderBy(x => x.Item4).ThenBy(x => x.Item2).ToList();
                     var teste = dadosFinaisOrdered.Select(x => x.Item2).Distinct().ToList();
-                    var datasLimitadas = limitar == true? dadosFinaisOrdered.Select(x => x.Item2).Distinct().Take(55).ToList(): dadosFinaisOrdered.Select(x => x.Item2).Distinct().ToList();
-                  
+                    var datasLimitadas = limitar == true ? dadosFinaisOrdered.Select(x => x.Item2).Distinct().Take(55).ToList() : dadosFinaisOrdered.Select(x => x.Item2).Distinct().ToList();
+
 
                     foreach (var dado in dadosFinaisOrdered)
                     {
-                        if (datasLimitadas.Any(x =>x.Date== dado.Item2.Date))
+                        if (datasLimitadas.Any(x => x.Date == dado.Item2.Date))
                         {
                             string linha = dado.Item1.ToString("dd/MM/yyyy") + ";" + dado.Item2.ToString("dd/MM/yyyy") + ";" + cenario + ";" + dado.Item4 + ";" + dado.Item5.ToString().Replace(',', '.');
                             newCsv.Add(linha);
                         }
-                        
+
                     }
 
                     File.WriteAllLines(Path.Combine(path_saida, cenario + ".csv"), newCsv);
