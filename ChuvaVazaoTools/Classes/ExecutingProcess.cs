@@ -4678,7 +4678,7 @@ namespace ChuvaVazaoTools.Classes
 
                 #region sao roque
 
-                string CNnome = "CM";
+                string CNnome = "CN";
                 if (padraoCSV == true)
                 {
                     CNnome = "campos_novos";
