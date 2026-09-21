@@ -18,7 +18,8 @@ namespace ChuvaVazaoTools.Tools
             cli.Host = "smtp.gmail.com";
             cli.Port = 587;
             // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
-            cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
+           // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
+            cli.Credentials = new System.Net.NetworkCredential("robot.enercore@gmail.com", "jhfjmwblvhqqerfp");
 
             cli.EnableSsl = true;
 
@@ -61,7 +62,8 @@ namespace ChuvaVazaoTools.Tools
 
             msg.Body = body;
 
-            msg.Sender = msg.From = new System.Net.Mail.MailAddress("cpas.robot@gmail.com");
+            //msg.Sender = msg.From = new System.Net.Mail.MailAddress("cpas.robot@gmail.com");
+            msg.Sender = msg.From = new System.Net.Mail.MailAddress("robot.enercore@gmail.com");
 
             var receivers = ConfigurationManager.AppSettings[receiversGroup];
 
@@ -105,7 +107,8 @@ namespace ChuvaVazaoTools.Tools
             cli.EnableSsl = true;
             cli.UseDefaultCredentials = false;
             // cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "cp@s9876");
-            cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
+            //cli.Credentials = new System.Net.NetworkCredential("cpas.robot@gmail.com", "ujkuiwpbeqerumvs");
+            cli.Credentials = new System.Net.NetworkCredential("robot.enercore@gmail.com", "jhfjmwblvhqqerfp");
 
 
 
@@ -139,7 +142,8 @@ namespace ChuvaVazaoTools.Tools
 
             msg.Body = body;
 
-            msg.Sender = msg.From = new System.Net.Mail.MailAddress("cpas.robot@gmail.com");
+            //msg.Sender = msg.From = new System.Net.Mail.MailAddress("cpas.robot@gmail.com");
+            msg.Sender = msg.From = new System.Net.Mail.MailAddress("robot.enercore@gmail.com");
 
             var receivers = System.Configuration.ConfigurationManager.AppSettings[receiversGroup];
 
