@@ -21,12 +21,12 @@ namespace ChuvaVazaoTools.Classes
             285,227,228,230 // 285 <-287 jirau <- stoantonio; 227,228,230 <- 229 sinop colider sao manoel <- teles pires; 155<-156 retiro baixo <- 3marias
         };
 
-        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate, int revnum = 0, bool shadow = false)
+        public List<Propagacao> ProcessResultsPart1(List<ModeloChuvaVazao> modelos, string pastaSaida, DateTime dataForms, DateTime runrevDate, int revnum = 0, bool shadow = false, bool rodarCsv = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             var propagacoes = new List<Propagacao>();
             bool csv = false;
-            if (shadow == true)
+            if (rodarCsv == true)
             {
                 csv = true;
             }
@@ -3300,7 +3300,7 @@ namespace ChuvaVazaoTools.Classes
 
                                         var horaatraso = (ms.TempoViagem % 24);
 
-                                        if (ms.NomeVazao.ToUpper() == "FURNAS")
+                                        if (ms.NomeVazao.ToUpper() == "FURNAS" || ms.NomeVazao.ToLower() == "incr_furnas")
                                         {
                                             propaga.VazaoNatural[dat] += modeloSmap.Vazoes[dat];
                                         }
@@ -3488,7 +3488,7 @@ namespace ChuvaVazaoTools.Classes
 
                                         var horaatraso = (ms.TempoViagem % 24);
 
-                                        if (ms.NomeVazao.ToUpper() == "PCOLOMBIA")
+                                        if (ms.NomeVazao.ToUpper() == "PCOLOMBIA" || ms.NomeVazao.ToLower() == "pcolombia_rio_sapucai_sp")
                                         {
                                             propaga.VazaoNatural[dat] += modeloSmap.Vazoes[dat] * ms.FatorDistribuicao;
                                         }
@@ -3792,7 +3792,7 @@ namespace ChuvaVazaoTools.Classes
                                         var modeloSmap = modelos.SelectMany(x => x.Vazoes).Where(x => x.Nome.ToUpper() == ms.NomeVazao.ToUpper()).First();
                                         var dmenor = dat.AddDays(-(1 + Math.Floor(ms.TempoViagem / 24))).Date;
                                         var dmaior = dmenor.AddDays(1);
-                                        if (ms.NomeVazao == "NAvanhanda")
+                                        if (ms.NomeVazao == "NAvanhanda" || ms.NomeVazao == "nova_avanhandava")
                                         {
                                             propaga.VazaoIncremental[dat] += modeloSmap.Vazoes[dat] * ms.FatorDistribuicao;
 

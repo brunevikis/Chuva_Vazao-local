@@ -184,7 +184,7 @@ namespace ChuvaVazaoTools
                             var newlogF = new LogFile(newlogFile);
                             newlogF.WriteLine("Iniciando AutoRoutine");
 
-                            AutoExec(data, newlogF);
+                            AutoExec(data, newlogF, csv: true);
                             Tools.Tools.addHistory(@"H:\TI - Sistemas\UAT\ChuvaVazao\Log\" + "LogChuva_Run.txt", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss ") + System.Environment.UserName.ToString() + " - tentativa de executar as rodadas [SEM EXCEL] via Self Enforcing - Dentro dos Processos");
                         }
                     }

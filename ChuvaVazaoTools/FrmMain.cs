@@ -1045,7 +1045,7 @@ namespace ChuvaVazaoTools
 
 
         }
-        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false, bool merge = false, bool cfs = false)
+        public void RunExecProcess(System.IO.TextWriter logF, out string runId, EnumRemo offset = EnumRemo.RemocaoAtual, bool smapR = false, bool shadow = false, bool merge = false, bool cfs = false, bool csv = false)
         {
             dtAtual.Value = DateTime.Today.Date;
             cbx_Encadear_Previvaz.Checked = false;
@@ -1115,9 +1115,10 @@ namespace ChuvaVazaoTools
             //Nome para rodada
             name = name + horaPrev;
             DateTime dataModelo;
-            if (shadow == true)
+            if (shadow == true) { }
+            if (csv == true)
             {
-                PreencherVazObservadaCSV(out DateTime dataModeloALT, out string fonteVaz, shadow);
+                PreencherVazObservadaCSV(out DateTime dataModeloALT, out string fonteVaz, csv);
                 name = name + "_" + fonteVaz.ToUpper();
                 dataModelo = dataModeloALT;
             }
@@ -1178,7 +1179,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_PUROECMWF";
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROECMWF");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVPUROECMWF");
                     cenario = "ECMWF";
@@ -1188,7 +1190,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_PUROGEFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVPURO", "CVPURO_PUROGEFS");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVPUROGEFS");
                     cenario = "GEFS";
@@ -1291,7 +1294,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_FUNCECENS45m");
-                if (shadow == true)//FUNCECENS45m
+                if (shadow == true) { }//FUNCECENS45m
+                if (csv == true)//FUNCECENS45m
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
                     cenario = "FUNCECENS45m";
@@ -1301,7 +1305,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45EURO";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_EUROECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
                     cenario = "ECMWFECENS45m";
@@ -1311,7 +1316,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45EUROop";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_EUROopECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
                     cenario = "ECMWFopECENS45m";
@@ -1321,7 +1327,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45GEFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_GEFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
                     cenario = "GEFSECENS45m";
@@ -1331,7 +1338,8 @@ namespace ChuvaVazaoTools
             {
                 name = name + "_ECENS45GFS";
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1", "CVSMAP1_GFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP1");
                     cenario = "GFSECENS45m";
@@ -1344,7 +1352,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV0_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_EUROECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0");
                     cenario = "ECMWFECENS45m";
@@ -1356,7 +1365,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV0_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0", "CVSMAP0_GEFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP0");
                     cenario = "GEFSECENS45m";
@@ -1369,7 +1379,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_EUROECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
                     cenario = "ECMWFECENS45m";
@@ -1381,7 +1392,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_EUROopECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
                     cenario = "ECMWFopECENS45m";
@@ -1393,7 +1405,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_GEFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
                     cenario = "GEFSECENS45m";
@@ -1405,7 +1418,8 @@ namespace ChuvaVazaoTools
                 // name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV2_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2", "CVSMAP2_GFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP2");
                     cenario = "GFSECENS45m";
@@ -1418,7 +1432,8 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV3_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3", "CVSMAP3_EUROECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3");
                     cenario = "ECMWFECENS45m";
@@ -1434,7 +1449,8 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV3_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3", "CVSMAP3_GEFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP3");
                     cenario = "GEFSECENS45m";
@@ -1451,7 +1467,8 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV4_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4", "CVSMAP4_EUROECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4");
                     cenario = "ECMWFECENS45m";
@@ -1467,7 +1484,8 @@ namespace ChuvaVazaoTools
                 //  name = name.Replace("_" + modeloPrecReal, "").Replace("CV_", "CV2_");
                 name = name.Replace("CV_", "CV4_");
                 pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4", "CVSMAP4_GEFSECENS45m");
-                if (shadow == true)
+                if (shadow == true) { }
+                if (csv == true)
                 {
                     pastaRaiz = Path.Combine(pastaMapa, "CVSMAP4");
                     cenario = "GEFSECENS45m";
@@ -1660,9 +1678,9 @@ namespace ChuvaVazaoTools
                         logF.WriteLine("retomando processo...");
                         esperouPsat = true;
                     }
-                    if (shadow == true && name.Contains("PURO"))
+                    if (csv == true && name.Contains("PURO"))
                     {
-                        smapExecutado = CopySmapExecuted(runRev, pastaSaida, shadow, cenario);
+                        smapExecutado = CopySmapExecuted(runRev, pastaSaida, csv, cenario);
                     }
                     else
                     {
@@ -1670,7 +1688,7 @@ namespace ChuvaVazaoTools
                     }
                     if (!smapExecutado)
                     {
-                        if (shadow == true)
+                        if (csv == true)
                         {
                             CriarCaso(statusF);
                         }
@@ -1707,7 +1725,7 @@ namespace ChuvaVazaoTools
                 if (!smapExecutado)
                 {
                     //Ler();
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         LerTotalCSV(pastaRaiz, modeloCenario: "");
                     }
@@ -1717,7 +1735,7 @@ namespace ChuvaVazaoTools
                     }
                     CarregarPrecObserv(false);
 
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         PreencherPrecObservCSV();
                     }
@@ -1726,9 +1744,9 @@ namespace ChuvaVazaoTools
                         PreencherPrecObserv();
                     }
 
-                    if (shadow == true)
+                    if (csv == true)
                     {
-                        PreencherVazObservadaCSV(out _, out _, shadow);
+                        PreencherVazObservadaCSV(out _, out _, csv);
                     }
                     else
                     {
@@ -1741,7 +1759,7 @@ namespace ChuvaVazaoTools
                     dtAtual.Value = datModel.AddDays(1);
                     dtModelo.Value = dtAtual.Value.Date;
 
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         ReiniciarCSV(dtModelo.Value);
                     }
@@ -1757,7 +1775,7 @@ namespace ChuvaVazaoTools
                     {
                         //
                         //PrecipitacaoPrevista_R(pastaRaiz, pastaSaida);
-                        if (shadow == true)
+                        if (csv == true)
                         {
                             //PrecipitacaoPrevista_RTotal(pastaRaiz.Replace(pastaRaiz.Split('\\').Last(), ""), pastaSaida);
                             PrecipitacaoPrevista_RTotalCSV(pastaRaiz, Path.Combine(pastaRaiz, pastaRaiz.Split('\\').Last() + ".csv"), pastaSaida);
@@ -1851,9 +1869,9 @@ namespace ChuvaVazaoTools
 
                 if (name.Contains("PURO"))
                 {
-                    if (shadow == true)
+                    if (csv == true)
                     {
-                        pastaSmapTotal = pastaSmapTotal + "_CVPURO" +cenario;
+                        pastaSmapTotal = pastaSmapTotal + "_CVPURO" + cenario;
                     }
                     else
                     {
@@ -1892,7 +1910,7 @@ namespace ChuvaVazaoTools
 
                 if (modelosChVz.Count == 0)
                 {
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         LerTotalCSV(pastaRaiz, modeloCenario: "");
                     }
@@ -1907,7 +1925,7 @@ namespace ChuvaVazaoTools
                 {
                     DateTime datini = DateTime.Now;
                     //ExecutarTudo(statusF);
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         ExecutarTudoTotalCSV(pastaRaiz, statusF, smapR, modeloCenario: "");
                     }
@@ -1983,7 +2001,7 @@ namespace ChuvaVazaoTools
 
                     modelosChVz.Clear();
 
-                    if (shadow == true)
+                    if (csv == true)
                     {
                         LerTotalCSV(pastaRaiz, modeloCenario: cenario);
                     }
@@ -1994,7 +2012,7 @@ namespace ChuvaVazaoTools
 
                     if (logF != null) logF.WriteLine(name + ": Iniciando cálculo de propagações!!!");
 
-                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate, runRev.rev, shadow);
+                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate, runRev.rev,shadow, csv);
                     if (propagacoes.Count != 0 || propagacoes != null)
                     {
                         statusF.Execution = RunStatus.statuscode.completed;
@@ -2033,7 +2051,17 @@ namespace ChuvaVazaoTools
 
                                 ExecutingProcess exportaDADVAZ = new ExecutingProcess();
                                 exportaDADVAZ.ExportaDadvaz(pastaSaida, propagacoes, runRev.revDate, modelosChVz, runRev.rev);
-                                if (logF != null) logF.WriteLine(name + ": DADVAZ concluído,  iniciando processo PREVIVAZ!!!");
+                                if (logF != null) 
+                                {
+                                    if (csv == true)
+                                    {
+                                        logF.WriteLine(name + ": DADVAZ concluído,  iniciando processo Pós-Processamento !!!");
+                                    }
+                                    else
+                                    {
+                                        logF.WriteLine(name + ": DADVAZ concluído,  iniciando processo PREVIVAZ!!!");
+                                    }
+                                } 
 
                             }
                             catch (Exception edad)
@@ -2047,7 +2075,7 @@ namespace ChuvaVazaoTools
 
                             var p = Program.GetPrevivazExPath(Path.Combine(ArquivosDeSaida, "Propagacoes_Automaticas.txt"));
                             bool padraoCSV = false;
-                            if (shadow == true)
+                            if (csv == true)
                             {
                                 padraoCSV = true;
                             }
@@ -2057,8 +2085,8 @@ namespace ChuvaVazaoTools
                                 var encad = cbx_Encadear_Previvaz.Checked;
                                 if (padraoCSV == true)
                                 {
-                                    AddLog("EXECUCAO PosProcessamento");
-                                    if (logF != null) logF.WriteLine(name + ": EXECUCAO PosProcessamento !!!");
+                                    AddLog("EXECUCAO Pos-Processamento");
+                                    if (logF != null) logF.WriteLine(name + ": EXECUCAO Pós-Processamento !!!");
                                     if (encad)
                                     {
                                         var parametro = p.Item2 + "|true";
@@ -2128,13 +2156,33 @@ namespace ChuvaVazaoTools
                                     if (System.IO.File.Exists(Path.Combine(pastaSaida, "Previvaz2.txt")))
                                     {
                                         // var procId = pr.BasePriority;
-                                        if (logF != null) logF.WriteLine(name + ": PREVIVAZ concluído!!!");
+                                        if (logF != null)
+                                        {
+                                            if (csv == true)
+                                            {
+                                                logF.WriteLine(name + ": Pós-Processamento concluído!!!");
+                                            }
+                                            else
+                                            {
+                                                logF.WriteLine(name + ": PREVIVAZ concluído!!!");
+                                            }
+                                        }
 
                                         if (statusF != null) statusF.Previvaz = RunStatus.statuscode.completed;
                                     }
                                     else
                                     {
-                                        if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+                                        if (logF != null) 
+                                        {
+                                            if (csv == true)
+                                            {
+                                                logF.WriteLine(name + ": Erro no Pós-processamento!!!");
+                                            }
+                                            else
+                                            {
+                                                logF.WriteLine(name + ": Erro no PREVIVAZ!!!");
+                                            }
+                                        }
 
                                         statusF.Previvaz = RunStatus.statuscode.error;
                                         return;
@@ -2144,14 +2192,14 @@ namespace ChuvaVazaoTools
                                 catch (Exception e)
                                 {
                                     e.ToString();
-                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou PosProcessamento!!!");
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou Pós-Processamento!!!");
 
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;
                                 }
                                 if (statusF?.Previvaz != RunStatus.statuscode.completed)
                                 {
-                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou PosProcessamento!!!");
+                                    if (logF != null) logF.WriteLine(name + ": Erro no PREVIVAZ ou Pós-Processamento!!!");
 
                                     statusF.Previvaz = RunStatus.statuscode.error;
                                     return;
@@ -2161,7 +2209,7 @@ namespace ChuvaVazaoTools
                             else
                             {
                                 if (statusF != null && System.IO.Directory.Exists(Path.Combine(pastaSaida, "Propagacoes_Automaticas.txt"))) statusF.Previvaz = RunStatus.statuscode.error;
-                                if (logF != null) logF.WriteLine(name + ": Falha ao iniciar instância de execução PREVIVAZ!!!");
+                                if (logF != null) logF.WriteLine(name + ": Falha ao iniciar instância de execução PREVIVAZ ou Pós-Processamento!!!");
 
                                 return;
                             }
@@ -6259,7 +6307,7 @@ namespace ChuvaVazaoTools
             if (statusF != null) statusF.Creation = RunStatus.statuscode.completed;
         }
 
-        bool CopySmapExecuted((DateTime revDate, int rev) runRev, string pastaSaida, bool shadow = false, string cenario = "")
+        bool CopySmapExecuted((DateTime revDate, int rev) runRev, string pastaSaida, bool csv = false, string cenario = "")
         {
             string name = pastaSaida.Split('\\').Last();
 
@@ -6284,7 +6332,7 @@ namespace ChuvaVazaoTools
 
             if (name.Contains("PURO"))
             {
-                if (shadow == true && cenario != "")
+                if (csv == true && cenario != "")
                 {
                     pastaSmapTotal = pastaSmapTotal + "_CVPURO" + cenario;
                 }
@@ -8812,10 +8860,10 @@ namespace ChuvaVazaoTools
 
         #endregion
 
-        private void PreencherVazObservadaCSV(out DateTime ultimaDataDisponivel, out string fonte, bool shadow = false)
+        private void PreencherVazObservadaCSV(out DateTime ultimaDataDisponivel, out string fonte, bool csv = false)
         {
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
-            var iniVazao = $@"H:\TI - Sistemas\UAT\ChuvaVazao\POSTOS_VAZOES_shadow.txt";
+            var iniVazao = $@"H:\TI - Sistemas\UAT\ChuvaVazao\POSTOS_VAZOES_csv.txt";
 
 
             var vazInicialConfigs = System.IO.File.ReadLines(iniVazao)
@@ -9588,7 +9636,7 @@ namespace ChuvaVazaoTools
 
         private List<Tuple<string, string, string, string>> Tipo_VazaoesCSV()
         {
-            var tipoVazao = @"H:\TI - Sistemas\UAT\ChuvaVazao\tipo_vazao_shadow.txt";
+            var tipoVazao = @"H:\TI - Sistemas\UAT\ChuvaVazao\tipo_vazao_csv.txt";
             var vazaoLinhas = File.ReadAllLines(tipoVazao);
             List<Tuple<string, string, string, string>> dadosTipo_Vazao = new List<Tuple<string, string, string, string>>();
 
