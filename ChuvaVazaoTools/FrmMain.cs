@@ -1646,7 +1646,7 @@ namespace ChuvaVazaoTools
 
             if (logF != null) logF.WriteLine("INICIANDO RODADA: " + name);
 
-            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao" + complementoModelos)) && Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada")) && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
+            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao" + complementoModelos)) /*&& Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada"))*/ && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
             {
                 if (logF != null) logF.WriteLine("Arquivos de entrada nao disponiveis");
                 return;
@@ -1668,7 +1668,7 @@ namespace ChuvaVazaoTools
                     if (logF != null) logF.WriteLine(name + ": Copiando arquivos SMAP!!!");
                     DateTime hoje = DateTime.Today;
 
-                    exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", hoje.ToString("yyyy"), hoje.ToString("MM"), "psat_" + hoje.ToString("ddMMyyyy") + ".txt"));
+                    exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", hoje.ToString("yyyy"), hoje.ToString("MM"), "msat_" + hoje.ToString("ddMMyyyy") + ".txt"));
 
                     if (exist_psat && esperouPsat == false)
                     {
@@ -1837,7 +1837,7 @@ namespace ChuvaVazaoTools
                 }
                 semEstimada = semEstimada.AddDays(6);//seta para sexta-feira
 
-                configPrevsM2.Add(this.ArquivosDeEntradaPrevivaz);
+                //configPrevsM2.Add(this.ArquivosDeEntradaPrevivaz);
                 configPrevsM2.Add(currRev.revDate.ToString("dd-MM-yyyy HH:mm:ss"));
                 configPrevsM2.Add(semEstimada.ToString("dd-MM-yyyy HH:mm:ss"));
                 File.WriteAllLines(Path.Combine(pastaSaida, "configPrevsM2.txt"), configPrevsM2);
@@ -4877,7 +4877,7 @@ namespace ChuvaVazaoTools
             //var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\12_2018\Dados_de_Entrada_e_Saida_201812_RV0";
 
 
-            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao")) && Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada")) && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
+            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao")) /*&& Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada"))*/ && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
             {
                 if (logF != null) logF.WriteLine("Arquivos de entrada nao disponiveis");
                 return;
@@ -5257,7 +5257,7 @@ namespace ChuvaVazaoTools
             //var pastaBase = @"C:\Files\Middle - Preço\Acompanhamento de vazões\12_2018\Dados_de_Entrada_e_Saida_201812_RV0";
 
 
-            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao")) && Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada")) && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
+            if (!Directory.Exists(pastaBase) || !(Directory.Exists(System.IO.Path.Combine(pastaBase, "Modelos_Chuva_Vazao")) /*&& Directory.Exists(System.IO.Path.Combine(pastaBase, "Previvaz", "Arq_Entrada"))*/ && System.IO.Directory.GetFiles(pastaBase, "prevs.*", SearchOption.AllDirectories).Length > 0))
             {
                 if (logF != null) logF.WriteLine("Arquivos de entrada nao disponiveis");
                 return;
@@ -7091,7 +7091,13 @@ namespace ChuvaVazaoTools
                         newCsv.Add("data_rodada;data_previsao;cenario;nome;valor");
                         foreach (var csvLine in csvPreci)
                         {
-                            string line = csvLine.Item1.ToString("yyyy-MM-dd") + ";" + csvLine.Item2.ToString("yyyy-MM-dd") + ";" + csvLine.Item3 + ";" + csvLine.Item4 + ";" + csvLine.Item5.ToString().Replace(',', '.');
+                            var valorPre = csvLine.Item5.ToString().Replace(',', '.');
+                            if (valorPre == "0")
+                            {
+                                valorPre = "0.0";
+                            }
+                            //string line = csvLine.Item1.ToString("yyyy-MM-dd") + ";" + csvLine.Item2.ToString("yyyy-MM-dd") + ";" + csvLine.Item3 + ";" + csvLine.Item4 + ";" + csvLine.Item5.ToString().Replace(',', '.');
+                            string line = csvLine.Item1.ToString("yyyy-MM-dd") + ";" + csvLine.Item2.ToString("yyyy-MM-dd") + ";" + csvLine.Item3 + ";" + csvLine.Item4 + ";" + valorPre;
                             newCsv.Add(line);
                         }
                         File.WriteAllLines(arq_Dest, newCsv);

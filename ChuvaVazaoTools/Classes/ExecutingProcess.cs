@@ -151,9 +151,10 @@ namespace ChuvaVazaoTools.Classes
                     #region Sub-bacia modelada: Marimbondo
 
                     #region Limoeiro
-                    //A S OLIVEIRA
-                    var Limoeiro = new Propagacao() { IdPosto = 16, NomePostoFluv = "Limoeiro" };///na configuração na existe mais , mas no prevs ele exeiste 
-                    Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.004f });
+                    //A S OLIVEIRA posto regredido do 15 fator A1=0,015
+                    var Limoeiro = new Propagacao() { IdPosto = 16, NomePostoFluv = "Limoeiro" };///na configuração na existe mais , mas no prevs ele existe //mudar , não existe mais no config smap , rever fator de possivel ser com euclides_da_cunha*(0,39*0,015)esta assim no arquivo de propagaçoes do pedro
+                   // Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.004f });
+                    Limoeiro.Modelo.Add(new ModeloSmap() { NomeVazao = "euclides_da_cunha", TempoViagem = 0, FatorDistribuicao = 0.00585f });//0,39*0,015
                     Limoeiro.PostoMontantes.Add(new PostoMontante { Propaga = EucCunha, TempoViagem = 3 });
                     propagacoes.Add(Limoeiro);
                     #endregion

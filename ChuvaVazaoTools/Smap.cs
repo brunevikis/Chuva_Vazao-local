@@ -727,6 +727,10 @@ namespace ChuvaVazaoTools.SMAP
                 foreach (var posto in concatPostos)
                 {
                     var precip = this.PostosPlu.Where(x => x.Codigo == posto).First().Preciptacao[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
+                    if (precip == "0")
+                    {
+                        precip = "0.0";
+                    }
                     newline = newline + ";" + precip;
                 }
 
@@ -900,6 +904,10 @@ namespace ChuvaVazaoTools.SMAP
                     foreach (var sub in concatSubBacias)
                     {
                         var vazao = this.SubBacias.Where(x => x.Nome == sub).First().Vazoes[dt].ToString().Replace(',', '.');//.Select(x =>x.Preciptacao)
+                        if (vazao == "0")
+                        {
+                            vazao = "0.0";
+                        }
                         newline = newline + ";" + vazao;
                     }
 
