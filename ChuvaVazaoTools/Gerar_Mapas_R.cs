@@ -145,7 +145,8 @@ namespace ChuvaVazaoTools
                 bool temPsat = false;
                 string psatPrelFolder = Path.Combine(oneDrive_preco.Replace("Previsao", "Observado"), data_Atual.ToString("yyyy"), data_Atual.ToString("MM"), data_Atual.ToString("dd"), "IMERG+GEFS");
 
-                string compIMERG_MERGE = merge == true ? "MERGE+GEFS" : "IMERG+GEFS";
+                //string compIMERG_MERGE = merge == true ? "MERGE+GEFS" : "IMERG+GEFS";
+                string compIMERG_MERGE = "MERGE+GEFS";
                 string psatPrelFolderK = Path.Combine("K:\\cv_temp", data_Atual.ToString("yyyyMMdd"), compIMERG_MERGE);
 
                 string psatpre = "";
@@ -577,10 +578,12 @@ namespace ChuvaVazaoTools
                         }
                         else
                         {
-                            logF.WriteLine("Transferindo PsatPreliminar");
+                            //logF.WriteLine("Transferindo PsatPreliminar");
+                            logF.WriteLine("Transferindo MERGE+GEFS");
                         }
 
-                        string psatArq = $"imerg+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
+                        string psatArq = $"MERGE+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
+                        //string psatArq = $"imerg+GEFS_p{data_Atual:ddMMyy}a{data_Atual:ddMMyy}.dat";
                         File.Copy(psatpre, Path.Combine(path_ArqPrev, funcemePsatPre, psatArq), true);
                     }
                     else if (Merge.Count() > 0)

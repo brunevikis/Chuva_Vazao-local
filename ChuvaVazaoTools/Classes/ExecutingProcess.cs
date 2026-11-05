@@ -162,7 +162,8 @@ namespace ChuvaVazaoTools.Classes
                     #region Marimbondo
                     var Marimbondo = new Propagacao() { IdPosto = 17, NomePostoFluv = "Marimbondo" };
                     //Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "PASSAGEM", TempoViagem = 16, FatorDistribuicao = 1f });
-                    Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.996f });
+                   // Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 0.996f });
+                    Marimbondo.Modelo.Add(new ModeloSmap() { NomeVazao = "marimbondo", TempoViagem = 0, FatorDistribuicao = 1 });
                     Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = Limoeiro, TempoViagem = 72 });//tlavez trocar para eucCunha e tempo de viagem 75(72limoeiro +3 de eucCunha até limoeiro)
                     Marimbondo.PostoMontantes.Add(new PostoMontante { Propaga = PortoColombia, TempoViagem = 20 });
                     propagacoes.Add(Marimbondo);
@@ -485,7 +486,8 @@ namespace ChuvaVazaoTools.Classes
 
                     #region Billings
                     var Billings = new Propagacao() { IdPosto = 118, NomePostoFluv = "Billings" };//vai usar um fator de 0.146 na geração do dadvaz (foi fator calculado pq faz uma conta com usina que ainda não foi incluida nas propoçoes)
-                    Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.183f });
+                    //Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.183f });//0,10176 -> 0,697*0,146
+                    Billings.Modelo.Add(new ModeloSmap() { NomeVazao = "edgard_de_souza", TempoViagem = 0, FatorDistribuicao = 0.10176f });//0,10176 -> 0,697*0,146
                     propagacoes.Add(Billings);
                     #endregion
 
@@ -540,14 +542,16 @@ namespace ChuvaVazaoTools.Classes
 
                     #region Promissao
                     var Promissao = new Propagacao() { IdPosto = 240, NomePostoFluv = "Promissao" };
-                    Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.717f });
+                    //Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.717f });
+                    Promissao.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.72f });
                     Promissao.PostoMontantes.Add(new PostoMontante { Propaga = Ibitinga, TempoViagem = 22 });
                     propagacoes.Add(Promissao);
                     #endregion
 
                     #region N. Avanhandava
                     var NAvanhandava = new Propagacao() { IdPosto = 242, NomePostoFluv = "NAvanhandava" };
-                    NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.283f });
+                    //NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.283f });
+                    NAvanhandava.Modelo.Add(new ModeloSmap() { NomeVazao = "nova_avanhandava", TempoViagem = 0, FatorDistribuicao = 0.28f });
                     NAvanhandava.PostoMontantes.Add(new PostoMontante { Propaga = Promissao, TempoViagem = 8 });
                     propagacoes.Add(NAvanhandava);
                     #endregion
@@ -791,13 +795,13 @@ namespace ChuvaVazaoTools.Classes
 
                     #region PassoFundo
                     var PassoFundo = new Propagacao() { IdPosto = 93, NomePostoFluv = "Passo Fundo" };
-                    PassoFundo.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.361f });
+                    PassoFundo.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.639f });
                     propagacoes.Add(PassoFundo);
                     #endregion
 
                     #region Monjolinho
                     var Monjolinho = new Propagacao() { IdPosto = 220, NomePostoFluv = "Monjolinho" };
-                    Monjolinho.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.639f });
+                    Monjolinho.Modelo.Add(new ModeloSmap() { NomeVazao = "monjolinho", TempoViagem = 0, FatorDistribuicao = 0.361f });
                     Monjolinho.PostoMontantes.Add(new PostoMontante { Propaga = PassoFundo, TempoViagem = 7.7f });
                     propagacoes.Add(Monjolinho);
                     #endregion
@@ -1350,7 +1354,7 @@ namespace ChuvaVazaoTools.Classes
 
                     #region SA CARVALHO
                     var SACAR = new Propagacao() { IdPosto = 183, NomePostoFluv = "SA CARVALHO" };
-                    SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "guilman_amorim", TempoViagem = 0, FatorDistribuicao = 0 });///ver se tem que ficar aqui ou somente nos postos regredidos
+                    SACAR.Modelo.Add(new ModeloSmap() { NomeVazao = "guilman_amorim", TempoViagem = 0, FatorDistribuicao = 0.0918f });///ver se tem que ficar aqui ou somente nos postos regredidos
                     SACAR.PostoMontantes.Add(new PostoMontante { Propaga = guimam, TempoViagem = 4 });
                     propagacoes.Add(SACAR);
                     #endregion
@@ -1367,7 +1371,7 @@ namespace ChuvaVazaoTools.Classes
 
                     #region PTO ESTRELA
                     var PTOESTRE = new Propagacao() { IdPosto = 263, NomePostoFluv = "PTO ESTRELA" };
-                    PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_grande_cm", TempoViagem = 0, FatorDistribuicao = 0 });///ver se tem que ficar aqui ou somente nos postos regredidos
+                    PTOESTRE.Modelo.Add(new ModeloSmap() { NomeVazao = "salto_grande_cm", TempoViagem = 0, FatorDistribuicao = 0.0369f });///ver se tem que ficar aqui ou somente nos postos regredidos
                     PTOESTRE.PostoMontantes.Add(new PostoMontante { Propaga = SALTOCM, TempoViagem = 2 });
                     propagacoes.Add(PTOESTRE);
                     #endregion
@@ -1507,7 +1511,7 @@ namespace ChuvaVazaoTools.Classes
 
                     #region ilha pombos
                     var ilhaP = new Propagacao() { IdPosto = 130, NomePostoFluv = "ilha Pombos" };
-                    ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "anta", TempoViagem = 0, FatorDistribuicao = 0 });//regredido
+                    ilhaP.Modelo.Add(new ModeloSmap() { NomeVazao = "anta", TempoViagem = 0, FatorDistribuicao = 0.3699f });//regredido
                     ilhaP.PostoMontantes.Add(new PostoMontante { Propaga = ANTA, TempoViagem = 10 });///verificar
                     propagacoes.Add(ilhaP);
                     #endregion
@@ -1542,19 +1546,21 @@ namespace ChuvaVazaoTools.Classes
 
                     #region tocos
                     var tocos = new Propagacao() { IdPosto = 201, NomePostoFluv = "tocos" };
-                    tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.68f });
+                   // tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.68f });
+                    tocos.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.711f });
                     propagacoes.Add(tocos);
                     #endregion
 
                     #region lajes
                     var lajes = new Propagacao() { IdPosto = 202, NomePostoFluv = "lajes" };
-                    lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.32f });
+                    lajes.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.289f });
                     propagacoes.Add(lajes);
                     #endregion
 
                     #region santana
                     var santana = new Propagacao() { IdPosto = 203, NomePostoFluv = "santana" };// vai usar fator de 0.317 para o dadvaz (calculado de fator de santana - fator de tocos)
-                    santana.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.997f });
+                   // santana.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.997f });
+                    santana.Modelo.Add(new ModeloSmap() { NomeVazao = "lajes", TempoViagem = 0, FatorDistribuicao = 0.466f });
                     propagacoes.Add(santana);
                     #endregion
 
@@ -6336,7 +6342,9 @@ namespace ChuvaVazaoTools.Classes
             var Culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
             try
             {
-
+                //todo: ver como esta ficando os dados dos dias da semana atual e as medias 
+                //pq no final de todo o processo , esta colocando um valor diferente entre o que esta no prevs e no vazaoes semanais.log 
+                //postos 172 173 175 176 178 
                 var currRev = ChuvaVazaoTools.Tools.Tools.GetCurrRev(DateTime.Today);
 
                 var pastaBase = @"H:\Middle - Preço\Acompanhamento de vazões\" + currRev.revDate.ToString("MM_yyyy") + @"\Dados_de_Entrada_e_Saida_" + currRev.revDate.ToString("yyyyMM") + "_RV" + currRev.rev.ToString();
@@ -6761,9 +6769,11 @@ namespace ChuvaVazaoTools.Classes
                     {
                         var pv119 = propagacoes.Where(x => x.IdPosto == 119).Select(x => x.VazaoNatural).FirstOrDefault();
                         var pv118 = propagacoes.Where(x => x.IdPosto == 118).Select(x => x.VazaoNatural).FirstOrDefault();
+                        var pv161 = propagacoes.Where(x => x.IdPosto == 161).Select(x => x.VazaoIncremental).FirstOrDefault();
                         foreach (var dat in pv118.Keys.ToList())
                         {
                             prop.VazaoNatural[dat] = pv119[dat] - pv118[dat];
+                            prop.VazaoIncremental[dat] = pv161[dat] * 0.037f;
                         }
 
                         var p119 = propagacoes.Where(x => x.IdPosto == 119).Select(x => x.calMedSemanal).FirstOrDefault();

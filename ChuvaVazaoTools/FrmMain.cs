@@ -1153,7 +1153,7 @@ namespace ChuvaVazaoTools
             name = name + "_" + modeloPrecReal;
 
             Boolean d1 = false;
-            Boolean exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", dtAtual.Value.ToString("yyyy"), dtAtual.Value.ToString("MM"), "psat_" + dtAtual.Value.ToString("ddMMyyyy") + ".txt"));
+            Boolean exist_psat = File.Exists(Path.Combine(@"H:\Middle - Preço\Acompanhamento de Precipitação\Observado_Satelite", dtAtual.Value.ToString("yyyy"), dtAtual.Value.ToString("MM"), "msat_" + dtAtual.Value.ToString("ddMMyyyy") + ".txt"));
             //Verifica Acomph
 
             if (dataModelo < dtAtual.Value.Date.AddDays(-1))
@@ -2012,7 +2012,7 @@ namespace ChuvaVazaoTools
 
                     if (logF != null) logF.WriteLine(name + ": Iniciando cálculo de propagações!!!");
 
-                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate, runRev.rev,shadow, csv);
+                    propagacoes = new ExecutingProcess().ProcessResultsPart1(modelosChVz, pastaSaida, dtAtual.Value, runRev.revDate, runRev.rev, shadow, csv);
                     if (propagacoes.Count != 0 || propagacoes != null)
                     {
                         statusF.Execution = RunStatus.statuscode.completed;
@@ -2051,7 +2051,7 @@ namespace ChuvaVazaoTools
 
                                 ExecutingProcess exportaDADVAZ = new ExecutingProcess();
                                 exportaDADVAZ.ExportaDadvaz(pastaSaida, propagacoes, runRev.revDate, modelosChVz, runRev.rev);
-                                if (logF != null) 
+                                if (logF != null)
                                 {
                                     if (csv == true)
                                     {
@@ -2061,7 +2061,7 @@ namespace ChuvaVazaoTools
                                     {
                                         logF.WriteLine(name + ": DADVAZ concluído,  iniciando processo PREVIVAZ!!!");
                                     }
-                                } 
+                                }
 
                             }
                             catch (Exception edad)
@@ -2172,7 +2172,7 @@ namespace ChuvaVazaoTools
                                     }
                                     else
                                     {
-                                        if (logF != null) 
+                                        if (logF != null)
                                         {
                                             if (csv == true)
                                             {
@@ -2519,12 +2519,12 @@ namespace ChuvaVazaoTools
                                                                                     //obs: os dados de A0 A1 e quais são os postos regredidos e base, são disponibilizados pelo ONS     
 
                     var propRegre = Propagacoes.Where(i => i.IdPosto == l.Idposto_Regredido).First();
-                    //if (!propRegre.VazaoNatural.ContainsKey(dat))//usa a regressão para as semanas que ainda não possuem dados
-                    //{
-                    propRegre.VazaoNatural[dat] = diaRegre;
+                    if (!propRegre.VazaoNatural.ContainsKey(dat) || propRegre.VazaoNatural[dat] <= 0)//usa a regressão para as semanas ou dias que ainda não possuem dados
+                    {
+                        propRegre.VazaoNatural[dat] = diaRegre;
 
-                    break;
-                    //}
+                        break;
+                    }
                 }
             }
         }
@@ -4077,7 +4077,7 @@ namespace ChuvaVazaoTools
                     }
                 }
 
-                AjustesDiarios(propagacoes, dias);
+                //AjustesDiarios(propagacoes, dias);
 
                 CalcularPostRegre(propagacoes, dias);
                 CalcularPostCalculados(propagacoes, dias);
